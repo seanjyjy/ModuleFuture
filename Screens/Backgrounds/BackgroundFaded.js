@@ -1,22 +1,22 @@
 import React from 'react';
-import { StyleSheet, View, ImageBackground, Platform} from 'react-native';
+import {StyleSheet, View, ImageBackground, Platform} from 'react-native';
 
-const Background = props => {
+const BackgroundFaded = props => {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require('../assets/loginbackgroundtest2.png')}
-                style={styles.image}>
+                source={require('../../assets/loginbackgroundtest4.png')}
+                style={styles.image}
+            >
                 {props.children}
             </ImageBackground>
         </View>
-    )
+    );
 }
-
 
 const styles = StyleSheet.create({
     container: {
-        flex : 1,
+        flex : 1
     },
     image: {
         flex :1,
@@ -24,4 +24,5 @@ const styles = StyleSheet.create({
         bottom: Platform.OS === 'android' ? 40 : null
     }
 })
-export default Background;
+
+export default BackgroundFaded;
