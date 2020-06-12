@@ -46,9 +46,10 @@ export default function App() {
         </NavigationContainer>
     );
   } else {
-    return (<AppLoading
-              startAsync={getFonts}
-              onFinish={() => setFontsLoaded(true)}
-              />)
+    return (
+        <AppLoading
+            startAsync={getFonts}
+            onFinish={() => setFontsLoaded(true)}
+        />)
   }
 }
