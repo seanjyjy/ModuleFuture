@@ -4,7 +4,9 @@ import {View, Text, StyleSheet} from 'react-native';
 const Planner = () => {
     return (
         <View style={styles.container}>
-
+            <Text>
+                PLANNER
+            </Text>
         </View>
     )
 }
