@@ -4,9 +4,10 @@ import * as Font from 'expo-font';
 import {AppLoading} from "expo";
 import DetailsCollection from "./Screens/DetailsCollection";
 import Homepage from "./Screens/Homepage";
-import { createStackNavigator} from "@react-navigation/stack";
+import {createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
 import MakingClock from "./Component/MakingClock";
+
 const AuthStack = createStackNavigator();
 
 const getFonts = () => {
@@ -28,22 +29,23 @@ export default function App() {
 
   if(fontsLoaded) {
     return (
-        <NavigationContainer theme={{colors : {background: 'white'}}}>
-          <AuthStack.Navigator headerMode={false}>
-            <AuthStack.Screen
-                name="Login"
-                component= {Login}
-            />
-            <AuthStack.Screen
-                name="DetailsCollection"
-                component= {DetailsCollection}
-            />
-            <AuthStack.Screen
-                name="Homepage"
-                component= {Homepage}
-            />
-          </AuthStack.Navigator>
-        </NavigationContainer>
+        // <NavigationContainer theme={{colors : {background: 'white'}}}>
+        //   <AuthStack.Navigator headerMode={false}>
+        //     <AuthStack.Screen
+        //         name="Login"
+        //         component= {Login}
+        //     />
+        //     <AuthStack.Screen
+        //         name="DetailsCollection"
+        //         component= {DetailsCollection}
+        //     />
+        //     <AuthStack.Screen
+        //         name="Homepage"
+        //         component= {Homepage}
+        //     />
+        //   </AuthStack.Navigator>
+        // </NavigationContainer>
+        <Homepage/>
     );
   } else {
     return (

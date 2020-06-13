@@ -4,7 +4,9 @@ import {View, Text, StyleSheet} from 'react-native';
 const FocusArea = () => {
     return (
         <View style={styles.container}>
-
+            <Text>
+                FOCUS AREA
+            </Text>
         </View>
     )
 }
