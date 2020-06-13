@@ -1,5 +1,5 @@
 import React , {useState} from 'react';
-import {StyleSheet, View, Text, Platform, TextInput} from 'react-native';
+import {StyleSheet, View, Text, Platform, TextInput, Dimensions} from 'react-native';
 import Background from "../Screens/Backgrounds/Background"
 import {globalFontStyles} from "../Component/GlobalFont";
 import {globalStyles} from "../Component/GlobalStyle";
@@ -9,10 +9,12 @@ import SignInButton from "../Component/SignInButton";
 import YesNoButton from "../Component/YesNoButton";
 import YesPage from "./YesPage"
 import NoPage from "./NoPage"
+import {useNavigation} from '@react-navigation/native';
+
 
 
 const Login = () => {
-
+    const navigation = useNavigation()
     const [firstHeader, setFirstHeader] = useState({ color: '#FC5185', ...globalFontStyles.OSSB_17});
     const [secondHeader, setSecondHeader] = useState({color: '#2D4056', ...globalFontStyles.OSSB_17});
     const [leftBar, setLeftBar] = useState({...styles.horizontalLine, right: 53, backgroundColor: '#FC5185'});
@@ -22,6 +24,7 @@ const Login = () => {
         secondText: 'Sign up'
     });
 
+    const signIn = () => navigation.navigate("Homepage");
 
     const middle = {
         key : 1,
@@ -47,7 +50,7 @@ const Login = () => {
                         style={{...globalFontStyles.OSR_17, right: 2, top: 7, flex : 1}}
                     />
                 </View>
-                <SignInButton>
+                <SignInButton func = {() => signIn()}>
                     <Text style={{...globalFontStyles.OSSB_17, color: 'white'}}>Sign In</Text>
                 </SignInButton>
             </View>
@@ -111,6 +114,8 @@ const Login = () => {
             setNewMiddle(middle);
         }
     }
+
+
 
     return (
             <Background>

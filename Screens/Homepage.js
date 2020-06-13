@@ -1,14 +1,36 @@
 import React , {useState} from 'react';
-import { StyleSheet, View, Text, Platform} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import ProfilePage from "./HomepageScreens/ProfilePage";
+import AskPage from "./HomepageScreens/ProfilePage";
+import ModulePage from "./HomepageScreens/ProfilePage";
+import Planner from "./HomepageScreens/ProfilePage";
+import FocusArea from "./HomepageScreens/ProfilePage";
 
 const Homepage = () => {
     return(
-        <View>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Text>
-                HELLO ASHLEY
+                HELLO DENNIS
             </Text>
         </View>
     )
 }
 
-export default Homepage;
+export default createBottomTabNavigator({
+    Planner: {
+
+    },
+    FocusArea: {
+
+    },
+    ModulePage: {
+
+    },
+    AskPage: {
+
+    },
+    ProfilePage: {
+
+    }
+});

@@ -6,7 +6,7 @@ import DetailsCollection from "./Screens/DetailsCollection";
 import Homepage from "./Screens/Homepage";
 import { createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
-
+import MakingClock from "./Component/MakingClock";
 const AuthStack = createStackNavigator();
 
 const getFonts = () => {

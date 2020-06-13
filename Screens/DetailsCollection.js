@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Platform, TouchableOpacity, Modal} from 'react-
 import BackgroundFaded from "../Screens/Backgrounds/BackgroundFaded"
 import {globalFontStyles} from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
-import Example from "../Component/MakingClock.js";
+import ChoosingOptions from "../Component/MakingClock.js";
 import {useNavigation} from '@react-navigation/native';
 
 const DetailsCollection = () => {
@@ -134,6 +134,9 @@ const DetailsCollection = () => {
         });
     }
 
+    const [heightmovement, setheightmovement] = useState(0);
+    const [once, setOnce] = useState(true);
+
     const courseinfo = (
         <View>
             {CS}{BA}{ISys}{ISec}{CE}
@@ -142,14 +145,21 @@ const DetailsCollection = () => {
 
     const additionalinfo = (
         <View>
-            <Example/>
+            <ChoosingOptions extraMovement={heightmovement}>
+
+            </ChoosingOptions>
         </View>
     )
 
 
     return (
         <BackgroundFaded>
-            <View style = {{flex : Platform.OS === 'android' ? 2 : 1, justifyContent:'center'}}>
+            <View style = {{flex : Platform.OS === 'android' ? 2 : 1, justifyContent:'center'}}
+                  onLayout = {event => {
+                      if (once) {
+                          setheightmovement(event.nativeEvent.layout.height)
+                          setOnce(false);
+                      }}}>
                 <Text style={{...globalFontStyles.OSEB_34, color: '#686868', left: 30, top: 30}}>
                     {textHeader}
                 </Text>
