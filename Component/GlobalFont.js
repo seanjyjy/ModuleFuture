@@ -17,6 +17,14 @@ export const globalFontStyles = StyleSheet.create({
         fontFamily: 'OpenSans-SemiBold',
         fontSize: 17,
     },
+    OSSB_13: {
+        fontFamily: 'OpenSans-SemiBold',
+        fontSize: 13,
+    },
+    OSB_13: {
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 13,
+    },
     OSR_17: {
         fontFamily: 'OpenSans-Regular',
         fontSize: 17,
