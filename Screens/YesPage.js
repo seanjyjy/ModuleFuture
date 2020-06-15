@@ -54,7 +54,7 @@ const YesPage = () => {
                         </View>
 
                         <View style ={{left: 30}}>
-                            <Text style={{...globalFontStyles.OSR_17, color: '#7F8E9E'}}>{props.touched.username && props.errors.username}</Text>
+                            <Text style={{...globalFontStyles.OSR_17, color: '#cc0000'}}>{props.touched.username && props.errors.username}</Text>
                         </View>
 
                         <View style = {{top : 50, left: 25}}>

@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
         flex : Platform.OS === 'android' ? 0.75 : 2,
         flexDirection: 'row',
         justifyContent: 'center',
-        // figure out how to hold the text in position
     },
     one: {
         flex: 1,

@@ -7,6 +7,7 @@ import Homepage from "./Screens/Homepage";
 import {createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
 import MakingClock from "./Component/MakingClock";
+import {SafeAreaProvider} from "react-native-safe-area-context";
 
 const AuthStack = createStackNavigator();
 
@@ -29,23 +30,24 @@ export default function App() {
 
   if(fontsLoaded) {
     return (
-        // <NavigationContainer theme={{colors : {background: 'white'}}}>
-        //   <AuthStack.Navigator headerMode={false}>
-        //     <AuthStack.Screen
-        //         name="Login"
-        //         component= {Login}
-        //     />
-        //     <AuthStack.Screen
-        //         name="DetailsCollection"
-        //         component= {DetailsCollection}
-        //     />
-        //     <AuthStack.Screen
-        //         name="Homepage"
-        //         component= {Homepage}
-        //     />
-        //   </AuthStack.Navigator>
-        // </NavigationContainer>
-        <Homepage/>
+          <NavigationContainer theme={{colors : {background: 'white'}}}>
+            <AuthStack.Navigator headerMode={false}>
+              <AuthStack.Screen
+                  name="Login"
+                  component= {Login}
+              />
+              <AuthStack.Screen
+                  name="DetailsCollection"
+                  component= {DetailsCollection}
+              />
+              <AuthStack.Screen
+                  name="Homepage"
+                  component= {Homepage}
+              />
+            </AuthStack.Navigator>
+          </NavigationContainer>
+
+
     );
   } else {
     return (

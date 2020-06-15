@@ -1,12 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-
+import Header from "../../Component/Header"
 const AskPage = () => {
     return (
         <View style={styles.container}>
-                <Text>
-                    COMING SOOOOOOOOOOOOOOOOOOON!
-                </Text>
+            <Header str={"Ask"}/>
         </View>
     )
 }
@@ -15,8 +13,6 @@ export default AskPage;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+        flex: 1
     }
 })

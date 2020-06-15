@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import ProfilePage from "./HomepageScreens/ProfilePage";
 import AskPage from "./HomepageScreens/AskPage";
 import ModulePage from "./HomepageScreens/ModulePage";
-import Planner from "./HomepageScreens/Planner";
+import Planner from "../Screens/HomepageScreens/Planner/Planner"
 import FocusArea from "./HomepageScreens/FocusArea";
 import {globalFontStyles} from "../Component/GlobalFont";
 import {NavigationContainer} from "@react-navigation/native";
@@ -16,7 +16,7 @@ import { SafeAreaProvider, useSafeArea } from 'react-native-safe-area-context';
 const textToReturn = (str) => {
     if (str === 'Planner') {
         return 'calendar'
-    } else if (str === 'Focus Area') {
+    } else if (str === 'Focus') {
         return 'crosshairs'
     } else if (str === 'Module') {
         return 'book'
@@ -27,20 +27,20 @@ const textToReturn = (str) => {
     }
 }
 
-export const TabDesign = ({ iconName, isCurrent, name }: Props) => {
+const TabDesign = (props) => {
     return (
         <View style={{height: "100%", justifyContent: "center", alignItems: "center",}}>
-            <Icon name={iconName} size={19} style={{ color: isCurrent ? '#FB5581' : '#979797'}}/>
-            <Text style={isCurrent ? {...globalFontStyles.OSB_13, color :  '#FB5581', top: 5}
+            <Icon name={props.iconName} size={19} style={{ color: props.isCurrent ? '#FB5581' : '#979797'}}/>
+            <Text style={props.isCurrent ? {...globalFontStyles.OSB_13, color :  '#FB5581', top: 5}
                 : {...globalFontStyles.OSSB_13, color: '#8E8E8E', top: 5}}
             >
-                {name}
+                {props.name}
             </Text>
         </View>
     );
 };
 
-export const TabBar = ({state, descriptors, navigation} : BottomTabBarProps) => {
+const TabBar = ({state, descriptors, navigation} : BottomTabBarProps) => {
     const [translateValue] = useState(new Animated.Value(0));
     const totalWidth = Dimensions.get("window").width;
     const tabWidth = totalWidth / state.routes.length;
@@ -117,15 +117,15 @@ export const TabBar = ({state, descriptors, navigation} : BottomTabBarProps) => 
 
 
 
-export const HomeTabNavigator = () => {
+const HomeTabNavigator = () => {
 
     const Tab = createBottomTabNavigator();
 
     return (
-        <View style={{ flex: 1, position: "relative"}}>
+        <View style={{ flex: 1}}>
             <Tab.Navigator tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}>
                 <Tab.Screen name="Planner" component={Planner}/>
-                <Tab.Screen name="Focus Area" component={FocusArea}/>
+                <Tab.Screen name="Focus" component={FocusArea}/>
                 <Tab.Screen name="Module" component={ModulePage}/>
                 <Tab.Screen name="Ask" component={AskPage}/>
                 <Tab.Screen name="Profile" component={ProfilePage}/>
@@ -138,11 +138,7 @@ export const HomeTabNavigator = () => {
 
 const Homepage = () => {
     return (
-        <SafeAreaProvider>
-            <NavigationContainer>
-                <HomeTabNavigator/>
-            </NavigationContainer>
-        </SafeAreaProvider>
+        HomeTabNavigator()
     )
 }
 
