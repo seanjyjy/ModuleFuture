@@ -1,30 +1,30 @@
-import React , {useState, useRef} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity , Dimensions} from 'react-native';
+import React, { useState, useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import Page from "./Page";
-import Animated from 'react-native-reanimated';
-import Header from "../../../Component/Header"
-
-
-
+import Animated from "react-native-reanimated";
+import Header from "../../../Component/Header";
 
 const Planner = () => {
+  const x = useRef(new Animated.Value(0)).current;
 
-    const x = useRef(new Animated.Value(0)).current
-
-    return (
-        <View style={{flex : 1}}>
-            <Header str={"Planner"} leftChildren = {<View/>} rightChildren = {<View/>} />
-            <Page>
-
-            </Page>
-        </View>
-    );
-}
-
+  return (
+    <View style={{ flex: 1 }}>
+      <Header
+        str={"Planner"}
+        leftChildren={<View />}
+        rightChildren={<View />}
+      />
+      <Page></Page>
+    </View>
+  );
+};
 
 export default Planner;
 
-const styles = StyleSheet.create({
-
-});
-
+const styles = StyleSheet.create({});
