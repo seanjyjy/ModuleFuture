@@ -11,7 +11,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ProfilePage from "./HomepageScreens/ProfilePage";
 import AskPage from "./HomepageScreens/AskPage";
 import ModulePage from "./HomepageScreens/ModulePage";
-import Planner from "./HomepageScreens/Planner/Planner";
+import Planner from "../Screens/HomepageScreens/Planner/Planner";
 import FocusArea from "./HomepageScreens/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";

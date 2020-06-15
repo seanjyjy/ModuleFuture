@@ -15,7 +15,11 @@ const Planner = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header str={"Planner"} />
+      <Header
+        str={"Planner"}
+        leftChildren={<View />}
+        rightChildren={<View />}
+      />
       <Page></Page>
     </View>
   );
