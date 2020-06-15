@@ -10,7 +10,6 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
 import MakingClock from "./Component/MakingClock";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
 const AuthStack = createStackNavigator();
 
 const getFonts = () => {
@@ -32,6 +31,12 @@ export default function App() {
 
   if (fontsLoaded) {
     return (
+        // <SafeAreaProvider>
+        //   <NavigationContainer>
+        //     <Homepage/>
+        //   </NavigationContainer>
+        // </SafeAreaProvider>
+
         <ApplicationProvider {...eva} theme={eva.light}>
           <NavigationContainer theme={{ colors: { background: "white" } }}>
             <AuthStack.Navigator headerMode={false}>

@@ -12,7 +12,7 @@ import { globalFontStyles } from "./GlobalFont";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 const Header = (props) => {
-  console.log("hdear height is" + 0.11 * height);
+
   return (
     <SafeAreaView style={styles.header}>
       <View

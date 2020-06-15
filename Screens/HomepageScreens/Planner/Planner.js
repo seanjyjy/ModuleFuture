@@ -6,22 +6,14 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import Page from "./Page";
-import Animated from "react-native-reanimated";
-import Header from "../../../Component/Header";
+
+import ContentPage from "./ContentPage";
 
 const Planner = () => {
-  const x = useRef(new Animated.Value(0)).current;
 
   return (
-    <View style={{ flex: 1 }}>
-      <Header
-        str={"Planner"}
-        leftChildren={<View />}
-        rightChildren={<View />}
-      />
-      <Page></Page>
-    </View>
+      // temporary
+      <ContentPage/>
   );
 };
 
