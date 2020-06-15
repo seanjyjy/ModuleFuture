@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@eva-design/eva": "^2.0.0",
     "@mdi/font": "^5.3.45",
     "@react-native-community/datetimepicker": "^2.2.2",
     "@react-native-community/masked-view": "0.1.6",
@@ -32,6 +33,7 @@
     "react-native-redash": "^14.1.1",
     "react-native-safe-area-context": "0.7.3",
     "react-native-screens": "~2.2.0",
+    "react-native-svg": "^11.0.1",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
+    "@ui-kitten/components": "^5.0.0",
     "babel-preset-expo": "~8.1.0",
     "expo-font": "^8.1.1",
     "react-native-responsive-screen": "^1.4.1"
