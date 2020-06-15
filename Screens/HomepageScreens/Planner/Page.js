@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Dimensions, Platform, Text, Image} from "react-native";
 import Animated from 'react-native-reanimated';
 import {useSafeArea} from "react-native-safe-area-context";
-import {ImageBackground} from "react-native-web";
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -14,7 +13,15 @@ const Page = () => {
 
     return (
         <View style={{
-            borderRadius: 10,
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            backgroundColor:'white',
+            elevation: 5,
+            borderRadius: 24,
             justifyContent: 'center',
             alignItems: 'center',
             height: (Platform.OS === "android" ? heightOfImageAndroid -10 : heightOfImageApple - 26) ,
@@ -25,7 +32,7 @@ const Page = () => {
                 borderRadius: (Platform.OS === "android" ? 6 : 24),
                 resizeMode:'contain',
                 height: '100%',
-                width: '100%'
+                width: '100%',
             }}/>
         </View>
     )
