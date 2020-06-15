@@ -7,10 +7,8 @@ import ModulePage from "./HomepageScreens/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner"
 import FocusArea from "./HomepageScreens/FocusArea";
 import {globalFontStyles} from "../Component/GlobalFont";
-import {NavigationContainer} from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { SafeAreaProvider, useSafeArea } from 'react-native-safe-area-context';
+import {useSafeArea } from 'react-native-safe-area-context';
 
 
 const textToReturn = (str) => {
@@ -40,7 +38,7 @@ const TabDesign = (props) => {
     );
 };
 
-const TabBar = ({state, descriptors, navigation} : BottomTabBarProps) => {
+const TabBar = ({state, descriptors, navigation}) => {
     const [translateValue] = useState(new Animated.Value(0));
     const totalWidth = Dimensions.get("window").width;
     const tabWidth = totalWidth / state.routes.length;
@@ -123,7 +121,7 @@ const HomeTabNavigator = () => {
 
     return (
         <View style={{ flex: 1}}>
-            <Tab.Navigator tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}>
+            <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
                 <Tab.Screen name="Planner" component={Planner}/>
                 <Tab.Screen name="Focus" component={FocusArea}/>
                 <Tab.Screen name="Module" component={ModulePage}/>

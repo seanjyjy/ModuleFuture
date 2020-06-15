@@ -8,9 +8,16 @@ const Header = (props) => {
     console.log("hdear height is" + (0.11 * height))
     return (
         <SafeAreaView style={styles.header}>
-            <Text style={{...globalFontStyles.OSB_17, color: '#232323', top : Platform.OS === 'android' ? 3 : -3,}}>
+            <View style={{top : Platform.OS === 'android' ? 10 : -3, left: (0.07 * width)}}>
+                {props.leftChildren}
+            </View>
+
+            <Text style={{...globalFontStyles.OSB_17, color: '#232323', top : Platform.OS === 'android' ? 10 : -3, left: (0.4 * width)}}>
                 {props.str}
             </Text>
+            <View style={{top : Platform.OS === 'android' ? 10 : -3, left: (0.93 * width)}}>
+                {props.rightChildren}
+            </View>
         </SafeAreaView>
     );
 }
@@ -21,7 +28,6 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: 'white',
         borderBottomWidth: 0.2,
         width: width,
@@ -29,6 +35,6 @@ const styles = StyleSheet.create({
         elevation: 5,
         shadowOffset:{width: 5,  height: 5},
         shadowColor: 'black',
-        shadowOpacity: 0.1
+        shadowOpacity: 0.1,
     },
 })
