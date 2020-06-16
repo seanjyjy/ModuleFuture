@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Platform} from 'react-native';
 import {globalFontStyles} from "./GlobalFont";
 import { IndexPath, Layout, Select, SelectItem } from '@ui-kitten/components';
 
@@ -31,7 +31,7 @@ const ChoosingOptions = () => {
     const YearDisplayValue = yearList[selectedIndex.row].value;
     const SemDisplayValue = semList[selectedIndex2.row].value;
     const renderOption = (title) => (
-        <SelectItem title={title.value} key={title.key}/>
+        <SelectItem title={title.value} key={title.key} />
     );
     const textYear = (
         <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>

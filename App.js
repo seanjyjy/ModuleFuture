@@ -7,9 +7,9 @@ import Homepage from "./Screens/Homepage";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
-import MakingClock from "./Component/MakingClock";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ApplicationProvider } from '@ui-kitten/components';
+import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
+
 const AuthStack = createStackNavigator();
 
 const getFonts = () => {
@@ -29,26 +29,23 @@ const getFonts = () => {
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
+
+
+
   if (fontsLoaded) {
     return (
-        // <SafeAreaProvider>
-        //   <NavigationContainer>
-        //     <Homepage/>
-        //   </NavigationContainer>
-        // </SafeAreaProvider>
 
-        <ApplicationProvider {...eva} theme={eva.light}>
-          <NavigationContainer theme={{ colors: { background: "white" } }}>
-            <AuthStack.Navigator headerMode={false}>
-              <AuthStack.Screen name="Login" component={Login} />
-              <AuthStack.Screen
-                name="DetailsCollection"
-                component={DetailsCollection}
-              />
-              <AuthStack.Screen name="Homepage" component={Homepage} />
-            </AuthStack.Navigator>
-          </NavigationContainer>
-        </ApplicationProvider>
+        <SafeAreaProvider>
+          <ApplicationProvider {...eva} theme={eva.light}>
+              <NavigationContainer theme={{ colors: { background: "white" } }}>
+                <AuthStack.Navigator headerMode={false}>
+                  <AuthStack.Screen name="Login" component={Login} />
+                  <AuthStack.Screen name="DetailsCollection" component={DetailsCollection}/>
+                  <AuthStack.Screen name="Homepage" component={Homepage} />
+                </AuthStack.Navigator>
+              </NavigationContainer>
+          </ApplicationProvider>
+        </SafeAreaProvider>
     );
   } else {
     return (
