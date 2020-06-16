@@ -8,7 +8,7 @@ import {
   Text,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ProfilePage from "./HomepageScreens/ProfilePage";
+import ProfilePage from "./HomepageScreens/Profile/ProfilePage";
 import AskPage from "./HomepageScreens/AskPage";
 import ModulePage from "./HomepageScreens/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";

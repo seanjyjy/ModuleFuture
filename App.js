@@ -6,8 +6,14 @@ import DetailsCollection from "./Screens/Login/DetailsCollection";
 import Homepage from "./Screens/Homepage";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
+import * as eva from "@eva-design/eva";
+import {
+  ApplicationProvider,
+  IconRegistry,
+  Layout,
+  Text,
+} from "@ui-kitten/components";
+import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import MakingClock from "./Component/MakingClock";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 const AuthStack = createStackNavigator();
@@ -31,24 +37,25 @@ export default function App() {
 
   if (fontsLoaded) {
     return (
-        // <SafeAreaProvider>
-        //   <NavigationContainer>
-        //     <Homepage/>
-        //   </NavigationContainer>
-        // </SafeAreaProvider>
+      // <SafeAreaProvider>
+      //   <NavigationContainer>
+      //     <Homepage/>
+      //   </NavigationContainer>
+      // </SafeAreaProvider>
 
-        <ApplicationProvider {...eva} theme={eva.light}>
-          <NavigationContainer theme={{ colors: { background: "white" } }}>
-            <AuthStack.Navigator headerMode={false}>
-              <AuthStack.Screen name="Login" component={Login} />
-              <AuthStack.Screen
-                name="DetailsCollection"
-                component={DetailsCollection}
-              />
-              <AuthStack.Screen name="Homepage" component={Homepage} />
-            </AuthStack.Navigator>
-          </NavigationContainer>
-        </ApplicationProvider>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <IconRegistry icons={EvaIconsPack} />
+        <NavigationContainer theme={{ colors: { background: "white" } }}>
+          <AuthStack.Navigator headerMode={false}>
+            <AuthStack.Screen name="Login" component={Login} />
+            <AuthStack.Screen
+              name="DetailsCollection"
+              component={DetailsCollection}
+            />
+            <AuthStack.Screen name="Homepage" component={Homepage} />
+          </AuthStack.Navigator>
+        </NavigationContainer>
+      </ApplicationProvider>
     );
   } else {
     return (
