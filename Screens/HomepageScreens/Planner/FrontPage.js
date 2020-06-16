@@ -1,7 +1,7 @@
-import React from 'react'
-import {Text, View, StyleSheet} from 'react-native';
+import React, {useState} from "react";
+import { View, StyleSheet, Dimensions, Platform,Text, TouchableOpacity} from "react-native";
 
-const Y2S2 = () => {
+const FrontPage = () => {
     return (
         <View style={styles.container}>
             <Text>
@@ -11,7 +11,7 @@ const Y2S2 = () => {
     )
 }
 
-export default Y2S2;
+export default FrontPage;
 
 const styles = StyleSheet.create({
     container: {

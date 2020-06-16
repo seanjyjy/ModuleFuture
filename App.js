@@ -14,8 +14,6 @@ import {
   Text,
 } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
-import MakingClock from "./Component/MakingClock";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 const AuthStack = createStackNavigator();
 
 const getFonts = () => {
