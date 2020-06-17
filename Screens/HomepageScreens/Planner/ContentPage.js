@@ -8,7 +8,6 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { useSafeArea } from "react-native-safe-area-context";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Page from "./Page";
 import Header from "../../../Component/Header";
@@ -26,31 +25,6 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const ContentPage = () => {
-  const semButton = (sem) => {
-    return (
-      <TouchableOpacity
-        style={{ ...styles.touchStyle, marginVertical: 20 }}
-        activeOpacity={0.9}
-      >
-        <View style={{ ...styles.viewStyle }}>
-          {sideColor()}
-          <View
-            style={{
-              width: "42%",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ ...globalFontStyles.OSB_17, color: "#303030" }}>
-              {sem}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   const navigation = useNavigation();
   const semButton = (sem) => {
     let state = true;
