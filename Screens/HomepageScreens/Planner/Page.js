@@ -57,7 +57,7 @@ const Page = (props) => {
             overflow: Platform.OS === "android" ? 'hidden' : null
         }}>
             <ImageBackground
-                source={require("../../../assets/testpic3.png")}
+                source={require("../../../assets/notebook1.jpg")}
                 style={{
                     flex: 1,
                     resizeMode: "cover",
@@ -67,10 +67,9 @@ const Page = (props) => {
                 imageStyle={{ borderRadius: 20}}
             >
                 <View style={{width: '100%', height: '100%'}}>
-                    <View style={{flex : 1, left: 0.1 * (width - 26), flexDirection: 'row'}}>
-                        {BookMark()}
-                        <Text style={{...globalFontStyles.NB_20, color: '#7B7D87', position: 'absolute', left: 0.2 * (width - 26), top: 0.03 * heightToUse}}>
-                            {props.year}
+                    <View style={{flex : 1, left: 0.09 * (width - 26), flexDirection: 'row'}}>
+                        <Text style={{...globalFontStyles.NB_20, color: '#7B7D87', position: 'absolute', left: 0.19 * (width - 26), top: 0.03 * heightToUse}}>
+                            {/*{props.year}*/}
                         </Text>
                     </View>
                     <View style={{flex : 8, justifyContent: 'center', alignItems: 'center'}}>

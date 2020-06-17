@@ -19,27 +19,27 @@ const DetailsCollection = () => {
   let pos = 0;
 
   const nonFilledButton = (props) => (
-    <TouchableOpacity
-      activeOpacity={0.95}
-      style={styles.shape}
-      onPress={() => change(1, props)}
-    >
-      <Text style={{ ...globalFontStyles.OSB_17, color: "#364F6B" }}>
-        {props}
-      </Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+          activeOpacity={0.95}
+          style={styles.shape}
+          onPress={() => change(1, props)}
+      >
+        <Text style={{ ...globalFontStyles.OSB_17, color: "#364F6B" }}>
+          {props}
+        </Text>
+      </TouchableOpacity>
   );
 
   const FilledButton = (props) => (
-    <TouchableOpacity
-      activeOpacity={0.95}
-      style={styles.newShape}
-      onPress={() => change(2, props)}
-    >
-      <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
-        {props}
-      </Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+          activeOpacity={0.95}
+          style={styles.newShape}
+          onPress={() => change(2, props)}
+      >
+        <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
+          {props}
+        </Text>
+      </TouchableOpacity>
   );
 
   const [CS, setCS] = useState(nonFilledButton("Computer Science"));
@@ -114,17 +114,17 @@ const DetailsCollection = () => {
   };
 
   const below = () => (
-    <SignInButton func={() => switchToAddInfo()}>
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-        Continue
-      </Text>
-    </SignInButton>
+      <SignInButton func={() => switchToAddInfo()}>
+        <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+          Continue
+        </Text>
+      </SignInButton>
   );
 
   const createAcc = () => (
-    <SignInButton func={() => createAccount()}>
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>Done</Text>
-    </SignInButton>
+      <SignInButton func={() => createAccount()}>
+        <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>Done</Text>
+      </SignInButton>
   );
 
   const [textHeader, setTextHeader] = useState("Course");
@@ -151,45 +151,45 @@ const DetailsCollection = () => {
   };
 
   const courseinfo = (
-    <View>
-      {CS}
-      {BA}
-      {ISys}
-      {ISec}
-      {CE}
-    </View>
+      <View>
+        {CS}
+        {BA}
+        {ISys}
+        {ISec}
+        {CE}
+      </View>
   );
 
   const additionalinfo = (
-    <View>
-      <ChoosingOptions/>
-    </View>
+      <View>
+        <ChoosingOptions/>
+      </View>
   );
 
   return (
-    <BackgroundFaded>
-      <View
-        style={{
-          flex: Platform.OS === "android" ? 2 : 1,
-          justifyContent: "center",
-        }}
-      >
-        <Text
-          style={{
-            ...globalFontStyles.OSEB_34,
-            color: "#686868",
-            left: 30,
-            top: 30,
-          }}
+      <BackgroundFaded>
+        <View
+            style={{
+              flex: Platform.OS === "android" ? 2 : 1,
+              justifyContent: "center",
+            }}
         >
-          {textHeader}
-        </Text>
-      </View>
-      <View style={{ flex: Platform.OS === "android" ? 4 : 2 }}>
-        {truth ? courseinfo : additionalinfo}
-      </View>
-      <View style={newPos}>{bot}</View>
-    </BackgroundFaded>
+          <Text
+              style={{
+                ...globalFontStyles.OSEB_34,
+                color: "#686868",
+                left: 30,
+                top: 30,
+              }}
+          >
+            {textHeader}
+          </Text>
+        </View>
+        <View style={{ flex: Platform.OS === "android" ? 4 : 2 }}>
+          {truth ? courseinfo : additionalinfo}
+        </View>
+        <View style={newPos}>{bot}</View>
+      </BackgroundFaded>
   );
 };
 
