@@ -1,13 +1,10 @@
 import React from "react";
-import { Button, View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, SafeAreaView } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
-import { globalFontStyles } from "../../../Component/GlobalFont";
-import { List, ListItem, Icon } from "@ui-kitten/components";
-import TextPlusIcon from "../../../Component/TextPlusIcon";
+import ProfileButton0 from "../../../Component/ProfileButton0";
 
 const Profile = ({ navigation }) => {
-  const logout = () => navigation.navigate("Login");
   const course = () => navigation.navigate("Course");
   const focus = () => navigation.navigate("Focus");
   const graduation = () => navigation.navigate("Graduation");
@@ -19,38 +16,33 @@ const Profile = ({ navigation }) => {
         leftChildren={<View />}
         rightChildren={<View />}
       />
-      <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-        <TextPlusIcon
+      <View
+        style={{
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}
+      >
+        <ProfileButton0
           left={"Course"}
           transition={() => course()}
           right={"Computer Science"}
         />
-        <TextPlusIcon
+        <ProfileButton0
           left={"Focus Area"}
           transition={() => focus()}
           right={"None"}
         />
-        <TextPlusIcon
+        <ProfileButton0
           left={"Expected Graduation Sem"}
           transition={() => graduation()}
           right={"Y4S2"}
         />
-        <LogoutButton func={() => logout()}>
-          <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-            Logout
-          </Text>
-        </LogoutButton>
+        <View style={{ alignItems: "center" }}>
+          <LogoutButton />
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
 export default Profile;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    // justifyContent: "space-between",
-    backgroundColor: "yellow",
-  },
-});

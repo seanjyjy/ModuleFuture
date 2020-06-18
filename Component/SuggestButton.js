@@ -1,39 +1,33 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Text,
-  NativeModules,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, Dimensions, Text } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
 
-const LogoutButton = () => {
+const SuggestButton = (props) => {
   return (
     <TouchableOpacity
       style={styles.buttonDesign}
       activeOpacity={0.875}
-      onPress={() => NativeModules.DevSettings.reload()}
+      onPress={() => props.func()}
     >
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-        Logout
+      <Text style={{ ...globalFontStyles.OSSB_15, color: "white" }}>
+        Suggest
       </Text>
     </TouchableOpacity>
   );
 };
 
-export default LogoutButton;
+export default SuggestButton;
 const screenwidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   buttonDesign: {
-    height: 40,
+    height: 28,
     backgroundColor: "#FB5581",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: screenHeight * 0.5,
-    borderRadius: 10,
-    width: screenwidth * 0.845,
+    borderRadius: 7,
+    width: 80,
+    marginRight: 40,
     elevation: 6,
     shadowOffset: {
       width: 0,

@@ -17,8 +17,6 @@ import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeArea } from "react-native-safe-area-context";
 
-
-
 const textToReturn = (str) => {
   if (str === "Planner") {
     return "calendar";
