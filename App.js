@@ -27,6 +27,7 @@ const getFonts = () => {
     "Nunito-Italic": require("./assets/Font/Nunito-Italic.ttf"),
     "Nunito-SemiBold": require("./assets/Font/Nunito-SemiBold.ttf"),
     "Nunito-Bold": require("./assets/Font/Nunito-Bold.ttf"),
+    "Nunito-ExtraBold": require("./assets/Font/Nunito-ExtraBold.ttf"),
   });
 };
 
@@ -35,25 +36,20 @@ export default function App() {
 
   if (fontsLoaded) {
     return (
-      // <SafeAreaProvider>
-      //   <NavigationContainer>
-      //     <Homepage/>
-      //   </NavigationContainer>
-      // </SafeAreaProvider>
-
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <IconRegistry icons={EvaIconsPack} />
-        <NavigationContainer theme={{ colors: { background: "white" } }}>
-          <AuthStack.Navigator headerMode={false}>
-            <AuthStack.Screen name="Login" component={Login} />
-            <AuthStack.Screen
-              name="DetailsCollection"
-              component={DetailsCollection}
-            />
-            <AuthStack.Screen name="Homepage" component={Homepage} />
-          </AuthStack.Navigator>
-        </NavigationContainer>
-      </ApplicationProvider>
+      <SafeAreaProvider>
+        <ApplicationProvider {...eva} theme={eva.light}>
+          <NavigationContainer theme={{ colors: { background: "white" } }}>
+            <AuthStack.Navigator headerMode={false}>
+              <AuthStack.Screen name="Login" component={Login} />
+              <AuthStack.Screen
+                name="DetailsCollection"
+                component={DetailsCollection}
+              />
+              <AuthStack.Screen name="Homepage" component={Homepage} />
+            </AuthStack.Navigator>
+          </NavigationContainer>
+        </ApplicationProvider>
+      </SafeAreaProvider>
     );
   } else {
     return (

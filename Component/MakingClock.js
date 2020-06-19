@@ -45,7 +45,7 @@ const ChoosingOptions = () => {
     )
     return (
         <View style={{width: '100%', height: '100%', flexDirection: 'column'}}>
-            <View style={{flex : 1, right: 30, top: 40}}>
+            <View style={{flex : 1, right: 30, top: 60}}>
                 <Layout style={styles.container} level='1'>
                     <Select
                         size={"large"}
@@ -60,7 +60,7 @@ const ChoosingOptions = () => {
                 </Layout>
             </View>
 
-            <View style={{flex : 1, right: 30}}>
+            <View style={{flex : 1, right: 30, bottom: 20}}>
                 <Layout style={styles.container} level='1'>
                     <Select
                         size={"large"}

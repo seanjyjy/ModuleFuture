@@ -3,9 +3,9 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Animated,
   StyleSheet,
   Text,
+  Animated,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ProfilePage from "./HomepageScreens/Profile/ProfilePage";
@@ -16,6 +16,9 @@ import FocusArea from "./HomepageScreens/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeArea } from "react-native-safe-area-context";
+
+const totalWidth = Dimensions.get("window").width;
+const totalHeight = Dimensions.get("window").height;
 
 const textToReturn = (str) => {
   if (str === "Planner") {
@@ -56,11 +59,10 @@ const TabDesign = (props) => {
 
 const TabBar = ({ state, descriptors, navigation }) => {
   const [translateValue] = useState(new Animated.Value(0));
-  const totalWidth = Dimensions.get("window").width;
-  const tabWidth = totalWidth / state.routes.length;
 
+  const tabWidth = totalWidth / state.routes.length;
   return (
-    <View style={[style.tabContainer, { width: totalWidth }]}>
+    <Animated.View style={{ ...style.tabContainer, width: totalWidth }}>
       <View style={{ flexDirection: "row" }}>
         <Animated.View
           style={[
@@ -107,7 +109,6 @@ const TabBar = ({ state, descriptors, navigation }) => {
               target: route.key,
             });
           };
-
           return (
             <TouchableOpacity
               accessibilityRole="button"
@@ -129,13 +130,13 @@ const TabBar = ({ state, descriptors, navigation }) => {
           );
         })}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
 const HomeTabNavigator = () => {
   const Tab = createBottomTabNavigator();
-
+  const val = useSafeArea().bottom;
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
@@ -145,10 +146,8 @@ const HomeTabNavigator = () => {
         <Tab.Screen name="Ask" component={AskPage} />
         <Tab.Screen name="Profile" component={ProfilePage} />
       </Tab.Navigator>
-      {useSafeArea().bottom > 0 && (
-        <View
-          style={{ height: useSafeArea().bottom - 5, backgroundColor: "white" }}
-        />
+      {val > 0 && (
+        <View style={{ height: val - 5, backgroundColor: "white" }} />
       )}
     </View>
   );

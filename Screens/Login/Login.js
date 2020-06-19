@@ -41,37 +41,37 @@ const Login = () => {
   const middle = {
     key: 1,
     frame: (
-      <View style={{ flex: 1 }}>
-        <View style={globalStyles.header}>
-          <MaterialCommunityIcons
-            name="account"
-            size={30}
-            style={{ ...globalStyles.iconDesign, right: 13 }}
-          />
-          <TextInput
-            placeholder="Username"
-            placeholderTextColor="#7F8E9E"
-            style={{ ...globalFontStyles.OSR_17, right: 10, flex: 1, top: 7 }}
-          />
+        <View style={{ flex: 1 }}>
+          <View style={globalStyles.header}>
+            <MaterialCommunityIcons
+                name="account"
+                size={30}
+                style={{ ...globalStyles.iconDesign, right: 13 }}
+            />
+            <TextInput
+                placeholder="Username"
+                placeholderTextColor="#7F8E9E"
+                style={{ ...globalFontStyles.OSR_17, right: 10, flex: 1, top: 7 }}
+            />
+          </View>
+          <View style={{ ...globalStyles.header, top: 10 }}>
+            <Ionicons
+                name="ios-lock"
+                size={34}
+                style={{ ...globalStyles.iconDesign, right: 10 }}
+            />
+            <TextInput
+                placeholder="Password"
+                placeholderTextColor="#7F8E9E"
+                style={{ ...globalFontStyles.OSR_17, right: 2, top: 7, flex: 1 }}
+            />
+          </View>
+          <SignInButton func={() => signIn()}>
+            <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+              Sign In
+            </Text>
+          </SignInButton>
         </View>
-        <View style={{ ...globalStyles.header, top: 10 }}>
-          <Ionicons
-            name="ios-lock"
-            size={34}
-            style={{ ...globalStyles.iconDesign, right: 10 }}
-          />
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor="#7F8E9E"
-            style={{ ...globalFontStyles.OSR_17, right: 2, top: 7, flex: 1 }}
-          />
-        </View>
-        <SignInButton func={() => signIn()}>
-          <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-            Sign In
-          </Text>
-        </SignInButton>
-      </View>
     ),
   };
 
@@ -88,42 +88,42 @@ const Login = () => {
   const nextMiddle = {
     key: 2,
     frame: (
-      <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: "column", flex: 2, bottom: 60 }}>
-          <View
-            style={{
-              flex: 3,
-              justifyContent: "center",
-              alignItems: "center",
-              bottom: 30,
-            }}
-          >
-            <Text style={{ ...globalFontStyles.NB_28, color: "#7F8E9E" }}>
-              Login via NUSnet ID ?
-            </Text>
-          </View>
-          <View style={{ flex: 6, top: Platform.OS === "android" ? 40 : 0 }}>
+        <View style={{ flex: 1 }}>
+          <View style={{ flexDirection: "column", flex: 2, bottom: 60 }}>
             <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-              }}
+                style={{
+                  flex: 3,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  bottom: 30,
+                }}
             >
-              <YesNoButton func={() => pressingYesOrNo("No")}>
-                <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                  No
-                </Text>
-              </YesNoButton>
-              <YesNoButton func={() => pressingYesOrNo("Yes")}>
-                <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                  Yes
-                </Text>
-              </YesNoButton>
+              <Text style={{ ...globalFontStyles.NB_28, color: "#7F8E9E" }}>
+                Login via NUSnet ID ?
+              </Text>
+            </View>
+            <View style={{ flex: 6, top: Platform.OS === "android" ? 40 : 0 }}>
+              <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+              >
+                <YesNoButton func={() => pressingYesOrNo("No")}>
+                  <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+                    No
+                  </Text>
+                </YesNoButton>
+                <YesNoButton func={() => pressingYesOrNo("Yes")}>
+                  <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+                    Yes
+                  </Text>
+                </YesNoButton>
+              </View>
             </View>
           </View>
         </View>
-      </View>
     ),
   };
 
@@ -168,50 +168,50 @@ const Login = () => {
   };
 
   return (
-    <Background>
-      <View style={{ flex: Platform.OS === "android" ? 9 : 8 }}>
-        <View style={styles.one}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              width: 200,
-            }}
-          >
-            <View>
-              <Text style={firstHeader}>Sign In</Text>
+      <Background>
+        <View style={{ flex: Platform.OS === "android" ? 9 : 8 }}>
+          <View style={styles.one}>
+            <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  width: 200,
+                }}
+            >
+              <View>
+                <Text style={firstHeader}>Sign In</Text>
+              </View>
+              <View style={styles.verticalLine} />
+              <View>
+                <Text style={secondHeader}>Sign Up</Text>
+              </View>
             </View>
-            <View style={styles.verticalLine} />
-            <View>
-              <Text style={secondHeader}>Sign Up</Text>
-            </View>
+            <View style={leftBar} />
+            <View style={rightBar} />
           </View>
-          <View style={leftBar} />
-          <View style={rightBar} />
         </View>
-      </View>
 
-      <View style={{ flex: 14 }}>{originalMiddle.frame}</View>
+        <View style={{ flex: 14 }}>{originalMiddle.frame}</View>
 
-      <View style={styles.textHeight}>
-        <Text style={{ ...globalFontStyles.OSI_15, color: "#6e6e6e" }}>
-          {bottomText.firstText}
-        </Text>
-        <Text
-          onPress={() => {
-            pressingSignUp(originalMiddle.key);
-          }}
-          style={{
-            ...globalFontStyles.OSR_15,
-            marginLeft: 5,
-            color: "#fb5581",
-            paddingRight: 5,
-          }}
-        >
-          {bottomText.secondText}
-        </Text>
-      </View>
-    </Background>
+        <View style={styles.textHeight}>
+          <Text style={{ ...globalFontStyles.OSI_15, color: "#6e6e6e" }}>
+            {bottomText.firstText}
+          </Text>
+          <Text
+              onPress={() => {
+                pressingSignUp(originalMiddle.key);
+              }}
+              style={{
+                ...globalFontStyles.OSR_15,
+                marginLeft: 5,
+                color: "#fb5581",
+                paddingRight: 5,
+              }}
+          >
+            {bottomText.secondText}
+          </Text>
+        </View>
+      </Background>
   );
 };
 
