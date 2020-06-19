@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
+import { useSafeArea } from "react-native-safe-area-context";
 
 const LogoutButton = () => {
   return (
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FB5581",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: screenHeight * 0.5,
+    marginTop: 25,
     borderRadius: 10,
     width: screenwidth * 0.845,
     elevation: 6,

@@ -5,11 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  Dimensions,
 } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import SuggestButton from "../../../Component/SuggestButton";
+import Modal from "react-native-modal";
 
 const Focus = ({ navigation }) => {
   const NotPressed = (props) => (
@@ -37,11 +39,23 @@ const Focus = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const TextonPopup = (props) => (
+    <View style={styles.popouttext}>
+      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
+        {props.name}
+      </Text>
+      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
+        {props.cap}
+      </Text>
+    </View>
+  );
+
   const [CS, setCS] = useState(NotPressed("Algorithms and Theory"));
   const [BA, setBA] = useState(NotPressed("Artificial Intelligence"));
   const [IS, setIS] = useState(NotPressed("Computer Graphics and Games"));
   const [InfoSec, setInfoSec] = useState(NotPressed("Computer Security"));
   const [CEG, setCEG] = useState(NotPressed("Database Systems"));
+  const [modalVisible, setModalVisible] = useState(false);
 
   const activate = (props) => {
     if (props === "Algorithms and Theory") {
@@ -72,7 +86,7 @@ const Focus = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, color: "black" }}>
       <Header
         str={"Focus Area"}
         leftChildren={
@@ -87,11 +101,32 @@ const Focus = ({ navigation }) => {
         rightChildren={
           <SuggestButton
             func={() => {
-              navigation.goBack();
+              setModalVisible(true);
             }}
           />
         }
       />
+      <Modal
+        style={styles.modalBox}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropTransitionOutTiming={0}
+        isVisible={modalVisible}
+        onBackdropPress={() => {
+          setModalVisible(false);
+        }}
+        onBackButtonPress={() => {
+          setModalVisible(false);
+        }}
+      >
+        <Text style={styles.popoutheader}>
+          Based on CAP, your best performing focus areas are
+        </Text>
+        <TextonPopup name="Artificial Intelligence" cap="4.5" />
+        <TextonPopup name="Computer Security" cap="4.33" />
+        <TextonPopup name="Database Systems" cap="4.0" />
+      </Modal>
+
       <View style={{ paddingLeft: 20, paddingRight: 25 }}>
         {CS}
         {BA}
@@ -104,6 +139,9 @@ const Focus = ({ navigation }) => {
 };
 
 export default Focus;
+
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   unpressed: {
@@ -119,5 +157,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     paddingBottom: 12,
+  },
+  modalBox: {
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: height * 0.35,
+    marginBottom: height * 0.35,
+    width: width * 0.8,
+    paddingLeft: 30,
+    paddingRight: 50,
+    borderRadius: 25,
+  },
+  popoutheader: {
+    ...globalFontStyles.OSB_13,
+    color: "#232323",
+    marginBottom: 20,
+    marginTop: 5,
+  },
+  popouttext: {
+    flexDirection: "row",
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "space-between",
   },
 });
