@@ -41,14 +41,27 @@ export const globalFontStyles = StyleSheet.create({
     fontFamily: "OpenSans-Bold",
     fontSize: 13,
   },
+  OSB_15: {
+    fontFamily: "OpenSans-Bold",
+    fontSize: 15,
+  },
   OSB_17: {
     fontFamily: "OpenSans-Bold",
     fontSize: 17,
   },
   // ---------------------------------------OPENSANS-EXTRABOLD-------------------------------------------------------
+  OSEB_17: {
+    fontFamily: "OpenSans-ExtraBold",
+    fontSize: 17,
+  },
   OSEB_34: {
     fontFamily: "OpenSans-ExtraBold",
     fontSize: 34,
+  },
+  //-------------------------------------------------NUNITO-SEMIBOLD------------------------------------------------
+  NSB_17: {
+    fontFamily: "Nunito-SemiBold",
+    fontSize: 17,
   },
   // ---------------------------------------NUNITO-BOLD-------------------------------------------------------------
   NB_17: {

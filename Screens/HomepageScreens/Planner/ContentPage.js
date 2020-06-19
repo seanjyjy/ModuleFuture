@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
+  ProgressViewIOS,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Y1S1 from "./Plans/Y1S1";
@@ -25,7 +26,7 @@ import SimpleIcon from "react-native-vector-icons/SimpleLineIcons";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ContentPage = () => {
+const ContentPage = (props) => {
   const colors = [
     "#FFB584",
     "#FF6F66",
@@ -135,12 +136,12 @@ const ContentPage = () => {
       <LinearGradient
         colors={["#ffc3a0", "#ffafbd"]}
         style={{
-          flex: 8,
+          flex: 7,
         }}
       >
         <SafeAreaView
           style={{
-            flex: 8,
+            flex: 7,
             justifyContent: "flex-start",
             flexDirection: "row",
             width: "100%",
@@ -148,7 +149,7 @@ const ContentPage = () => {
             alignItems: "flex-start",
           }}
         >
-          <View style={{ flexDirection: "column", top: 0.02 * height }}>
+          <View style={{ flexDirection: "column", top: 0.01 * height }}>
             <Text
               style={{
                 ...globalFontStyles.NBEB_52,
@@ -176,7 +177,7 @@ const ContentPage = () => {
               justifyContent: "center",
               alignItems: "flex-end",
               right: 0.1 * width,
-              top: 0.02 * height,
+              top: 0.01 * height,
             }}
           >
             <TouchableOpacity
@@ -193,7 +194,8 @@ const ContentPage = () => {
       <View
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       />
-      <View style={{ flex: 32, marginBottom: 60 }}>
+
+      <View style={{ flex: 32, position: "relative", marginBottom: 60 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
           numColumns={2}
