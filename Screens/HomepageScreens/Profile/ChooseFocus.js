@@ -11,29 +11,24 @@ import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import SuggestButton from "../../../Component/SuggestButton";
 
-/**
- * TODO: Retrieve info from firebase?
- * TODO: Set course with firebase + update records/planner page accordingly with firebase
- */
-
 const Focus = ({ navigation }) => {
   const NotPressed = (props) => (
     <TouchableOpacity
       style={styles.unpressed}
       activeOpacity={0.85}
-      onPress={() => change(props)}
+      onPress={() => activate(props)}
     >
       <Text style={{ ...globalFontStyles.OSSB_17, color: "#00000080" }}>
         {props}
       </Text>
-      <Icon name="square-outline" width={25} height={25} fill="#232323" />
+      <Icon name="square-outline" width={25} height={25} fill="#00000080" />
     </TouchableOpacity>
   );
   const Pressed = (props) => (
     <TouchableOpacity
       style={styles.Pressed}
       activeOpacity={0.65}
-      onPress={() => change(props)}
+      onPress={() => deactivate(props)}
     >
       <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
         {props}
@@ -42,48 +37,37 @@ const Focus = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  let current = 0;
-  const [CS, setCS] = useState(Pressed("Algorithms and Theory"));
+  const [CS, setCS] = useState(NotPressed("Algorithms and Theory"));
   const [BA, setBA] = useState(NotPressed("Artificial Intelligence"));
-  const [IS, setIS] = useState(NotPressed("Information Systems"));
-  const [InfoSec, setInfoSec] = useState(NotPressed("Information Security"));
-  const [CEG, setCEG] = useState(NotPressed("Computer Engineering"));
+  const [IS, setIS] = useState(NotPressed("Computer Graphics and Games"));
+  const [InfoSec, setInfoSec] = useState(NotPressed("Computer Security"));
+  const [CEG, setCEG] = useState(NotPressed("Database Systems"));
 
-  const deSelect = (current) => {
-    if (current === 0) {
-      setCS(NotPressed("Algorithms and Theory"));
-    } else if (current === 1) {
-      setBA(NotPressed("Artificial Intelligence"));
-    } else if (current === 2) {
-      setIS(NotPressed("Information Systems"));
-    } else if (current === 3) {
-      setInfoSec(NotPressed("Information Security"));
-    } else {
-      setCEG(NotPressed("Computer Engineering"));
+  const activate = (props) => {
+    if (props === "Algorithms and Theory") {
+      setCS(Pressed("Algorithms and Theory"));
+    } else if (props === "Artificial Intelligence") {
+      setBA(Pressed("Artificial Intelligence"));
+    } else if (props === "Computer Graphics and Games") {
+      setIS(Pressed("Computer Graphics and Games"));
+    } else if (props === "Computer Security") {
+      setInfoSec(Pressed("Computer Security"));
+    } else if (props === "Database Systems") {
+      setCEG(Pressed("Database Systems"));
     }
   };
 
-  const change = (props) => {
-    if (props === "Algorithms and Theory" && current !== 0) {
-      setCS(Pressed("Algorithms and Theory"));
-      deSelect(current);
-      current = 0;
-    } else if (props === "Artificial Intelligence" && current !== 1) {
-      setBA(Pressed("Artificial Intelligence"));
-      deSelect(current);
-      current = 1;
-    } else if (props === "Information Systems" && current !== 2) {
-      setIS(Pressed("Information Systems"));
-      deSelect(current);
-      current = 2;
-    } else if (props === "Information Security" && current !== 3) {
-      setInfoSec(Pressed("Information Security"));
-      deSelect(current);
-      current = 3;
-    } else if (props === "Computer Engineering" && current !== 4) {
-      setCEG(Pressed("Computer Engineering"));
-      deSelect(current);
-      current = 4;
+  const deactivate = (props) => {
+    if (props === "Algorithms and Theory") {
+      setCS(NotPressed("Algorithms and Theory"));
+    } else if (props === "Artificial Intelligence") {
+      setBA(NotPressed("Artificial Intelligence"));
+    } else if (props === "Computer Graphics and Games") {
+      setIS(NotPressed("Computer Graphics and Games"));
+    } else if (props === "Computer Security") {
+      setInfoSec(NotPressed("Computer Security"));
+    } else if (props === "Database Systems") {
+      setCEG(NotPressed("Database Systems"));
     }
   };
 
@@ -128,21 +112,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     paddingBottom: 12,
-    borderBottomColor: "black",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomEndRadius: 13,
-    borderBottomStartRadius: 16,
   },
   Pressed: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
-    paddingTop: 18.5,
-    paddingBottom: 11,
-    borderBottomColor: "black",
-    borderBottomWidth: StyleSheet.hairlineWidth * 2,
-    borderBottomEndRadius: 13,
-    borderBottomStartRadius: 16,
+    paddingBottom: 12,
   },
 });

@@ -7,13 +7,8 @@ import Homepage from "./Screens/Homepage";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import * as eva from "@eva-design/eva";
-import {
-  ApplicationProvider,
-  IconRegistry,
-  Layout,
-  Text,
-} from "@ui-kitten/components";
-import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import { ApplicationProvider } from "@ui-kitten/components";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 const AuthStack = createStackNavigator();
 
 const getFonts = () => {

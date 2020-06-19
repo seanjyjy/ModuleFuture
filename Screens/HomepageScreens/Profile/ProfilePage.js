@@ -4,7 +4,6 @@ import Course from "./Course";
 import Graduation from "./Graduation";
 import Focus from "./ChooseFocus";
 import Profile from "./Profile";
-import Login from "../../Login/Login";
 
 const Stack = createStackNavigator();
 
@@ -15,7 +14,6 @@ const ProfilePage = () => {
       <Stack.Screen name="Focus" component={Focus} />
       <Stack.Screen name="Course" component={Course} />
       <Stack.Screen name="Graduation" component={Graduation} />
-      <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   );
 };
