@@ -29,10 +29,10 @@ const Planner = () => {
       <AuthStack.Screen name="Y4S1" component={Y4S1} />
       <AuthStack.Screen name="Y4S2" component={Y4S2} />
       <AuthStack.Screen name="ProgressPage" component={ProgressPage} />
-      <AuthStack.Screen
+      {/* <AuthStack.Screen
         name="ProgressPageSettings"
         component={ProgressPageSettings}
-      />
+      /> */}
     </AuthStack.Navigator>
   );
 };

@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  Platform,
   Text,
   TouchableOpacity,
   SafeAreaView,
@@ -12,24 +11,50 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { useNavigation } from "@react-navigation/native";
+import { LineChart } from "react-native-chart-kit";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ProgressPage = () => {
-  const [capGoalDenominator, setcapGoalDenominator] = useState(4.5);
-  const [cap, setCap] = useState(4.4);
+const ProgressPage = ({ navigation, route }) => {
+  React.useEffect(() => {
+    if (route.params?.items) {
+      setSegments(route.params?.items[0]);
+      setMCprogressTotal(route.params?.items[1]);
+      setcapGoalDenominator(route.params?.items[2]);
+    }
+  });
 
-  const [MCprogressTotal, setMCprogressTotal] = useState(160);
-  const [MCs, setMCs] = useState(110);
+  // ***********************************************this data is going to get from the back end data*****************************************************
+  const linedata = {
+    labels: ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"],
+    datasets: [
+      {
+        data: [3.9, 4.58, 4.15, 4.32, 4.75, 4.9],
+        strokeWidth: 2,
+      },
+    ],
+  };
+
+  const [capGoalDenominator, setcapGoalDenominator] = useState(() => {
+    const initialState = 5;
+    return initialState;
+  }); // this data is to get from the User (5 as the default value)
+  const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
+
+  const [MCprogressTotal, setMCprogressTotal] = useState(160); // this data is to get from the User (160 as the default value)
+  const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
   const [progress, setProgress] = useState((MCs / MCprogressTotal) * 100); // this is to track and display the amount in the circle progress
   const [progress2, setProgress2] = useState((cap / capGoalDenominator) * 100); // this is to track and display the amount in the circle progress
 
-  const navigation = useNavigation();
+  const [numberOfSegments, setSegments] = useState(4); // this data is to receive from User on the preference on number of Y-axis segments (4 as the default value)
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaStyle}>
-        <View
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => navigation.navigate("Content Page")}
           style={{
             flex: 1,
             justifyContent: "center",
@@ -37,16 +62,15 @@ const ProgressPage = () => {
           }}
         >
           <Icon
-            name="home"
-            size={30}
+            name="arrow-left"
+            size={25}
             style={{ color: "white", right: 0.02 * width }}
           />
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             flex: 4,
-            justifyContent: "center",
-            alignItems: "center",
+            ...styles.center,
           }}
         >
           <Text style={{ ...globalFontStyles.NB_34, color: "white" }}>
@@ -58,13 +82,12 @@ const ProgressPage = () => {
           activeOpacity={0.9}
           style={{
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
+            ...styles.center,
           }}
         >
           <Icon
             name="cog"
-            size={30}
+            size={25}
             style={{ color: "white", right: 0.02 * width }}
           />
         </TouchableOpacity>
@@ -79,7 +102,47 @@ const ProgressPage = () => {
           bottom: 0.03 * height,
         }}
       >
-        <View style={styles.largerRec}></View>
+        <View style={styles.largerRec}>
+          <View style={{ ...styles.largerRec, overflow: "hidden" }}>
+            <LineChart
+              onDataPointClick={() => console.log("hello")}
+              data={linedata}
+              width={width * 0.95}
+              height={height * 0.36}
+              yAxisInterval={1}
+              yLabelsOffset={10}
+              segments={numberOfSegments}
+              chartConfig={{
+                backgroundGradientFrom: "white",
+                backgroundGradientTo: "white",
+                decimalPlaces: 2,
+                color: (opacity = 1) => `rgba(251, 85, 129, ${opacity})`,
+                fillShadowGradient: "#FB5581",
+                fillShadowGradientOpacity: "1",
+                labelColor: (opacity = 1) => `rgba(138, 138, 138, ${opacity})`,
+
+                propsForDots: {
+                  r: "2",
+                  strokeWidth: "1",
+                  stroke: "#FB5581",
+                  fill: "#FB5581",
+                },
+                propsForBackgroundLines: {
+                  strokeWidth: "1",
+                  stroke: "#E2E2E2",
+                  strokeDasharray: "",
+                  opacity: "1",
+                },
+              }}
+              bezier
+              style={{
+                marginRight: 30,
+                marginVertical: 8,
+                borderRadius: 20,
+              }}
+            />
+          </View>
+        </View>
 
         <View
           style={{
@@ -94,10 +157,7 @@ const ProgressPage = () => {
             <View
               style={{
                 flex: 1,
-                width: "100%",
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
+                ...styles.centerMax,
               }}
             >
               <Text style={{ ...globalFontStyles.OSEB_17, color: "#686868" }}>
@@ -108,10 +168,7 @@ const ProgressPage = () => {
             <View
               style={{
                 flex: 4,
-                width: "100%",
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
+                ...styles.centerMax,
               }}
             >
               <CircularBarProgress
@@ -184,8 +241,7 @@ const ProgressPage = () => {
                 <View
                   style={{
                     flex: 2,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    ...styles.center,
                   }}
                 >
                   <Text
@@ -239,8 +295,7 @@ const ProgressPage = () => {
                 <View
                   style={{
                     flex: 2,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    ...styles.center,
                   }}
                 >
                   <Text
@@ -258,10 +313,7 @@ const ProgressPage = () => {
             <View
               style={{
                 flex: 1,
-                width: "100%",
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
+                ...styles.centerMax,
               }}
             >
               <Text style={{ ...globalFontStyles.OSB_17, color: "#686868" }}>
@@ -273,10 +325,7 @@ const ProgressPage = () => {
             <View
               style={{
                 flex: 4,
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "100%",
+                ...styles.centerMax,
               }}
             >
               <CircularBarProgress
@@ -392,6 +441,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
     elevation: 4,
     backgroundColor: "white",
+    alignItems: "center",
   },
   safeAreaStyle: {
     flex: 2,
@@ -403,5 +453,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
+  },
+  centerMax: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+  },
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
