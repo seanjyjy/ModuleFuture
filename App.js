@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import Login from "./Screens/Login/Login";
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
-import DetailsCollection from "./Screens/Login/DetailsCollection";
 import Homepage from "./Screens/Homepage";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+// -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
+
+import Login from "./Screens/Login/Login";
+import DetailsCollection from "./Screens/Login/DetailsCollection";
+import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
+
+// -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
 
@@ -42,6 +48,10 @@ export default function App() {
                 component={DetailsCollection}
               />
               <AuthStack.Screen name="Homepage" component={Homepage} />
+              <AuthStack.Screen
+                name="ProgressPageSettings"
+                component={ProgressPageSettings}
+              />
             </AuthStack.Navigator>
           </NavigationContainer>
         </ApplicationProvider>

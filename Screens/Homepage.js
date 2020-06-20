@@ -8,7 +8,7 @@ import {
   Animated,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ProfilePage from "./HomepageScreens/ProfilePage";
+import ProfilePage from "../Screens/HomepageScreens/Profile/ProfilePage";
 import AskPage from "./HomepageScreens/AskPage";
 import ModulePage from "./HomepageScreens/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";
@@ -17,8 +17,6 @@ import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeArea } from "react-native-safe-area-context";
 import ContentPage from "./HomepageScreens/Planner/ContentPage";
-import { interpolate } from "react-native-reanimated";
-import { withTransition } from "react-native-redash";
 
 const totalWidth = Dimensions.get("window").width;
 const totalHeight = Dimensions.get("window").height;
