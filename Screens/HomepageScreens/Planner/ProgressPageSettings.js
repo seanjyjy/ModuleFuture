@@ -35,7 +35,12 @@ const ProgressPageSettings = ({ navigation, route }) => {
             {questions}
           </Text>
         </View>
-        <View style={styles.questionRight}>
+        <View
+          style={{
+            ...styles.questionRight,
+            borderBottomWidth: key === 3 ? 0 : 0.7,
+          }}
+        >
           <TextInput
             keyboardType="numeric"
             onChangeText={(val) => {
@@ -125,7 +130,6 @@ const styles = StyleSheet.create({
     width: width - 160,
     justifyContent: "center",
     alignItems: "flex-start",
-    borderBottomWidth: key === 3 ? 0 : 0.7,
     borderColor: "#B5B5B5",
   },
   questionLeft: {

@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { Asset } from "expo-asset";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
 
@@ -33,10 +34,38 @@ const getFonts = () => {
   });
 };
 
-export default function App() {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+const cacheImages = (images) => {
+  return images.map((image) => {
+    if (typeof image === "string") {
+      return Image.prefetch(image);
+    } else {
+      return Asset.fromModule(image).downloadAsync();
+    }
+  });
+};
 
-  if (fontsLoaded) {
+export default function App() {
+  const [isReady, setIsReady] = useState(false);
+
+  const loadAssetAsync = async () => {
+    const imageAssets = cacheImages([
+      require("./assets/loginbackgroundtest2.png"),
+      require("./assets/loginbackgroundtest4.png"),
+      require("./assets/y1s1.png"),
+      require("./assets/y1s2v1.png"),
+      require("./assets/y2s1.png"),
+      require("./assets/y2s2.png"),
+      require("./assets/y3s1.png"),
+      require("./assets/y3s2.png"),
+      require("./assets/y4s1.png"),
+      require("./assets/y4s2.png"),
+    ]);
+
+    const fontAssets = getFonts();
+    await Promise.all([...imageAssets, fontAssets]);
+  };
+
+  if (isReady) {
     return (
       <SafeAreaProvider>
         <ApplicationProvider {...eva} theme={eva.light}>
@@ -59,7 +88,11 @@ export default function App() {
     );
   } else {
     return (
-      <AppLoading startAsync={getFonts} onFinish={() => setFontsLoaded(true)} />
+      <AppLoading
+        startAsync={loadAssetAsync}
+        onFinish={() => setIsReady(true)}
+        onError={console.warn}
+      />
     );
   }
 }
