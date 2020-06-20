@@ -8,15 +8,14 @@ import {
   Animated,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ProfilePage from "./HomepageScreens/ProfilePage";
-import AskPage from "./HomepageScreens/AskPage";
+import ProfilePage from "./HomepageScreens/Profile/ProfilePage";
+import RecordsStack from "./HomepageScreens/Records/RecordsStack";
 import ModulePage from "./HomepageScreens/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";
 import FocusArea from "./HomepageScreens/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeArea } from "react-native-safe-area-context";
-import ContentPage from "./HomepageScreens/Planner/ContentPage";
 import { interpolate } from "react-native-reanimated";
 import { withTransition } from "react-native-redash";
 
@@ -29,9 +28,9 @@ const textToReturn = (str) => {
   } else if (str === "Focus") {
     return "crosshairs";
   } else if (str === "Module") {
+    return "search";
+  } else if (str === "Records") {
     return "book";
-  } else if (str === "Ask") {
-    return "comments";
   } else {
     return "user-circle";
   }
@@ -158,9 +157,9 @@ const HomeTabNavigator = () => {
     <View style={{ flex: 1 }}>
       <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
         <Tab.Screen name="Planner" component={Planner} />
+        <Tab.Screen name="Records" component={RecordsStack} />
         <Tab.Screen name="Focus" component={FocusArea} />
         <Tab.Screen name="Module" component={ModulePage} />
-        <Tab.Screen name="Ask" component={AskPage} />
         <Tab.Screen name="Profile" component={ProfilePage} />
       </Tab.Navigator>
       {val > 0 && (

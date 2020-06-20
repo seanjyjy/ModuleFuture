@@ -4,7 +4,11 @@ import * as Font from "expo-font";
 import { AppLoading } from "expo";
 import DetailsCollection from "./Screens/Login/DetailsCollection";
 import Homepage from "./Screens/Homepage";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
@@ -35,7 +39,17 @@ export default function App() {
       <SafeAreaProvider>
         <ApplicationProvider {...eva} theme={eva.light}>
           <NavigationContainer theme={{ colors: { background: "white" } }}>
-            <AuthStack.Navigator headerMode={false}>
+            <AuthStack.Navigator
+              headerMode="false"
+              screenOptions={{
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                ...TransitionPresets.SlideFromRightIOS,
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+              }}
+            >
               <AuthStack.Screen name="Login" component={Login} />
               <AuthStack.Screen
                 name="DetailsCollection"
@@ -53,3 +67,15 @@ export default function App() {
     );
   }
 }
+
+const config = {
+  animation: "spring",
+  config: {
+    stiffness: 300,
+    damping: 200,
+    mass: 2,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01,
+  },
+};
