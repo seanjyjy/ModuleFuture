@@ -86,7 +86,7 @@ const Focus = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, color: "black" }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header
         str={"Focus Area"}
         leftChildren={
@@ -159,10 +159,8 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   modalBox: {
-    justifyContent: "space-between",
     backgroundColor: "white",
     alignSelf: "center",
-    justifyContent: "center",
     marginTop: height * 0.35,
     marginBottom: height * 0.35,
     width: width * 0.8,

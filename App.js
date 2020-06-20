@@ -114,11 +114,12 @@ export default function App() {
 const config = {
   animation: "spring",
   config: {
-    stiffness: 300,
-    damping: 200,
-    mass: 2,
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
     overshootClamping: true,
     restDisplacementThreshold: 0.01,
     restSpeedThreshold: 0.01,
+    useNativeDriver: true,
   },
 };

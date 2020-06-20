@@ -31,13 +31,7 @@ const Graduation = ({ navigation }) => {
       <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
         {props}
       </Text>
-      <Icon
-        name="checkmark-outline"
-        width={25}
-        height={25}
-        fill="#232323"
-        // style={styles.checkedIcon}
-      />
+      <Icon name="checkmark-outline" width={25} height={25} fill="#232323" />
     </TouchableOpacity>
   );
 
