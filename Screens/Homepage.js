@@ -16,8 +16,6 @@ import FocusArea from "./HomepageScreens/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeArea } from "react-native-safe-area-context";
-import { interpolate } from "react-native-reanimated";
-import { withTransition } from "react-native-redash";
 
 const totalWidth = Dimensions.get("window").width;
 const totalHeight = Dimensions.get("window").height;

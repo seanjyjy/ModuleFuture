@@ -10,7 +10,6 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
-import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
 
 const width = Dimensions.get("window").width;

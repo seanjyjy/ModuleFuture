@@ -18,7 +18,6 @@ import Y3S2 from "./Plans/Y3S2";
 import Y4S1 from "./Plans/Y4S1";
 import Y4S2 from "./Plans/Y4S2";
 import { useNavigation } from "@react-navigation/native";
-
 import SimpleIcon from "react-native-vector-icons/SimpleLineIcons";
 
 const width = Dimensions.get("window").width;
