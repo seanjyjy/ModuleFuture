@@ -17,8 +17,6 @@ const SuggestButton = (props) => {
 };
 
 export default SuggestButton;
-const screenwidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   buttonDesign: {
     height: 28,

@@ -24,9 +24,17 @@ export const globalFontStyles = StyleSheet.create({
     fontSize: 28,
   },
   // ------------------------------------------OPENSANS-SEMIBOLD-----------------------------------------------------
+  OSSB_12: {
+    fontFamily: "OpenSans-SemiBold",
+    fontSize: 12,
+  },
   OSSB_13: {
     fontFamily: "OpenSans-SemiBold",
     fontSize: 13,
+  },
+  OSSB_14: {
+    fontFamily: "OpenSans-SemiBold",
+    fontSize: 14,
   },
   OSSB_15: {
     fontFamily: "OpenSans-SemiBold",
@@ -96,6 +104,14 @@ export const globalFontStyles = StyleSheet.create({
   NBEB_40: {
     fontFamily: "Nunito-ExtraBold",
     fontSize: 40,
+  },
+  NBEB_17: {
+    fontFamily: "Nunito-ExtraBold",
+    fontSize: 17,
+  },
+  NBEB_14: {
+    fontFamily: "Nunito-ExtraBold",
+    fontSize: 14,
   },
   // ----------------------------------------NUNITO-REGULAR--------------------------------------------------------
   NR_28: {

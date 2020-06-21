@@ -18,6 +18,8 @@ import { Asset } from "expo-asset";
 import Login from "./Screens/Login/Login";
 import DetailsCollection from "./Screens/Login/DetailsCollection";
 import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
+import AddModule from "./Screens/HomepageScreens/AddModule/AddModule";
+import Filter from "./Screens/HomepageScreens/AddModule/Filter";
 
 // -------------------------------------------------------------------------------------------------------------
 
@@ -95,6 +97,8 @@ export default function App() {
                 name="ProgressPageSettings"
                 component={ProgressPageSettings}
               />
+              <AuthStack.Screen name="AddModule" component={AddModule} />
+              <AuthStack.Screen name="Filter" component={Filter} />
             </AuthStack.Navigator>
           </NavigationContainer>
         </ApplicationProvider>
