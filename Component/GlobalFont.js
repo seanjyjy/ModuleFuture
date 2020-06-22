@@ -53,6 +53,10 @@ export const globalFontStyles = StyleSheet.create({
     fontFamily: "OpenSans-Bold",
     fontSize: 13,
   },
+  OSB_14: {
+    fontFamily: "OpenSans-Bold",
+    fontSize: 14,
+  },
   OSB_15: {
     fontFamily: "OpenSans-Bold",
     fontSize: 15,
