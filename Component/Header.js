@@ -16,7 +16,6 @@ const Header = (props) => {
     <SafeAreaView style={styles.header}>
       <View
         style={{
-          top: Platform.OS === "android" ? 10 : -3,
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
@@ -29,7 +28,6 @@ const Header = (props) => {
           flex: 4,
           justifyContent: "center",
           alignItems: "center",
-          top: Platform.OS === "android" ? 10 : -3,
         }}
       >
         <Text style={{ ...globalFontStyles.OSB_17, color: "#232323" }}>
@@ -38,7 +36,6 @@ const Header = (props) => {
       </View>
       <View
         style={{
-          top: Platform.OS === "android" ? 10 : -3,
           flex: 1,
           justifyContent: "center",
           alignItems: "center",

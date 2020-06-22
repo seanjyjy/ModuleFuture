@@ -4,15 +4,15 @@ import { globalFontStyles } from "./GlobalFont";
 
 const SuggestButton = (props) => {
   return (
-    <TouchableOpacity
-      style={styles.buttonDesign}
-      activeOpacity={0.875}
-      onPress={() => props.func()}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_15, color: "white" }}>
-        Suggest
-      </Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+          style={styles.buttonDesign}
+          activeOpacity={0.875}
+          onPress={() => props.func()}
+      >
+        <Text style={{ ...globalFontStyles.OSSB_15, color: "white" }}>
+          Suggest
+        </Text>
+      </TouchableOpacity>
   );
 };
 

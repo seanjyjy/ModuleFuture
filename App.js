@@ -58,13 +58,16 @@ export default function App() {
       require("./assets/loginbackgroundtest2.png"),
       require("./assets/loginbackgroundtest4.png"),
       require("./assets/y1s1.png"),
-      require("./assets/y1s2v1.png"),
+      require("./assets/y1s2.png"),
       require("./assets/y2s1.png"),
       require("./assets/y2s2.png"),
       require("./assets/y3s1.png"),
       require("./assets/y3s2.png"),
       require("./assets/y4s1.png"),
       require("./assets/y4s2.png"),
+        require("./assets/y5s1.png"),
+        require("./assets/y5s2.png"),
+      require("./assets/HeaderBG.jpg"),
     ]);
 
     const fontAssets = getFonts();

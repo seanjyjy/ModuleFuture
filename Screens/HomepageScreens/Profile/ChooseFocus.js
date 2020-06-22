@@ -15,39 +15,39 @@ import Modal from "react-native-modal";
 
 const Focus = ({ navigation }) => {
   const NotPressed = (props) => (
-    <TouchableOpacity
-      style={styles.unpressed}
-      activeOpacity={0.85}
-      onPress={() => activate(props)}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "#00000080" }}>
-        {props}
-      </Text>
-      <Icon name="square-outline" width={25} height={25} fill="#00000080" />
-    </TouchableOpacity>
+      <TouchableOpacity
+          style={styles.unpressed}
+          activeOpacity={0.85}
+          onPress={() => activate(props)}
+      >
+        <Text style={{ ...globalFontStyles.OSSB_17, color: "#00000080" }}>
+          {props}
+        </Text>
+        <Icon name="square-outline" width={25} height={25} fill="#00000080" />
+      </TouchableOpacity>
   );
   const Pressed = (props) => (
-    <TouchableOpacity
-      style={styles.Pressed}
-      activeOpacity={0.65}
-      onPress={() => deactivate(props)}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
-        {props}
-      </Text>
-      <Icon name="checkmark-square-2" width={25} height={25} fill="#232323" />
-    </TouchableOpacity>
+      <TouchableOpacity
+          style={styles.Pressed}
+          activeOpacity={0.65}
+          onPress={() => deactivate(props)}
+      >
+        <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
+          {props}
+        </Text>
+        <Icon name="checkmark-square-2" width={25} height={25} fill="#232323" />
+      </TouchableOpacity>
   );
 
   const TextonPopup = (props) => (
-    <View style={styles.popouttext}>
-      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
-        {props.name}
-      </Text>
-      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
-        {props.cap}
-      </Text>
-    </View>
+      <View style={styles.popouttext}>
+        <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
+          {props.name}
+        </Text>
+        <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
+          {props.cap}
+        </Text>
+      </View>
   );
 
   const [CS, setCS] = useState(NotPressed("Algorithms and Theory"));
@@ -86,55 +86,55 @@ const Focus = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Header
-        str={"Focus Area"}
-        leftChildren={
-          <Icon
-            name="chevron-left-outline"
-            width={100}
-            height={30}
-            fill="#232323"
-            onPress={() => navigation.goBack()}
-          />
-        }
-        rightChildren={
-          <SuggestButton
-            func={() => {
-              setModalVisible(true);
+      <SafeAreaView style={{ flex: 1 }}>
+        <Header
+            str={"Focus Area"}
+            leftChildren={
+              <Icon
+                  name="chevron-left-outline"
+                  width={100}
+                  height={30}
+                  fill="#232323"
+                  onPress={() => navigation.goBack()}
+              />
+            }
+            rightChildren={
+              <SuggestButton
+                  func={() => {
+                    setModalVisible(true);
+                  }}
+              />
+            }
+        />
+        <Modal
+            style={styles.modalBox}
+            animationIn="fadeIn"
+            animationOut="fadeOut"
+            backdropTransitionOutTiming={0}
+            isVisible={modalVisible}
+            onBackdropPress={() => {
+              setModalVisible(false);
             }}
-          />
-        }
-      />
-      <Modal
-        style={styles.modalBox}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        backdropTransitionOutTiming={0}
-        isVisible={modalVisible}
-        onBackdropPress={() => {
-          setModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setModalVisible(false);
-        }}
-      >
-        <Text style={styles.popoutheader}>
-          Based on CAP, your best performing focus areas are
-        </Text>
-        <TextonPopup name="Artificial Intelligence" cap="4.5" />
-        <TextonPopup name="Computer Security" cap="4.33" />
-        <TextonPopup name="Database Systems" cap="4.0" />
-      </Modal>
+            onBackButtonPress={() => {
+              setModalVisible(false);
+            }}
+        >
+          <Text style={styles.popoutheader}>
+            Based on CAP, your best performing focus areas are
+          </Text>
+          <TextonPopup name="Artificial Intelligence" cap="4.5" />
+          <TextonPopup name="Computer Security" cap="4.33" />
+          <TextonPopup name="Database Systems" cap="4.0" />
+        </Modal>
 
-      <View style={{ paddingLeft: 20, paddingRight: 25 }}>
-        {CS}
-        {BA}
-        {IS}
-        {InfoSec}
-        {CEG}
-      </View>
-    </SafeAreaView>
+        <View style={{ paddingLeft: 20, paddingRight: 25 }}>
+          {CS}
+          {BA}
+          {IS}
+          {InfoSec}
+          {CEG}
+        </View>
+      </SafeAreaView>
   );
 };
 

@@ -252,7 +252,7 @@ const Records = ({ navigation }) => {
   };
 
   return catView ? (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
         leftChildren={<View />}
@@ -268,10 +268,10 @@ const Records = ({ navigation }) => {
           renderItem={({ item }) => holders(item.key, item.name)}
         />
       </View>
-    </SafeAreaView>
+    </View>
   ) : (
     // To be updated for Full View
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
         leftChildren={<View />}
@@ -287,7 +287,7 @@ const Records = ({ navigation }) => {
           renderItem={({ item }) => holders(item.key, item.name)}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

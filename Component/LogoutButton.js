@@ -11,15 +11,15 @@ import { useSafeArea } from "react-native-safe-area-context";
 
 const LogoutButton = () => {
   return (
-    <TouchableOpacity
-      style={styles.buttonDesign}
-      activeOpacity={0.875}
-      onPress={() => NativeModules.DevSettings.reload()}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-        Logout
-      </Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+          style={styles.buttonDesign}
+          activeOpacity={0.875}
+          onPress={() => NativeModules.DevSettings.reload()}
+      >
+        <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+          Logout
+        </Text>
+      </TouchableOpacity>
   );
 };
 

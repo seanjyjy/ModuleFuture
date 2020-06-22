@@ -7,15 +7,9 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { useSafeArea, SafeAreaView } from "react-native-safe-area-context";
 
-import {
-  useNavigation,
-  CommonActions,
-  NavigationHelpersContext,
-} from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import { set } from "react-native-reanimated";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -74,20 +68,20 @@ const ProgressPageSettings = ({ navigation, route }) => {
           </Text>
         </TouchableOpacity>
         <View style={styles.headerMiddle}>
-          <Text style={{ ...globalFontStyles.OSSB_19, color: "black" }}>
+          <Text style={{ ...globalFontStyles.OSSB_19, color: "#5D5151" }}>
             Options
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
             navigation.navigate("ProgressPage", {
               items: [NumInterval, totalMCs, TargetCAP],
-            })
-          }
+            });
+          }}
           activeOpacity={0.9}
           style={styles.headerRight}
         >
-          <Text style={{ ...globalFontStyles.OSB_17, color: "blue" }}>
+          <Text style={{ ...globalFontStyles.OSB_17, color: "#4787D9" }}>
             Done
           </Text>
         </TouchableOpacity>
