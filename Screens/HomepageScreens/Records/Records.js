@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  SafeAreaView,
   StyleSheet,
   Dimensions,
   Text,
@@ -61,30 +60,29 @@ const Records = ({ navigation }) => {
   const item2 = () =>
     currentType === "Type" || currentType === "Code" ? "Level" : "Type";
 
-  const renderOverflowMenuAction = () => (
-    <OverflowMenu
-      visible={menuVisible}
-      anchor={MenuIcon}
-      onBackdropPress={toggleMenu}
-    >
+  const renderOverflowMenuAction = () => {
+    const option = (item1, item2) => (
       <MenuItem
-        title={text(numTaken())}
+        title={text(item1())}
         onPress={() => {
-          toggle(!MCstaken);
+          toggle(!item2);
           toggleMenu();
         }}
         activeOpacity={0.9}
       />
-      <MenuItem
-        title={text(overallView())}
-        onPress={() => {
-          setView(!catView);
-          toggleMenu();
-        }}
-        activeOpacity={0.9}
-      />
-    </OverflowMenu>
-  );
+    );
+
+    return (
+      <OverflowMenu
+        visible={menuVisible}
+        anchor={MenuIcon}
+        onBackdropPress={toggleMenu}
+      >
+        {option(numTaken, MCstaken)}
+        {option(overallView, catView)}
+      </OverflowMenu>
+    );
+  };
 
   const viewType = () => (
     <TouchableOpacity
@@ -104,30 +102,28 @@ const Records = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  const selector = () => (
-    <OverflowMenu
-      visible={type}
-      anchor={viewType}
-      onBackdropPress={toggleTypeMenu}
-    >
+  const selector = () => {
+    const option = (item) => (
       <MenuItem
-        title={text(item1())}
+        title={text(item())}
         onPress={() => {
-          changeType(item1());
+          changeType(item());
           toggleTypeMenu();
         }}
         activeOpacity={0.9}
       />
-      <MenuItem
-        title={text(item2())}
-        onPress={() => {
-          changeType(item2());
-          toggleTypeMenu();
-        }}
-        activeOpacity={0.9}
-      />
-    </OverflowMenu>
-  );
+    );
+    return (
+      <OverflowMenu
+        visible={type}
+        anchor={viewType}
+        onBackdropPress={toggleTypeMenu}
+      >
+        {option(item1)}
+        {option(item2)}
+      </OverflowMenu>
+    );
+  };
 
   /* --------------------------------------------Floating content------------------------------------------------ */
 
@@ -161,8 +157,30 @@ const Records = ({ navigation }) => {
     );
   };
 
-  const content = (key) => (
-    <View style={styles.whitelayer}>
+  const content = (key) => {
+    const circle = (
+      <View
+        style={{
+          backgroundColor: colors[key - 1],
+          width: 0.03 * width,
+          height: 0.03 * width,
+          borderRadius: (0.03 * width) / 2,
+          top: 4.5,
+          right: 6,
+        }}
+      />
+    );
+
+    const text1 = MCstaken ? "MCs taken" : "No. taken";
+    const text2 = MCstaken ? "26 / 38" : "6 / 9";
+
+    const text = (input) => (
+      <Text style={{ ...globalFontStyles.NBEB_14, color: "#686868" }}>
+        {input}
+      </Text>
+    );
+
+    const line = (text1, text2) => (
       <View style={styles.innerText}>
         <View
           style={{
@@ -170,51 +188,20 @@ const Records = ({ navigation }) => {
             alignContent: "center",
           }}
         >
-          <View
-            style={{
-              backgroundColor: colors[key - 1],
-              width: 0.03 * width,
-              height: 0.03 * width,
-              borderRadius: (0.03 * width) / 2,
-              top: 4.5,
-              right: 6,
-            }}
-          />
-          <Text style={{ ...globalFontStyles.NBEB_14, color: "#686868" }}>
-            {MCstaken ? "MCs taken" : "No. taken"}
-          </Text>
+          {circle}
+          {text(text1)}
         </View>
-        <Text style={{ ...globalFontStyles.NBEB_14, color: "#686868" }}>
-          {MCstaken ? "26 / 38" : "6 / 9"}
-        </Text>
+        {text(text2)}
       </View>
-      <View style={styles.innerText}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignContent: "center",
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: colors[key - 1],
-              width: 0.03 * width,
-              height: 0.03 * width,
-              borderRadius: (0.03 * width) / 2,
-              top: 4.5,
-              right: 6,
-            }}
-          />
-          <Text style={{ ...globalFontStyles.NBEB_14, color: "#686868" }}>
-            CAP
-          </Text>
-        </View>
-        <Text style={{ ...globalFontStyles.NBEB_14, color: "#686868" }}>
-          4.5
-        </Text>
+    );
+
+    return (
+      <View style={styles.whitelayer}>
+        {line(text1, text2)}
+        {line("CAP", "4.5")}
       </View>
-    </View>
-  );
+    );
+  };
 
   /* --------------------------------------------Content headers------------------------------------------------ */
 
@@ -252,7 +239,7 @@ const Records = ({ navigation }) => {
   };
 
   return catView ? (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
         leftChildren={<View />}
@@ -268,10 +255,10 @@ const Records = ({ navigation }) => {
           renderItem={({ item }) => holders(item.key, item.name)}
         />
       </View>
-    </SafeAreaView>
+    </View>
   ) : (
     // To be updated for Full View
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
         leftChildren={<View />}
@@ -287,7 +274,7 @@ const Records = ({ navigation }) => {
           renderItem={({ item }) => holders(item.key, item.name)}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -299,10 +286,10 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 10,
     justifyContent: "center",
-    // borderBottomColor: "white",
-    // borderBottomWidth: StyleSheet.hairlineWidth,
-    // borderBottomEndRadius: 13,
-    // borderBottomStartRadius: 16,
+    borderBottomColor: "black",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomEndRadius: 13,
+    borderBottomStartRadius: 16,
   },
   container: {
     width: (width - 40) / 2,

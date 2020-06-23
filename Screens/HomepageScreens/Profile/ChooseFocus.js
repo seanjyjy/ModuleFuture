@@ -106,6 +106,7 @@ const Focus = ({ navigation }) => {
           />
         }
       />
+
       <Modal
         style={styles.modalBox}
         animationIn="fadeIn"
@@ -161,8 +162,7 @@ const styles = StyleSheet.create({
   modalBox: {
     backgroundColor: "white",
     alignSelf: "center",
-    marginTop: height * 0.35,
-    marginBottom: height * 0.35,
+    marginVertical: height * 0.35,
     width: width * 0.8,
     paddingLeft: 30,
     paddingRight: 50,
@@ -176,8 +176,7 @@ const styles = StyleSheet.create({
   },
   popouttext: {
     flexDirection: "row",
-    marginBottom: 10,
-    marginTop: 10,
+    marginVertical: 10,
     justifyContent: "space-between",
   },
 });

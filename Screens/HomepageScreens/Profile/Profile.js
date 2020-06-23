@@ -11,11 +11,7 @@ const Profile = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Header
-        str={"Profile"}
-        leftChildren={<View />}
-        rightChildren={<View />}
-      />
+      <Header str={"Profile"} leftChildren={null} rightChildren={null} />
       <View
         style={{
           paddingLeft: 20,

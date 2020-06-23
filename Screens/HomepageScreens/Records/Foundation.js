@@ -196,7 +196,7 @@ const Foundation = ({ navigation }) => {
             }
           />
         }
-        rightChildren={<View />}
+        rightChildren={null}
       />
       <Box />
     </SafeAreaView>

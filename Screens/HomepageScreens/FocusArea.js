@@ -4,11 +4,7 @@ import Header from "../../Component/Header";
 const FocusArea = () => {
   return (
     <View style={styles.container}>
-      <Header
-        str={"Focus Area"}
-        leftChildren={<View />}
-        rightChildren={<View />}
-      />
+      <Header str={"Focus Area"} leftChildren={null} rightChildren={null} />
     </View>
   );
 };
