@@ -7,7 +7,6 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  SafeAreaView,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Y1S1 from "./Plans/Y1S1";
@@ -19,13 +18,12 @@ import Y3S2 from "./Plans/Y3S2";
 import Y4S1 from "./Plans/Y4S1";
 import Y4S2 from "./Plans/Y4S2";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import SimpleIcon from "react-native-vector-icons/SimpleLineIcons";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ContentPage = () => {
+const ContentPage = (props) => {
   const colors = [
     "#FFB584",
     "#FF6F66",
@@ -132,68 +130,50 @@ const ContentPage = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <LinearGradient
-        colors={["#ffc3a0", "#ffafbd"]}
-        style={{
-          flex: 8,
-        }}
-      >
-        <SafeAreaView
+      <View style={styles.header}>
+        <View
           style={{
-            flex: 8,
-            justifyContent: "flex-start",
-            flexDirection: "row",
-            width: "100%",
-            height: "100%",
+            flex: 5,
+            justifyContent: "flex-end",
             alignItems: "flex-start",
           }}
         >
-          <View style={{ flexDirection: "column", top: 0.02 * height }}>
-            <Text
-              style={{
-                ...globalFontStyles.NBEB_52,
-                color: "white",
-                left: 0.07 * width,
-              }}
-            >
-              Home
-            </Text>
-            <Text
-              style={{
-                ...globalFontStyles.NB_20,
-                color: "white",
-                left: 0.07 * width,
-              }}
-            >
-              Let's start planning
-            </Text>
-          </View>
-          <View
+          <Text
             style={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "flex-end",
-              right: 0.1 * width,
-              top: 0.02 * height,
+              ...globalFontStyles.OSB_34,
+              color: "#272727",
+              left: 30,
+              bottom: 10,
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ProgressPage");
-              }}
-              style={{ width: 50, height: 50 }}
-            >
-              <SimpleIcon name="graph" color="white" size={40} />
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </LinearGradient>
-      <View
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      />
-      <View style={{ flex: 32, marginBottom: 60 }}>
+            Home
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flex: 2,
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("ProgressPage");
+            }}
+            style={{ width: 50, height: 50 }}
+          >
+            <SimpleIcon
+              name="graph"
+              color="#484848"
+              size={30}
+              style={{ top: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={{ height: 5, width: "100%" }} />
+      <View style={{ flex: 1, position: "relative", marginBottom: 60 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
           numColumns={2}
@@ -242,5 +222,23 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     top: 1,
+  },
+  header: {
+    height: 100,
+    width: "100%",
+    flexDirection: "row",
+    backgroundColor: "#F9F9F9",
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.18,
+    // shadowRadius: 1.0,
+    // elevation: 2,
+    elevation: 5,
+    shadowOffset: { width: 5, height: 5 },
+    shadowColor: "black",
+    shadowOpacity: 0.1,
   },
 });
