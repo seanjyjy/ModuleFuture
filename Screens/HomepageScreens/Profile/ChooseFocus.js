@@ -16,7 +16,7 @@ import Modal from "react-native-modal";
 const Focus = ({ navigation }) => {
   const NotPressed = (props) => (
     <TouchableOpacity
-      style={styles.unpressed}
+      style={styles.Pressed}
       activeOpacity={0.85}
       onPress={() => activate(props)}
     >
@@ -145,13 +145,6 @@ const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-  unpressed: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    paddingBottom: 12,
-  },
   Pressed: {
     flexDirection: "row",
     justifyContent: "space-between",

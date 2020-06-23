@@ -17,13 +17,14 @@ import { Icon } from "react-native-eva-icons";
 import BottomBar from "../../../Component/BottomBar";
 import Modal from "react-native-modal";
 import Cross from "../../../Component/Cross";
-
-const height = Dimensions.get("window").height;
-const width = Dimensions.get("window").width;
+import Container from "../../../Component/Container";
 
 // TODO:
 // Add MC count and change icon plus to minus
 // Filter pages
+
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 
 const AddModule = ({ navigation }) => {
   const header = (
@@ -132,7 +133,6 @@ const AddModule = ({ navigation }) => {
         { key: 1, name: "CS1231" },
         { key: 2, name: "CS2030 / CS2040S" },
       ],
-      notTaken: [],
     },
     {
       key: 7,
@@ -147,8 +147,6 @@ const AddModule = ({ navigation }) => {
     },
   ];
 
-  const len = array.length;
-  const [plus, onPlus] = useState(true);
   const [MCcount, addVal] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [current, setItem] = useState(array[0]);
@@ -159,73 +157,17 @@ const AddModule = ({ navigation }) => {
     return (taken.length / len) * 100;
   };
 
-  const holders = (key, name, prereq, taken, notTaken) => (
-    <View style={styles.container}>
-      <View style={{ flexDirection: "column", flex: 1 }}>
-        <View style={{ width: 0.7 * width }}>
-          <Text
-            numberOfLines={1}
-            style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}
-          >
-            {name}
-          </Text>
-        </View>
-        {/* Two buttons below */}
-        <View style={{ flexDirection: "row", flex: 1 }}>
-          {/* Prereq button */}
-          <TouchableOpacity
-            style={{
-              ...styles.button1,
-              backgroundColor: prereq ? "#303030" : "#FF6B6B",
-            }}
-            activeOpacity={0.85}
-            onPress={() => {
-              const current = array[key - 1];
-              setItem(current);
-              setSplit(compute(taken, notTaken));
-              setModalVisible(true);
-            }}
-          >
-            <Text style={{ ...globalFontStyles.OSSB_12, color: "white" }}>
-              Prereq
-            </Text>
-            <View>
-              {prereq ? null : (
-                <Icon
-                  style={{ marginLeft: 2 }}
-                  fill="white"
-                  width={15}
-                  height={15}
-                  name="alert-circle"
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-          {/* Info button */}
-          <TouchableOpacity
-            style={styles.button1}
-            activeOpacity={0.85}
-            onPress={() => null}
-          >
-            <Text style={{ ...globalFontStyles.OSSB_12, color: "white" }}>
-              Info
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      {/* Firebase to handle modules being added */}
-      <Icon
-        name="plus-circle"
-        width={43}
-        height={43}
-        fill={plus ? "#3FE2D3" : "#E52727"}
-        onPress={() => {
-          const current = array[key - 1];
-          setItem(current);
-          return onPlus(!plus);
-        }}
-      />
-    </View>
+  const holders = (item) => (
+    <Container
+      name={item.name}
+      prereq={item.prereqFulfilled}
+      button1Press={() => {
+        setItem(item);
+        setSplit(compute(item.taken, item.notTaken));
+        setModalVisible(true);
+      }}
+      button2Press={() => null}
+    />
   );
 
   const textWithIcon = (name) => (
@@ -286,6 +228,7 @@ const AddModule = ({ navigation }) => {
           </Text>
           <FlatList
             data={current.taken}
+            keyExtractor={(item) => item.key.toString()}
             renderItem={({ item }) => textWithIcon(item.name)}
           />
         </View>
@@ -295,6 +238,7 @@ const AddModule = ({ navigation }) => {
           </Text>
           <FlatList
             data={current.notTaken}
+            keyExtractor={(item) => item.key.toString()}
             renderItem={({ item }) => textWithIcon(item.name)}
           />
         </View>
@@ -309,15 +253,7 @@ const AddModule = ({ navigation }) => {
         <FlatList
           data={array}
           keyExtractor={(item) => item.key.toString()}
-          renderItem={({ item }) =>
-            holders(
-              item.key,
-              item.name,
-              item.prereqFulfilled,
-              item.taken,
-              item.notTaken
-            )
-          }
+          renderItem={({ item }) => holders(item)}
         />
       </View>
       {modal(split, 100 - split)}
@@ -366,29 +302,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  // Stylesheet for box
-  container: {
-    backgroundColor: "white",
-    borderRadius: 15,
-    borderColor: "lightgrey",
-    borderWidth: StyleSheet.hairlineWidth * 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
-    width: width * 0.9,
-    height: height * 0.12,
-    padding: 15,
-    paddingLeft: 20,
-    marginVertical: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
   modalBox: {
     backgroundColor: "white",
     alignSelf: "center",
@@ -396,16 +309,5 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     paddingLeft: 25,
     borderRadius: 25,
-  },
-  button1: {
-    marginTop: 12,
-    marginRight: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    height: 30,
-    width: 75,
-    borderRadius: 5,
-    backgroundColor: "#303030",
   },
 });
