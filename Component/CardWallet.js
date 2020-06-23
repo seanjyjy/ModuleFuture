@@ -66,7 +66,7 @@ const CardWallet = (y, index, card, PageName) => {
         width: 0.8 * width,
         height: CARD_HEIGHT,
       }}
-      onPress={() => PageName}
+      onPress={() => PageName()}
     >
       <Animated.View
         style={[

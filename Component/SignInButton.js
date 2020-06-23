@@ -4,7 +4,7 @@ import React from "react";
 
 const SignInButton = (props) => {
   return (
-    <View style={{ top: 50, left: 25 }}>
+    <View>
       <TouchableOpacity
         activeOpacity={0.875}
         style={globalStyles.buttonDesign}

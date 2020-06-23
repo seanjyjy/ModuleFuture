@@ -17,10 +17,7 @@ const YesPage = () => {
     FirebaseDB.firestore()
       .collection("users")
       .add({ name: values.username })
-      .then(() => {
-        console.log("TEST123");
-        //navigation.navigate("DetailsCollection")
-      })
+      .then(() => {})
       .catch((err) => console.error(err));
   };
 
@@ -34,6 +31,7 @@ const YesPage = () => {
         onSubmit={(values, actions) => {
           handleData(values);
           actions.resetForm();
+          navigation.navigate("DetailsCollection");
         }}
       >
         {(props) => (

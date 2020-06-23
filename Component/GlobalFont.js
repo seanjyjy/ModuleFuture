@@ -7,6 +7,10 @@ export const globalFontStyles = StyleSheet.create({
     fontSize: 15,
   },
   // ------------------------------------------OPENSANS-REGULAR------------------------------------------------------
+  OSR_12: {
+    fontFamily: "OpenSans-Regular",
+    fontSize: 12,
+  },
   OSR_14: {
     fontFamily: "OpenSans-Regular",
     fontSize: 14,

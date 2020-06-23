@@ -5,6 +5,7 @@ import {
   Text,
   Platform,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import BackgroundFaded from "../Backgrounds/BackgroundFaded";
 import { globalFontStyles } from "../../Component/GlobalFont";
@@ -12,6 +13,8 @@ import SignInButton from "../../Component/SignInButton";
 import ChoosingOptions from "../../Component/MakingClock";
 import { useNavigation } from "@react-navigation/native";
 
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 const DetailsCollection = () => {
   const navigation = useNavigation();
   const createAccount = () => navigation.navigate("Homepage");
@@ -131,10 +134,9 @@ const DetailsCollection = () => {
   const [bot, setBot] = useState(below);
   const [truth, setTruth] = useState(true);
   const [newPos, setNewPos] = useState({
-    flex: Platform.OS === "android" ? 2 : 1,
-    justifyContent: Platform.OS === "android" ? "center" : null,
+    flex: 2,
+    justifyContent: "center",
     alignItems: "center",
-    right: 20,
   });
 
   const switchToAddInfo = () => {
@@ -142,16 +144,15 @@ const DetailsCollection = () => {
     setBot(createAcc);
     setTruth(false);
     setNewPos({
-      flex: Platform.OS === "android" ? 2 : 1,
-      justifyContent: Platform.OS === "android" ? "center" : null,
+      flex: 2,
+      justifyContent: "center",
       alignItems: "center",
-      right: 20,
-      bottom: Platform.OS === "android" ? 40 : 10,
+      bottom: 0.2 * height,
     });
   };
 
   const courseinfo = (
-    <View>
+    <View style={{ flex: 1 }}>
       {CS}
       {BA}
       {ISys}
@@ -161,7 +162,7 @@ const DetailsCollection = () => {
   );
 
   const additionalinfo = (
-    <View>
+    <View style={{ flex: 1 }}>
       <ChoosingOptions />
     </View>
   );
@@ -170,7 +171,7 @@ const DetailsCollection = () => {
     <BackgroundFaded>
       <View
         style={{
-          flex: Platform.OS === "android" ? 2 : 1,
+          flex: 2,
           justifyContent: "center",
         }}
       >
@@ -185,9 +186,7 @@ const DetailsCollection = () => {
           {textHeader}
         </Text>
       </View>
-      <View style={{ flex: Platform.OS === "android" ? 4 : 2 }}>
-        {truth ? courseinfo : additionalinfo}
-      </View>
+      <View style={{ flex: 5 }}>{truth ? courseinfo : additionalinfo}</View>
       <View style={newPos}>{bot}</View>
     </BackgroundFaded>
   );
@@ -195,18 +194,20 @@ const DetailsCollection = () => {
 
 const styles = StyleSheet.create({
   shape: {
-    margin: 10,
-    padding: Platform.OS === "android" ? 22 : 25,
-    borderRadius: 35,
+    width: 0.95 * width,
+    height: 0.09 * height,
+    borderRadius: 40,
     borderColor: "#364F6B",
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
+    margin: 10,
   },
   newShape: {
     margin: 10,
-    padding: Platform.OS === "android" ? 22 : 25,
-    borderRadius: 35,
+    width: 0.95 * width,
+    height: 0.09 * height,
+    borderRadius: 40,
     borderColor: "#364F6B",
     borderWidth: 1,
     justifyContent: "center",

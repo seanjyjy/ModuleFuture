@@ -20,6 +20,18 @@ import DetailsCollection from "./Screens/Login/DetailsCollection";
 import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
 import AddModule from "./Screens/HomepageScreens/AddModule/AddModule";
 import Filter from "./Screens/HomepageScreens/AddModule/Filter";
+import {
+  Y1S1,
+  Y1S2,
+  Y2S1,
+  Y2S2,
+  Y3S1,
+  Y3S2,
+  Y4S1,
+  Y4S2,
+  Y5S1,
+  Y5S2,
+} from "./Screens/HomepageScreens/Planner/Plans/ContentPlan";
 
 // -------------------------------------------------------------------------------------------------------------
 
@@ -65,8 +77,8 @@ export default function App() {
       require("./assets/y3s2.png"),
       require("./assets/y4s1.png"),
       require("./assets/y4s2.png"),
-        require("./assets/y5s1.png"),
-        require("./assets/y5s2.png"),
+      require("./assets/y5s1.png"),
+      require("./assets/y5s2.png"),
       require("./assets/HeaderBG.jpg"),
     ]);
 
@@ -100,6 +112,16 @@ export default function App() {
                 name="ProgressPageSettings"
                 component={ProgressPageSettings}
               />
+              <AuthStack.Screen name="Y1S1" component={Y1S1} />
+              <AuthStack.Screen name="Y1S2" component={Y1S2} />
+              <AuthStack.Screen name="Y2S1" component={Y2S1} />
+              <AuthStack.Screen name="Y2S2" component={Y2S2} />
+              <AuthStack.Screen name="Y3S1" component={Y3S1} />
+              <AuthStack.Screen name="Y3S2" component={Y3S2} />
+              <AuthStack.Screen name="Y4S1" component={Y4S1} />
+              <AuthStack.Screen name="Y4S2" component={Y4S2} />
+              <AuthStack.Screen name="Y5S1" component={Y5S1} />
+              <AuthStack.Screen name="Y5S2" component={Y5S2} />
               <AuthStack.Screen name="AddModule" component={AddModule} />
               <AuthStack.Screen name="Filter" component={Filter} />
             </AuthStack.Navigator>

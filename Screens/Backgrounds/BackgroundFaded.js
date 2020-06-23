@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: "cover",
-    bottom: Platform.OS === "android" ? 40 : null,
   },
 });
 

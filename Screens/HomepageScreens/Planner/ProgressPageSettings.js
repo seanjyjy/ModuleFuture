@@ -15,7 +15,7 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const ProgressPageSettings = ({ navigation, route }) => {
-  const [NumInterval, setNumInterval] = useState(4);
+  //const [NumInterval, setNumInterval] = useState(4);
   const [totalMCs, setTotalMCs] = useState(160);
   const [TargetCAP, setTargetCAP] = useState(5);
 
@@ -32,15 +32,13 @@ const ProgressPageSettings = ({ navigation, route }) => {
         <View
           style={{
             ...styles.questionRight,
-            borderBottomWidth: key === 3 ? 0 : 0.7,
+            borderBottomWidth: key === 2 ? 0 : 0.7,
           }}
         >
           <TextInput
             keyboardType="numeric"
             onChangeText={(val) => {
               if (key === 1) {
-                setNumInterval(val);
-              } else if (key === 2) {
                 setTotalMCs(val);
               } else {
                 setTargetCAP(val);
@@ -88,9 +86,8 @@ const ProgressPageSettings = ({ navigation, route }) => {
       </View>
       {/* ----------------------------------------------------------------- BOTTOM --------------------------------------------------------------------------- */}
       <View style={styles.btmPortion}>
-        {questions("No. of interval", "4-10", 1)}
-        {questions("Total MCs", "160", 2)}
-        {questions("Target CAP", "0-5", 3)}
+        {questions("Total MCs", "160", 1)}
+        {questions("Target CAP", "0-5", 2)}
       </View>
     </>
   );

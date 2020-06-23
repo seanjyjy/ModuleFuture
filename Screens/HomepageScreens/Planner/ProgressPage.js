@@ -19,8 +19,8 @@ const height = Dimensions.get("window").height;
 const ProgressPage = ({ navigation, route }) => {
   React.useEffect(() => {
     if (route.params?.items) {
-      setMCprogressTotal(route.params?.items[1]);
-      setcapGoalDenominator(route.params?.items[2]);
+      setMCprogressTotal(route.params?.items[0]);
+      setcapGoalDenominator(route.params?.items[1]);
     }
   });
 
@@ -515,8 +515,7 @@ const styles = StyleSheet.create({
   modalBox: {
     backgroundColor: "white",
     alignSelf: "center",
-    marginTop: height * 0.4,
-    marginBottom: height * 0.4,
+    marginVertical: height * 0.4,
     width: width * 0.6,
     paddingLeft: 30,
     paddingRight: 50,

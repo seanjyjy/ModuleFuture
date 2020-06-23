@@ -11,16 +11,18 @@ import {
   ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import Y1S1 from "./Plans/Y1S1";
-import Y1S2 from "./Plans/Y1S2";
-import Y2S1 from "./Plans/Y2S1";
-import Y2S2 from "./Plans/Y2S2";
-import Y3S1 from "./Plans/Y3S1";
-import Y3S2 from "./Plans/Y3S2";
-import Y4S1 from "./Plans/Y4S1";
-import Y4S2 from "./Plans/Y4S2";
-import Y5S1 from "./Plans/Y5S1";
-import Y5S2 from "./Plans/Y5S2";
+import {
+  Y1S1,
+  Y1S2,
+  Y2S1,
+  Y2S2,
+  Y3S1,
+  Y3S2,
+  Y4S1,
+  Y4S2,
+  Y5S1,
+  Y5S2,
+} from "./Plans/ContentPlan";
 import Entypo from "react-native-vector-icons/Entypo";
 import CardWallet from "../../../Component/CardWallet";
 import { useNavigation } from "@react-navigation/native";
@@ -136,7 +138,7 @@ const ContentPage = (props) => {
       PageName: "Y5S2",
       card: card10,
     },
-    { venue: {}, key: 11, name: "", PageName: "", card: card11 },
+    { venue: {}, key: 11, name: "", PageName: "Content Page", card: card11 },
   ]);
 
   const y = new Animated.Value(0);
@@ -200,7 +202,7 @@ const ContentPage = (props) => {
 
       <View style={{ height: 5, width: "100%" }} />
 
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
         <AnimatedFlatList
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
@@ -209,7 +211,7 @@ const ContentPage = (props) => {
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) =>
             CardWallet(y, item.key.toString(), item.card, () =>
-              item.key === 11 ? {} : navigation.navigate(item.PageName)
+              navigation.navigate(item.PageName)
             )
           }
           {...{ onScroll }}

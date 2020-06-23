@@ -14,10 +14,9 @@ const height = Dimensions.get("window").height;
 
 const Page = (props) => {
   const extraBottom = useSafeArea().bottom > 0 ? useSafeArea().bottom - 5 : 0;
-  const bottomTabHeight = 60;
   const headerHeight = 0.11 * height;
   const heightToUse =
-    height - extraBottom - headerHeight - bottomTabHeight - 20;
+    height - extraBottom - headerHeight - (1 / 7) * (height - headerHeight);
 
   const BookMark = () => {
     return (
@@ -67,6 +66,7 @@ const Page = (props) => {
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
         overflow: Platform.OS === "android" ? "hidden" : null,
+        alignSelf: "center",
       }}
     >
       <ImageBackground

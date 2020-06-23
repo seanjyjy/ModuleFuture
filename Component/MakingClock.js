@@ -14,14 +14,12 @@ const ChoosingOptions = () => {
   ];
 
   const semList = [
-    { key: "Y1S1", value: "Y1S1" },
-    { key: "Y1S2", value: "Y1S2" },
-    { key: "Y2S1", value: "Y2S1" },
-    { key: "Y2S2", value: "Y2S2" },
     { key: "Y3S1", value: "Y3S1" },
     { key: "Y3S2", value: "Y3S2" },
     { key: "Y4S1", value: "Y4S1" },
     { key: "Y4S2", value: "Y4S2" },
+    { key: "Y5S1", value: "Y5S1" },
+    { key: "Y5S2", value: "Y5S2" },
   ];
 
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -29,52 +27,52 @@ const ChoosingOptions = () => {
   const YearDisplayValue = yearList[selectedIndex.row].value;
   const SemDisplayValue = semList[selectedIndex2.row].value;
   const renderOption = (title) => (
-      <SelectItem title={title.value} key={title.key} />
+    <SelectItem title={title.value} key={title.key} />
   );
   const textYear = (
-      <Text style={{ ...globalFontStyles.OSR_17, color: "#575757" }}>
-        Year of matriculation
-      </Text>
+    <Text style={{ ...globalFontStyles.OSR_17, color: "#575757" }}>
+      Year of matriculation
+    </Text>
   );
   const textSem = (
-      <Text style={{ ...globalFontStyles.OSR_17, color: "#575757" }}>
-        Expected graduation semester
-      </Text>
+    <Text style={{ ...globalFontStyles.OSR_17, color: "#575757" }}>
+      Expected graduation semester
+    </Text>
   );
   return (
-      <View style={{ width: "100%", height: "100%", flexDirection: "column" }}>
-        <View style={{ flex: 1, right: 30, top: 60 }}>
-          <Layout style={styles.container} level="1">
-            <Select
-                size={"large"}
-                label={textYear}
-                style={styles.select}
-                placeholder="Default"
-                value={YearDisplayValue}
-                selectedIndex={selectedIndex}
-                onSelect={(index) => setSelectedIndex(index)}
-            >
-              {yearList.map(renderOption)}
-            </Select>
-          </Layout>
-        </View>
-
-        <View style={{ flex: 1, right: 30, bottom: 20 }}>
-          <Layout style={styles.container} level="1">
-            <Select
-                size={"large"}
-                label={textSem}
-                style={styles.select}
-                placeholder="Default"
-                value={SemDisplayValue}
-                selectedIndex={selectedIndex2}
-                onSelect={(index) => setSelectedIndex2(index)}
-            >
-              {semList.map(renderOption)}
-            </Select>
-          </Layout>
-        </View>
+    <View style={{ width: "100%", height: "100%", flexDirection: "column" }}>
+      <View style={{ flex: 1, right: 30, top: 60 }}>
+        <Layout style={styles.container} level="1">
+          <Select
+            size={"large"}
+            label={textYear}
+            style={styles.select}
+            placeholder="Default"
+            value={YearDisplayValue}
+            selectedIndex={selectedIndex}
+            onSelect={(index) => setSelectedIndex(index)}
+          >
+            {yearList.map(renderOption)}
+          </Select>
+        </Layout>
       </View>
+
+      <View style={{ flex: 1, right: 30, bottom: 20 }}>
+        <Layout style={styles.container} level="1">
+          <Select
+            size={"large"}
+            label={textSem}
+            style={styles.select}
+            placeholder="Default"
+            value={SemDisplayValue}
+            selectedIndex={selectedIndex2}
+            onSelect={(index) => setSelectedIndex2(index)}
+          >
+            {semList.map(renderOption)}
+          </Select>
+        </Layout>
+      </View>
+    </View>
   );
 };
 
