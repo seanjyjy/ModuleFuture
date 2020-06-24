@@ -17,27 +17,31 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 
 const Course = ({ navigation }) => {
   const NotPressed = (props) => (
-      <TouchableOpacity
-          style={styles.unpressed}
-          activeOpacity={0.85}
-          onPress={() => change(props)}
-      >
-        <Text style={{ ...globalFontStyles.OSSB_17, color: "#00000080" }}>
-          {props}
-        </Text>
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.unpressed}
+      activeOpacity={0.85}
+      onPress={() => change(props)}
+    >
+      <Text style={{ ...globalFontStyles.OSSB_14, color: "#00000080" }}>
+        {props}
+      </Text>
+      <Icon name="checkmark-outline" width={25} height={25} fill="white" />
+    </TouchableOpacity>
   );
   const Pressed = (props) => (
-      <TouchableOpacity
-          style={styles.Pressed}
-          activeOpacity={0.65}
-          onPress={() => change(props)}
-      >
-        <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
-          {props}
-        </Text>
-        <Icon name="checkmark-outline" width={25} height={25} fill="#232323" />
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={{
+        ...styles.unpressed,
+        borderBottomWidth: StyleSheet.hairlineWidth * 2,
+      }}
+      activeOpacity={0.65}
+      onPress={() => change(props)}
+    >
+      <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
+        {props}
+      </Text>
+      <Icon name="checkmark-outline" width={25} height={25} fill="#232323" />
+    </TouchableOpacity>
   );
 
   let current = 0;
@@ -86,28 +90,28 @@ const Course = ({ navigation }) => {
   };
 
   return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Header
-            str={"Course"}
-            leftChildren={
-              <Icon
-                  name="chevron-left-outline"
-                  width={100}
-                  height={30}
-                  fill="#232323"
-                  onPress={() => navigation.goBack()}
-              />
-            }
-            rightChildren={<View />}
-        />
-        <View style={{ paddingLeft: 20, paddingRight: 25 }}>
-          {CS}
-          {BA}
-          {IS}
-          {InfoSec}
-          {CEG}
-        </View>
-      </SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Header
+        str={"Course"}
+        leftChildren={
+          <Icon
+            name="chevron-left-outline"
+            width={100}
+            height={30}
+            fill="#232323"
+            onPress={() => navigation.goBack()}
+          />
+        }
+        rightChildren={<View />}
+      />
+      <View style={{ paddingLeft: 20, paddingRight: 25 }}>
+        {CS}
+        {BA}
+        {IS}
+        {InfoSec}
+        {CEG}
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -125,16 +129,4 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: 13,
     borderBottomStartRadius: 16,
   },
-  Pressed: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    paddingTop: 19,
-    paddingBottom: 11,
-    borderBottomColor: "black",
-    borderBottomWidth: StyleSheet.hairlineWidth * 2,
-    borderBottomEndRadius: 13,
-    borderBottomStartRadius: 16,
-  },
-})
+});

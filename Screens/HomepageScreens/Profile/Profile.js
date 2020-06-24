@@ -10,12 +10,8 @@ const Profile = ({ navigation }) => {
   const graduation = () => navigation.navigate("Graduation");
 
   return (
-    <View style={{ flex: 1 }}>
-      <Header
-        str={"Profile"}
-        leftChildren={<View />}
-        rightChildren={<View />}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <Header str={"Profile"} leftChildren={null} rightChildren={null} />
       <View
         style={{
           paddingLeft: 20,
@@ -41,7 +37,7 @@ const Profile = ({ navigation }) => {
           <LogoutButton />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
