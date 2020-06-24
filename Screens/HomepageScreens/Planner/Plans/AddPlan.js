@@ -46,7 +46,7 @@ const AddPlan = ({ route }) => {
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => {}}
+        onPress={() => navigation.navigate("ViewPlan")}
         style={styles.flexOneCenterFlexEnd}
         activeOpacity={0.9}
       >

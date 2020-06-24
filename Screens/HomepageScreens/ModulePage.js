@@ -5,6 +5,9 @@ const ModulePage = () => {
   return (
     <View style={styles.container}>
       <Header str={"Module"} />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>COMING SOOOOOOOOOON!</Text>
+      </View>
     </View>
   );
 };

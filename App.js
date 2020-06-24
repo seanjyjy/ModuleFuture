@@ -33,7 +33,7 @@ import {
   Y5S2,
 } from "./Screens/HomepageScreens/Planner/Plans/ContentPlan";
 import AddPlan from "./Screens/HomepageScreens/Planner/Plans/AddPlan";
-
+import ViewPlan from "./Screens/HomepageScreens/Planner/Plans/ViewPlan";
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
@@ -85,6 +85,7 @@ export default function App() {
       require("./assets/plan2.png"),
       require("./assets/plan3.png"),
       require("./assets/plan4.png"),
+      require("./assets/corkboard.png"),
     ]);
 
     const fontAssets = getFonts();
@@ -129,6 +130,7 @@ export default function App() {
               <AuthStack.Screen name="Y5S2" component={Y5S2} />
               <AuthStack.Screen name="AddPlan" component={AddPlan} />
               <AuthStack.Screen name="AddModule" component={AddModule} />
+              <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
               <AuthStack.Screen name="Filter" component={Filter} />
             </AuthStack.Navigator>
           </NavigationContainer>
