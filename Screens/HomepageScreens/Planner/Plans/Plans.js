@@ -6,8 +6,10 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
+  TextInput,
+  ImageBackground,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+
 import Header from "../../../../Component/Header";
 import Icons from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
@@ -15,90 +17,93 @@ import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import SignInButton from "../../../../Component/SignInButton";
+import Modal from "react-native-modal";
 
 const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").width;
-const colorArray = [
-  ["#ffafb0", "#ee9ca7"],
-  ["#ffafbd", "#ffc3a0"],
-  ["#ffb88c", "#de6262"],
-  ["#eb3349", "#f45c43"],
-  ["#dd5e89", "#f7bb97"],
+const height = Dimensions.get("window").height;
+
+const ImageSet = [
+  require("../../../../assets/plan1.png"),
+  require("../../../../assets/plan2.png"),
+  require("../../../../assets/plan3.png"),
+  require("../../../../assets/plan4.png"),
 ];
-function RectInfoSelected({ id, selected, onSelect, colorStyle, navChange }) {
+
+const colorSet = ["#D8A3A3", "#745454", "#C4C0C0", "white"];
+function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
   return (
     <TouchableOpacity
-      style={styles.boxStyle}
+      style={{ ...styles.boxStyle }}
       activeOpacity={0.9}
       onPress={() => {
         onSelect(id);
         navChange();
       }}
     >
-      <LinearGradient style={{ flex: 1, borderRadius: 30 }} colors={colorStyle}>
-        <View style={styles.boxDesign}>
-          <Text style={{ ...globalFontStyles.OSR_12, color: "white" }}>
-            {selected ? "Current" : ""}
-          </Text>
-        </View>
-        <View style={{ flex: 7 }}>
-          <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, overflow: "hidden", borderRadius: 30 }}>
+        <ImageBackground style={{ flex: 1 }} source={ImageSet[imageLink]}>
+          <View style={styles.boxDesign}>
             <Text
-              style={{
-                ...globalFontStyles.OSSB_19,
-                left: 20,
-                color: "white",
-              }}
+              style={{ ...globalFontStyles.OSR_14, color: colorSet[imageLink] }}
             >
-              Plan 1
+              {selected ? "Current" : ""}
             </Text>
           </View>
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                ...globalFontStyles.OSSB_14,
-                left: 20,
-                color: "white",
-              }}
-            >
-              Semester Cap:
-            </Text>
+          <View style={{ flex: 7 }}>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  ...globalFontStyles.OSSB_19,
+                  left: 20,
+                  color: colorSet[imageLink],
+                }}
+              >
+                Plan 1
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  ...styles.OSSBL20ColorBlack,
+                  color: colorSet[imageLink],
+                }}
+              >
+                Semester Cap:
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  ...styles.OSSBL20ColorBlack,
+                  color: colorSet[imageLink],
+                }}
+              >
+                Overall Cap:
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  ...styles.OSSBL20ColorBlack,
+                  color: colorSet[imageLink],
+                }}
+              >
+                MCs:
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  ...styles.OSSBL20ColorBlack,
+                  color: colorSet[imageLink],
+                }}
+              >
+                Last Updated:
+              </Text>
+            </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                ...globalFontStyles.OSSB_14,
-                left: 20,
-                color: "white",
-              }}
-            >
-              Overall Cap:
-            </Text>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                ...globalFontStyles.OSSB_14,
-                left: 20,
-                color: "white",
-              }}
-            >
-              MCs:
-            </Text>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                ...globalFontStyles.OSSB_14,
-                left: 20,
-                color: "white",
-              }}
-            >
-              Last Updated:
-            </Text>
-          </View>
-        </View>
-      </LinearGradient>
+        </ImageBackground>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -106,7 +111,7 @@ function RectInfoSelected({ id, selected, onSelect, colorStyle, navChange }) {
 const Plans = (props) => {
   const navigation = useNavigation();
   const [selected, setSelected] = React.useState(new Map());
-
+  const [planName, setPlanName] = useState("Plan 1");
   const onSelect = React.useCallback(
     (key) => {
       const newSelected = new Map();
@@ -133,6 +138,63 @@ const Plans = (props) => {
     }
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const PopOutBox = () => {
+    return (
+      <Modal
+        style={styles.modalBox}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropTransitionOutTiming={0}
+        isVisible={modalVisible}
+        onBackdropPress={() => {
+          setModalVisible(false);
+        }}
+        onBackButtonPress={() => {
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.modalHeaderQuestion}>
+          <Text style={styles.popoutheader}>Name of Plan</Text>
+        </View>
+        <View style={styles.flexOneCenter}>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g. EZ CAP 5.0"
+            onChangeText={(val) => setPlanName(val)}
+          />
+        </View>
+        <View style={{ flex: 1, borderTopWidth: 0.5, flexDirection: "row" }}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(false)}
+            activeOpacity={0.9}
+            style={{
+              ...styles.flexOneCenter,
+              borderRightWidth: 0.5,
+              color: "#232323",
+            }}
+          >
+            <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.flexOneCenter}
+            activeOpacity={0.9}
+            onPress={() => {
+              setModalVisible(false);
+              navigation.navigate("AddPlan", { item: [planName] });
+            }}
+          >
+            <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
+              Confirm
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
   return (
     <>
       <Header
@@ -146,7 +208,7 @@ const Plans = (props) => {
           />
         }
       />
-      <View style={{ flex: 6, backgroundColor: "white" }}>
+      <View style={{ flex: 6, backgroundColor: "#f9f9f9" }}>
         <FlatList
           showsVerticalScrollIndicator={false}
           data={data}
@@ -157,7 +219,7 @@ const Plans = (props) => {
               id={item.key}
               selected={!!selected.get(item.key)}
               onSelect={onSelect}
-              colorStyle={colorArray[(parseInt(item.key) - 1) % 5]}
+              imageLink={(parseInt(item.key) - 1) % 4}
               navChange={() => navChange(parseInt(item.key))}
             />
           )}
@@ -172,16 +234,20 @@ const Plans = (props) => {
             </Text>
           </SignInButton>
         </View>
-        <TouchableOpacity style={styles.btmRightPart}>
+        <TouchableOpacity
+          style={styles.btmRightPart}
+          activeOpacity={0.9}
+          onPress={() => setModalVisible(true)}
+        >
           <Icon name="plus-circle" width={60} height={60} fill={"#FB5581"} />
         </TouchableOpacity>
       </View>
+      {PopOutBox()}
     </>
   );
 };
 
 export default Plans;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -190,7 +256,7 @@ const styles = StyleSheet.create({
   },
   boxStyle: {
     width: 0.9 * width,
-    height: 0.45 * height,
+    height: 0.22 * height,
     backgroundColor: "white",
     alignSelf: "center",
     margin: 15,
@@ -243,5 +309,55 @@ const styles = StyleSheet.create({
     alignItems: "center",
     right: 0.03 * width,
     bottom: 10,
+  },
+  modalBox: {
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginVertical: height * 0.4,
+    width: width * 0.8,
+    borderRadius: 25,
+    bottom: 20,
+  },
+  popouttext: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  popoutheader: {
+    ...globalFontStyles.OSB_13,
+    color: "#232323",
+  },
+  modalHeaderQuestion: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    top: 30,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#232323",
+    padding: 8,
+    margin: 10,
+    width: 200,
+  },
+  flexOneShadowOne: {
+    flex: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+    elevation: 1,
+  },
+  flexOneCenter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  OSSBL20ColorBlack: {
+    ...globalFontStyles.OSSB_14,
+    left: 20,
   },
 });

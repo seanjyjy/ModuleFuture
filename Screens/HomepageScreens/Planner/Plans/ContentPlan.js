@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TextInput } from "react-native";
 import Plans from "./Plans";
 
 export const Y1S1 = () => <Plans headerTitle={"Y1S1"}></Plans>;

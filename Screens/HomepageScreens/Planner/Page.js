@@ -70,7 +70,7 @@ const Page = (props) => {
       }}
     >
       <ImageBackground
-        source={require("../../../assets/notebook1.jpg")}
+        source={require("../../../assets/testpic2forAndroid.png")}
         style={{
           flex: 1,
           resizeMode: "cover",

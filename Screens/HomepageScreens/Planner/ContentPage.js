@@ -153,54 +153,61 @@ const ContentPage = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <ImageBackground
+        {/* <ImageBackground
           style={styles.header}
-          source={require("../../../assets/HeaderBG.jpg")}
+          source={require("../../../assets/HeaderBG.png")}
+        > */}
+        <View
+          style={{
+            flex: 5,
+            justifyContent: "flex-end",
+            alignItems: "flex-start",
+          }}
         >
-          <View
+          <Text
             style={{
-              flex: 5,
-              justifyContent: "flex-end",
-              alignItems: "flex-start",
+              ...globalFontStyles.NB_34,
+              color: "#FB5581",
+              left: 30,
+              bottom: 5,
             }}
           >
-            <Text
-              style={{
-                ...globalFontStyles.OSB_34,
-                color: "#FB5581",
-                left: 30,
-                bottom: 10,
-              }}
-            >
-              Home
-            </Text>
-          </View>
+            Planner
+          </Text>
+        </View>
 
-          <View
-            style={{
-              flex: 2,
-              justifyContent: "flex-end",
-              alignItems: "center",
+        <View
+          style={{
+            flex: 2,
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("ProgressPage");
             }}
+            style={{ width: 50, height: 50 }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ProgressPage");
-              }}
-              style={{ width: 50, height: 50 }}
-            >
-              <Entypo
-                name="bar-graph"
-                color="#979797"
-                size={30}
-                style={{ left: 15, top: 8 }}
-              />
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
+            <Entypo
+              name="bar-graph"
+              //color="#918989"
+              color="#A5A0A0"
+              size={30}
+              style={{ left: 25, top: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* </ImageBackground> */}
       </View>
-
-      <View style={{ height: 5, width: "100%" }} />
+      <View
+        style={{
+          height: 5,
+          width: "100%",
+          backgroundColor: "#f9f9f9",
+          // or no bgColor
+        }}
+      />
 
       <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
         <AnimatedFlatList
@@ -228,6 +235,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: "100%",
     flexDirection: "row",
+    backgroundColor: "#f9f9f9",
     // shadowColor: "#000",
     // shadowOffset: {
     //   width: 0,
@@ -236,10 +244,6 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.18,
     // shadowRadius: 1.0,
     // elevation: 2,
-    elevation: 5,
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: "black",
-    shadowOpacity: 0.1,
   },
   card: {
     width: width * 0.8,

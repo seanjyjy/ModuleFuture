@@ -32,6 +32,7 @@ import {
   Y5S1,
   Y5S2,
 } from "./Screens/HomepageScreens/Planner/Plans/ContentPlan";
+import AddPlan from "./Screens/HomepageScreens/Planner/Plans/AddPlan";
 
 // -------------------------------------------------------------------------------------------------------------
 
@@ -79,7 +80,11 @@ export default function App() {
       require("./assets/y4s2.png"),
       require("./assets/y5s1.png"),
       require("./assets/y5s2.png"),
-      require("./assets/HeaderBG.jpg"),
+      require("./assets/HeaderBG.png"),
+      require("./assets/plan1.png"),
+      require("./assets/plan2.png"),
+      require("./assets/plan3.png"),
+      require("./assets/plan4.png"),
     ]);
 
     const fontAssets = getFonts();
@@ -122,6 +127,7 @@ export default function App() {
               <AuthStack.Screen name="Y4S2" component={Y4S2} />
               <AuthStack.Screen name="Y5S1" component={Y5S1} />
               <AuthStack.Screen name="Y5S2" component={Y5S2} />
+              <AuthStack.Screen name="AddPlan" component={AddPlan} />
               <AuthStack.Screen name="AddModule" component={AddModule} />
               <AuthStack.Screen name="Filter" component={Filter} />
             </AuthStack.Navigator>
