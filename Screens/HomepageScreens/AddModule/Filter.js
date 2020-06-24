@@ -183,7 +183,7 @@ const Filter = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {header}
       <ScrollView style={{ marginBottom: 60 }}>
         {sort}
@@ -196,7 +196,7 @@ const Filter = ({ navigation }) => {
         rightText={`Show ${numMods} modules`}
         size={"45%"}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
