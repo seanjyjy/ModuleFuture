@@ -227,6 +227,7 @@ const AddModule = ({ navigation }) => {
             {portion1 > 0 ? "Taken" : ""}
           </Text>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={current.taken}
             keyExtractor={(item) => item.key.toString()}
             renderItem={({ item }) => textWithIcon(item.name)}

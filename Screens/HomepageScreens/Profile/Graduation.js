@@ -92,7 +92,7 @@ const Graduation = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={"Expected Graduation Sem"}
         leftChildren={
@@ -114,7 +114,7 @@ const Graduation = ({ navigation }) => {
         {Y5S1}
         {Y5S2}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

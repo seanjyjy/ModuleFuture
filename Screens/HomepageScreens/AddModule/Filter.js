@@ -183,20 +183,19 @@ const Filter = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {header}
-      <ScrollView style={{ marginBottom: 60 }}>
-        {sort}
+      <FlatList ListHeaderComponent={sort} style={{ marginBottom: 60 }}>
         {divider}
         {mainFilter}
-      </ScrollView>
+      </FlatList>
       <BottomBar
         leftText={"Clear all"}
         transition={() => navigation.navigate("AddModule")}
         rightText={`Show ${numMods} modules`}
         size={"45%"}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
