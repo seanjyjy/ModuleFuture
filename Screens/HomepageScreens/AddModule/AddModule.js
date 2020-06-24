@@ -28,7 +28,7 @@ const width = Dimensions.get("window").width;
 
 const AddModule = ({ navigation }) => {
   const header = (
-    <SafeAreaView style={styles.header}>
+    <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
         <Cross
           top={12}
@@ -65,7 +65,7 @@ const AddModule = ({ navigation }) => {
           />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 
   const array = [

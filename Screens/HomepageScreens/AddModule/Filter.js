@@ -26,14 +26,14 @@ const Filter = ({ navigation }) => {
   const [sortState2, setSortState2] = useState("Default");
 
   const header = (
-    <SafeAreaView style={styles.header}>
+    <View style={styles.header}>
       <Cross
         top={14}
         left={20}
         transition={() => navigation.dispatch(CommonActions.goBack())}
         text={"Filter"}
       />
-    </SafeAreaView>
+    </View>
   );
 
   const sortButton = (boolean, setter, name) => {
