@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
+import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
 import { Icon } from "react-native-eva-icons";
 
 const FilterItem = (props) => {
@@ -21,12 +22,22 @@ const FilterItem = (props) => {
       <Text style={{ ...globalFontStyles.NR_14, color: "black" }}>
         {props.text}
       </Text>
-      <Icon
-        name={toggled ? "checkmark-square-2" : "square-outline"}
-        width={25}
-        height={25}
-        fill={toggled ? "#232323" : "#00000080"}
-      />
+      <View>
+        {props.box ? (
+          <Icon
+            name={toggled ? "checkmark-square-2" : "square-outline"}
+            width={25}
+            height={25}
+            fill={toggled ? "#232323" : "#00000080"}
+          />
+        ) : (
+          <FontAwesomeIcons
+            name={toggled ? "toggle-on" : "toggle-off"}
+            size={25}
+            color={toggled ? "#232323" : "grey"}
+          />
+        )}
+      </View>
     </TouchableOpacity>
   );
 };

@@ -7,22 +7,21 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import Icon from "react-native-vector-icons/FontAwesome";
 import BottomBar from "../../../Component/BottomBar";
 import Cross from "../../../Component/Cross";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FilterItem from "../../../Component/FilterItem";
-import { ScrollView } from "react-native-gesture-handler";
+import FilterSection from "./FilterSection";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const Filter = ({ navigation }) => {
-  const [numMods, update] = useState(400);
+  const [numMods, update] = useState("400+");
   const [sortState1, setSortState1] = useState("Default");
   const [sortState2, setSortState2] = useState("Default");
 
@@ -115,7 +114,10 @@ const Filter = ({ navigation }) => {
     { name: "IS", key: 5 },
     { name: "CM", key: 6 },
     { name: "BIZ", key: 7 },
-    { name: "IC", key: 8 },
+    { name: "CEG", key: 8 },
+    { name: "CP", key: 9 },
+    { name: "BA", key: 10 },
+    { name: "GER", key: 11 },
   ];
 
   const MCs = [
@@ -130,20 +132,14 @@ const Filter = ({ navigation }) => {
     { name: "No Exam", key: 2 },
   ];
 
-  const convert = (text) =>
-    text === "Level" ? "levels" : text === "Code" ? "codes" : text;
-
-  const textWithIcon1 = (name) => <FilterItem text={name} />;
+  const textWithIcon2 = (name) => <FilterItem text={name} box={false} />;
 
   const filterSection = (array, name) => (
-    <View
-      style={{
-        width: "83.6%",
-        borderBottomWidth: StyleSheet.hairlineWidth * 3,
-        borderBottomColor: "#7070704D",
-        marginTop: 35,
-      }}
-    >
+    <FilterSection array={array} name={name} />
+  );
+
+  const otherSection = (
+    <View style={{ marginTop: 35, width: "83.6%" }}>
       <Text
         style={{
           ...globalFontStyles.NSB_17,
@@ -151,25 +147,13 @@ const Filter = ({ navigation }) => {
           marginBottom: 5,
         }}
       >
-        {name}
+        Other
       </Text>
       <FlatList
-        data={array.splice(0, 3)}
+        data={other}
         keyExtractor={(item) => item.key.toString()}
-        renderItem={({ item }) => textWithIcon1(item.name)}
+        renderItem={({ item }) => textWithIcon2(item.name)}
       />
-      <Text
-        style={{
-          ...globalFontStyles.NR_14,
-          color: "#232323",
-          textDecorationLine: "underline",
-          marginTop: 15,
-          marginBottom: 30,
-          paddingLeft: 4,
-        }}
-      >
-        Show more {convert(name)}
-      </Text>
     </View>
   );
 
@@ -180,7 +164,7 @@ const Filter = ({ navigation }) => {
   ];
 
   const mainFilter = (
-    <View style={{ alignItems: "center" }}>
+    <View style={{ alignItems: "center", paddingBottom: 20 }}>
       <Text
         style={{
           ...globalFontStyles.NSB_17,
@@ -194,6 +178,7 @@ const Filter = ({ navigation }) => {
       {filterSection(levels, "Level")}
       {filterSection(codes, "Code")}
       {filterSection(MCs, "MCs")}
+      {otherSection}
     </View>
   );
 

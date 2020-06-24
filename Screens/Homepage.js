@@ -12,7 +12,7 @@ import ProfilePage from "./HomepageScreens/Profile/ProfilePage";
 import RecordsStack from "./HomepageScreens/Records/RecordsStack";
 import ModulePage from "./HomepageScreens/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";
-import FocusArea from "./HomepageScreens/FocusArea";
+import FocusArea from "./HomepageScreens/FocusArea/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeArea } from "react-native-safe-area-context";

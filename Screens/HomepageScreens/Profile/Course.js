@@ -22,18 +22,22 @@ const Course = ({ navigation }) => {
       activeOpacity={0.85}
       onPress={() => change(props)}
     >
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "#00000080" }}>
+      <Text style={{ ...globalFontStyles.OSSB_14, color: "#00000080" }}>
         {props}
       </Text>
+      <Icon name="checkmark-outline" width={25} height={25} fill="white" />
     </TouchableOpacity>
   );
   const Pressed = (props) => (
     <TouchableOpacity
-      style={styles.Pressed}
+      style={{
+        ...styles.unpressed,
+        borderBottomWidth: StyleSheet.hairlineWidth * 2,
+      }}
       activeOpacity={0.65}
       onPress={() => change(props)}
     >
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
+      <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
         {props}
       </Text>
       <Icon name="checkmark-outline" width={25} height={25} fill="#232323" />
@@ -122,18 +126,6 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     borderBottomColor: "black",
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomEndRadius: 13,
-    borderBottomStartRadius: 16,
-  },
-  Pressed: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    paddingTop: 19,
-    paddingBottom: 11,
-    borderBottomColor: "black",
-    borderBottomWidth: StyleSheet.hairlineWidth * 2,
     borderBottomEndRadius: 13,
     borderBottomStartRadius: 16,
   },
