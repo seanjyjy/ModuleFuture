@@ -46,52 +46,26 @@ const ChoosingOptions = props => {
     const [heightmovement, setheightmovement] = useState(0);
     const [heightmovement2, setheightmovement2] = useState(0);
 
-
     return (
-        <View style ={{width: '100%', height: '100%'}}>
-            <View style={{flexDirection: 'column'}} onLayout = {event => setheightmovement(event.nativeEvent.layout.height)}>
-                <View style={{top: 20}}>
-                    <View style = {{padding: 10, left: 10}}>
-                        <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
-                            Year of matriculation
-                        </Text>
-                    </View>
-                    <TouchableOpacity style={styles.dropDown} onPress={() => allYearList()} activeOpacity = {0.1} >
-                        <Text style={{...globalFontStyles.OSR_17, color: '#575757', left: 10, top: 9}}>
-                            {year}
-                        </Text>
-                        <Ionicons
-                            name="ios-arrow-down" size={20}
-                            style={styles.arrowDown}/>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <Modal visible={yearVisible} transparent={true}>
-                <View style={{width: 150, height: 200, backgroundColor: '#FCFCFC', alignItems: 'flex-start',
-                    left : 20, top : (props.extraMovement + heightmovement + 20), borderWidth: 0.3}}>
-                    {yearList.map((year, value) =>  {
-                        return (
-                            <TouchableHighlight
-                                key ={value}
-                                style={{padding: 5, height: (200/6), width: 150, left: 5}}
-                                onPress={()=> {
-                                    setYear(year.value)
-                                    allYearList()
-                                }}
-                            >
-                                <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
-                                    {year.value}
-                                </Text>
-                            </TouchableHighlight>)})}
-                </View>
-            </Modal>
-
-            <View style ={{top: 40}} onLayout = {event => setheightmovement2(event.nativeEvent.layout.height)}>
-                <View style = {{padding: 10, left: 10}}>
-                    <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
-                        Expected graduation semester
+        <View style={{width: '100%', height: '100%', backgroundColor: 'black', flexDirection: 'column'}}>
+            <View style={{flex : 1}}>
+                <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
+                    Year of matriculation
+                </Text>
+                <TouchableOpacity style={styles.dropDown} onPress={() => allYearList()} activeOpacity = {0.9}>
+                    <Text style={{...globalFontStyles.OSR_17, color: '#575757', left: 10, top: 9}}>
+                        {year}
                     </Text>
-                </View>
+                    <Ionicons
+                        name="ios-arrow-down" size={20}
+                        style={styles.arrowDown}/>
+                </TouchableOpacity>
+            </View>
+
+            <View style={{flex : 1}}>
+                <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
+                    Expected graduation semester
+                </Text>
                 <TouchableOpacity style={styles.dropDown} onPress={() => allSemList()} activeOpacity = {0.9}>
                     <Text style={{...globalFontStyles.OSR_17, color: '#575757', left: 10, top: 9}}>
                         {sem}
@@ -101,28 +75,84 @@ const ChoosingOptions = props => {
                         style={styles.arrowDown}/>
                 </TouchableOpacity>
             </View>
-            <Modal visible={listVisible} transparent={true}>
-                <View style={{width: 150, height: 320, backgroundColor: '#FCFCFC', alignItems: 'flex-start',
-                    left : 20, top : (props.extraMovement + heightmovement + heightmovement2 + 40), borderWidth: 0.3}}>
-                    {semList.map((sem, value) =>  {
-                        return (
-                            <TouchableHighlight
-                                key ={value}
-                                style={{padding: 5, height: (320/8), width: 150, left: 5}}
-                                onPress={()=> {
-                                    setSem(sem.value)
-                                    allSemList()
-                                }}
-                            >
-                                <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
-                                    {sem.value}
-                                </Text>
-                            </TouchableHighlight>)})}
-                </View>
-            </Modal>
-
         </View>
     )
+    // return (
+    //     <View style ={{width: '100%', height: '100%'}}>
+    //         <View style={{flexDirection: 'column'}} onLayout = {event => setheightmovement(event.nativeEvent.layout.height)}>
+    //             <View style={{top: 20}}>
+    //                 <View style = {{padding: 10, left: 10}}>
+    //                     <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
+    //                         Year of matriculation
+    //                     </Text>
+    //                 </View>
+    //                 <TouchableOpacity style={styles.dropDown} onPress={() => allYearList()} activeOpacity = {0.1} >
+    //                     <Text style={{...globalFontStyles.OSR_17, color: '#575757', left: 10, top: 9}}>
+    //                         {year}
+    //                     </Text>
+    //                     <Ionicons
+    //                         name="ios-arrow-down" size={20}
+    //                         style={styles.arrowDown}/>
+    //                 </TouchableOpacity>
+    //             </View>
+    //         </View>
+    //         <Modal visible={yearVisible} transparent={true}>
+    //             <View style={{width: 150, height: 200, backgroundColor: '#FCFCFC', alignItems: 'flex-start',
+    //                 left : 20, top : (props.extraMovement + heightmovement + 20), borderWidth: 0.3}}>
+    //                 {yearList.map((year, value) =>  {
+    //                     return (
+    //                         <TouchableHighlight
+    //                             key ={value}
+    //                             style={{padding: 5, height: (200/6), width: 150, left: 5}}
+    //                             onPress={()=> {
+    //                                 setYear(year.value)
+    //                                 allYearList()
+    //                             }}
+    //                         >
+    //                             <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
+    //                                 {year.value}
+    //                             </Text>
+    //                         </TouchableHighlight>)})}
+    //             </View>
+    //         </Modal>
+    //
+    //         <View style ={{top: 40}} onLayout = {event => setheightmovement2(event.nativeEvent.layout.height)}>
+    //             <View style = {{padding: 10, left: 10}}>
+    //                 <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
+    //                     Expected graduation semester
+    //                 </Text>
+    //             </View>
+    //             <TouchableOpacity style={styles.dropDown} onPress={() => allSemList()} activeOpacity = {0.9}>
+    //                 <Text style={{...globalFontStyles.OSR_17, color: '#575757', left: 10, top: 9}}>
+    //                     {sem}
+    //                 </Text>
+    //                 <Ionicons
+    //                     name="ios-arrow-down" size={20}
+    //                     style={styles.arrowDown}/>
+    //             </TouchableOpacity>
+    //         </View>
+    //         <Modal visible={listVisible} transparent={true}>
+    //             <View style={{width: 150, height: 320, backgroundColor: '#FCFCFC', alignItems: 'flex-start',
+    //                 left : 20, top : (props.extraMovement + heightmovement + heightmovement2 + 40), borderWidth: 0.3}}>
+    //                 {semList.map((sem, value) =>  {
+    //                     return (
+    //                         <TouchableHighlight
+    //                             key ={value}
+    //                             style={{padding: 5, height: (320/8), width: 150, left: 5}}
+    //                             onPress={()=> {
+    //                                 setSem(sem.value)
+    //                                 allSemList()
+    //                             }}
+    //                         >
+    //                             <Text style={{...globalFontStyles.OSR_17, color: '#575757'}}>
+    //                                 {sem.value}
+    //                             </Text>
+    //                         </TouchableHighlight>)})}
+    //             </View>
+    //         </Modal>
+    //
+    //     </View>
+    // )
 };
 
 const styles = StyleSheet.create({

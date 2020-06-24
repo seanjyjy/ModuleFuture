@@ -149,59 +149,73 @@ const DetailsCollection = () => {
       right: 20,
       bottom: Platform.OS === "android" ? 40 : 10,
     });
-  };
+    const switchToAddInfo = () => {
+        setTextHeader("Additional\nDetails");
+        setBot(createAcc);
+        setTruth(false);
+        setNewPos({
+            flex : Platform.OS === 'android' ? 2 : 1,
+            justifyContent: Platform.OS === 'android' ? 'center' : null,
+            alignItems:'center',
+            right: 20,
+            bottom: Platform.OS === 'android' ? 40 : 10,
+        });
+    }
 
-  const [heightmovement, setheightmovement] = useState(0);
-  const [once, setOnce] = useState(true);
+    const [heightmovement, setheightmovement] = useState(0);
+    const [once, setOnce] = useState(true);
 
-  const courseinfo = (
-    <View>
-      {CS}
-      {BA}
-      {ISys}
-      {ISec}
-      {CE}
-    </View>
-  );
+    const courseinfo = (
+        <View>
+            {CS}{BA}{ISys}{ISec}{CE}
+        </View>
+    )
 
-  const additionalinfo = (
-    <View>
-      <ChoosingOptions extraMovement={heightmovement}></ChoosingOptions>
-    </View>
-  );
+    const additionalinfo = (
+        <View>
+            <ChoosingOptions extraMovement={heightmovement}>
 
-  return (
-    <BackgroundFaded>
-      <View
-        style={{
-          flex: Platform.OS === "android" ? 2 : 1,
-          justifyContent: "center",
-        }}
-        onLayout={(event) => {
-          if (once) {
-            setheightmovement(event.nativeEvent.layout.height);
-            setOnce(false);
-          }
-        }}
-      >
-        <Text
-          style={{
-            ...globalFontStyles.OSEB_34,
-            color: "#686868",
-            left: 30,
-            top: 30,
-          }}
-        >
-          {textHeader}
-        </Text>
-      </View>
-      <View style={{ flex: Platform.OS === "android" ? 4 : 2 }}>
-        {truth ? courseinfo : additionalinfo}
-      </View>
-      <View style={newPos}>{bot}</View>
-    </BackgroundFaded>
-  );
-};
+            </ChoosingOptions>
+        </View>
+    )
+
+
+    // return (
+    //     <BackgroundFaded>
+    //         <View style = {{flex : Platform.OS === 'android' ? 2 : 1, justifyContent:'center'}}
+    //               onLayout = {event => {
+    //                   if (once) {
+    //                       setheightmovement(event.nativeEvent.layout.height)
+    //                       setOnce(false);
+    //                   }}}>
+    //             <Text style={{...globalFontStyles.OSEB_34, color: '#686868', left: 30, top: 30}}>
+    //                 {textHeader}
+    //             </Text>
+    //         </View>
+    //         <View style = {{flex : Platform.OS === 'android' ? 4 : 2}}>
+    //             {truth ? courseinfo : additionalinfo}
+    //         </View>
+    //         <View style = {newPos}>
+    //             {bot}
+    //         </View>
+    //     </BackgroundFaded>
+    // )
+    return (
+        <BackgroundFaded>
+            <View style = {{flex : Platform.OS === 'android' ? 2 : 1, justifyContent:'center'}}>
+                <Text style={{...globalFontStyles.OSEB_34, color: '#686868', left: 30, top: 30}}>
+                    {textHeader}
+                </Text>
+            </View>
+            <View style = {{flex : Platform.OS === 'android' ? 4 : 2}}>
+                {truth ? courseinfo : additionalinfo}
+            </View>
+            <View style = {newPos}>
+                {bot}
+            </View>
+        </BackgroundFaded>
+    )
+}
 
 const styles = StyleSheet.create({
   shape: {
