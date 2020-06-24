@@ -90,7 +90,7 @@ const Course = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={"Course"}
         leftChildren={
@@ -111,7 +111,7 @@ const Course = ({ navigation }) => {
         {InfoSec}
         {CEG}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

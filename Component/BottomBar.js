@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
+  View,
 } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
 
@@ -12,7 +13,7 @@ const width = Dimensions.get("window").width;
 
 const BottomBar = (props) => {
   return (
-    <SafeAreaView style={styles.bottomBar}>
+    <View style={styles.bottomBar}>
       <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
         {props.leftText}
       </Text>
@@ -24,7 +25,7 @@ const BottomBar = (props) => {
           {props.rightText}
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
