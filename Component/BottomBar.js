@@ -8,17 +8,33 @@ import {
   View,
 } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
+import { useSafeArea } from "react-native-safe-area-context";
 
 const width = Dimensions.get("window").width;
 
 const BottomBar = (props) => {
   return (
-    <View style={styles.bottomBar}>
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
+    <View
+      style={{
+        ...styles.bottomBar,
+        height: 60 + (useSafeArea().bottom > 0 ? useSafeArea().bottom - 5 : 0),
+      }}
+    >
+      <Text
+        style={{
+          ...globalFontStyles.OSSB_17,
+          color: "#232323",
+          bottom: useSafeArea().bottom > 0 ? (useSafeArea().bottom - 5) / 2 : 0,
+        }}
+      >
         {props.leftText}
       </Text>
       <TouchableOpacity
-        style={{ ...styles.addModButton, width: props.size }}
+        style={{
+          ...styles.addModButton,
+          width: props.size,
+          bottom: useSafeArea().bottom > 0 ? (useSafeArea().bottom - 5) / 2 : 0,
+        }}
         onPress={() => props.transition()}
       >
         <Text style={{ ...globalFontStyles.OSSB_14, color: "white" }}>
@@ -36,7 +52,6 @@ const styles = StyleSheet.create({
     width: width,
     flexDirection: "row",
     flex: 1,
-    height: 60,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: "grey",
     backgroundColor: "#F9F9F9",
