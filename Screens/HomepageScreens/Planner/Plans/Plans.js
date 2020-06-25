@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import Header from "../../../../Component/Header";
@@ -98,7 +99,7 @@ function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
                   color: colorSet[imageLink],
                 }}
               >
-                Last Updated:
+                Last Updated
               </Text>
             </View>
           </View>
@@ -154,6 +155,7 @@ const Plans = (props) => {
         onBackButtonPress={() => {
           setModalVisible(false);
         }}
+        hideModalContentWhileAnimating={true}
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>Name of Plan</Text>
@@ -163,6 +165,7 @@ const Plans = (props) => {
             style={styles.input}
             placeholder="e.g. EZ CAP 5.0"
             onChangeText={(val) => setPlanName(val)}
+            onPress={() => setModalVisible(true)}
           />
         </View>
         <View style={{ flex: 1, borderTopWidth: 0.5, flexDirection: "row" }}>

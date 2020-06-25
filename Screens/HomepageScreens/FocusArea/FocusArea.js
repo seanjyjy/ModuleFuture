@@ -29,7 +29,7 @@ const FocusArea = ({ navigation }) => {
       <ColouredList
         colors={colors}
         transition={() => null}
-        text1={"Number of prereq taken"}
+        text1={"No. of prereq taken"}
         text2={"3/5"}
         text3={"4.5"}
         array={specialisations}

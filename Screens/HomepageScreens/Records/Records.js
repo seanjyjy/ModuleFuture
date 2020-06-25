@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Header from "../../../Component/Header";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
@@ -88,14 +81,15 @@ const Records = ({ navigation }) => {
       activeOpacity={0.85}
       onPress={toggleTypeMenu}
     >
-      <Text style={{ ...globalFontStyles.OSSB_19, color: "#4D4D4D" }}>
+      <Text style={{ ...globalFontStyles.OSSB_19, color: "#232323" }}>
         {currentType}
       </Text>
       <Icon
         fill="#232323"
-        width={40}
-        height={30}
+        width={30}
+        height={20}
         name="arrow-ios-downward-outline"
+        style={{ marginTop: 4 }}
       />
     </TouchableOpacity>
   );
@@ -211,6 +205,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 10,
     justifyContent: "center",
+    alignItems: "center",
     borderBottomColor: "black",
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomEndRadius: 13,

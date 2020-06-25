@@ -15,6 +15,7 @@ const height = Dimensions.get("window").height;
 const ColouredList = (props) => {
   const colors = props.colors;
 
+  // TODO:
   const content = (key) => {
     const circle = (
       <View
@@ -23,8 +24,8 @@ const ColouredList = (props) => {
           width: 0.03 * width,
           height: 0.03 * width,
           borderRadius: (0.03 * width) / 2,
-          top: 4.5,
-          right: 6,
+          // top: 4.5,
+          // right: 3,
         }}
       />
     );
@@ -76,13 +77,14 @@ const ColouredList = (props) => {
   );
 
   return (
-    <View style={{ flex: 1, position: "relative", marginBottom: 60 }}>
+    <View style={{ flex: 1, position: "relative" }}>
       <FlatList
         showsVerticalScrollIndicator={false}
         numColumns={2}
         keyExtractor={(item) => item.key.toString()}
         data={props.array}
         renderItem={({ item }) => holders(item.key, item.name)}
+        ListFooterComponent={<View style={{ height: 70 }} />}
       />
     </View>
   );

@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Dimensions,
-  Platform,
-  StatusBar,
-} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Dimensions } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
 import { useSafeArea } from "react-native-safe-area-context";
 
@@ -60,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#fAfAfA",
     width: width,
-    height: 110,
+    height: 0.113 * height,
     elevation: 5,
     shadowOffset: { width: 5, height: 5 },
     shadowColor: "black",

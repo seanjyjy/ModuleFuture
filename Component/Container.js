@@ -18,7 +18,9 @@ const Container = (props) => {
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "column", flex: 1 }}>
-        <View style={{ width: 0.7 * width }}>
+        <View
+          style={{ width: 0.65 * width, flex: 1, justifyContent: "center" }}
+        >
           <Text
             numberOfLines={1}
             style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}
@@ -98,15 +100,14 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: width * 0.9,
     height: height * 0.12,
-    padding: 15,
-    paddingLeft: 20,
+    paddingHorizontal: 15,
     marginVertical: 10,
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
   },
   button1: {
-    marginTop: 12,
+    // marginTop: 12,
     marginRight: 10,
     justifyContent: "center",
     alignItems: "center",

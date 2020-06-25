@@ -59,9 +59,9 @@ const Foundation = ({ navigation }) => {
       // Should be false, but testing for fit if all are true
       key: 7,
       name: "CS3230 Design and Analysis of Algorithms",
-      grade: "B",
-      sem: "Y3S2",
-      taken: true,
+      grade: "",
+      sem: "",
+      taken: false,
     },
   ];
 

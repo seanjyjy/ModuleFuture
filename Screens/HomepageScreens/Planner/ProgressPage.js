@@ -440,9 +440,9 @@ const ProgressPage = ({ navigation, route }) => {
                     : progress2 >= 90
                     ? "You are almost there keep it up!"
                     : progress2 >= 80
-                    ? "Keep up the good work"
+                    ? "Keep up the good work!"
                     : progress2 >= 70
-                    ? "You can do it"
+                    ? "You can do it!"
                     : progress2 >= 60
                     ? "Dont give up!"
                     : "Perserve on!"}
