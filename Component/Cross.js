@@ -23,7 +23,7 @@ const Cross = (props) => {
       />
       <Text
         style={{
-          ...globalFontStyles.OSB_14,
+          ...globalFontStyles.OSB_15,
           color: "#666666",
           marginLeft: 10,
         }}

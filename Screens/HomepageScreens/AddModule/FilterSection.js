@@ -10,7 +10,9 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import FilterItem from "../../../Component/FilterItem";
 
 const FilterSection = (props) => {
-  const textWithIcon1 = (name) => <FilterItem text={name} box={true} />;
+  const textWithIcon1 = (name) => (
+    <FilterItem text={name} box={true} reset={props.reset} />
+  );
   const convert = (text) =>
     text === "Level" ? "levels" : text === "Code" ? "codes" : text;
 
@@ -23,10 +25,9 @@ const FilterSection = (props) => {
   return (
     <View
       style={{
-        width: "83.6%",
         borderBottomWidth: StyleSheet.hairlineWidth * 3,
         borderBottomColor: "#7070704D",
-        marginTop: 35,
+        marginTop: 30,
       }}
     >
       <Text

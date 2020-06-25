@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView } from "react-native";
+import { View } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
