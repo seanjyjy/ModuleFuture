@@ -21,6 +21,10 @@ const ProgressPage = ({ navigation, route }) => {
     if (route.params?.items) {
       setMCprogressTotal(route.params?.items[0]);
       setcapGoalDenominator(route.params?.items[1]);
+      setProgress((Math.min(MCs, MCprogressTotal) / MCprogressTotal) * 100);
+      setProgress2(
+        (Math.min(cap, capGoalDenominator) / capGoalDenominator) * 100
+      );
     }
   });
 
@@ -34,8 +38,8 @@ const ProgressPage = ({ navigation, route }) => {
       },
     ],
   };
-  const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
-  const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
+  const [cap, setCap] = useState(3.5); // ********************************** 8this data is calculated from user's current standing *************************************
+  const [MCs, setMCs] = useState(50); //**********************************/ this data is calculated from user's current standing ************************************
   const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0);
   const [SemesterCap, setSemesterCap] = useState(0);
   const [OverallCap, setOverallCap] = useState(0);
@@ -172,7 +176,7 @@ const ProgressPage = ({ navigation, route }) => {
         <View style={styles.largerRec}>
           <View style={{ ...styles.largerRec, overflow: "hidden" }}>
             <LineChart
-              onDataPointClick={({ value, dataset, getColor }) => {
+              onDataPointClick={({ value }) => {
                 setOverallCap(value);
                 setModalVisible(true);
               }}
@@ -351,7 +355,7 @@ const ProgressPage = ({ navigation, route }) => {
                   <Text
                     style={{ ...globalFontStyles.OSB_15, color: "#686868" }}
                   >
-                    {MCprogressTotal - MCs}
+                    {Math.max(MCprogressTotal - MCs, 0)}
                   </Text>
                 </View>
               </View>
@@ -431,7 +435,9 @@ const ProgressPage = ({ navigation, route }) => {
                 }}
               >
                 <Text style={{ ...globalFontStyles.OSB_15, color: "#686868" }}>
-                  {progress2 >= 90
+                  {progress2 >= 100
+                    ? "You have did it!"
+                    : progress2 >= 90
                     ? "You are almost there keep it up!"
                     : progress2 >= 80
                     ? "Keep up the good work"

@@ -73,7 +73,7 @@ const ProgressPageSettings = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("ProgressPage", {
-              items: [NumInterval, totalMCs, TargetCAP],
+              items: [totalMCs, TargetCAP],
             });
           }}
           activeOpacity={0.9}
