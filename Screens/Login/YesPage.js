@@ -1,4 +1,4 @@
-import { Text, TextInput, View, TouchableOpacity } from "react-native";
+import { Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
 import { globalFontStyles } from "../../Component/GlobalFont";
 import { globalStyles } from "../../Component/GlobalStyle";
 import React, { useState } from "react";
@@ -7,18 +7,31 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { Formik } from "formik";
 import * as yup from "yup";
 import FirebaseDB from "../../FirebaseDB";
-
+import SignInButton from "../../Component/SignInButton";
 const reviewSchema = yup.object({
   username: yup.string().required().min(6).max(16),
 });
 
 const YesPage = () => {
+  const [isLoading, setIsLoading] = useState("");
   const handleData = (values) => {
-    FirebaseDB.firestore()
-      .collection("users")
-      .add({ name: values.username })
-      .then(() => {})
-      .catch((err) => console.error(err));
+    try {
+      setIsLoading(true);
+      FirebaseDB.firestore()
+        .collection("users")
+        .add({ name: values.username })
+        .then(() => {
+          setIsLoading(false);
+          navigation.navigate("DetailsCollection");
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          Alert.alert(error);
+        });
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert(error);
+    }
   };
 
   const navigation = useNavigation();
@@ -31,7 +44,6 @@ const YesPage = () => {
         onSubmit={(values, actions) => {
           handleData(values);
           actions.resetForm();
-          navigation.navigate("DetailsCollection");
         }}
       >
         {(props) => (
@@ -63,15 +75,11 @@ const YesPage = () => {
             </View>
 
             <View style={{ top: 50, left: 25 }}>
-              <TouchableOpacity
-                activeOpacity={0.875}
-                style={globalStyles.buttonDesign}
-                onPress={props.handleSubmit}
-              >
+              <SignInButton func={props.handleSubmit} isLoading={isLoading}>
                 <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                  continue
+                  Continue
                 </Text>
-              </TouchableOpacity>
+              </SignInButton>
             </View>
           </View>
         )}

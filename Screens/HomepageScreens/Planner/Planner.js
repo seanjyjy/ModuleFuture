@@ -1,5 +1,4 @@
 import React from "react";
-import { StyleSheet } from "react-native";
 
 import {
   createStackNavigator,
@@ -26,17 +25,11 @@ const Planner = () => {
     >
       <AuthStack.Screen name="Content Page" component={ContentPage} />
       <AuthStack.Screen name="ProgressPage" component={ProgressPage} />
-      {/* <AuthStack.Screen
-        name="ProgressPageSettings"
-        component={ProgressPageSettings}
-      /> */}
     </AuthStack.Navigator>
   );
 };
 
 export default Planner;
-
-const styles = StyleSheet.create({});
 
 const config = {
   animation: "spring",

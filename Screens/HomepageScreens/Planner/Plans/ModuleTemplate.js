@@ -108,7 +108,7 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
             style={styles.flexOneCenter}
             activeOpacity={0.9}
             onPress={() => {
-              setTargetGrade(text);
+              setTargetGrade(text.toString().toUpperCase());
               setModalVisible(false);
             }}
           >

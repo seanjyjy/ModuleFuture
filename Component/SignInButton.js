@@ -1,10 +1,19 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { globalStyles } from "./GlobalStyle";
 import React from "react";
 
 const SignInButton = (props) => {
-  return (
-    <View>
+  const loader = () => {
+    return (
+      <ActivityIndicator
+        animating={props.isLoading}
+        style={{ color: "white" }}
+      />
+    );
+  };
+
+  const button = () => {
+    return (
       <TouchableOpacity
         activeOpacity={0.875}
         style={globalStyles.buttonDesign}
@@ -12,6 +21,12 @@ const SignInButton = (props) => {
       >
         {props.children}
       </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View style={globalStyles.buttonDesign}>
+      {props.isLoading ? loader() : button()}
     </View>
   );
 };

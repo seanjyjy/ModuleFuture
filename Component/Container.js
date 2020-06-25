@@ -19,7 +19,11 @@ const Container = (props) => {
     <View style={styles.container}>
       <View style={{ flexDirection: "column", flex: 1 }}>
         <View
-          style={{ width: 0.65 * width, flex: 1, justifyContent: "center" }}
+          style={{
+            width: 0.7 * width,
+            flex: 1,
+            justifyContent: "center",
+          }}
         >
           <Text
             numberOfLines={1}
@@ -29,7 +33,12 @@ const Container = (props) => {
           </Text>
         </View>
         {/* Two buttons below */}
-        <View style={{ flexDirection: "row", flex: 1 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+          }}
+        >
           {/* Prereq button */}
           <TouchableOpacity
             style={{
@@ -101,13 +110,13 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: height * 0.12,
     paddingHorizontal: 15,
+    paddingLeft: 20,
     marginVertical: 10,
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
   },
   button1: {
-    // marginTop: 12,
     marginRight: 10,
     justifyContent: "center",
     alignItems: "center",

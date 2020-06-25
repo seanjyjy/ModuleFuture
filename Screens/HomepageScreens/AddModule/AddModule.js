@@ -250,16 +250,18 @@ const AddModule = ({ navigation }) => {
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
-      <FlatList
-        ListHeaderComponent={gap}
-        data={array}
-        keyExtractor={(item) => item.key.toString()}
-        renderItem={({ item }) => holders(item)}
-        showsVerticalScrollIndicator={false}
-        ListFooterComponent={
-          <View style={{ height: height * 0.12 - 20 }}></View>
-        }
-      />
+      <View style={{ marginBottom: 200 }}>
+        <FlatList
+          ListHeaderComponent={gap}
+          data={array}
+          keyExtractor={(item) => item.key.toString()}
+          renderItem={({ item }) => holders(item)}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            <View style={{ height: height * 0.12 - 20 }}></View>
+          }
+        />
+      </View>
       {modal(split, 100 - split)}
       <BottomBar
         leftText={`MC count: ${MCcount}`}

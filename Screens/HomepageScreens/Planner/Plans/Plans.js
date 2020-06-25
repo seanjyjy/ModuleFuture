@@ -16,8 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
-import SignInButton from "../../../../Component/SignInButton";
-import ModalBox from "react-native-modalbox";
+import Modal from "react-native-modal";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -98,7 +97,7 @@ function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
                   color: colorSet[imageLink],
                 }}
               >
-                Last Updated
+                Last Updated:
               </Text>
             </View>
           </View>
@@ -142,20 +141,25 @@ const Plans = (props) => {
 
   const PopOutBox = () => {
     return (
-      <ModalBox
+      <Modal
         style={styles.modalBox}
-        isOpen={modalVisible}
-        backDropPresstoClose={true}
-        backButtonClose={true}
-        coverScreen={true}
-        onClosed={() => setModalVisible(false)}
-        // Keyboard offset
+        //animationIn="fadeIn"
+        //animationOut="fadeOut"
+
+        isVisible={modalVisible}
+        onBackdropPress={() => {
+          setModalVisible(false);
+        }}
+        onBackButtonPress={() => {
+          setModalVisible(false);
+        }}
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>Name of Plan</Text>
         </View>
         <View style={styles.flexOneCenter}>
           <TextInput
+            autoFocus={true}
             style={styles.input}
             placeholder="e.g. EZ CAP 5.0"
             onChangeText={(val) => setPlanName(val)}
@@ -188,22 +192,50 @@ const Plans = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
-      </ModalBox>
+      </Modal>
     );
   };
   return (
     <>
-      <Header
-        str={props.headerTitle}
-        leftChildren={
-          <Icons
-            name="arrow-left"
-            size={21}
-            style={{ color: "#3E3E3E", right: 0.02 * width }}
-            onPress={() => navigation.dispatch(CommonActions.goBack())}
-          />
-        }
-      />
+      <View style={styles.header}>
+        <ImageBackground
+          style={styles.header}
+          source={require("../../../../assets/HeaderBG.png")}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "flex-end",
+              alignItems: "flex-start",
+            }}
+          >
+            <Icons
+              name="arrow-left"
+              size={21}
+              style={{ color: "#3E3E3E", left: 30, bottom: 15 }}
+              onPress={() => navigation.dispatch(CommonActions.goBack())}
+            />
+          </View>
+          <View
+            style={{
+              flex: 3,
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                ...globalFontStyles.NB_20,
+                color: "#232323",
+                bottom: 15,
+              }}
+            >
+              {props.headerTitle}
+            </Text>
+          </View>
+          <View style={{ flex: 1 }} />
+        </ImageBackground>
+      </View>
       <View style={{ flex: 6, backgroundColor: "#f9f9f9" }}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -224,11 +256,11 @@ const Plans = (props) => {
       <View style={styles.btmPart}>
         <View style={{ flex: 1 }} />
         <View style={styles.btmMidPart}>
-          <SignInButton>
+          <TouchableOpacity activeOpacity={0.9} style={styles.enterButton}>
             <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
               Enter
             </Text>
-          </SignInButton>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={styles.btmRightPart}
@@ -308,9 +340,11 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     backgroundColor: "white",
+    alignSelf: "center",
+    marginVertical: height * 0.4,
     width: width * 0.8,
-    height: 0.3 * height,
     borderRadius: 25,
+    bottom: 20,
   },
   popouttext: {
     flexDirection: "row",
@@ -330,8 +364,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "#232323",
-    padding: 8,
-    margin: 10,
+    height: 0.04 * height,
     width: 200,
   },
   flexOneShadowOne: {
@@ -353,5 +386,35 @@ const styles = StyleSheet.create({
   OSSBL20ColorBlack: {
     ...globalFontStyles.OSSB_14,
     left: 20,
+  },
+  enterButton: {
+    height: 65,
+    backgroundColor: "#FB5581",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 40,
+    width: 220,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  header: {
+    height: 0.11 * height,
+    width: "100%",
+    flexDirection: "row",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+    elevation: 2,
   },
 });

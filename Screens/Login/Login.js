@@ -5,11 +5,9 @@ import { globalFontStyles } from "../../Component/GlobalFont";
 import YesNoButton from "../../Component/YesNoButton";
 import YesPage from "./YesPage";
 import NoPage from "./NoPage";
-import { useNavigation } from "@react-navigation/native";
 import LoginAuth from "./LoginAuth";
 
 const Login = () => {
-  const navigation = useNavigation();
   const [firstHeader, setFirstHeader] = useState({
     color: "#FC5185",
     ...globalFontStyles.OSSB_17,

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Dimensions, TextInput } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  TextInput,
+  Alert,
+} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SignInButton from "../../Component/SignInButton";
@@ -15,27 +22,39 @@ const LoginAuth = () => {
   const navigation = useNavigation();
   const [emailValues, setEmailValues] = useState("");
   const [passwordValues, setPasswordValues] = useState("");
+  const [isLoading, setIsLoading] = useState("");
 
   const signIn = () => {
-    FirebaseDB.auth()
-      .signInWithEmailAndPassword(emailValues, passwordValues)
-      .then((response) => {
-        const uid = response.user.uid;
-        const userRef = FirebaseDB.firestore().collection("users");
-        userRef
-          .doc(uid)
-          .get()
-          .then((firestoreDocument) => {
-            if (!firestoreDocument.exists) {
-              alert("No such account with this email exists");
-              return;
-            }
-            const user = firestoreDocument.data();
-            navigation.navigate("Homepage");
-          })
-          .catch((error) => alert(error));
-      })
-      .catch((error) => alert(error));
+    try {
+      setIsLoading(true);
+      FirebaseDB.auth()
+        .signInWithEmailAndPassword(emailValues, passwordValues)
+        .then((response) => {
+          const uid = response.user.uid;
+          const userRef = FirebaseDB.firestore().collection("users");
+          userRef
+            .doc(uid)
+            .get()
+            .then((firestoreDocument) => {
+              if (!firestoreDocument.exists) {
+                setIsLoading(false);
+                Alert.alert("No such account with this email exists");
+                return;
+              }
+              setIsLoading(false);
+              const user = firestoreDocument.data();
+              navigation.navigate("Homepage", { user });
+            })
+            .catch((error) => {
+              setIsLoading(false);
+              Alert.alert(error);
+            });
+        })
+        .catch((error) => Alert.alert(error));
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert(error);
+    }
   };
 
   return (
@@ -77,7 +96,7 @@ const LoginAuth = () => {
           right: 0.15 * width,
         }}
       >
-        <SignInButton func={() => signIn()}>
+        <SignInButton func={() => signIn()} isLoading={isLoading}>
           <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
             Sign In
           </Text>

@@ -1,4 +1,4 @@
-import { Text, TextInput, View, TouchableOpacity } from "react-native";
+import { Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
 import { globalFontStyles } from "../../Component/GlobalFont";
 import { globalStyles } from "../../Component/GlobalStyle";
 import React, { useState } from "react";
@@ -8,6 +8,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { Formik, isString } from "formik";
 import * as yup from "yup";
 import FirebaseDB from "../../FirebaseDB";
+import SignInButton from "../../Component/SignInButton";
 const reviewSchema = yup.object({
   username: yup
     .string()
@@ -37,16 +38,41 @@ const reviewSchema = yup.object({
 });
 
 const NoPage = () => {
+  const [isLoading, setIsLoading] = useState("");
   const handleData = (values) => {
-    FirebaseDB.firestore()
-      .collection("users")
-      .add({
-        name: values.username,
-        email: values.email,
-        password: values.password,
-      })
-      .then(() => {})
-      .catch((err) => console.error(err));
+    try {
+      setIsLoading(true);
+      FirebaseDB.auth()
+        .createUserWithEmailAndPassword(values.email, values.password)
+        .then((response) => {
+          const uid = response.user.uid;
+          const data = {
+            id: uid,
+            username: values.username,
+            password: values.password,
+            email: values.email,
+          };
+          const userRef = FirebaseDB.firestore().collection("users");
+          userRef
+            .doc(uid)
+            .set(data)
+            .then(() => {
+              setIsLoading(false);
+              navigation.navigate("DetailsCollection", { user: data });
+            })
+            .catch((error) => {
+              setIsLoading(false);
+              Alert.alert(error);
+            });
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          Alert.alert(error);
+        });
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert(error);
+    }
   };
 
   const navigation = useNavigation();
@@ -59,7 +85,6 @@ const NoPage = () => {
         onSubmit={(values, actions) => {
           handleData(values);
           actions.resetForm();
-          navigation.navigate("DetailsCollection");
         }}
       >
         {(props) => (
@@ -144,15 +169,11 @@ const NoPage = () => {
             </View>
 
             <View style={{ top: 50, left: 25 }}>
-              <TouchableOpacity
-                activeOpacity={0.875}
-                style={globalStyles.buttonDesign}
-                onPress={props.handleSubmit}
-              >
+              <SignInButton func={props.handleSubmit} isLoading={isLoading}>
                 <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                  continue
+                  Continue
                 </Text>
-              </TouchableOpacity>
+              </SignInButton>
             </View>
           </View>
         )}

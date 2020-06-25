@@ -3,12 +3,20 @@ import { View } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
+import FirebaseDB from "../../../FirebaseDB";
 
 const Profile = ({ navigation }) => {
   const course = () => navigation.navigate("Course");
   const focus = () => navigation.navigate("Focus");
   const graduation = () => navigation.navigate("Graduation");
-
+  const signOutUser = async () => {
+    try {
+      await FirebaseDB.auth().signOut();
+      //navigation.navigate("Login");
+    } catch (error) {
+      Alert.alert(error);
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <Header str={"Profile"} leftChildren={null} rightChildren={null} />
@@ -34,7 +42,7 @@ const Profile = ({ navigation }) => {
           right={"Y4S2"}
         />
         <View style={{ alignItems: "center" }}>
-          <LogoutButton />
+          <LogoutButton func={() => signOutUser()} />
         </View>
       </View>
     </View>

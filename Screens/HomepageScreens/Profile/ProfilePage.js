@@ -13,22 +13,22 @@ const Stack = createStackNavigator();
 
 const ProfilePage = () => {
   return (
-      <Stack.Navigator
-          initialRouteName="Profile"
-          screenOptions={{
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            ...TransitionPresets.SlideFromRightIOS,
-            transitionSpec: {
-              open: config,
-              close: config,
-            },
-          }}
-      >
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Focus" component={Focus} />
-        <Stack.Screen name="Course" component={Course} />
-        <Stack.Screen name="Graduation" component={Graduation} />
-      </Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="Profile"
+      screenOptions={{
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        ...TransitionPresets.SlideFromRightIOS,
+        transitionSpec: {
+          open: config,
+          close: config,
+        },
+      }}
+    >
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Focus" component={Focus} />
+      <Stack.Screen name="Course" component={Course} />
+      <Stack.Screen name="Graduation" component={Graduation} />
+    </Stack.Navigator>
   );
 };
 
