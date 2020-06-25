@@ -5,6 +5,7 @@ import {
   Text,
   Platform,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import BackgroundFaded from "../Backgrounds/BackgroundFaded";
 import { globalFontStyles } from "../../Component/GlobalFont";
@@ -12,6 +13,8 @@ import SignInButton from "../../Component/SignInButton";
 import ChoosingOptions from "../../Component/MakingClock";
 import { useNavigation } from "@react-navigation/native";
 
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 const DetailsCollection = () => {
   const navigation = useNavigation();
   const createAccount = () => navigation.navigate("Homepage");
@@ -19,27 +22,27 @@ const DetailsCollection = () => {
   let pos = 0;
 
   const nonFilledButton = (props) => (
-      <TouchableOpacity
-          activeOpacity={0.95}
-          style={styles.shape}
-          onPress={() => change(1, props)}
-      >
-        <Text style={{ ...globalFontStyles.OSB_17, color: "#364F6B" }}>
-          {props}
-        </Text>
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={0.95}
+      style={styles.shape}
+      onPress={() => change(1, props)}
+    >
+      <Text style={{ ...globalFontStyles.OSB_17, color: "#364F6B" }}>
+        {props}
+      </Text>
+    </TouchableOpacity>
   );
 
   const FilledButton = (props) => (
-      <TouchableOpacity
-          activeOpacity={0.95}
-          style={styles.newShape}
-          onPress={() => change(2, props)}
-      >
-        <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
-          {props}
-        </Text>
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={0.95}
+      style={styles.newShape}
+      onPress={() => change(2, props)}
+    >
+      <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
+        {props}
+      </Text>
+    </TouchableOpacity>
   );
 
   const [CS, setCS] = useState(nonFilledButton("Computer Science"));
@@ -114,27 +117,26 @@ const DetailsCollection = () => {
   };
 
   const below = () => (
-      <SignInButton func={() => switchToAddInfo()}>
-        <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-          Continue
-        </Text>
-      </SignInButton>
+    <SignInButton func={() => switchToAddInfo()}>
+      <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+        Continue
+      </Text>
+    </SignInButton>
   );
 
   const createAcc = () => (
-      <SignInButton func={() => createAccount()}>
-        <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>Done</Text>
-      </SignInButton>
+    <SignInButton func={() => createAccount()}>
+      <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>Done</Text>
+    </SignInButton>
   );
 
   const [textHeader, setTextHeader] = useState("Course");
   const [bot, setBot] = useState(below);
   const [truth, setTruth] = useState(true);
   const [newPos, setNewPos] = useState({
-    flex: Platform.OS === "android" ? 2 : 1,
-    justifyContent: Platform.OS === "android" ? "center" : null,
+    flex: 2,
+    justifyContent: "center",
     alignItems: "center",
-    right: 20,
   });
 
   const switchToAddInfo = () => {
@@ -142,71 +144,70 @@ const DetailsCollection = () => {
     setBot(createAcc);
     setTruth(false);
     setNewPos({
-      flex: Platform.OS === "android" ? 2 : 1,
-      justifyContent: Platform.OS === "android" ? "center" : null,
+      flex: 2,
+      justifyContent: "center",
       alignItems: "center",
-      right: 20,
-      bottom: Platform.OS === "android" ? 40 : 10,
+      bottom: 0.2 * height,
     });
   };
 
   const courseinfo = (
-      <View>
-        {CS}
-        {BA}
-        {ISys}
-        {ISec}
-        {CE}
-      </View>
+    <View style={{ flex: 1 }}>
+      {CS}
+      {BA}
+      {ISys}
+      {ISec}
+      {CE}
+    </View>
   );
 
   const additionalinfo = (
-      <View>
-        <ChoosingOptions/>
-      </View>
+    <View style={{ flex: 1 }}>
+      <ChoosingOptions />
+    </View>
   );
 
   return (
-      <BackgroundFaded>
-        <View
-            style={{
-              flex: Platform.OS === "android" ? 2 : 1,
-              justifyContent: "center",
-            }}
+    <BackgroundFaded>
+      <View
+        style={{
+          flex: 2,
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          style={{
+            ...globalFontStyles.OSEB_34,
+            color: "#686868",
+            left: 30,
+            top: 30,
+          }}
         >
-          <Text
-              style={{
-                ...globalFontStyles.OSEB_34,
-                color: "#686868",
-                left: 30,
-                top: 30,
-              }}
-          >
-            {textHeader}
-          </Text>
-        </View>
-        <View style={{ flex: Platform.OS === "android" ? 4 : 2 }}>
-          {truth ? courseinfo : additionalinfo}
-        </View>
-        <View style={newPos}>{bot}</View>
-      </BackgroundFaded>
+          {textHeader}
+        </Text>
+      </View>
+      <View style={{ flex: 5 }}>{truth ? courseinfo : additionalinfo}</View>
+      <View style={newPos}>{bot}</View>
+    </BackgroundFaded>
   );
 };
 
 const styles = StyleSheet.create({
   shape: {
-    margin: 10,
-    padding: Platform.OS === "android" ? 22 : 25,
-    borderRadius: 35,
+    width: 0.95 * width,
+    height: 0.09 * height,
+    borderRadius: 40,
     borderColor: "#364F6B",
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
+    margin: 10,
   },
   newShape: {
     margin: 10,
-    padding: Platform.OS === "android" ? 22 : 25,
-    borderRadius: 35,
+    width: 0.95 * width,
+    height: 0.09 * height,
+    borderRadius: 40,
     borderColor: "#364F6B",
     borderWidth: 1,
     justifyContent: "center",

@@ -7,7 +7,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Formik, isString } from "formik";
 import * as yup from "yup";
-
+import FirebaseDB from "../../FirebaseDB";
 const reviewSchema = yup.object({
   username: yup
     .string()
@@ -37,17 +37,16 @@ const reviewSchema = yup.object({
 });
 
 const NoPage = () => {
-  const [data, setData] = useState({
-    username: "",
-    password: "",
-    email: "",
-  });
-
   const handleData = (values) => {
-    setData({
-      ...data,
-      values,
-    });
+    FirebaseDB.firestore()
+      .collection("users")
+      .add({
+        name: values.username,
+        email: values.email,
+        password: values.password,
+      })
+      .then(() => {})
+      .catch((err) => console.error(err));
   };
 
   const navigation = useNavigation();
@@ -98,6 +97,7 @@ const NoPage = () => {
                 style={{ ...globalStyles.iconDesign, right: 10 }}
               />
               <TextInput
+                secureTextEntry={true}
                 placeholder="Password"
                 placeholderTextColor="#7F8E9E"
                 onChangeText={props.handleChange("password")}

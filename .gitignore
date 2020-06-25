@@ -2,3 +2,4 @@ node_modules/**/*
 .expo/*
 package-lock.json
 package.json
+.DS_Store

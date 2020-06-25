@@ -14,14 +14,12 @@ const ChoosingOptions = () => {
   ];
 
   const semList = [
-    { key: "Y1S1", value: "Y1S1" },
-    { key: "Y1S2", value: "Y1S2" },
-    { key: "Y2S1", value: "Y2S1" },
-    { key: "Y2S2", value: "Y2S2" },
     { key: "Y3S1", value: "Y3S1" },
     { key: "Y3S2", value: "Y3S2" },
     { key: "Y4S1", value: "Y4S1" },
     { key: "Y4S2", value: "Y4S2" },
+    { key: "Y5S1", value: "Y5S1" },
+    { key: "Y5S2", value: "Y5S2" },
   ];
 
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));

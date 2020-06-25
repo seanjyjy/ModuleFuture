@@ -20,7 +20,20 @@ import DetailsCollection from "./Screens/Login/DetailsCollection";
 import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
 import AddModule from "./Screens/HomepageScreens/AddModule/AddModule";
 import Filter from "./Screens/HomepageScreens/AddModule/Filter";
-
+import {
+  Y1S1,
+  Y1S2,
+  Y2S1,
+  Y2S2,
+  Y3S1,
+  Y3S2,
+  Y4S1,
+  Y4S2,
+  Y5S1,
+  Y5S2,
+} from "./Screens/HomepageScreens/Planner/Plans/ContentPlan";
+import AddPlan from "./Screens/HomepageScreens/Planner/Plans/AddPlan";
+import ViewPlan from "./Screens/HomepageScreens/Planner/Plans/ViewPlan";
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
@@ -58,13 +71,21 @@ export default function App() {
       require("./assets/loginbackgroundtest2.png"),
       require("./assets/loginbackgroundtest4.png"),
       require("./assets/y1s1.png"),
-      require("./assets/y1s2v1.png"),
+      require("./assets/y1s2.png"),
       require("./assets/y2s1.png"),
       require("./assets/y2s2.png"),
       require("./assets/y3s1.png"),
       require("./assets/y3s2.png"),
       require("./assets/y4s1.png"),
       require("./assets/y4s2.png"),
+      require("./assets/y5s1.png"),
+      require("./assets/y5s2.png"),
+      require("./assets/HeaderBG.png"),
+      require("./assets/plan1.png"),
+      require("./assets/plan2.png"),
+      require("./assets/plan3.png"),
+      require("./assets/plan4.png"),
+      require("./assets/corkboard.png"),
     ]);
 
     const fontAssets = getFonts();
@@ -97,7 +118,19 @@ export default function App() {
                 name="ProgressPageSettings"
                 component={ProgressPageSettings}
               />
+              <AuthStack.Screen name="Y1S1" component={Y1S1} />
+              <AuthStack.Screen name="Y1S2" component={Y1S2} />
+              <AuthStack.Screen name="Y2S1" component={Y2S1} />
+              <AuthStack.Screen name="Y2S2" component={Y2S2} />
+              <AuthStack.Screen name="Y3S1" component={Y3S1} />
+              <AuthStack.Screen name="Y3S2" component={Y3S2} />
+              <AuthStack.Screen name="Y4S1" component={Y4S1} />
+              <AuthStack.Screen name="Y4S2" component={Y4S2} />
+              <AuthStack.Screen name="Y5S1" component={Y5S1} />
+              <AuthStack.Screen name="Y5S2" component={Y5S2} />
+              <AuthStack.Screen name="AddPlan" component={AddPlan} />
               <AuthStack.Screen name="AddModule" component={AddModule} />
+              <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
               <AuthStack.Screen name="Filter" component={Filter} />
             </AuthStack.Navigator>
           </NavigationContainer>

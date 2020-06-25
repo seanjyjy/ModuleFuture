@@ -6,21 +6,19 @@ import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Formik } from "formik";
 import * as yup from "yup";
+import FirebaseDB from "../../FirebaseDB";
 
 const reviewSchema = yup.object({
   username: yup.string().required().min(6).max(16),
 });
 
 const YesPage = () => {
-  const [data, setData] = useState({
-    username: "",
-  });
-
   const handleData = (values) => {
-    setData({
-      ...data,
-      values,
-    });
+    FirebaseDB.firestore()
+      .collection("users")
+      .add({ name: values.username })
+      .then(() => {})
+      .catch((err) => console.error(err));
   };
 
   const navigation = useNavigation();
