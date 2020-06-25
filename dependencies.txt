@@ -11,3 +11,4 @@ npm install --save react-native-gesture-handler
 npm install react-native link react-native-screens
 npm install react-native-animatable --save
 npm install --save @react-native-community/masked-view
+"firebase": "7.9.0"

@@ -1,6 +1,6 @@
 import { Text, TextInput, View, TouchableOpacity } from "react-native";
-import { globalFontStyles } from "../Component/GlobalFont";
-import { globalStyles } from "../Component/GlobalStyle";
+import { globalFontStyles } from "../../Component/GlobalFont";
+import { globalStyles } from "../../Component/GlobalStyle";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
