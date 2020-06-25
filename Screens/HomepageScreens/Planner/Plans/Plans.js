@@ -148,6 +148,8 @@ const Plans = (props) => {
         backDropPresstoClose={true}
         backButtonClose={true}
         coverScreen={true}
+        onClosed={() => setModalVisible(false)}
+        // Keyboard offset
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>Name of Plan</Text>
@@ -157,7 +159,6 @@ const Plans = (props) => {
             style={styles.input}
             placeholder="e.g. EZ CAP 5.0"
             onChangeText={(val) => setPlanName(val)}
-            onPress={() => setModalVisible(true)}
           />
         </View>
         <View style={{ flex: 1, borderTopWidth: 0.5, flexDirection: "row" }}>
