@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
@@ -182,7 +175,7 @@ const Foundation = ({ navigation }) => {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={editMode ? "" : "Foundation"}
         leftChildren={
@@ -199,7 +192,7 @@ const Foundation = ({ navigation }) => {
         rightChildren={null}
       />
       <Box />
-    </SafeAreaView>
+    </View>
   );
 };
 

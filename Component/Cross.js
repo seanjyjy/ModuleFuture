@@ -8,6 +8,7 @@ const Cross = (props) => {
     <View
       style={{
         flexDirection: "row",
+        // flex: 1,
         top: props.top,
         alignItems: "center",
         left: props.left,
@@ -22,7 +23,7 @@ const Cross = (props) => {
       />
       <Text
         style={{
-          ...globalFontStyles.OSB_14,
+          ...globalFontStyles.OSB_15,
           color: "#666666",
           marginLeft: 10,
         }}

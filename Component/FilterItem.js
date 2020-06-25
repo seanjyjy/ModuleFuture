@@ -13,6 +13,10 @@ import { Icon } from "react-native-eva-icons";
 const FilterItem = (props) => {
   const [toggled, setToggle] = useState(false);
 
+  if (toggled && props.reset) {
+    setToggle(false);
+  }
+
   return (
     <TouchableOpacity
       style={styles.main}

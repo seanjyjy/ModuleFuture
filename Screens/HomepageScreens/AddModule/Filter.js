@@ -7,7 +7,6 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
@@ -43,6 +42,7 @@ const Filter = ({ navigation }) => {
         : boolean === "Ascending"
         ? "Descending"
         : "Default";
+
     return (
       <TouchableOpacity
         style={{
@@ -51,7 +51,7 @@ const Filter = ({ navigation }) => {
           borderRightWidth: name === "Level" ? 0.1 : 0.6,
           marginLeft: name === "Level" ? 1 : 0,
         }}
-        activeOpacity={0.85}
+        activeOpacity={0.95}
         onPress={() => setter(setSort())}
       >
         <Text
@@ -78,23 +78,16 @@ const Filter = ({ navigation }) => {
   };
 
   const sort = (
-    <View
-      style={{
-        paddingTop: 20,
-        alignItems: "center",
-      }}
-    >
+    <View style={styles.sortComponent}>
       <Text style={{ ...globalFontStyles.NSB_17, color: "#232323" }}>
         Sort by
       </Text>
-      <View style={{ flexDirection: "row", marginTop: 14 }}>
+      <View style={{ flexDirection: "row", marginTop: 14, marginBottom: 30 }}>
         {sortButton(sortState1, setSortState1, "Level")}
         {sortButton(sortState2, setSortState2, "Code")}
       </View>
     </View>
   );
-
-  const divider = <View style={styles.divider} />;
 
   const levels = [
     { name: "1000", key: 1 },
@@ -134,12 +127,12 @@ const Filter = ({ navigation }) => {
 
   const textWithIcon2 = (name) => <FilterItem text={name} box={false} />;
 
-  const filterSection = (array, name) => (
-    <FilterSection array={array} name={name} />
+  const filterSection = (array, name, clear) => (
+    <FilterSection array={array} name={name} reset={clearFilters} />
   );
 
   const otherSection = (
-    <View style={{ marginTop: 35, width: "83.6%" }}>
+    <View style={{ marginTop: 35, marginBottom: 15 }}>
       <Text
         style={{
           ...globalFontStyles.NSB_17,
@@ -159,44 +152,42 @@ const Filter = ({ navigation }) => {
 
   const section = [
     { key: 1, array: levels, string: "Level" },
-    { key: 2, array: codes, string: "Level" },
-    { key: 3, array: MCs, string: "Level" },
+    { key: 2, array: codes, string: "Code" },
+    { key: 3, array: MCs, string: "MCs" },
   ];
 
-  const mainFilter = (
-    <View style={{ alignItems: "center", paddingBottom: 20 }}>
-      <Text
-        style={{
-          ...globalFontStyles.NSB_17,
-          color: "#232323",
-          top: 18,
-          marginBottom: -8,
-        }}
-      >
-        Filter by
-      </Text>
-      {filterSection(levels, "Level")}
-      {filterSection(codes, "Code")}
-      {filterSection(MCs, "MCs")}
-      {otherSection}
-    </View>
-  );
+  const [clearFilters, clear] = useState(false);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       {header}
-      <ScrollView style={{ marginBottom: 60 }}>
-        {sort}
-        {divider}
-        {mainFilter}
-      </ScrollView>
+      <View style={{ marginBottom: 155, width: "83.6%" }}>
+        <FlatList
+          ListHeaderComponent={sort}
+          ListFooterComponent={otherSection}
+          data={section}
+          keyExtractor={(item) => item.key.toString()}
+          renderItem={({ item }) =>
+            filterSection(item.array, item.string, clearFilters)
+          }
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
       <BottomBar
         leftText={"Clear all"}
         transition={() => navigation.navigate("AddModule")}
         rightText={`Show ${numMods} modules`}
         size={"45%"}
+        clearAll={() => {
+          clear(true);
+          setSortState1("Default");
+          setSortState2("Default");
+          setTimeout(() => {
+            clear(false);
+          }, 1);
+        }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -226,12 +217,11 @@ const styles = StyleSheet.create({
     width: 90,
     borderWidth: 0.6,
   },
-  divider: {
-    marginTop: 22,
-    width: "83.6%",
-    left: 0.09 * width,
+  sortComponent: {
     borderBottomWidth: StyleSheet.hairlineWidth * 3,
     borderBottomColor: "#7070704D",
     alignSelf: "stretch",
+    paddingTop: 20,
+    alignItems: "center",
   },
 });

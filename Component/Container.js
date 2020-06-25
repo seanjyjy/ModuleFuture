@@ -73,7 +73,7 @@ const Container = (props) => {
         name={plus ? "plus-circle" : "minus-circle"}
         width={43}
         height={43}
-        fill={plus ? "#3FE2D3" : "#E52727"}
+        fill={plus ? "#3FE2D3" : "#FF6B6B"}
         onPress={() => changeState(!plus)}
       />
     </View>

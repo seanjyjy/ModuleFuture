@@ -3,10 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   Dimensions,
   FlatList,
-  TouchableOpacity,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
@@ -227,6 +225,7 @@ const AddModule = ({ navigation }) => {
             {portion1 > 0 ? "Taken" : ""}
           </Text>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={current.taken}
             keyExtractor={(item) => item.key.toString()}
             renderItem={({ item }) => textWithIcon(item.name)}
@@ -246,14 +245,19 @@ const AddModule = ({ navigation }) => {
     );
   };
 
+  const gap = <View style={{ marginVertical: 5 }}></View>;
+
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
       <View style={{ marginBottom: 200 }}>
         <FlatList
+          ListHeaderComponent={gap}
           data={array}
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) => holders(item)}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={gap}
         />
       </View>
       {modal(split, 100 - split)}

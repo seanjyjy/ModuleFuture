@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView } from "react-native";
+import { View } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import SuggestButton from "../../../Component/SuggestButton";
@@ -10,7 +10,7 @@ import specialisations from "../../../Data/Specialisations";
 const Focus = ({ navigation }) => {
   const textWithIcon2 = (name) => <FocusAreaChoice text={name} />;
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header
         str={"Focus Area"}
         leftChildren={
@@ -31,7 +31,7 @@ const Focus = ({ navigation }) => {
           renderItem={({ item }) => textWithIcon2(item.name)}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

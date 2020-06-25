@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView } from "react-native";
+import { View } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
@@ -10,7 +10,7 @@ const Profile = ({ navigation }) => {
   const graduation = () => navigation.navigate("Graduation");
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Header str={"Profile"} leftChildren={null} rightChildren={null} />
       <View
         style={{
@@ -37,7 +37,7 @@ const Profile = ({ navigation }) => {
           <LogoutButton />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
