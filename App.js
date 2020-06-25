@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
 import Homepage from "./Screens/Homepage";
@@ -12,6 +12,7 @@ import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
+import FirebaseDB from "./FirebaseDB";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
 
@@ -65,7 +66,8 @@ const cacheImages = (images) => {
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const loadAssetAsync = async () => {
     const imageAssets = cacheImages([
       require("./assets/loginbackgroundtest2.png"),
@@ -91,52 +93,103 @@ export default function App() {
     const fontAssets = getFonts();
     await Promise.all([...imageAssets, fontAssets]);
   };
+  useEffect(() => {
+    const usersRef = FirebaseDB.firestore().collection("users");
+    FirebaseDB.auth().onAuthStateChanged((user) => {
+      if (user) {
+        usersRef
+          .doc(user.uid)
+          .get()
+          .then((document) => {
+            const userData = document.data();
+            setLoading(false);
+            setUser(userData);
+          })
+          .catch((error) => {
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []);
 
   if (isReady) {
-    return (
-      <SafeAreaProvider>
-        <ApplicationProvider {...eva} theme={eva.light}>
-          <NavigationContainer theme={{ colors: { background: "white" } }}>
-            <AuthStack.Navigator
-              headerMode="false"
-              screenOptions={{
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-                ...TransitionPresets.SlideFromRightIOS,
-                transitionSpec: {
-                  open: config,
-                  close: config,
-                },
-              }}
-            >
-              <AuthStack.Screen name="Login" component={Login} />
-              <AuthStack.Screen
-                name="DetailsCollection"
-                component={DetailsCollection}
-              />
-              <AuthStack.Screen name="Homepage" component={Homepage} />
-              <AuthStack.Screen
-                name="ProgressPageSettings"
-                component={ProgressPageSettings}
-              />
-              <AuthStack.Screen name="Y1S1" component={Y1S1} />
-              <AuthStack.Screen name="Y1S2" component={Y1S2} />
-              <AuthStack.Screen name="Y2S1" component={Y2S1} />
-              <AuthStack.Screen name="Y2S2" component={Y2S2} />
-              <AuthStack.Screen name="Y3S1" component={Y3S1} />
-              <AuthStack.Screen name="Y3S2" component={Y3S2} />
-              <AuthStack.Screen name="Y4S1" component={Y4S1} />
-              <AuthStack.Screen name="Y4S2" component={Y4S2} />
-              <AuthStack.Screen name="Y5S1" component={Y5S1} />
-              <AuthStack.Screen name="Y5S2" component={Y5S2} />
-              <AuthStack.Screen name="AddPlan" component={AddPlan} />
-              <AuthStack.Screen name="AddModule" component={AddModule} />
-              <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
-              <AuthStack.Screen name="Filter" component={Filter} />
-            </AuthStack.Navigator>
-          </NavigationContainer>
-        </ApplicationProvider>
-      </SafeAreaProvider>
-    );
+    if (loading) {
+      return <></>;
+    } else {
+      return (
+        <SafeAreaProvider>
+          <ApplicationProvider {...eva} theme={eva.light}>
+            <NavigationContainer theme={{ colors: { background: "white" } }}>
+              <AuthStack.Navigator
+                headerMode="false"
+                screenOptions={{
+                  cardStyleInterpolator:
+                    CardStyleInterpolators.forHorizontalIOS,
+                  ...TransitionPresets.SlideFromRightIOS,
+                  transitionSpec: {
+                    open: config,
+                    close: config,
+                  },
+                }}
+              >
+                {user ? (
+                  <>
+                    <AuthStack.Screen name="Homepage" component={Homepage} />
+                    <AuthStack.Screen
+                      name="ProgressPageSettings"
+                      component={ProgressPageSettings}
+                    />
+                    <AuthStack.Screen name="Y1S1" component={Y1S1} />
+                    <AuthStack.Screen name="Y1S2" component={Y1S2} />
+                    <AuthStack.Screen name="Y2S1" component={Y2S1} />
+                    <AuthStack.Screen name="Y2S2" component={Y2S2} />
+                    <AuthStack.Screen name="Y3S1" component={Y3S1} />
+                    <AuthStack.Screen name="Y3S2" component={Y3S2} />
+                    <AuthStack.Screen name="Y4S1" component={Y4S1} />
+                    <AuthStack.Screen name="Y4S2" component={Y4S2} />
+                    <AuthStack.Screen name="Y5S1" component={Y5S1} />
+                    <AuthStack.Screen name="Y5S2" component={Y5S2} />
+                    <AuthStack.Screen name="AddPlan" component={AddPlan} />
+                    <AuthStack.Screen name="AddModule" component={AddModule} />
+                    <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
+                    <AuthStack.Screen name="Filter" component={Filter} />
+                  </>
+                ) : (
+                  <>
+                    <AuthStack.Screen name="Login" component={Login} />
+                    <AuthStack.Screen
+                      name="DetailsCollection"
+                      component={DetailsCollection}
+                    />
+                    <AuthStack.Screen name="Homepage" component={Homepage} />
+                    <AuthStack.Screen
+                      name="ProgressPageSettings"
+                      component={ProgressPageSettings}
+                    />
+                    <AuthStack.Screen name="Y1S1" component={Y1S1} />
+                    <AuthStack.Screen name="Y1S2" component={Y1S2} />
+                    <AuthStack.Screen name="Y2S1" component={Y2S1} />
+                    <AuthStack.Screen name="Y2S2" component={Y2S2} />
+                    <AuthStack.Screen name="Y3S1" component={Y3S1} />
+                    <AuthStack.Screen name="Y3S2" component={Y3S2} />
+                    <AuthStack.Screen name="Y4S1" component={Y4S1} />
+                    <AuthStack.Screen name="Y4S2" component={Y4S2} />
+                    <AuthStack.Screen name="Y5S1" component={Y5S1} />
+                    <AuthStack.Screen name="Y5S2" component={Y5S2} />
+                    <AuthStack.Screen name="AddPlan" component={AddPlan} />
+                    <AuthStack.Screen name="AddModule" component={AddModule} />
+                    <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
+                    <AuthStack.Screen name="Filter" component={Filter} />
+                  </>
+                )}
+              </AuthStack.Navigator>
+            </NavigationContainer>
+          </ApplicationProvider>
+        </SafeAreaProvider>
+      );
+    }
   } else {
     return (
       <AppLoading

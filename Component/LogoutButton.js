@@ -4,22 +4,41 @@ import {
   Dimensions,
   Text,
   NativeModules,
+  Alert,
 } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
 import { useSafeArea } from "react-native-safe-area-context";
+import { log } from "react-native-reanimated";
+import FirebaseDB from "../FirebaseDB";
 
 const LogoutButton = () => {
+  // const logout = () => {
+  //   Alert.alert(
+  //     "Confirm Log Out",
+  //     "Do you want to log out?",
+  //     [
+  //       {
+  //         text: "Yes",
+  //         onPress: () => FirebaseDB.auth().signOut(),
+  //         style: "cancel",
+  //       },
+  //       { text: "Cancel", onPress: () => {}, style: "cancel" },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
   return (
-      <TouchableOpacity
-          style={styles.buttonDesign}
-          activeOpacity={0.875}
-          onPress={() => NativeModules.DevSettings.reload()}
-      >
-        <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-          Logout
-        </Text>
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.buttonDesign}
+      activeOpacity={0.875}
+      //onPress={() => NativeModules.DevSettings.reload()}
+      onPress={() => FirebaseDB.auth().signOut()}
+    >
+      <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+        Logout
+      </Text>
+    </TouchableOpacity>
   );
 };
 
