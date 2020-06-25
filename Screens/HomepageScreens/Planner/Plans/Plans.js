@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
-  KeyboardAvoidingView,
 } from "react-native";
 
 import Header from "../../../../Component/Header";
@@ -18,7 +17,7 @@ import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import SignInButton from "../../../../Component/SignInButton";
-import Modal from "react-native-modal";
+import ModalBox from "react-native-modalbox";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -143,19 +142,12 @@ const Plans = (props) => {
 
   const PopOutBox = () => {
     return (
-      <Modal
+      <ModalBox
         style={styles.modalBox}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        backdropTransitionOutTiming={0}
-        isVisible={modalVisible}
-        onBackdropPress={() => {
-          setModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setModalVisible(false);
-        }}
-        hideModalContentWhileAnimating={true}
+        isOpen={modalVisible}
+        backDropPresstoClose={true}
+        backButtonClose={true}
+        coverScreen={true}
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>Name of Plan</Text>
@@ -195,7 +187,7 @@ const Plans = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </ModalBox>
     );
   };
   return (
@@ -315,11 +307,9 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.4,
     width: width * 0.8,
+    height: 0.3 * height,
     borderRadius: 25,
-    bottom: 20,
   },
   popouttext: {
     flexDirection: "row",
