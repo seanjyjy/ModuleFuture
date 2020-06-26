@@ -14,12 +14,10 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ProgressPageSettings = ({ navigation, route }) => {
+const ProgressPageSettings = ({ navigation }) => {
   //const [NumInterval, setNumInterval] = useState(4);
   const [totalMCs, setTotalMCs] = useState(160);
   const [TargetCAP, setTargetCAP] = useState(5);
-
-  //const navigation = useNavigation();
 
   const questions = (questions, displays, key) => {
     return (

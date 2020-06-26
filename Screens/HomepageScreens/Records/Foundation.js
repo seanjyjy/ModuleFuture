@@ -9,10 +9,26 @@ import AddModuleButton from "../../../Component/AddModuleButton";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const Foundation = ({ navigation }) => {
+const Foundation = ({ navigation, route }) => {
   const [editMode, setEdit] = useState(false);
 
-  const array = [
+  /*
+  React.useEffect(() => {
+    if (route.params?.mods) {
+      console.log("ANY");
+      const array = Array.from(route.params?.mods);
+      let i = data.length;
+      let newArr = array.map((module) => {
+        const code = module.name.substring(0, 7);
+        i++;
+        return { key: i, clash: false, moduleName: code, TargetGrade: "" };
+      });
+      setData([...data, newArr]);
+    }
+  });
+  */
+
+  const [data, setData] = useState([
     {
       key: 1,
       name: "CS1101S Programming Methodology",
@@ -22,28 +38,28 @@ const Foundation = ({ navigation }) => {
     },
     {
       key: 2,
-      name: "CS2030 Programming Methodology II",
+      name: "CS1231S Discrete Structures",
       grade: "B+",
-      sem: "Y1S1",
+      sem: "Y1S2",
       taken: true,
     },
     {
       key: 3,
-      name: "CS2040S Data Structures and Algorithms",
+      name: "CS2030 Programming Methodology II",
       grade: "B+",
-      sem: "Y1S1",
+      sem: "Y1S2",
       taken: true,
     },
     {
       key: 4,
-      name: "CS1101S Programming Methodology",
-      grade: "B+",
-      sem: "Y1S1",
-      taken: true,
+      name: "CS2040S Data Structures and Algorithms",
+      grade: "",
+      sem: "",
+      taken: false,
     },
     {
       key: 5,
-      name: "CS1101S Programming Methodology",
+      name: "CS2105 Introduction to Computer Networks",
       grade: "",
       sem: "",
       taken: false,
@@ -56,14 +72,13 @@ const Foundation = ({ navigation }) => {
       taken: false,
     },
     {
-      // Should be false, but testing for fit if all are true
       key: 7,
       name: "CS3230 Design and Analysis of Algorithms",
       grade: "",
       sem: "",
       taken: false,
     },
-  ];
+  ]);
 
   const holders = (name, grade, sem, taken) => (
     <View style={styles.headerText}>
@@ -84,7 +99,7 @@ const Foundation = ({ navigation }) => {
       <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
         {sem}
       </Text>
-      {editMode && taken ? (
+      {editMode ? (
         <Icon
           name="trash-2-outline"
           width={17}
@@ -123,7 +138,7 @@ const Foundation = ({ navigation }) => {
         </Text>
       </View>
       <FlatList
-        data={array}
+        data={data}
         keyExtractor={(item) => item.key.toString()}
         renderItem={({ item }) =>
           holders(item.name, item.grade, item.sem, item.taken)
@@ -140,7 +155,7 @@ const Foundation = ({ navigation }) => {
   const styles = StyleSheet.create({
     container: {
       width: width * 0.9,
-      height: Math.min(height * 0.8, array.length * 40 + 88),
+      height: Math.min(height * 0.8, data.length * 40 + 88),
       alignSelf: "center",
       marginTop: 20,
       borderRadius: 14,

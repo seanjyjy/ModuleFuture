@@ -20,7 +20,7 @@ const Container = (props) => {
       <View style={{ flexDirection: "column", flex: 1 }}>
         <View
           style={{
-            width: 0.7 * width,
+            width: 0.65 * width,
             flex: 1,
             justifyContent: "center",
           }}
@@ -85,7 +85,10 @@ const Container = (props) => {
         width={43}
         height={43}
         fill={plus ? "#3FE2D3" : "#FF6B6B"}
-        onPress={() => changeState(!plus)}
+        onPress={() => {
+          plus ? props.incr() : props.decr();
+          changeState(!plus);
+        }}
       />
     </View>
   );

@@ -138,9 +138,17 @@ export const globalFontStyles = StyleSheet.create({
     fontFamily: "Nunito-ExtraBold",
     fontSize: 17,
   },
+  NBEB_15: {
+    fontFamily: "Nunito-ExtraBold",
+    fontSize: 15,
+  },
   NBEB_14: {
     fontFamily: "Nunito-ExtraBold",
     fontSize: 14,
+  },
+  NBEB_13: {
+    fontFamily: "Nunito-ExtraBold",
+    fontSize: 13,
   },
   // ----------------------------------------NUNITO-REGULAR--------------------------------------------------------
   NR_14: {

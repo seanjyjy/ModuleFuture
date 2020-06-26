@@ -127,7 +127,7 @@ const Filter = ({ navigation }) => {
 
   const textWithIcon2 = (name) => <FilterItem text={name} box={false} />;
 
-  const filterSection = (array, name, clear) => (
+  const filterSection = (array, name) => (
     <FilterSection array={array} name={name} reset={clearFilters} />
   );
 
@@ -167,9 +167,7 @@ const Filter = ({ navigation }) => {
           ListFooterComponent={otherSection}
           data={section}
           keyExtractor={(item) => item.key.toString()}
-          renderItem={({ item }) =>
-            filterSection(item.array, item.string, clearFilters)
-          }
+          renderItem={({ item }) => filterSection(item.array, item.string)}
           showsVerticalScrollIndicator={false}
         />
       </View>

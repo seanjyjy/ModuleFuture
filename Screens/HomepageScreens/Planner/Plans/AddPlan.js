@@ -24,6 +24,17 @@ const AddPlan = ({ route }) => {
     if (route.params?.item) {
       setPlanName(route.params?.item[0]);
     }
+    // if (route.params?.mods) {
+    //   console.log("ANY");
+    //   const array = Array.from(route.params?.mods);
+    //   let i = data.length;
+    //   let newArr = array.map((module) => {
+    //     const code = module.name.substring(0, 7);
+    //     i++;
+    //     return { key: i, clash: false, moduleName: code, TargetGrade: "" };
+    //   });
+    //   setData([...data, newArr]);
+    // }
   });
   const [planNameValue, setPlanName] = useState("Plan 1");
   const navigation = useNavigation();
@@ -64,9 +75,8 @@ const AddPlan = ({ route }) => {
     { key: "2", clash: false, moduleName: "CS1231S", TargetGrade: "A" },
     { key: "3", clash: false, moduleName: "MA1101R", TargetGrade: "A-" },
     { key: "4", clash: false, moduleName: "MA1521", TargetGrade: "B+" },
-    { key: "5", clash: true, moduleName: "GER100H", TargetGrade: "B" },
-    { key: "6", clash: false, moduleName: "CS2040S", TargetGrade: "A+" },
-    { key: "7", clash: true, moduleName: "CS2030", TargetGrade: "A" },
+    { key: "5", clash: true, moduleName: "GER1000H", TargetGrade: "B" },
+    { key: "6", clash: false, moduleName: "ST1131", TargetGrade: "A+" },
   ];
 
   let transition = new Animated.Value(0);
