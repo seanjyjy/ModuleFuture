@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
 import { IndexPath, Layout, Select, SelectItem } from "@ui-kitten/components";
 
 const ChoosingOptions = () => {
   const yearList = [
-    { key: 2015, value: "2015" },
     { key: 2016, value: "2016" },
     { key: 2017, value: "2017" },
     { key: 2018, value: "2018" },
@@ -22,8 +21,8 @@ const ChoosingOptions = () => {
     { key: "Y5S2", value: "Y5S2" },
   ];
 
-  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
-  const [selectedIndex2, setSelectedIndex2] = useState(new IndexPath(0));
+  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(3));
+  const [selectedIndex2, setSelectedIndex2] = useState(new IndexPath(3));
   const YearDisplayValue = yearList[selectedIndex.row].value;
   const SemDisplayValue = semList[selectedIndex2.row].value;
   const renderOption = (title) => (
