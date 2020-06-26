@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import Header from "../../../../Component/Header";
@@ -16,7 +18,8 @@ import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
-import Modal from "react-native-modal";
+import Modal from "react-native-modalbox";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -139,43 +142,62 @@ const Plans = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
+  // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
     return (
       <Modal
         style={styles.modalBox}
-        //animationIn="fadeIn"
-        //animationOut="fadeOut"
-
-        isVisible={modalVisible}
-        onBackdropPress={() => {
-          setModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setModalVisible(false);
-        }}
+        isOpen={modalVisible}
+        backdropPressToClose={false}
+        coverScreen={true}
+        onClosed={() => setModalVisible(false)}
+        keyboardTopOffset={300}
+        position="center"
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>Name of Plan</Text>
         </View>
-        <View style={styles.flexOneCenter}>
-          <TextInput
-            autoFocus={true}
-            style={styles.input}
-            placeholder="e.g. EZ CAP 5.0"
-            onChangeText={(val) => setPlanName(val)}
-          />
+        <View style={{ ...styles.flexOneCenter }}>
+          <View
+            style={{
+              width: 0.4 * width,
+              height: 0.04 * height,
+              borderWidth: 1,
+              borderColor: "#D0CECE",
+            }}
+          >
+            <TextInput
+              style={{
+                width: 0.4 * width,
+                height: 0.04 * height,
+                left: 5,
+              }}
+              placeholder="e.g. EZ CAP 5.0"
+              onChangeText={(val) => setPlanName(val)}
+            />
+          </View>
         </View>
-        <View style={{ flex: 1, borderTopWidth: 0.5, flexDirection: "row" }}>
+        <View
+          style={{
+            flex: 1,
+            borderTopWidth: 1,
+            borderColor: "#D0CECE",
+            flexDirection: "row",
+          }}
+        >
           <TouchableOpacity
-            onPress={() => setModalVisible(false)}
+            onPress={() => {
+              Keyboard.dismiss();
+              setModalVisible(false);
+            }}
             activeOpacity={0.9}
             style={{
               ...styles.flexOneCenter,
-              borderRightWidth: 0.5,
-              color: "#232323",
+              borderRightWidth: 1,
+              borderColor: "#D0CECE",
             }}
           >
-            <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
+            <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
               Cancel
             </Text>
           </TouchableOpacity>
@@ -183,11 +205,12 @@ const Plans = (props) => {
             style={styles.flexOneCenter}
             activeOpacity={0.9}
             onPress={() => {
+              Keyboard.dismiss();
               setModalVisible(false);
               navigation.navigate("AddPlan", { item: [planName] });
             }}
           >
-            <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
+            <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
               Confirm
             </Text>
           </TouchableOpacity>
@@ -196,7 +219,7 @@ const Plans = (props) => {
     );
   };
   return (
-    <>
+    <View style={{ flex: 1, minHeight: hp("100%") }}>
       <View style={styles.header}>
         <ImageBackground
           style={styles.header}
@@ -271,7 +294,7 @@ const Plans = (props) => {
         </TouchableOpacity>
       </View>
       {PopOutBox()}
-    </>
+    </View>
   );
 };
 
@@ -340,11 +363,9 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.4,
-    width: width * 0.8,
-    borderRadius: 25,
-    bottom: 20,
+    width: 0.7 * width,
+    height: 0.17 * height,
+    borderRadius: 30,
   },
   popouttext: {
     flexDirection: "row",
@@ -363,7 +384,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#232323",
+    borderColor: "#f2f2f2",
     height: 0.04 * height,
     width: 200,
   },

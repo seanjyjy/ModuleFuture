@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
-import Modal from "react-native-modal";
+import Modal from "react-native-modalbox";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -69,26 +69,35 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
     return (
       <Modal
         style={styles.modalBox}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        backdropTransitionOutTiming={0}
-        isVisible={modalVisible}
-        onBackdropPress={() => {
-          setModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setModalVisible(false);
-        }}
+        isOpen={modalVisible}
+        backdropPressToClose={false}
+        coverScreen={true}
+        onClosed={() => setModalVisible(false)}
+        keyboardTopOffset={300}
+        position="center"
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>New Target Grade</Text>
         </View>
         <View style={styles.flexOneCenter}>
-          <TextInput
-            style={styles.input}
-            placeholder="S - A+ only"
-            onChangeText={(val) => setText(val)}
-          />
+          <View
+            style={{
+              width: 0.4 * width,
+              height: 0.04 * height,
+              borderWidth: 1,
+              borderColor: "#D0CECE",
+            }}
+          >
+            <TextInput
+              style={{
+                width: 0.4 * width,
+                height: 0.04 * height,
+                left: 5,
+              }}
+              placeholder="S - A+ only"
+              onChangeText={(val) => setText(val)}
+            />
+          </View>
         </View>
         <View style={{ flex: 1, borderTopWidth: 0.5, flexDirection: "row" }}>
           <TouchableOpacity
@@ -248,11 +257,9 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.4,
-    width: width * 0.8,
-    borderRadius: 25,
-    bottom: 20,
+    width: 0.7 * width,
+    height: 0.17 * height,
+    borderRadius: 30,
   },
   popouttext: {
     flexDirection: "row",

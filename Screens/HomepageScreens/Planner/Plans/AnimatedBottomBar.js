@@ -17,7 +17,7 @@ const AnimatedBottomBar = ({ translateY }) => {
         name="plus-circle"
         width={70}
         height={70}
-        fill={"#e65c3f"}
+        fill={"#FB5581"}
         style={{ bottom: 10 }}
         onPress={() => navigation.navigate("AddModule")}
       />

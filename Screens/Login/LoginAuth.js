@@ -38,22 +38,25 @@ const LoginAuth = () => {
             .then((firestoreDocument) => {
               if (!firestoreDocument.exists) {
                 setIsLoading(false);
-                Alert.alert("No such account with this email exists");
-                return;
+                alert("No such account with this email exists");
+              } else {
+                setIsLoading(false);
+                const user = firestoreDocument.data();
+                navigation.navigate("Homepage", { user });
               }
-              setIsLoading(false);
-              const user = firestoreDocument.data();
-              navigation.navigate("Homepage", { user });
             })
             .catch((error) => {
               setIsLoading(false);
-              Alert.alert(error);
+              alert(error);
             });
         })
-        .catch((error) => Alert.alert(error));
+        .catch((error) => {
+          setIsLoading(false);
+          alert(error);
+        });
     } catch (error) {
       setIsLoading(false);
-      Alert.alert(error);
+      alert(error);
     }
   };
 

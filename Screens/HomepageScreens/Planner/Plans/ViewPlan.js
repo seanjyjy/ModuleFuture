@@ -129,17 +129,24 @@ const ViewPlan = () => {
     { moduleName: "ST1131", TargetGrade: "C+", NumMcs: "4", index: 6 },
   ];
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {Header()}
-      <View style={styles.oneCenter}>
-        <View style={{ ...styles.container, bottom: heightToAdjust }}>
+      <View style={{ ...styles.oneCenter, backgroundColor: "transparent" }}>
+        <View
+          style={{
+            ...styles.container,
+            bottom: heightToAdjust,
+            overflow: "hidden",
+          }}
+        >
           <View style={styles.headerAtPlan}>
-            <Text style={{ ...globalFontStyles.NB_24, color: "#707070" }}>
+            <Text style={{ ...globalFontStyles.NB_24, color: "#FFF8DC" }}>
               My Plans
             </Text>
             <View style={styles.lineAtPlan} />
           </View>
-          <View style={{ flex: 10, flexDirection: "row" }}>
+
+          <View style={{ flex: 12, flexDirection: "row" }}>
             <FlatList
               showsVerticalScrollIndicator={false}
               scrollEventThrottle={16}
@@ -158,7 +165,7 @@ const ViewPlan = () => {
           </View>
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
     height: 0.86 * height,
     width: 0.95 * width,
     borderRadius: 20,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#DEB887",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -203,12 +210,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderBottomWidth: 0.3,
+    backgroundColor: "#f9f9f9",
   },
   lineAtPlan: {
     width: 0.85 * width,
     height: 0.002 * height,
     borderRadius: 60,
-    backgroundColor: "#707070",
+    backgroundColor: "#FFF8DC",
   },
   headerAtPlan: {
     flex: 1,

@@ -62,16 +62,16 @@ const NoPage = () => {
             })
             .catch((error) => {
               setIsLoading(false);
-              Alert.alert(error);
+              alert(error);
             });
         })
         .catch((error) => {
           setIsLoading(false);
-          Alert.alert(error);
+          alert(error);
         });
     } catch (error) {
       setIsLoading(false);
-      Alert.alert(error);
+      alert(error);
     }
   };
 
