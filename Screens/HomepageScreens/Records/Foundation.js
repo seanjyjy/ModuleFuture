@@ -80,7 +80,7 @@ const Foundation = ({ navigation, route }) => {
     },
   ]);
 
-  const holders = (name, grade, sem, taken) => (
+  const holders = (key, name, grade, sem, taken) => (
     <View style={styles.headerText}>
       <View style={{ width: width * (editMode ? 0.47 : 0.52) }}>
         <Text
@@ -105,7 +105,10 @@ const Foundation = ({ navigation, route }) => {
           width={17}
           height={17}
           fill="#232323"
-          onPress={() => null}
+          onPress={() => {
+            const newList = data.filter((x) => x.name !== name);
+            setData(newList);
+          }}
         />
       ) : null}
     </View>
@@ -141,7 +144,7 @@ const Foundation = ({ navigation, route }) => {
         data={data}
         keyExtractor={(item) => item.key.toString()}
         renderItem={({ item }) =>
-          holders(item.name, item.grade, item.sem, item.taken)
+          holders(item.key, item.name, item.grade, item.sem, item.taken)
         }
       />
       {editMode ? (
