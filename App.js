@@ -92,8 +92,6 @@ export default function App() {
       require("./assets/plan2.png"),
       require("./assets/plan3.png"),
       require("./assets/plan4.png"),
-      require("./assets/corkboard.png"),
-      require("./assets/corkboard1.png"),
     ]);
 
     const fontAssets = getFonts();
