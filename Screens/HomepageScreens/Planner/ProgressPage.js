@@ -8,7 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicon from "react-native-vector-icons/Ionicons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
@@ -133,9 +133,9 @@ const ProgressPage = ({ navigation, route }) => {
             alignItems: "flex-end",
           }}
         >
-          <Ionicons
+          <Ionicon
             name="md-arrow-round-back"
-            size={30}
+            size={25}
             style={{ color: "white", right: 0.02 * width }}
           />
         </TouchableOpacity>
@@ -145,7 +145,9 @@ const ProgressPage = ({ navigation, route }) => {
             ...styles.center,
           }}
         >
-          <Text style={{ ...globalFontStyles.NB_34, color: "white" }}>
+          <Text
+            style={{ ...globalFontStyles.NB_34, color: "white", bottom: 5 }}
+          >
             Progress
           </Text>
         </View>
@@ -159,8 +161,8 @@ const ProgressPage = ({ navigation, route }) => {
         >
           <Icon
             name="cog"
-            size={25}
-            style={{ color: "white", right: 0.02 * width }}
+            size={23}
+            style={{ color: "white", right: 0.02 * width, bottom: 2 }}
           />
         </TouchableOpacity>
       </SafeAreaView>
@@ -414,6 +416,7 @@ const ProgressPage = ({ navigation, route }) => {
                   top: 0.0175 * height,
                   justifyContent: "flex-start",
                   alignItems: "center",
+                  // backgroundColor: "green",
                 }}
               >
                 <View
@@ -429,10 +432,9 @@ const ProgressPage = ({ navigation, route }) => {
               <View
                 style={{
                   flex: 4,
-                  top: 0.015 * height,
+                  top: 0.013 * height,
                   justifyContent: "flex-start",
-                  alignItems: "center",
-                  right: 5,
+                  alignItems: "flex-start",
                 }}
               >
                 <Text style={{ ...globalFontStyles.OSB_15, color: "#686868" }}>

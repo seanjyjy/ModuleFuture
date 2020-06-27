@@ -91,11 +91,11 @@ const LoginAuth = () => {
       <View
         style={{
           justifyContent: "flex-start",
-          alignItems: "center",
+          alignItems: "flex-start",
           width: "100%",
           height: "100%",
           top: 0.06 * height,
-          right: 0.15 * width,
+          left: 30,
         }}
       >
         <SignInButton func={() => signIn()} isLoading={isLoading}>

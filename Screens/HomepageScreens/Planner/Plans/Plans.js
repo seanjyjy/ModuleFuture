@@ -12,7 +12,8 @@ import {
 } from "react-native";
 
 import Header from "../../../../Component/Header";
-import Icons from "react-native-vector-icons/Ionicons";
+import Icons from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
@@ -35,7 +36,7 @@ function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
   return (
     <TouchableOpacity
       style={{ ...styles.boxStyle }}
-      activeOpacity={0.9}
+      activeOpacity={0.95}
       onPress={() => {
         onSelect(id);
         navChange();
@@ -111,7 +112,7 @@ function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
 
 const Plans = (props) => {
   const navigation = useNavigation();
-  const [selected, setSelected] = React.useState(new Map());
+  const [selected, setSelected] = React.useState(new Map().set("1", true));
   const [planName, setPlanName] = useState("Plan 1");
   const onSelect = React.useCallback(
     (key) => {
@@ -231,7 +232,7 @@ const Plans = (props) => {
               alignItems: "flex-start",
             }}
           >
-            <Icons
+            <Ionicons
               name="md-arrow-round-back"
               size={25}
               style={{ color: "#3E3E3E", left: 30, bottom: 15 }}
@@ -278,7 +279,11 @@ const Plans = (props) => {
       <View style={styles.btmPart}>
         <View style={{ flex: 1 }} />
         <View style={styles.btmMidPart}>
-          <TouchableOpacity activeOpacity={0.9} style={styles.enterButton}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.enterButton}
+            onPress={() => navigation.navigate("ViewPlan")}
+          >
             <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
               Enter
             </Text>
