@@ -16,6 +16,7 @@ import FocusArea from "./HomepageScreens/FocusArea/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeArea } from "react-native-safe-area-context";
+import FirebaseDB from "../FirebaseDB";
 
 const totalWidth = Dimensions.get("window").width;
 const totalHeight = Dimensions.get("window").height;

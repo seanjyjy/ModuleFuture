@@ -42,7 +42,6 @@ const LoginAuth = () => {
               } else {
                 setIsLoading(false);
                 const user = firestoreDocument.data();
-                navigation.navigate("Homepage", { user });
               }
             })
             .catch((error) => {

@@ -12,9 +12,8 @@ const Profile = ({ navigation }) => {
   const signOutUser = async () => {
     try {
       await FirebaseDB.auth().signOut();
-      //navigation.navigate("Login");
     } catch (error) {
-      Alert.alert(error);
+      alert(error);
     }
   };
   return (

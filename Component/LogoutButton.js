@@ -16,10 +16,8 @@ const LogoutButton = (props) => {
     <TouchableOpacity
       style={styles.buttonDesign}
       activeOpacity={0.875}
-      onPress={() => NativeModules.DevSettings.reload()}
-
       // TEMPORARY SOLUTION TO THE LOG OUT
-      //onPress={() => props.func()}
+      onPress={() => props.func()}
     >
       <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
         Logout

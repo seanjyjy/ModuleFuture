@@ -12,6 +12,7 @@ const Planner = () => {
 
   return (
     <AuthStack.Navigator
+      initialRouteName="Content Page"
       headerMode="false"
       screenOptions={{
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

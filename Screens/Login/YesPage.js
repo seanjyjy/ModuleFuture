@@ -6,43 +6,23 @@ import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Formik } from "formik";
 import * as yup from "yup";
-import FirebaseDB from "../../FirebaseDB";
 import SignInButton from "../../Component/SignInButton";
 const reviewSchema = yup.object({
-  username: yup.string().required().min(6).max(16),
+  name: yup.string().required(),
 });
 
 const YesPage = () => {
-  const [isLoading, setIsLoading] = useState("");
-  const handleData = (values) => {
-    try {
-      setIsLoading(true);
-      FirebaseDB.firestore()
-        .collection("users")
-        .add({ name: values.username })
-        .then(() => {
-          setIsLoading(false);
-          navigation.navigate("DetailsCollection");
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          alert(error);
-        });
-    } catch (error) {
-      setIsLoading(false);
-      alert(error);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
   return (
     <View style={{ flex: 1 }}>
       <Formik
-        initialValues={{ username: "" }}
+        initialValues={{ name: "" }}
         validationSchema={reviewSchema}
         onSubmit={(values, actions) => {
-          handleData(values);
+          navigation.navigate("DetailsCollection", { item: values });
           actions.resetForm();
         }}
       >
@@ -55,9 +35,9 @@ const YesPage = () => {
                 style={{ ...globalStyles.iconDesign, right: 13 }}
               />
               <TextInput
-                placeholder="Username"
+                placeholder="Name"
                 placeholderTextColor="#7F8E9E"
-                onChangeText={props.handleChange("username")}
+                onChangeText={props.handleChange("name")}
                 value={props.values.username}
                 style={{
                   ...globalFontStyles.OSR_17,
@@ -70,7 +50,7 @@ const YesPage = () => {
 
             <View style={{ left: 30 }}>
               <Text style={{ ...globalFontStyles.OSR_17, color: "#cc0000" }}>
-                {props.touched.username && props.errors.username}
+                {props.touched.name && props.errors.name}
               </Text>
             </View>
 
