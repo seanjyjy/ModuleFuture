@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { CommonActions, BaseRouter } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import { Icon } from "react-native-eva-icons";
 import BottomBar from "../../../Component/BottomBar";

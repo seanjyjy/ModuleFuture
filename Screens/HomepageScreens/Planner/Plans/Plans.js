@@ -9,11 +9,10 @@ import {
   TextInput,
   ImageBackground,
   Keyboard,
-  KeyboardAvoidingView,
 } from "react-native";
 
 import Header from "../../../../Component/Header";
-import Icons from "react-native-vector-icons/FontAwesome";
+import Icons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
@@ -233,8 +232,8 @@ const Plans = (props) => {
             }}
           >
             <Icons
-              name="arrow-left"
-              size={21}
+              name="md-arrow-round-back"
+              size={25}
               style={{ color: "#3E3E3E", left: 30, bottom: 15 }}
               onPress={() => navigation.dispatch(CommonActions.goBack())}
             />

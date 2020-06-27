@@ -80,7 +80,7 @@ const Foundation = ({ navigation, route }) => {
     },
   ]);
 
-  const holders = (key, name, grade, sem, taken) => (
+  const holders = (name, grade, sem, taken) => (
     <View style={styles.headerText}>
       <View style={{ width: width * (editMode ? 0.47 : 0.52) }}>
         <Text
@@ -102,7 +102,7 @@ const Foundation = ({ navigation, route }) => {
       {editMode ? (
         <Icon
           name="trash-2-outline"
-          width={17}
+          width={30}
           height={17}
           fill="#232323"
           onPress={() => {
@@ -144,7 +144,7 @@ const Foundation = ({ navigation, route }) => {
         data={data}
         keyExtractor={(item) => item.key.toString()}
         renderItem={({ item }) =>
-          holders(item.key, item.name, item.grade, item.sem, item.taken)
+          holders(item.name, item.grade, item.sem, item.taken)
         }
       />
       {editMode ? (

@@ -8,6 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
@@ -132,9 +133,9 @@ const ProgressPage = ({ navigation, route }) => {
             alignItems: "flex-end",
           }}
         >
-          <Icon
-            name="arrow-left"
-            size={25}
+          <Ionicons
+            name="md-arrow-round-back"
+            size={30}
             style={{ color: "white", right: 0.02 * width }}
           />
         </TouchableOpacity>

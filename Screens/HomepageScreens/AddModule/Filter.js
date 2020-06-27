@@ -7,7 +7,6 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import BottomBar from "../../../Component/BottomBar";
 import Cross from "../../../Component/Cross";
@@ -29,7 +28,7 @@ const Filter = ({ navigation }) => {
       <Cross
         top={14 + useSafeArea().top > 24 ? 10 : 0}
         left={20}
-        transition={() => navigation.dispatch(CommonActions.goBack())}
+        transition={() => navigation.goBack()}
         text={"Filter"}
       />
     </View>
