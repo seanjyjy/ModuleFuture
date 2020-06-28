@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
@@ -6,18 +6,26 @@ import ProfileButton0 from "../../../Component/ProfileButton0";
 import FirebaseDB from "../../../FirebaseDB";
 
 const Profile = ({ navigation, route }) => {
-  const course = () => navigation.navigate("Course");
+  const course = () => navigation.navigate("Course", { course1: course1 });
   const focus = () => navigation.navigate("Focus");
-  const graduation = () =>
-    navigation.navigate("Graduation", { year2: currentYear });
+  const graduation = () => navigation.navigate("Graduation", { sem: gradSem });
 
-  const [currentYear, setYear] = useState("Y4S2");
-  const arr = ["Y3S1", "Y3S2", "Y4S1", "Y4S2", "Y5S1", "Y5S2"];
+  const [course1, setCourse] = useState("");
+  const [gradSem, setGradSem] = useState("");
+  const [year, setYear] = useState("");
 
-  React.useEffect(() => {
-    if (route.params?.year) {
-      setYear(route.params?.year);
-    }
+  const userInfo = FirebaseDB.firestore().collection("users");
+  const user = FirebaseDB.auth().currentUser.uid;
+  useEffect(() => {
+    userInfo
+      .doc(user)
+      .get()
+      .then((document) => {
+        setCourse(document.data().course);
+        console.log(document.data().expectedSemGrad);
+        setGradSem(document.data().expectedSemGrad);
+      })
+      .catch((error) => alert(error));
   });
 
   const signOutUser = async () => {
@@ -27,6 +35,7 @@ const Profile = ({ navigation, route }) => {
       alert(error);
     }
   };
+
   return (
     <View style={{ flex: 1 }}>
       <Header str={"Profile"} leftChildren={null} rightChildren={null} />
@@ -39,7 +48,7 @@ const Profile = ({ navigation, route }) => {
         <ProfileButton0
           left={"Course"}
           transition={() => course()}
-          right={"Computer Science"}
+          right={course1}
         />
         <ProfileButton0
           left={"Focus Area"}
@@ -49,7 +58,7 @@ const Profile = ({ navigation, route }) => {
         <ProfileButton0
           left={"Expected Graduation Sem"}
           transition={() => graduation()}
-          right={currentYear}
+          right={gradSem}
         />
         <View style={{ alignItems: "center" }}>
           <LogoutButton func={() => signOutUser()} />

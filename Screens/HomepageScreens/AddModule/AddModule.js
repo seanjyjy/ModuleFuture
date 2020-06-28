@@ -87,7 +87,6 @@ const AddModule = ({ navigation }) => {
         addVal(MCcount + 1);
         const newSet = modules.add(item.name.substring(0, 7));
         add(newSet);
-        newSet.forEach((x) => console.log(x));
       }}
       decr={() => {
         addVal(MCcount - 1);

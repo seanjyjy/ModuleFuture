@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
+import FirebaseDB from "../../../FirebaseDB";
 
 const Graduation = ({ navigation, route }) => {
-  React.useEffect(() => {
-    if (route.params?.year2) {
-      setYear(route.params?.year2);
-    }
-  });
+  const arr = ["Y3S1", "Y3S2", "Y4S1", "Y4S2", "Y5S1", "Y5S2"];
+
+  useEffect(() => {
+    change(route.params?.sem);
+  }, [currentYear]);
 
   const notPressed = (props) => (
     <TouchableOpacity
@@ -40,16 +41,18 @@ const Graduation = ({ navigation, route }) => {
     </TouchableOpacity>
   );
 
-  let current = 3;
+  let current = -1;
+
+  const userInfo = FirebaseDB.firestore().collection("users");
+  const user = FirebaseDB.auth().currentUser.uid;
+
   const [Y3S1, set1] = useState(notPressed("Y3S1"));
   const [Y3S2, set2] = useState(notPressed("Y3S2"));
   const [Y4S1, set3] = useState(notPressed("Y4S1"));
-  const [Y4S2, set4] = useState(pressed("Y4S2"));
+  const [Y4S2, set4] = useState(notPressed("Y4S2"));
   const [Y5S1, set5] = useState(notPressed("Y5S1"));
   const [Y5S2, set6] = useState(notPressed("Y5S2"));
-  const [currentVal, setYear] = useState(3);
-
-  const arr = ["Y3S1", "Y3S2", "Y4S1", "Y4S2", "Y5S1", "Y5S2"];
+  const [currentYear, setYear] = useState(3);
 
   const deSelect = (current) => {
     if (current === 0) {
@@ -62,7 +65,7 @@ const Graduation = ({ navigation, route }) => {
       set4(notPressed("Y4S2"));
     } else if (current === 4) {
       set5(notPressed("Y5S1"));
-    } else {
+    } else if (current === 5) {
       set6(notPressed("Y5S2"));
     }
   };
@@ -111,7 +114,13 @@ const Graduation = ({ navigation, route }) => {
             size={25}
             style={{ color: "#232323" }}
             onPress={() => {
-              navigation.navigate("Profile", { year: arr[currentVal] });
+              userInfo
+                .doc(user)
+                .update({
+                  expectedSemGrad: arr[currentYear],
+                })
+                .catch((error) => alert(error));
+              navigation.navigate("Profile");
             }}
           />
         }
