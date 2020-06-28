@@ -23,11 +23,12 @@ const height = Dimensions.get("window").height;
 const ContentPage = (props) => {
   const navigation = useNavigation();
   const [cardArray, setCardArray] = useState([]);
+  const [arrToPass, setArrToPass] = useState([]);
   const userInfo = FirebaseDB.firestore().collection("users");
-  const user = FirebaseDB.auth().currentUser.uid;
+  const userID = FirebaseDB.auth().currentUser.uid;
   useEffect(() => {
     userInfo
-      .doc(user)
+      .doc(userID)
       .get()
       .then((document) => {
         const val = document.data().expectedSemGrad;
@@ -39,8 +40,25 @@ const ContentPage = (props) => {
         setCardArray(tempArr);
       })
       .catch((error) => alert(error));
-  }, []);
-
+  }, [userID]);
+  //   const plansArrayRef = FirebaseDB.firestore()
+  //   .collection("plansArray")
+  //   .doc(userID.concat("_", item.PageName));
+  // plansArrayRef
+  //   .get()
+  //   .then((document) => {
+  //     const val = document.data();
+  //     if (val !== undefined) {
+  //       const arr = val.yearSem;
+  //       setArrToPass(arr);
+  //       //navigation.navigate(item.PageName, { item: [userID, arr] });
+  //     } else {
+  //       plansArrayRef.set({ yearSem: [] });
+  //       setArrToPass([]);
+  //       //navigation.navigate(item.PageName, { item: [userID, []] });
+  //     }
+  //   })
+  //   .catch((error) => alert(error));
   const num = (val) => {
     return val === "Y3S1"
       ? 4
@@ -131,9 +149,26 @@ const ContentPage = (props) => {
           data={cardArray}
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) => {
-            return CardWallet(y, item.key.toString(), item.card, () =>
-              navigation.navigate(item.PageName)
-            );
+            return CardWallet(y, item.key.toString(), item.card, () => {
+              const plansArrayRef = FirebaseDB.firestore()
+                .collection("plansArray")
+                .doc(userID.concat("_", item.PageName));
+              plansArrayRef
+                .get()
+                .then((document) => {
+                  const val = document.data();
+                  if (val !== undefined) {
+                    const arr = val.yearSem;
+                    //setArrToPass(arr);
+                    navigation.navigate(item.PageName, { item: [userID, arr] });
+                  } else {
+                    plansArrayRef.set({ yearSem: [] });
+                    //setArrToPass([]);
+                    navigation.navigate(item.PageName, { item: [userID, []] });
+                  }
+                })
+                .catch((error) => alert(error));
+            });
           }}
           {...{ onScroll }}
         />

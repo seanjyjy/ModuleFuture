@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -20,6 +20,7 @@ import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import Modal from "react-native-modalbox";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import FirebaseDB from "../../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -31,15 +32,22 @@ const ImageSet = [
   require("../../../../assets/plan4.png"),
 ];
 
-const colorSet = ["#D8A3A3", "#745454", "#C4C0C0", "white"];
-function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
+const colorSet = ["#E09797", "#745454", "white", "#fcf2d8"];
+function RectInfoSelected({
+  id,
+  selected,
+  onSelect,
+  imageLink,
+  idChange,
+  nameOfPlan,
+}) {
   return (
     <TouchableOpacity
       style={{ ...styles.boxStyle }}
       activeOpacity={0.95}
       onPress={() => {
         onSelect(id);
-        navChange();
+        idChange(id);
       }}
     >
       <View style={{ flex: 1, overflow: "hidden", borderRadius: 30 }}>
@@ -58,9 +66,10 @@ function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
                   ...globalFontStyles.OSSB_19,
                   left: 20,
                   color: colorSet[imageLink],
+                  bottom: 5,
                 }}
               >
-                Plan 1
+                {nameOfPlan}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -112,6 +121,48 @@ function RectInfoSelected({ id, selected, onSelect, imageLink, navChange }) {
 
 const Plans = (props) => {
   const navigation = useNavigation();
+  //const thisPageInfo = props.nextPageInfo;
+  //const userID = thisPageInfo[0];
+  const info = props.data;
+  const userID = info[0];
+  const plansArrayRef = FirebaseDB.firestore()
+    .collection("plansArray")
+    .doc(userID.concat("_", props.headerTitle));
+  const [currentArr, setCurrentArr] = useState(info[1]);
+  //const [size, setSize] = useState(thisPageInfo[1].length);
+  const [size, setSize] = useState(0);
+  useEffect(() => {
+    // plansArrayRef
+    //   .get()
+    //   .then((document) => {
+    //     const val = document.data();
+    //     if (val !== undefined) {
+    //       const arr = val.yearSem;
+    //       setSize(arr.length);
+    //       setCurrentArr(arr);
+    //     } else {
+    //       plansArrayRef.set({ yearSem: [] });
+    //       setCurrentArr([]);
+    //     }
+    //   })
+    //   .catch((error) => alert(error));
+    const unsub = plansArrayRef.onSnapshot(
+      (document) => {
+        const val = document.data();
+        if (val !== undefined) {
+          const arr = val.yearSem;
+          setSize(arr.length);
+          setCurrentArr(arr);
+        } else {
+          plansArrayRef.set({ yearSem: [] });
+          setCurrentArr([]);
+        }
+      },
+      (error) => alert(error)
+    );
+    return () => unsub();
+  }, [userID]);
+
   const [selected, setSelected] = React.useState(new Map().set("1", true));
   const [planName, setPlanName] = useState("Plan 1");
   const onSelect = React.useCallback(
@@ -122,23 +173,20 @@ const Plans = (props) => {
     },
     [selected]
   );
-
+  const [currentID, setCurrentID] = useState("1");
+  const setCurrentlyPressID = (val) => {
+    if (val === currentID) {
+      setCurrentID("-1");
+    } else {
+      setCurrentID(val);
+    }
+  };
   const data = [
     { key: "1", value: true },
     { key: "2", value: false },
     { key: "3", value: false },
     { key: "4", value: false },
   ]; // demo
-
-  const plansArray = []; // this is the arrays of plan
-  const [navigationID, setNavigationID] = useState("1"); // selecting of plans
-  const navChange = (val) => {
-    if (val === navigationID) {
-      setNavigationID("");
-    } else {
-      setNavigationID(val);
-    }
-  };
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -207,7 +255,14 @@ const Plans = (props) => {
             onPress={() => {
               Keyboard.dismiss();
               setModalVisible(false);
-              navigation.navigate("AddPlan", { item: [planName] });
+              navigation.navigate("AddPlan", {
+                item: [
+                  planName,
+                  userID.concat("_", props.headerTitle),
+                  size,
+                  props.headerTitle,
+                ],
+              });
             }}
           >
             <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
@@ -249,29 +304,49 @@ const Plans = (props) => {
             <Text
               style={{
                 ...globalFontStyles.NB_20,
-                color: "#232323",
+                color: "#3E3E3E",
                 bottom: 15,
               }}
             >
               {props.headerTitle}
             </Text>
           </View>
-          <View style={{ flex: 1 }} />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                bottom: 18,
+                ...globalFontStyles.NB_14,
+                color: "#007AFF",
+              }}
+            >
+              Edit
+            </Text>
+          </View>
         </ImageBackground>
       </View>
       <View style={{ flex: 6, backgroundColor: "#f9f9f9" }}>
         <FlatList
+          ListEmptyComponent={
+            <View style={{ flex: 1, backgroundColor: "#f9f9f9" }} />
+          }
           showsVerticalScrollIndicator={false}
-          data={data}
+          data={currentArr}
           keyExtractor={(item) => item.key}
           extraData={selected}
           renderItem={({ item }) => (
             <RectInfoSelected
-              id={item.key}
+              id={item.key.toString()}
               selected={!!selected.get(item.key)}
               onSelect={onSelect}
               imageLink={(parseInt(item.key) - 1) % 4}
-              navChange={() => navChange(parseInt(item.key))}
+              idChange={(val) => setCurrentlyPressID(val)}
+              nameOfPlan={item.nameOfPlan}
             />
           )}
         />
@@ -282,9 +357,35 @@ const Plans = (props) => {
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.enterButton}
-            onPress={() => navigation.navigate("ViewPlan")}
+            onPress={() => {
+              if (parseInt(currentID) - 1 < 0) {
+                alert("Please select or create a plan");
+              } else {
+                const currentPlanName =
+                  currentArr[parseInt(currentID) - 1].nameOfPlan;
+                const plansItselfRef = FirebaseDB.firestore()
+                  .collection("plansItself")
+                  .doc(
+                    userID.concat("_", props.headerTitle, "_", currentPlanName)
+                  );
+                const val = plansItselfRef.get().then((document) => {
+                  const info = document.data();
+                  if (info !== undefined) {
+                    const moduleInformations = info.planInfo;
+                    const thisPlanName = info.nameOfPlan;
+                    navigation.navigate("ViewPlan", {
+                      item: [
+                        thisPlanName,
+                        moduleInformations,
+                        props.headerTitle,
+                      ],
+                    });
+                  }
+                });
+              }
+            }}
           >
-            <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+            <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
               Enter
             </Text>
           </TouchableOpacity>
@@ -292,7 +393,9 @@ const Plans = (props) => {
         <TouchableOpacity
           style={styles.btmRightPart}
           activeOpacity={0.9}
-          onPress={() => setModalVisible(true)}
+          onPress={() => {
+            setModalVisible(true);
+          }}
         >
           <Icon name="plus-circle" width={60} height={60} fill={"#FB5581"} />
         </TouchableOpacity>

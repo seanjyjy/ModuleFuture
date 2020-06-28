@@ -23,7 +23,7 @@ const ProgressPageSettings = ({ navigation }) => {
     return (
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.questionLeft}>
-          <Text style={{ ...globalFontStyles.OSSB_15, left: 20 }}>
+          <Text style={{ ...globalFontStyles.NB_15, left: 20 }}>
             {questions}
           </Text>
         </View>
@@ -59,12 +59,12 @@ const ProgressPageSettings = ({ navigation }) => {
           activeOpacity={0.9}
           style={styles.headerLeft}
         >
-          <Text style={{ ...globalFontStyles.OSR_17, color: "#0F0B0B" }}>
+          <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
             Cancel
           </Text>
         </TouchableOpacity>
         <View style={styles.headerMiddle}>
-          <Text style={{ ...globalFontStyles.OSSB_19, color: "#5D5151" }}>
+          <Text style={{ ...globalFontStyles.NB_17, color: "#232323" }}>
             Options
           </Text>
         </View>
@@ -77,7 +77,7 @@ const ProgressPageSettings = ({ navigation }) => {
           activeOpacity={0.9}
           style={styles.headerRight}
         >
-          <Text style={{ ...globalFontStyles.OSB_17, color: "#4787D9" }}>
+          <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
             Done
           </Text>
         </TouchableOpacity>
@@ -95,7 +95,7 @@ export default ProgressPageSettings;
 
 const styles = StyleSheet.create({
   topPortion: {
-    height: 100,
+    height: 0.11 * height,
     flexDirection: "row",
     borderBottomWidth: 0.7,
     borderColor: "#B5B5B5",
@@ -110,20 +110,20 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   btmPortion: {
-    height: 180,
+    height: 130,
     borderBottomWidth: 0.7,
     borderColor: "#B5B5B5",
   },
   questionRight: {
     height: "100%",
-    width: width - 160,
+    width: width,
     justifyContent: "center",
     alignItems: "flex-start",
     borderColor: "#B5B5B5",
   },
   questionLeft: {
     height: "100%",
-    width: 160,
+    width: 120,
     justifyContent: "center",
     alignItems: "flex-start",
   },

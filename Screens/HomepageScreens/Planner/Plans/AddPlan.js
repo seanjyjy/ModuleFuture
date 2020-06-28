@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,27 +16,43 @@ import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import FirebaseDB from "../../../../FirebaseDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const AddPlan = ({ route }) => {
-  React.useEffect(() => {
+  const [planNameValue, setPlanName] = useState("Plan 1");
+  const [size, setSize] = useState(0);
+  const [docLoc, setDocLoc] = useState("");
+  const [data, setData] = useState([]);
+  const deleteItem = (modName) => {
+    setData((newData) => {
+      return newData.filter((todo) => todo.moduleName !== modName);
+    });
+  };
+  useEffect(() => {
     if (route.params?.item) {
       setPlanName(route.params?.item[0]);
+      setSize(route.params?.item[2]);
+      setDocLoc(route.params?.item[1]);
     }
-    // if (route.params?.mods) {
-    //   console.log("ANY");
-    //   const array = Array.from(route.params?.mods);
-    //   let i = data.length;
-    //   let newArr = array.map((module) => {
-    //     const code = module.name.substring(0, 7);
-    //     i++;
-    //     return { key: i, clash: false, moduleName: code, TargetGrade: "" };
-    //   });
-    //   setData([...data, newArr]);
-    // }
-  });
-  const [planNameValue, setPlanName] = useState("Plan 1");
+    if (route.params?.modDetails) {
+      const tempArr = [];
+      const receivedArr = route.params?.modDetails[0];
+      for (var i = 0; i < route.params?.modDetails[1]; i++) {
+        tempArr.push({
+          key: i.toString(),
+          clash: false,
+          moduleName: receivedArr[i],
+          TargetGrade: "",
+          NumMcs: "4",
+          FinalGrade: "",
+        });
+      }
+      setData(tempArr);
+    }
+  }, [docLoc, route.params?.modDetails]);
+
   const navigation = useNavigation();
   const Header = () => (
     <View style={styles.headerDesign}>
@@ -52,32 +68,46 @@ const AddPlan = ({ route }) => {
         </Text>
       </TouchableOpacity>
       <View style={{ ...styles.flexThreeCenterFlexEnd }}>
-        <Text style={{ bottom: 10, ...globalFontStyles.NB_20, color: "black" }}>
+        <Text
+          style={{ bottom: 10, ...globalFontStyles.NB_20, color: "#232323" }}
+        >
           {planNameValue}
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("ViewPlan")}
+        onPress={() => {
+          const plansArrayRef = FirebaseDB.firestore()
+            .collection("plansArray")
+            .doc(docLoc);
+          plansArrayRef.update({
+            yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
+              key: (size + 1).toString(),
+              nameOfPlan: route.params?.item[0],
+            }),
+          });
+          const plansItself = FirebaseDB.firestore()
+            .collection("plansItself")
+            .doc(docLoc.concat("_", route.params?.item[0]));
+          plansItself.set({
+            nameOfPlan: route.params?.item[0],
+            planInfo: data,
+            fromWhere: route.params?.item[3],
+          });
+          navigation.navigate("ViewPlan", {
+            item: [route.params?.item[0], data, route.params?.item[3]],
+          });
+        }}
         style={styles.flexOneCenterFlexEnd}
         activeOpacity={0.9}
       >
         <Text
-          style={{ bottom: 10, ...globalFontStyles.NB_14, color: "#232323" }}
+          style={{ bottom: 10, ...globalFontStyles.NB_14, color: "#007AFF" }}
         >
           Done
         </Text>
       </TouchableOpacity>
     </View>
   );
-  // -----------------------------------------------------------------------------------------------------
-  const data = [
-    { key: "1", clash: true, moduleName: "CS1101S", TargetGrade: "A+" },
-    { key: "2", clash: false, moduleName: "CS1231S", TargetGrade: "A" },
-    { key: "3", clash: false, moduleName: "MA1101R", TargetGrade: "A-" },
-    { key: "4", clash: false, moduleName: "MA1521", TargetGrade: "B+" },
-    { key: "5", clash: true, moduleName: "GER1000H", TargetGrade: "B" },
-    { key: "6", clash: false, moduleName: "ST1131", TargetGrade: "A+" },
-  ];
 
   let transition = new Animated.Value(0);
   let translateY = transition.interpolate({
@@ -96,13 +126,7 @@ const AddPlan = ({ route }) => {
           data={data}
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
-            <ModuleTemplate
-              {...{
-                clash: item.clash,
-                moduleName: item.moduleName,
-                TargetGrade: item.TargetGrade,
-              }}
-            />
+            <ModuleTemplate dataObj={item} deleteMethod={deleteItem} />
           )}
           onScroll={(event) => {
             transition.setValue(event.nativeEvent.contentOffset.y);
@@ -126,6 +150,16 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     backgroundColor: "#f9f9f9",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+    borderBottomWidth: 1,
+    borderColor: "#DDDDDD",
   },
   flexOneCenterFlexEnd: {
     flex: 1,

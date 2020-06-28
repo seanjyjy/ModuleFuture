@@ -19,7 +19,7 @@ const AnimatedBottomBar = ({ translateY }) => {
         height={70}
         fill={"#FB5581"}
         style={{ bottom: 10 }}
-        onPress={() => navigation.navigate("AddModule")}
+        onPress={() => navigation.navigate("AddModule", { item: "AddPlan" })}
       />
     </Animated.View>
   );

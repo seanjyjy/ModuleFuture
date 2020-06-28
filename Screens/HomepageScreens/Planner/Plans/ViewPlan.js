@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -11,16 +11,43 @@ import {
 import FeatherIcon from "react-native-vector-icons/Feather";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
+import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { useSafeArea } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { Icon } from "react-native-eva-icons";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ViewPlan = () => {
+const ViewPlan = ({ route }) => {
   const navigation = useNavigation();
   const usaBTM = useSafeArea().bottom;
   const heightToAdjust = usaBTM > 0 ? (usaBTM - 20) / 2 : 0;
-
+  const title = route.params?.item[0];
+  const [dataArray, setDataArray] = useState([]);
+  useEffect(() => {
+    if (route.params?.item[1]) {
+      const arrayOfModules = route.params?.item[1];
+      const tempArr = [];
+      for (var i = 0; i < arrayOfModules.length; i++) {
+        tempArr.push({
+          moduleName: arrayOfModules[i].moduleName,
+          TargetGrade: arrayOfModules[i].TargetGrade,
+          NumMcs: "4",
+          key: parseInt(arrayOfModules[i].key),
+        });
+      }
+      setDataArray(tempArr);
+    }
+  }, [route.params?.item[0], route.params?.item[1]]);
+  // const demoArray = [
+  //   { moduleName: "CS1101S", TargetGrade: "A", NumMcs: "4", index: 0 },
+  //   { moduleName: "CS1231S", TargetGrade: "A", NumMcs: "4", index: 1 },
+  //   { moduleName: "MA1101R", TargetGrade: "A-", NumMcs: "4", index: 2 },
+  //   { moduleName: "MA1521", TargetGrade: "B+", NumMcs: "4", index: 3 },
+  //   { moduleName: "GES1021", TargetGrade: "B", NumMcs: "4", index: 4 },
+  //   { moduleName: "GER1000H", TargetGrade: "B-", NumMcs: "4", index: 5 },
+  //   { moduleName: "ST1131", TargetGrade: "C+", NumMcs: "4", index: 6 },
+  // ];
   const colorArray = [
     { top: "#fff2ab", btm: "#fff7d1", pin: "#EB0000" },
     { top: "#ffcce5", btm: "#ffe4f1", pin: "#EE82EE" },
@@ -28,48 +55,95 @@ const ViewPlan = () => {
     { top: "#e7cfff", btm: "#f2e6ff", pin: "#FF00FF" },
     { top: "#cbf1c4", btm: "#e4f9e0", pin: "brown" },
   ];
+  //list-outline
+  const MenuIcon = () => (
+    <Icon
+      fill="#232323"
+      width={30}
+      height={30}
+      name="list-outline"
+      onPress={toggleMenu}
+      style={{ right: 15, bottom: 10 }}
+    />
+  );
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
 
+  const [menuVisible, setMenuVisible] = useState(false);
+  const dropDownList = () => {
+    return (
+      <OverflowMenu
+        visible={menuVisible}
+        anchor={MenuIcon}
+        onBackdropPress={toggleMenu}
+        style={{ right: 15, bottom: 10 }}
+      >
+        <MenuItem
+          title={"Home"}
+          onPress={() => {
+            toggleMenu();
+            navigation.navigate("Content Page");
+          }}
+          activeOpacity={0.9}
+        />
+        <MenuItem
+          title={"Plans"}
+          onPress={() => {
+            toggleMenu();
+            navigation.navigate(route.params?.item[2].toString());
+          }}
+          activeOpacity={0.9}
+        />
+        <MenuItem
+          title={"Edit"}
+          onPress={() => {
+            toggleMenu();
+            console.log("LOL");
+          }}
+          activeOpacity={0.9}
+        />
+      </OverflowMenu>
+    );
+  };
   const Header = () => {
     return (
       <View style={styles.headerDesign}>
-        <TouchableOpacity
-          style={{ ...styles.hundredCenter, flex: 1 }}
-          activeOpacity={0.9}
-          onPress={() => navigation.navigate("Content Page")} // temporary
-        >
-          <FeatherIcon
-            name="list"
-            size={23}
-            color="black"
-            style={{ bottom: 10, right: 20 }}
-          />
-        </TouchableOpacity>
-        <View style={{ ...styles.hundredCenter, flex: 2 }}>
-          <Text style={styles.headerText}>NameOfPlan</Text>
+        <View style={{ ...styles.hundredCenter, flex: 1 }}>
+          {dropDownList()}
         </View>
-        <View style={{ ...styles.hundredCenter, flex: 1 }} />
+        <View style={{ ...styles.hundredCenter, flex: 2 }}>
+          <Text style={styles.headerText}>{title}</Text>
+        </View>
+        <View style={{ ...styles.hundredCenter, flex: 1 }}>
+          <Text
+            style={{ bottom: 12, ...globalFontStyles.NB_14, color: "#007AFF" }}
+          >
+            Submit
+          </Text>
+        </View>
       </View>
     );
   };
 
-  const StickyPad = (moduleName, TargetGrade, NumMcs, index) => {
+  const StickyPad = (moduleName, TargetGrade, NumMcs, key) => {
     return (
       <View
         style={{
           ...styles.stickPadContainer,
-          backgroundColor: colorArray[index % 5].btm,
+          backgroundColor: colorArray[key % 5].btm,
         }}
       >
         <View
           style={{
             ...styles.oneCenter,
-            backgroundColor: colorArray[index % 5].top,
+            backgroundColor: colorArray[key % 5].top,
           }}
         >
           <EntypoIcon
             name="pin"
             size={20}
-            color={colorArray[index % 5].pin}
+            color={colorArray[key % 5].pin}
             style={{ left: 10, bottom: 5 }}
           />
         </View>
@@ -77,7 +151,7 @@ const ViewPlan = () => {
           <View
             style={{
               ...styles.twoStart,
-              backgroundColor: colorArray[index % 5].btm,
+              backgroundColor: colorArray[key % 5].btm,
             }}
           >
             <Text
@@ -91,7 +165,7 @@ const ViewPlan = () => {
           <View
             style={{
               ...styles.twoStart,
-              backgroundColor: colorArray[index % 5].btm,
+              backgroundColor: colorArray[key % 5].btm,
             }}
           >
             <Text
@@ -101,7 +175,7 @@ const ViewPlan = () => {
           <View
             style={{
               ...styles.twoStart,
-              backgroundColor: colorArray[index % 5].btm,
+              backgroundColor: colorArray[key % 5].btm,
             }}
           >
             <Text
@@ -111,7 +185,7 @@ const ViewPlan = () => {
           <View
             style={{
               ...styles.oneCenter,
-              backgroundColor: colorArray[index % 5].btm,
+              backgroundColor: colorArray[key % 5].btm,
             }}
           />
         </View>
@@ -119,15 +193,6 @@ const ViewPlan = () => {
     );
   };
 
-  const demoArray = [
-    { moduleName: "CS1101S", TargetGrade: "A", NumMcs: "4", index: 0 },
-    { moduleName: "CS1231S", TargetGrade: "A", NumMcs: "4", index: 1 },
-    { moduleName: "MA1101R", TargetGrade: "A-", NumMcs: "4", index: 2 },
-    { moduleName: "MA1521", TargetGrade: "B+", NumMcs: "4", index: 3 },
-    { moduleName: "GES1021", TargetGrade: "B", NumMcs: "4", index: 4 },
-    { moduleName: "GER1000H", TargetGrade: "B-", NumMcs: "4", index: 5 },
-    { moduleName: "ST1131", TargetGrade: "C+", NumMcs: "4", index: 6 },
-  ];
   return (
     <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {Header()}
@@ -151,14 +216,14 @@ const ViewPlan = () => {
               showsVerticalScrollIndicator={false}
               scrollEventThrottle={16}
               numColumns={2}
-              data={demoArray}
-              keyExtractor={(item) => item.index}
+              data={dataArray}
+              keyExtractor={(item) => item.key}
               renderItem={({ item }) =>
                 StickyPad(
                   item.moduleName,
                   item.TargetGrade,
                   item.NumMcs,
-                  item.index
+                  item.key
                 )
               }
             />

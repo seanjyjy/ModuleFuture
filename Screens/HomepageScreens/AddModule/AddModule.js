@@ -20,7 +20,7 @@ import moduleList from "../../../Data/ModuleList";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const AddModule = ({ navigation }) => {
+const AddModule = ({ navigation, route }) => {
   const header = (
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
@@ -66,7 +66,7 @@ const AddModule = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [current, setItem] = useState(moduleList[0]);
   const [split, setSplit] = useState(0);
-  const [modules, add] = useState(new Set());
+  const [modules, add] = useState(new Set()); // modules are stored here
 
   const compute = (taken, notTaken) => {
     const len = taken.length + notTaken.length;
@@ -87,7 +87,7 @@ const AddModule = ({ navigation }) => {
         addVal(MCcount + 1);
         const newSet = modules.add(item.name.substring(0, 7));
         add(newSet);
-        newSet.forEach((x) => console.log(x));
+        //newSet.forEach((x) => console.log(x));
       }}
       decr={() => {
         addVal(MCcount - 1);
@@ -192,8 +192,13 @@ const AddModule = ({ navigation }) => {
       <BottomBar
         leftText={`Modules added: ${MCcount}`}
         transition={() => {
-          navigation.setParams({ mods: modules });
-          navigation.goBack();
+          const val = route.params?.item;
+          const iterator1 = modules.values();
+          const mods = [];
+          for (var i = 0; i < MCcount; i++) {
+            mods.push(iterator1.next().value);
+          }
+          navigation.navigate(val, { modDetails: [mods, MCcount] });
         }}
         rightText={"Add modules"}
         size={"33%"}

@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  Keyboard,
 } from "react-native";
 
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -20,12 +21,18 @@ import Modal from "react-native-modalbox";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
+const ModuleTemplate = (props) => {
+  const clash = props.dataObj.clash;
+  const moduleName = props.dataObj.moduleName;
+  const TargetGrade = props.dataObj.TargetGrade;
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState("");
+  const [text1, setText1] = useState("");
   const [clashValue, setClash] = useState(clash);
   const [TargetGradeValue, setTargetGrade] = useState(TargetGrade);
+  const [FinalGrade, setFinalGrade] = useState("");
   const [menuVisible, setMenuVisible] = useState(false);
+  const [TargetOrFinal, setTargetOrFinal] = useState(0);
   const MenuIcon = () => (
     <Icon
       fill="#232323"
@@ -50,6 +57,8 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
         <MenuItem
           title={"Delete"}
           onPress={() => {
+            const deleteMethod = props.deleteMethod;
+            deleteMethod(moduleName);
             toggleMenu();
           }}
           activeOpacity={0.9}
@@ -65,7 +74,7 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
       </OverflowMenu>
     );
   };
-  const PopOutBox = () => {
+  const PopOutBox = (whatType) => {
     return (
       <Modal
         style={styles.modalBox}
@@ -77,7 +86,9 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
         position="center"
       >
         <View style={styles.modalHeaderQuestion}>
-          <Text style={styles.popoutheader}>New Target Grade</Text>
+          <Text style={styles.popoutheader}>
+            {whatType === 0 ? "New Target Grade" : "Final Grade"}
+          </Text>
         </View>
         <View style={styles.flexOneCenter}>
           <View
@@ -95,21 +106,36 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
                 left: 5,
               }}
               placeholder="S - A+ only"
-              onChangeText={(val) => setText(val)}
+              onChangeText={(val) => {
+                if (whatType === 0) {
+                  setText(val);
+                  props.dataObj.TargetGrade = val;
+                } else {
+                  setText1(val);
+                  props.dataObj.FinalGrade = val;
+                }
+              }}
             />
           </View>
         </View>
-        <View style={{ flex: 1, borderTopWidth: 0.5, flexDirection: "row" }}>
+        <View
+          style={{
+            flex: 1,
+            borderTopWidth: 1,
+            borderColor: "#D0CECE",
+            flexDirection: "row",
+          }}
+        >
           <TouchableOpacity
             onPress={() => setModalVisible(false)}
             activeOpacity={0.9}
             style={{
               ...styles.flexOneCenter,
-              borderRightWidth: 0.5,
-              color: "#232323",
+              borderRightWidth: 1,
+              borderColor: "#D0CECE",
             }}
           >
-            <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
+            <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
               Cancel
             </Text>
           </TouchableOpacity>
@@ -117,11 +143,16 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
             style={styles.flexOneCenter}
             activeOpacity={0.9}
             onPress={() => {
-              setTargetGrade(text.toString().toUpperCase());
+              Keyboard.dismiss();
+              if (whatType === 0) {
+                setTargetGrade(text.toString().toUpperCase());
+              } else {
+                setFinalGrade(text1.toString().toUpperCase());
+              }
               setModalVisible(false);
             }}
           >
-            <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
+            <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
               Confirm
             </Text>
           </TouchableOpacity>
@@ -163,7 +194,10 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
               <TouchableOpacity
                 style={styles.flexThreeColumnCenter}
                 activeOpacity={0.1}
-                onPress={() => setModalVisible(true)}
+                onPress={() => {
+                  setTargetOrFinal(0);
+                  setModalVisible(true);
+                }}
               >
                 <View style={styles.flexOneCenter}>
                   <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
@@ -189,6 +223,10 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
               <TouchableOpacity
                 style={styles.flexThreeColumnCenter}
                 activeOpacity={0.9}
+                onPress={() => {
+                  setTargetOrFinal(1);
+                  setModalVisible(true);
+                }}
               >
                 <View style={styles.flexOneCenter}>
                   <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
@@ -196,16 +234,16 @@ const ModuleTemplate = ({ clash, moduleName, TargetGrade }) => {
                   </Text>
                 </View>
                 <View style={styles.flexOneFlexStartCenter}>
-                  <Text
-                    style={{ ...globalFontStyles.NB_14, color: "#555151" }}
-                  ></Text>
+                  <Text style={{ ...globalFontStyles.NB_14, color: "#555151" }}>
+                    {FinalGrade}
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </View>
-      {PopOutBox()}
+      {PopOutBox(TargetOrFinal)}
     </>
   );
 };
@@ -278,9 +316,8 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#232323",
-    padding: 8,
-    margin: 10,
+    borderColor: "#f2f2f2",
+    height: 0.04 * height,
     width: 200,
   },
   flexOneShadowOne: {
