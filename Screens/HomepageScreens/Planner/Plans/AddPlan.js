@@ -24,17 +24,17 @@ const AddPlan = ({ route }) => {
     if (route.params?.item) {
       setPlanName(route.params?.item[0]);
     }
-    if (route.params?.mods) {
-      console.log("ANY");
-      const array = Array.from(route.params?.mods);
-      let i = data.length;
-      let newArr = array.map((module) => {
-        const code = module.name.substring(0, 7);
-        i++;
-        return { key: i, clash: false, moduleName: code, TargetGrade: "" };
-      });
-      setData([...data, newArr]);
-    }
+    // if (route.params?.mods) {
+    //   console.log("ANY");
+    //   const array = Array.from(route.params?.mods);
+    //   let i = data.length;
+    //   let newArr = array.map((module) => {
+    //     const code = module.name.substring(0, 7);
+    //     i++;
+    //     return { key: i, clash: false, moduleName: code, TargetGrade: "" };
+    //   });
+    //   setData([...data, newArr]);
+    // }
   });
   const [planNameValue, setPlanName] = useState("Plan 1");
   const navigation = useNavigation();

@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import FirebaseDB from "../../../FirebaseDB";
 
-const Course = ({ navigation, route }) => {
-  useEffect(() => {
-    change(route.params?.course1);
-    console.log("check");
-  });
+/**
+ * TODO: Retrieve info from firebase?
+ * TODO: Set course with firebase + update records/planner page accordingly with firebase
+ */
 
-  const userInfo = FirebaseDB.firestore().collection("users");
-  const user = FirebaseDB.auth().currentUser.uid;
-
+const Course = ({ navigation }) => {
   const NotPressed = (props) => (
     <TouchableOpacity
       style={styles.unpressed}
@@ -43,21 +39,12 @@ const Course = ({ navigation, route }) => {
     </TouchableOpacity>
   );
 
-  let current = -1;
-  const arr = [
-    "Computer Science",
-    "Business Analytics",
-    "Information Systems",
-    "Information Security",
-    "Computer Engineering",
-  ];
-
-  const [CS, setCS] = useState(NotPressed("Computer Science"));
+  let current = 0;
+  const [CS, setCS] = useState(Pressed("Computer Science"));
   const [BA, setBA] = useState(NotPressed("Business Analytics"));
   const [IS, setIS] = useState(NotPressed("Information Systems"));
   const [InfoSec, setInfoSec] = useState(NotPressed("Information Security"));
   const [CEG, setCEG] = useState(NotPressed("Computer Engineering"));
-  const [currentCourse, setCourse] = useState(3);
 
   const deSelect = (current) => {
     if (current === 0) {
@@ -68,7 +55,7 @@ const Course = ({ navigation, route }) => {
       setIS(NotPressed("Information Systems"));
     } else if (current === 3) {
       setInfoSec(NotPressed("Information Security"));
-    } else if (current === 4) {
+    } else {
       setCEG(NotPressed("Computer Engineering"));
     }
   };
@@ -78,28 +65,22 @@ const Course = ({ navigation, route }) => {
       setCS(Pressed("Computer Science"));
       deSelect(current);
       current = 0;
-      setCourse(current);
     } else if (props === "Business Analytics" && current !== 1) {
       setBA(Pressed("Business Analytics"));
       deSelect(current);
       current = 1;
-      setCourse(current);
     } else if (props === "Information Systems" && current !== 2) {
       setIS(Pressed("Information Systems"));
       deSelect(current);
       current = 2;
-      setCourse(current);
     } else if (props === "Information Security" && current !== 3) {
-      console.log("check");
       setInfoSec(Pressed("Information Security"));
       deSelect(current);
       current = 3;
-      setCourse(current);
     } else if (props === "Computer Engineering" && current !== 4) {
       setCEG(Pressed("Computer Engineering"));
       deSelect(current);
       current = 4;
-      setCourse(current);
     }
   };
 
@@ -112,15 +93,7 @@ const Course = ({ navigation, route }) => {
             name="md-arrow-round-back"
             size={25}
             style={{ color: "#232323" }}
-            onPress={() => {
-              userInfo
-                .doc(user)
-                .update({
-                  course: arr[currentCourse],
-                })
-                .catch((error) => alert(error));
-              navigation.goBack();
-            }}
+            onPress={() => navigation.goBack()}
           />
         }
         rightChildren={<View />}

@@ -10,6 +10,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
+
 import Entypo from "react-native-vector-icons/Entypo";
 import CardWallet from "../../../Component/CardWallet";
 import { useNavigation } from "@react-navigation/native";
