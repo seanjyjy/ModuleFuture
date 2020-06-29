@@ -203,7 +203,7 @@ const Foundation = ({ navigation, route }) => {
             height={30}
             fill="#232323"
             onPress={() =>
-              editMode ? setEdit(!editMode) : navigation.goBack()
+              editMode ? setEdit(!editMode) : navigation.navigate("Records")
             }
           />
         }
