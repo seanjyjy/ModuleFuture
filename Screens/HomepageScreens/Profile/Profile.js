@@ -12,6 +12,7 @@ const Profile = ({ navigation, route }) => {
 
   const [course1, setCourse] = useState("");
   const [gradSem, setGradSem] = useState("");
+  const [focusArea, setFocusArea] = useState("None");
   const [year, setYear] = useState("");
 
   const userInfo = FirebaseDB.firestore().collection("users");
@@ -21,6 +22,8 @@ const Profile = ({ navigation, route }) => {
       setGradSem(route.params?.semester);
     } else if (route.params?.course) {
       setCourse(route.params?.course);
+    } else if (route.params?.focusArea) {
+      setFocusArea(route.params?.focusArea);
     } else {
       userInfo
         .doc(user)
@@ -58,7 +61,7 @@ const Profile = ({ navigation, route }) => {
         <ProfileButton0
           left={"Focus Area"}
           transition={() => focus()}
-          right={"None"}
+          right={focusArea}
         />
         <ProfileButton0
           left={"Expected Graduation Sem"}

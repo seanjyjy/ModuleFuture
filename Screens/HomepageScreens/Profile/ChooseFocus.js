@@ -18,7 +18,11 @@ const Focus = ({ navigation }) => {
             name="md-arrow-round-back"
             size={25}
             style={{ color: "#232323" }}
-            onPress={() => navigation.goBack()}
+            onPress={() =>
+              navigation.navigate("Profile", {
+                focusArea: "Artificial Intelligence",
+              })
+            }
           />
         }
         rightChildren={<SuggestButton />}
