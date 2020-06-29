@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
@@ -114,7 +114,7 @@ const Foundation = ({ navigation, route }) => {
     </View>
   );
 
-  const Box = (props) => (
+  const Box = () => (
     <View style={styles.container}>
       <View style={styles.header}>
         <View

@@ -59,7 +59,7 @@ const AddPlan = ({ route }) => {
   const Header = () => (
     <View style={styles.headerDesign}>
       <TouchableOpacity
-        onPress={() => navigation.dispatch(CommonActions.goBack())}
+        onPress={() => navigation.goBack()}
         style={styles.flexOneCenterFlexEnd}
         activeOpacity={0.9}
       >

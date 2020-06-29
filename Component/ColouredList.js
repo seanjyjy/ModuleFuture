@@ -14,7 +14,7 @@ const height = Dimensions.get("window").height;
 
 const ColouredList = (props) => {
   const colors = props.colors;
-  const bool = props.text1 === "Number of prereq taken";
+  const bool = props.text3 === "4.1";
 
   // TODO:
   const content = (key) => {

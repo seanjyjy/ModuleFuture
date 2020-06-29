@@ -1,231 +1,214 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Header from "../../../Component/Header";
+import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import EditButton from "../../../Component/EditButton";
-import AddModuleButton from "../../../Component/AddModuleButton";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import ColouredList from "../../../Component/ColouredList";
 
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
+const Records = ({ navigation }) => {
+  // Default states
+  const [MCstaken, toggle] = useState(true);
+  const [catView, setView] = useState(true);
+  const [currentType, changeType] = useState("Type");
+  const [type, setTypeVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
 
-const Foundation = ({ navigation, route }) => {
-  const [editMode, setEdit] = useState(false);
-
-  /*
-  React.useEffect(() => {
-    if (route.params?.mods) {
-      console.log("ANY");
-      const array = Array.from(route.params?.mods);
-      let i = data.length;
-      let newArr = array.map((module) => {
-        const code = module.name.substring(0, 7);
-        i++;
-        return { key: i, clash: false, moduleName: code, TargetGrade: "" };
-      });
-      setData([...data, newArr]);
-    }
-  });
-  */
-
-  const [data, setData] = useState([
-    {
-      key: 1,
-      name: "CS1101S Programming Methodology",
-      grade: "B+",
-      sem: "Y1S1",
-      taken: true,
-    },
-    {
-      key: 2,
-      name: "CS1231S Discrete Structures",
-      grade: "B+",
-      sem: "Y1S2",
-      taken: true,
-    },
-    {
-      key: 3,
-      name: "CS2030 Programming Methodology II",
-      grade: "B+",
-      sem: "Y1S2",
-      taken: true,
-    },
-    {
-      key: 4,
-      name: "CS2040S Data Structures and Algorithms",
-      grade: "",
-      sem: "",
-      taken: false,
-    },
-    {
-      key: 5,
-      name: "CS2105 Introduction to Computer Networks",
-      grade: "",
-      sem: "",
-      taken: false,
-    },
-    {
-      key: 6,
-      name: "CS2106 Operating Systems",
-      grade: "",
-      sem: "",
-      taken: false,
-    },
-    {
-      key: 7,
-      name: "CS3230 Design and Analysis of Algorithms",
-      grade: "",
-      sem: "",
-      taken: false,
-    },
-  ]);
-
-  const holders = (name, grade, sem, taken) => (
-    <View style={styles.headerText}>
-      <View style={{ width: width * (editMode ? 0.47 : 0.52) }}>
-        <Text
-          numberOfLines={1}
-          style={{
-            ...globalFontStyles.OSSB_14,
-            color: taken ? "#232323" : "#68686880",
-          }}
-        >
-          {name}
-        </Text>
-      </View>
-      <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
-        {grade}
-      </Text>
-      <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
-        {sem}
-      </Text>
-      {editMode ? (
-        <Icon
-          name="trash-2-outline"
-          width={30}
-          height={17}
-          fill="#232323"
-          onPress={() => {
-            const newList = data.filter((x) => x.name !== name);
-            setData(newList);
-          }}
-        />
-      ) : null}
-    </View>
+  {
+    /* --------------------------------------------Ellipsis------------------------------------------------ */
+  }
+  const MenuIcon = () => (
+    <Icon
+      fill="#232323"
+      width={30}
+      height={30}
+      name="more-vertical-outline"
+      onPress={toggleMenu}
+    />
   );
 
-  const Box = (props) => (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View
-          style={{
-            flexDirection: "row",
-            width: width * 0.71,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ ...globalFontStyles.OSB_17, color: "#232323" }}>
-            {editMode ? "" : "Module"}
-          </Text>
-          <Text
-            style={{
-              ...globalFontStyles.OSB_17,
-              color: "#232323",
-            }}
-          >
-            {editMode ? "" : "Grade"}
-          </Text>
-        </View>
-        <Text style={{ ...globalFontStyles.OSB_17, color: "#232323" }}>
-          {editMode ? "" : "Sem"}
-        </Text>
-      </View>
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.key.toString()}
-        renderItem={({ item }) =>
-          holders(item.name, item.grade, item.sem, item.taken)
-        }
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  const toggleTypeMenu = () => {
+    setTypeVisible(!type);
+  };
+
+  /* --------------------------------------------Selector---------------------------------------- */
+
+  const text = (word) => (
+    <Text style={{ ...globalFontStyles.OSR_15, color: "#232323" }}>{word}</Text>
+  );
+
+  const numTaken = () => (MCstaken ? "Toggle no. taken" : "Toggle MCs taken");
+
+  const overallView = () => (catView ? "Full view" : "Categorical view");
+
+  const item1 = () =>
+    currentType === "Type" || currentType === "Level" ? "Code" : "Type";
+
+  const item2 = () =>
+    currentType === "Type" || currentType === "Code" ? "Level" : "Type";
+
+  const renderOverflowMenuAction = () => {
+    const option = (item1, item2) => (
+      <MenuItem
+        title={text(item1())}
+        onPress={() => {
+          toggle(!item2);
+          toggleMenu();
+        }}
+        activeOpacity={0.9}
       />
-      {editMode ? (
-        <AddModuleButton func={() => navigation.navigate("AddModule")} />
-      ) : (
-        <EditButton func={() => setEdit(!editMode)} />
-      )}
-    </View>
+    );
+
+    return (
+      <OverflowMenu
+        visible={menuVisible}
+        anchor={MenuIcon}
+        onBackdropPress={toggleMenu}
+      >
+        {option(numTaken, MCstaken)}
+        {option(overallView, catView)}
+      </OverflowMenu>
+    );
+  };
+
+  const viewType = () => (
+    <TouchableOpacity
+      style={styles.header2}
+      activeOpacity={0.85}
+      onPress={toggleTypeMenu}
+    >
+      <Text style={{ ...globalFontStyles.OSSB_19, color: "#232323" }}>
+        {currentType}
+      </Text>
+      <Icon
+        fill="#232323"
+        width={30}
+        height={20}
+        name="arrow-ios-downward-outline"
+        style={{ marginTop: 4 }}
+      />
+    </TouchableOpacity>
   );
 
-  const styles = StyleSheet.create({
-    container: {
-      width: width * 0.9,
-      height: Math.min(height * 0.8, data.length * 40 + 88),
-      alignSelf: "center",
-      marginTop: 20,
-      borderRadius: 14,
-      borderColor: "#C6C6C6",
-      justifyContent: "space-between",
-      alignContent: "stretch",
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.23,
-      shadowRadius: 2.62,
-      elevation: 4,
-      flexDirection: "column",
-      backgroundColor: "white",
-    },
-    header: {
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      flexDirection: "row",
-      justifyContent: "space-between",
-      padding: 10,
-      borderBottomColor: "#A0A0A0",
-      borderBottomWidth: StyleSheet.hairlineWidth,
-    },
-    headerText: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      padding: 10,
-    },
-  });
+  const selector = () => {
+    const option = (item) => (
+      <MenuItem
+        title={text(item())}
+        onPress={() => {
+          changeType(item());
+          toggleTypeMenu();
+        }}
+        activeOpacity={0.9}
+      />
+    );
+    return (
+      <OverflowMenu
+        visible={type}
+        anchor={viewType}
+        onBackdropPress={toggleTypeMenu}
+      >
+        {option(item1)}
+        {option(item2)}
+      </OverflowMenu>
+    );
+  };
 
-  return (
+  /* --------------------------------------------Floating content------------------------------------------------ */
+
+  const colors = [
+    "#FFB584",
+    "#FF6F66",
+    "#C6E198",
+    "#6CD5AF",
+    "#8F9ED5",
+    "#CE6F73",
+    "#241161",
+    // "#6c2386",
+  ];
+
+  /* --------------------------------------------Content headers------------------------------------------------ */
+
+  const text1 = MCstaken ? "MCs taken" : "No. taken";
+  const text2 = MCstaken ? "26 / 38" : "6 / 9";
+
+  const menu = () => {
+    if (currentType === "Type") {
+      return [
+        { key: 1, name: "Foundation" },
+        { key: 2, name: "Specialisation" },
+        { key: 3, name: "Maths and Sciences" },
+        { key: 4, name: "Depth" },
+        { key: 5, name: "IT Professionalism" },
+        { key: 6, name: "UE" },
+        { key: 7, name: "GEM" },
+      ];
+    } else if (currentType === "Level") {
+      return [
+        { key: 1, name: "1000s" },
+        { key: 2, name: "2000s" },
+        { key: 3, name: "3000s" },
+        { key: 4, name: "4000s" },
+        { key: 5, name: "5000s" },
+        { key: 6, name: "8000s" },
+        { key: 7, name: "8000s" },
+      ];
+    } else {
+      return [
+        { key: 1, name: "CS" },
+        { key: 2, name: "MA" },
+        { key: 3, name: "ST" },
+        { key: 4, name: "ES" },
+        { key: 5, name: "IS" },
+        { key: 6, name: "CM" },
+      ];
+    }
+  };
+
+  return catView ? (
     <View style={{ flex: 1 }}>
       <Header
-        str={editMode ? "" : "Foundation"}
-        leftChildren={
-          <View>
-            {editMode ? (
-              <Icon
-                name={"close-outline"}
-                width={100}
-                height={30}
-                fill="#232323"
-                onPress={() =>
-                  editMode ? setEdit(!editMode) : navigation.goBack()
-                }
-              />
-            ) : (
-              <Ionicons
-                name="md-arrow-round-back"
-                size={25}
-                style={{ color: "#232323" }}
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              />
-            )}
-          </View>
-        }
-        rightChildren={null}
+        str={"Records"}
+        leftChildren={<View />}
+        rightChildren={renderOverflowMenuAction()}
       />
-      <Box />
+      {selector()}
+      <ColouredList
+        colors={colors}
+        transition={() => navigation.navigate("Foundation")}
+        text1={text1}
+        text2={text2}
+        text3={"4.5"}
+        array={menu()}
+      />
+    </View>
+  ) : (
+    // To be updated for Full View
+    <View style={{ flex: 1 }}>
+      <Header
+        str={"Records"}
+        leftChildren={<View />}
+        rightChildren={renderOverflowMenuAction()}
+      />
     </View>
   );
 };
 
-export default Foundation;
+export default Records;
+
+const styles = StyleSheet.create({
+  header2: {
+    flexDirection: "row",
+    paddingTop: 20,
+    paddingBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    // borderBottomColor: "grey",
+    // borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderBottomEndRadius: 13,
+    // borderBottomStartRadius: 16,
+  },
+});
