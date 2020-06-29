@@ -11,7 +11,7 @@ const YesNoButton = (props) => {
         >
             {props.children}
         </TouchableOpacity>
-        )
+    )
 }
 
 export default YesNoButton;

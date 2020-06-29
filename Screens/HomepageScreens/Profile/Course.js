@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 
 /**
@@ -88,11 +89,10 @@ const Course = ({ navigation }) => {
       <Header
         str={"Course"}
         leftChildren={
-          <Icon
-            name="chevron-left-outline"
-            width={100}
-            height={30}
-            fill="#232323"
+          <Ionicons
+            name="md-arrow-round-back"
+            size={25}
+            style={{ color: "#232323" }}
             onPress={() => navigation.goBack()}
           />
         }

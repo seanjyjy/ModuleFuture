@@ -8,7 +8,6 @@ const Cross = (props) => {
     <View
       style={{
         flexDirection: "row",
-        // flex: 1,
         top: props.top,
         alignItems: "center",
         left: props.left,

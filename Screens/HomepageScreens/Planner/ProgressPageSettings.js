@@ -7,46 +7,36 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { useSafeArea, SafeAreaView } from "react-native-safe-area-context";
 
-import {
-  useNavigation,
-  CommonActions,
-  NavigationHelpersContext,
-} from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import { set } from "react-native-reanimated";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ProgressPageSettings = ({ navigation, route }) => {
-  const [NumInterval, setNumInterval] = useState(4);
+const ProgressPageSettings = ({ navigation }) => {
+  //const [NumInterval, setNumInterval] = useState(4);
   const [totalMCs, setTotalMCs] = useState(160);
   const [TargetCAP, setTargetCAP] = useState(5);
-
-  //const navigation = useNavigation();
 
   const questions = (questions, displays, key) => {
     return (
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.questionLeft}>
-          <Text style={{ ...globalFontStyles.OSSB_15, left: 20 }}>
+          <Text style={{ ...globalFontStyles.NB_15, left: 20 }}>
             {questions}
           </Text>
         </View>
         <View
           style={{
             ...styles.questionRight,
-            borderBottomWidth: key === 3 ? 0 : 0.7,
+            borderBottomWidth: key === 2 ? 0 : 0.7,
           }}
         >
           <TextInput
             keyboardType="numeric"
             onChangeText={(val) => {
               if (key === 1) {
-                setNumInterval(val);
-              } else if (key === 2) {
                 setTotalMCs(val);
               } else {
                 setTargetCAP(val);
@@ -69,34 +59,33 @@ const ProgressPageSettings = ({ navigation, route }) => {
           activeOpacity={0.9}
           style={styles.headerLeft}
         >
-          <Text style={{ ...globalFontStyles.OSR_17, color: "#0F0B0B" }}>
+          <Text style={{ ...globalFontStyles.NB_14, color: "#232323" }}>
             Cancel
           </Text>
         </TouchableOpacity>
         <View style={styles.headerMiddle}>
-          <Text style={{ ...globalFontStyles.OSSB_19, color: "black" }}>
+          <Text style={{ ...globalFontStyles.NB_17, color: "#232323" }}>
             Options
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
             navigation.navigate("ProgressPage", {
-              items: [NumInterval, totalMCs, TargetCAP],
-            })
-          }
+              items: [totalMCs, TargetCAP],
+            });
+          }}
           activeOpacity={0.9}
           style={styles.headerRight}
         >
-          <Text style={{ ...globalFontStyles.OSB_17, color: "blue" }}>
+          <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
             Done
           </Text>
         </TouchableOpacity>
       </View>
       {/* ----------------------------------------------------------------- BOTTOM --------------------------------------------------------------------------- */}
       <View style={styles.btmPortion}>
-        {questions("No. of interval", "4-10", 1)}
-        {questions("Total MCs", "160", 2)}
-        {questions("Target CAP", "0-5", 3)}
+        {questions("Total MCs", "160", 1)}
+        {questions("Target CAP", "0-5", 2)}
       </View>
     </>
   );
@@ -106,7 +95,7 @@ export default ProgressPageSettings;
 
 const styles = StyleSheet.create({
   topPortion: {
-    height: 100,
+    height: 0.11 * height,
     flexDirection: "row",
     borderBottomWidth: 0.7,
     borderColor: "#B5B5B5",
@@ -121,20 +110,20 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   btmPortion: {
-    height: 180,
+    height: 130,
     borderBottomWidth: 0.7,
     borderColor: "#B5B5B5",
   },
   questionRight: {
     height: "100%",
-    width: width - 160,
+    width: width,
     justifyContent: "center",
     alignItems: "flex-start",
     borderColor: "#B5B5B5",
   },
   questionLeft: {
     height: "100%",
-    width: 160,
+    width: 120,
     justifyContent: "center",
     alignItems: "flex-start",
   },

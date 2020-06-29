@@ -7,6 +7,10 @@ export const globalFontStyles = StyleSheet.create({
     fontSize: 15,
   },
   // ------------------------------------------OPENSANS-REGULAR------------------------------------------------------
+  OSR_12: {
+    fontFamily: "OpenSans-Regular",
+    fontSize: 12,
+  },
   OSR_13: {
     fontFamily: "OpenSans-Regular",
     fontSize: 13,
@@ -97,6 +101,14 @@ export const globalFontStyles = StyleSheet.create({
   },
 
   // ---------------------------------------NUNITO-BOLD-------------------------------------------------------------
+  NB_14: {
+    fontFamily: "Nunito-Bold",
+    fontSize: 14,
+  },
+  NB_15: {
+    fontFamily: "Nunito-Bold",
+    fontSize: 15,
+  },
   NB_17: {
     fontFamily: "Nunito-Bold",
     fontSize: 17,
@@ -104,6 +116,10 @@ export const globalFontStyles = StyleSheet.create({
   NB_20: {
     fontFamily: "Nunito-Bold",
     fontSize: 20,
+  },
+  NB_24: {
+    fontFamily: "Nunito-Bold",
+    fontSize: 24,
   },
   NB_28: {
     fontFamily: "Nunito-Bold",
@@ -122,9 +138,17 @@ export const globalFontStyles = StyleSheet.create({
     fontFamily: "Nunito-ExtraBold",
     fontSize: 17,
   },
+  NBEB_15: {
+    fontFamily: "Nunito-ExtraBold",
+    fontSize: 15,
+  },
   NBEB_14: {
     fontFamily: "Nunito-ExtraBold",
     fontSize: 14,
+  },
+  NBEB_13: {
+    fontFamily: "Nunito-ExtraBold",
+    fontSize: 13,
   },
   // ----------------------------------------NUNITO-REGULAR--------------------------------------------------------
   NR_14: {

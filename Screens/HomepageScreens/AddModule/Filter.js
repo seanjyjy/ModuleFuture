@@ -3,18 +3,17 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   Dimensions,
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import BottomBar from "../../../Component/BottomBar";
 import Cross from "../../../Component/Cross";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FilterItem from "../../../Component/FilterItem";
 import FilterSection from "./FilterSection";
+import { useSafeArea } from "react-native-safe-area-context";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -25,14 +24,14 @@ const Filter = ({ navigation }) => {
   const [sortState2, setSortState2] = useState("Default");
 
   const header = (
-    <SafeAreaView style={styles.header}>
+    <View style={styles.header}>
       <Cross
-        top={14}
+        top={14 + useSafeArea().top > 24 ? 10 : 0}
         left={20}
-        transition={() => navigation.dispatch(CommonActions.goBack())}
+        transition={() => navigation.goBack()}
         text={"Filter"}
       />
-    </SafeAreaView>
+    </View>
   );
 
   const sortButton = (boolean, setter, name) => {
@@ -127,7 +126,7 @@ const Filter = ({ navigation }) => {
 
   const textWithIcon2 = (name) => <FilterItem text={name} box={false} />;
 
-  const filterSection = (array, name, clear) => (
+  const filterSection = (array, name) => (
     <FilterSection array={array} name={name} reset={clearFilters} />
   );
 
@@ -167,9 +166,7 @@ const Filter = ({ navigation }) => {
           ListFooterComponent={otherSection}
           data={section}
           keyExtractor={(item) => item.key.toString()}
-          renderItem={({ item }) =>
-            filterSection(item.array, item.string, clearFilters)
-          }
+          renderItem={({ item }) => filterSection(item.array, item.string)}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -199,6 +196,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
     width: width,
     height: 0.12 * height,
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -207,7 +205,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
-    justifyContent: "center",
   },
   sortButton: {
     justifyContent: "center",

@@ -18,7 +18,13 @@ const Container = (props) => {
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "column", flex: 1 }}>
-        <View style={{ width: 0.7 * width }}>
+        <View
+          style={{
+            width: 0.65 * width,
+            flex: 1,
+            justifyContent: "center",
+          }}
+        >
           <Text
             numberOfLines={1}
             style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}
@@ -27,7 +33,12 @@ const Container = (props) => {
           </Text>
         </View>
         {/* Two buttons below */}
-        <View style={{ flexDirection: "row", flex: 1 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+          }}
+        >
           {/* Prereq button */}
           <TouchableOpacity
             style={{
@@ -74,7 +85,10 @@ const Container = (props) => {
         width={43}
         height={43}
         fill={plus ? "#3FE2D3" : "#FF6B6B"}
-        onPress={() => changeState(!plus)}
+        onPress={() => {
+          plus ? props.incr() : props.decr();
+          changeState(!plus);
+        }}
       />
     </View>
   );
@@ -98,7 +112,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: width * 0.9,
     height: height * 0.12,
-    padding: 15,
+    paddingHorizontal: 15,
     paddingLeft: 20,
     marginVertical: 10,
     flexDirection: "row",
@@ -106,7 +120,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button1: {
-    marginTop: 12,
     marginRight: 10,
     justifyContent: "center",
     alignItems: "center",

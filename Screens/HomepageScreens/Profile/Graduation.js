@@ -2,9 +2,16 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 
-const Graduation = ({ navigation }) => {
+const Graduation = ({ navigation, route }) => {
+  React.useEffect(() => {
+    if (route.params?.year2) {
+      setYear(route.params?.year2);
+    }
+  });
+
   const notPressed = (props) => (
     <TouchableOpacity
       style={styles.unpressed}
@@ -40,6 +47,9 @@ const Graduation = ({ navigation }) => {
   const [Y4S2, set4] = useState(pressed("Y4S2"));
   const [Y5S1, set5] = useState(notPressed("Y5S1"));
   const [Y5S2, set6] = useState(notPressed("Y5S2"));
+  const [currentVal, setYear] = useState(3);
+
+  const arr = ["Y3S1", "Y3S2", "Y4S1", "Y4S2", "Y5S1", "Y5S2"];
 
   const deSelect = (current) => {
     if (current === 0) {
@@ -62,40 +72,47 @@ const Graduation = ({ navigation }) => {
       set1(pressed("Y3S1"));
       deSelect(current);
       current = 0;
+      setYear(current);
     } else if (props === "Y3S2" && current !== 1) {
       set2(pressed("Y3S2"));
       deSelect(current);
       current = 1;
+      setYear(current);
     } else if (props === "Y4S1" && current !== 2) {
       set3(pressed("Y4S1"));
       deSelect(current);
       current = 2;
+      setYear(current);
     } else if (props === "Y4S2" && current !== 3) {
       set4(pressed("Y4S2"));
       deSelect(current);
       current = 3;
+      setYear(current);
     } else if (props === "Y5S1" && current !== 4) {
       set5(pressed("Y5S1"));
       deSelect(current);
       current = 4;
+      setYear(current);
     } else if (props === "Y5S2" && current !== 5) {
       set6(pressed("Y5S2"));
       deSelect(current);
       current = 5;
+      setYear(current);
     }
   };
 
   return (
     <View style={{ flex: 1 }}>
       <Header
-        str={"Expected Graduation Sem"}
+        str={"Graduation Semester"}
         leftChildren={
-          <Icon
-            name="chevron-left-outline"
-            width={100}
-            height={30}
-            fill="#232323"
-            onPress={() => navigation.goBack()}
+          <Ionicons
+            name="md-arrow-round-back"
+            size={25}
+            style={{ color: "#232323" }}
+            onPress={() => {
+              navigation.navigate("Profile", { year: arr[currentVal] });
+            }}
           />
         }
         rightChildren={<View />}

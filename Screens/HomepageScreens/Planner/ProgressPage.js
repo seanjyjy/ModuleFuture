@@ -8,9 +8,11 @@ import {
   SafeAreaView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Ionicon from "react-native-vector-icons/Ionicons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
+import Modal from "react-native-modal";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -18,9 +20,12 @@ const height = Dimensions.get("window").height;
 const ProgressPage = ({ navigation, route }) => {
   React.useEffect(() => {
     if (route.params?.items) {
-      setSegments(route.params?.items[0]);
-      setMCprogressTotal(route.params?.items[1]);
-      setcapGoalDenominator(route.params?.items[2]);
+      setMCprogressTotal(route.params?.items[0]);
+      setcapGoalDenominator(route.params?.items[1]);
+      setProgress((Math.min(MCs, MCprogressTotal) / MCprogressTotal) * 100);
+      setProgress2(
+        (Math.min(cap, capGoalDenominator) / capGoalDenominator) * 100
+      );
     }
   });
 
@@ -34,19 +39,87 @@ const ProgressPage = ({ navigation, route }) => {
       },
     ],
   };
-
-  const [capGoalDenominator, setcapGoalDenominator] = useState(() => {
-    const initialState = 5;
-    return initialState;
-  }); // this data is to get from the User (5 as the default value)
-  const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
+  const [cap, setCap] = useState(3.5); // ********************************** 8this data is calculated from user's current standing *************************************
+  const [MCs, setMCs] = useState(50); //**********************************/ this data is calculated from user's current standing ************************************
+  const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0);
+  const [SemesterCap, setSemesterCap] = useState(0);
+  const [OverallCap, setOverallCap] = useState(0);
 
   const [MCprogressTotal, setMCprogressTotal] = useState(160); // this data is to get from the User (160 as the default value)
-  const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
+  const [capGoalDenominator, setcapGoalDenominator] = useState(5); // this data is to get from the User (5 as the default value)
+
   const [progress, setProgress] = useState((MCs / MCprogressTotal) * 100); // this is to track and display the amount in the circle progress
   const [progress2, setProgress2] = useState((cap / capGoalDenominator) * 100); // this is to track and display the amount in the circle progress
 
-  const [numberOfSegments, setSegments] = useState(4); // this data is to receive from User on the preference on number of Y-axis segments (4 as the default value)
+  const chartConfig = {
+    backgroundGradientFrom: "white",
+    backgroundGradientTo: "white",
+    decimalPlaces: 2,
+    color: (opacity = 1) => "#FB5581",
+    fillShadowGradient: "#FB5581",
+    fillShadowGradientOpacity: "1",
+    labelColor: (opacity = 1) => "#8A8A8A",
+
+    propsForDots: {
+      r: "2",
+      strokeWidth: "1",
+      stroke: "#FB5581",
+      fill: "#FB5581",
+    },
+    propsForBackgroundLines: {
+      strokeWidth: "1",
+      stroke: "#E2E2E2",
+      strokeDasharray: "",
+      opacity: "1",
+    },
+  };
+
+  const TextonPopup = (props) => (
+    <View style={styles.popouttext}>
+      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
+        {props.name}
+      </Text>
+      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
+        {props.cap}
+      </Text>
+    </View>
+  );
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const popoutBox = (OverallCap, SemesterCap, MCsTakenForThatSem) => {
+    return (
+      <Modal
+        style={styles.modalBox}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropTransitionOutTiming={0}
+        isVisible={modalVisible}
+        onBackdropPress={() => {
+          setModalVisible(false);
+        }}
+        onBackButtonPress={() => {
+          setModalVisible(false);
+        }}
+      >
+        <View
+          style={{ flex: 1, width: "100%", justifyContent: "center", top: 5 }}
+        >
+          <Text style={styles.popoutheader}>Performance</Text>
+        </View>
+        <View
+          style={{
+            flex: 3,
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TextonPopup name="Overall CAP" cap={OverallCap} />
+          <TextonPopup name="Semester CAP" cap={SemesterCap} />
+          <TextonPopup name="MCs taken" cap={MCsTakenForThatSem} />
+        </View>
+      </Modal>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -60,8 +133,8 @@ const ProgressPage = ({ navigation, route }) => {
             alignItems: "flex-end",
           }}
         >
-          <Icon
-            name="arrow-left"
+          <Ionicon
+            name="md-arrow-round-back"
             size={25}
             style={{ color: "white", right: 0.02 * width }}
           />
@@ -72,7 +145,9 @@ const ProgressPage = ({ navigation, route }) => {
             ...styles.center,
           }}
         >
-          <Text style={{ ...globalFontStyles.NB_34, color: "white" }}>
+          <Text
+            style={{ ...globalFontStyles.NB_34, color: "white", bottom: 5 }}
+          >
             Progress
           </Text>
         </View>
@@ -86,8 +161,8 @@ const ProgressPage = ({ navigation, route }) => {
         >
           <Icon
             name="cog"
-            size={25}
-            style={{ color: "white", right: 0.02 * width }}
+            size={23}
+            style={{ color: "white", right: 0.02 * width, bottom: 2 }}
           />
         </TouchableOpacity>
       </SafeAreaView>
@@ -104,35 +179,17 @@ const ProgressPage = ({ navigation, route }) => {
         <View style={styles.largerRec}>
           <View style={{ ...styles.largerRec, overflow: "hidden" }}>
             <LineChart
-              onDataPointClick={() => console.log("hello")}
+              onDataPointClick={({ value }) => {
+                setOverallCap(value);
+                setModalVisible(true);
+              }}
               data={linedata}
               width={width * 0.95}
               height={height * 0.36}
               yAxisInterval={1}
               yLabelsOffset={10}
-              segments={numberOfSegments}
-              chartConfig={{
-                backgroundGradientFrom: "white",
-                backgroundGradientTo: "white",
-                decimalPlaces: 2,
-                color: (opacity = 1) => `rgba(251, 85, 129, ${opacity})`,
-                fillShadowGradient: "#FB5581",
-                fillShadowGradientOpacity: "1",
-                labelColor: (opacity = 1) => `rgba(138, 138, 138, ${opacity})`,
-
-                propsForDots: {
-                  r: "2",
-                  strokeWidth: "1",
-                  stroke: "#FB5581",
-                  fill: "#FB5581",
-                },
-                propsForBackgroundLines: {
-                  strokeWidth: "1",
-                  stroke: "#E2E2E2",
-                  strokeDasharray: "",
-                  opacity: "1",
-                },
-              }}
+              segments={4}
+              chartConfig={chartConfig}
               bezier
               style={{
                 marginRight: 30,
@@ -140,6 +197,7 @@ const ProgressPage = ({ navigation, route }) => {
                 borderRadius: 20,
               }}
             />
+            {popoutBox(OverallCap, SemesterCap, MCsTakenForThatSem)}
           </View>
         </View>
 
@@ -300,7 +358,7 @@ const ProgressPage = ({ navigation, route }) => {
                   <Text
                     style={{ ...globalFontStyles.OSB_15, color: "#686868" }}
                   >
-                    {MCprogressTotal - MCs}
+                    {Math.max(MCprogressTotal - MCs, 0)}
                   </Text>
                 </View>
               </View>
@@ -358,6 +416,7 @@ const ProgressPage = ({ navigation, route }) => {
                   top: 0.0175 * height,
                   justifyContent: "flex-start",
                   alignItems: "center",
+                  // backgroundColor: "green",
                 }}
               >
                 <View
@@ -373,19 +432,20 @@ const ProgressPage = ({ navigation, route }) => {
               <View
                 style={{
                   flex: 4,
-                  top: 0.015 * height,
+                  top: 0.013 * height,
                   justifyContent: "flex-start",
-                  alignItems: "center",
-                  right: 5,
+                  alignItems: "flex-start",
                 }}
               >
                 <Text style={{ ...globalFontStyles.OSB_15, color: "#686868" }}>
-                  {progress2 >= 90
+                  {progress2 >= 100
+                    ? "You have did it!"
+                    : progress2 >= 90
                     ? "You are almost there keep it up!"
                     : progress2 >= 80
-                    ? "Keep up the good work"
+                    ? "Keep up the good work!"
                     : progress2 >= 70
-                    ? "You can do it"
+                    ? "You can do it!"
                     : progress2 >= 60
                     ? "Dont give up!"
                     : "Perserve on!"}
@@ -450,8 +510,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
   },
   centerMax: {
     justifyContent: "center",
@@ -462,5 +520,22 @@ const styles = StyleSheet.create({
   center: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  modalBox: {
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginVertical: height * 0.4,
+    width: width * 0.6,
+    paddingLeft: 30,
+    paddingRight: 50,
+    borderRadius: 25,
+  },
+  popouttext: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  popoutheader: {
+    ...globalFontStyles.OSB_15,
+    color: "#232323",
   },
 });

@@ -9,29 +9,25 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import { Icon } from "react-native-eva-icons";
 import BottomBar from "../../../Component/BottomBar";
 import Modal from "react-native-modal";
 import Cross from "../../../Component/Cross";
 import Container from "../../../Component/Container";
-
-// TODO:
-// Add MC count and change icon plus to minus
-// Filter pages
+import moduleList from "../../../Data/ModuleList";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const AddModule = ({ navigation }) => {
+const AddModule = ({ navigation, route }) => {
   const header = (
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
         <Cross
           top={12}
           left={0}
-          transition={() => navigation.dispatch(CommonActions.goBack())}
+          transition={() => navigation.goBack()}
           text={"Add a module"}
         />
         <View style={styles.second}>
@@ -66,89 +62,11 @@ const AddModule = ({ navigation }) => {
     </View>
   );
 
-  const array = [
-    {
-      key: 1,
-      name: "CS1101S Programming Methodology",
-      prereqFulfilled: true,
-      taken: [
-        { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
-        { key: 2, name: "ST2131 / ST2132" },
-        { key: 3, name: "CS1101S / CS1100 / CS1010 / CS1010S" },
-      ],
-      notTaken: [],
-    },
-    {
-      key: 2,
-      name: "CS2030 Programming Methodology II",
-      prereqFulfilled: true,
-      taken: [{ key: 1, name: "CS1231" }],
-      notTaken: [],
-    },
-    {
-      key: 3,
-      name: "CS2040S Data Structures and Algorithms",
-      prereqFulfilled: true,
-      taken: [
-        { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
-        { key: 2, name: "ST2131 / ST2132" },
-        { key: 3, name: "CS1101S / CS1100 / CS1010 / CS1010S" },
-      ],
-      notTaken: [],
-    },
-    {
-      key: 4,
-      name: "CS1101S Programming Methodology",
-      prereqFulfilled: false,
-      taken: [
-        { key: 1, name: "CS1231" },
-        { key: 2, name: "CS2030 / CS2040S" },
-      ],
-      notTaken: [
-        { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
-        { key: 2, name: "ST2131 / ST2132" },
-      ],
-    },
-    {
-      key: 5,
-      name: "CS1101S Programming Methodology",
-      prereqFulfilled: false,
-      taken: [
-        { key: 1, name: "CS1231" },
-        { key: 2, name: "CS2030 / CS2040S" },
-      ],
-      notTaken: [
-        { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
-        { key: 2, name: "ST2131 / ST2132" },
-        { key: 3, name: "CS1101S / CS1100 / CS1010 / CS1010S" },
-      ],
-    },
-    {
-      key: 6,
-      name: "CS2106 Operating Systems",
-      prereqFulfilled: true,
-      taken: [
-        { key: 1, name: "CS1231" },
-        { key: 2, name: "CS2030 / CS2040S" },
-      ],
-    },
-    {
-      key: 7,
-      name: "CS3230 Design and Analysis of Algorithms",
-      prereqFulfilled: false,
-      taken: [{ key: 7, name: "CS1231" }],
-      notTaken: [
-        { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
-        { key: 2, name: "ST2131 / ST2132" },
-        { key: 3, name: "CS1101S / CS1100 / CS1010 / CS1010S" },
-      ],
-    },
-  ];
-
   const [MCcount, addVal] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [current, setItem] = useState(array[0]);
+  const [current, setItem] = useState(moduleList[0]);
   const [split, setSplit] = useState(0);
+  const [modules, add] = useState(new Set()); // modules are stored here
 
   const compute = (taken, notTaken) => {
     const len = taken.length + notTaken.length;
@@ -165,6 +83,18 @@ const AddModule = ({ navigation }) => {
         setModalVisible(true);
       }}
       button2Press={() => null}
+      incr={() => {
+        addVal(MCcount + 1);
+        const newSet = modules.add(item.name.substring(0, 7));
+        add(newSet);
+        //newSet.forEach((x) => console.log(x));
+      }}
+      decr={() => {
+        addVal(MCcount - 1);
+        modules.delete(item.name.substring(0, 7));
+        let newSet = modules;
+        add(newSet);
+      }}
     />
   );
 
@@ -245,25 +175,31 @@ const AddModule = ({ navigation }) => {
     );
   };
 
-  const gap = <View style={{ marginVertical: 5 }}></View>;
-
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
       <View style={{ marginBottom: 200 }}>
         <FlatList
-          ListHeaderComponent={gap}
-          data={array}
+          ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
+          data={moduleList}
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) => holders(item)}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={gap}
+          ListFooterComponent={<View style={{ height: height * 0.06 - 20 }} />}
         />
       </View>
       {modal(split, 100 - split)}
       <BottomBar
-        leftText={`MC count: ${MCcount}`}
-        transition={() => navigation.navigate("Foundation")}
+        leftText={`Modules added: ${MCcount}`}
+        transition={() => {
+          const val = route.params?.item;
+          const iterator1 = modules.values();
+          const mods = [];
+          for (var i = 0; i < MCcount; i++) {
+            mods.push(iterator1.next().value);
+          }
+          navigation.navigate(val, { modDetails: [mods, MCcount] });
+        }}
         rightText={"Add modules"}
         size={"33%"}
       />

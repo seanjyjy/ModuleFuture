@@ -16,10 +16,15 @@ export const globalStyles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 40,
     width: 160,
-    elevation: 20,
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: "black",
-    shadowOpacity: 0.1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+
+    elevation: 6,
   },
   buttonDesign: {
     height: 65,
@@ -28,10 +33,15 @@ export const globalStyles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 40,
     width: 220,
-    elevation: 20,
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: "black",
-    shadowOpacity: 0.1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+
+    elevation: 6,
   },
   iconDesign: {
     color: "#2D4056",

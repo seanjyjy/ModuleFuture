@@ -4,17 +4,20 @@ import {
   Dimensions,
   Text,
   NativeModules,
+  Alert,
 } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
 import { useSafeArea } from "react-native-safe-area-context";
+import { log } from "react-native-reanimated";
 
-const LogoutButton = () => {
+const LogoutButton = (props) => {
   return (
     <TouchableOpacity
       style={styles.buttonDesign}
       activeOpacity={0.875}
-      onPress={() => NativeModules.DevSettings.reload()}
+      // TEMPORARY SOLUTION TO THE LOG OUT
+      onPress={() => props.func()}
     >
       <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
         Logout
