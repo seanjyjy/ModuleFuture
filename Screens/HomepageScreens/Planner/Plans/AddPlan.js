@@ -6,14 +6,18 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
+  interpolate,
   FlatList,
+  ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
 import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FirebaseDB from "../../../../FirebaseDB";
+
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
@@ -21,12 +25,14 @@ const AddPlan = ({ route }) => {
   const [planNameValue, setPlanName] = useState("Plan 1");
   const [size, setSize] = useState(0);
   const [docLoc, setDocLoc] = useState("");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); // might need to use async storage?
+
   const deleteItem = (modName) => {
     setData((newData) => {
       return newData.filter((todo) => todo.moduleName !== modName);
     });
   };
+
   useEffect(() => {
     if (route.params?.item) {
       setPlanName(route.params?.item[0]);
@@ -35,21 +41,21 @@ const AddPlan = ({ route }) => {
     }
     if (route.params?.modDetails) {
       const tempArr = [];
-      let keyToBe = data.length;
       for (let i = 0; i < data.length; i++) {
         tempArr.push(data[i]);
       }
+      let keyTobe = data.length;
       const receivedArr = route.params?.modDetails[0];
       for (let i = 0; i < route.params?.modDetails[1]; i++) {
         tempArr.push({
-          key: keyToBe.toString(),
+          key: keyTobe.toString(),
           clash: false,
           moduleName: receivedArr[i],
           TargetGrade: "",
           NumMcs: "4",
           FinalGrade: "",
         });
-        keyToBe++;
+        keyTobe++;
       }
       setData(tempArr);
     }

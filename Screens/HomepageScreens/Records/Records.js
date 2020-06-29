@@ -206,9 +206,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     justifyContent: "center",
     alignItems: "center",
-    // borderBottomColor: "grey",
-    // borderBottomWidth: StyleSheet.hairlineWidth,
-    // borderBottomEndRadius: 13,
-    // borderBottomStartRadius: 16,
+    borderBottomColor: "grey",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomEndRadius: 13,
+    borderBottomStartRadius: 16,
   },
 });
