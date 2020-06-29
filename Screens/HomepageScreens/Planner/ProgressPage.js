@@ -34,13 +34,13 @@ const ProgressPage = ({ navigation, route }) => {
     labels: ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"],
     datasets: [
       {
-        data: [3.9, 4.58, 4.15, 4.32, 4.75, 4.9],
+        data: [3.9, 4.58, 4.15, 4.32, 4.75, 4.8],
         strokeWidth: 2,
       },
     ],
   };
-  const [cap, setCap] = useState(3.5); // ********************************** 8this data is calculated from user's current standing *************************************
-  const [MCs, setMCs] = useState(50); //**********************************/ this data is calculated from user's current standing ************************************
+  const [cap, setCap] = useState(4.8); // ********************************** 8this data is calculated from user's current standing *************************************
+  const [MCs, setMCs] = useState(120); //**********************************/ this data is calculated from user's current standing ************************************
   const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0);
   const [SemesterCap, setSemesterCap] = useState(0);
   const [OverallCap, setOverallCap] = useState(0);
@@ -181,6 +181,25 @@ const ProgressPage = ({ navigation, route }) => {
             <LineChart
               onDataPointClick={({ value }) => {
                 setOverallCap(value);
+                if (value === 3.9) {
+                  setSemesterCap(3.9);
+                  setMCsTakenForThatSem(20);
+                } else if (value === 4.58) {
+                  setSemesterCap(5.0);
+                  setMCsTakenForThatSem(40);
+                } else if (value === 4.15) {
+                  setSemesterCap(4.0);
+                  setMCsTakenForThatSem(60);
+                } else if (value === 4.32) {
+                  setSemesterCap(4.75);
+                  setMCsTakenForThatSem(80);
+                } else if (value === 4.75) {
+                  setSemesterCap(5.0);
+                  setMCsTakenForThatSem(100);
+                } else {
+                  setSemesterCap(5.0);
+                  setMCsTakenForThatSem(120);
+                }
                 setModalVisible(true);
               }}
               data={linedata}

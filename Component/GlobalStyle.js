@@ -19,12 +19,12 @@ export const globalStyles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 2,
     },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
 
-    elevation: 6,
+    elevation: 4,
   },
   buttonDesign: {
     height: 65,
@@ -36,12 +36,12 @@ export const globalStyles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 2,
     },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
 
-    elevation: 6,
+    elevation: 4,
   },
   iconDesign: {
     color: "#2D4056",

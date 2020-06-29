@@ -1,5 +1,26 @@
 const moduleList = [
   {
+    key: 31,
+    name: "MA1521 Calculus for Computing",
+    prereqFulfilled: true,
+    taken: [],
+    notTaken: [],
+  },
+  {
+    key: 32,
+    name: "MA1101R Linear Algebra",
+    prereqFulfilled: true,
+    taken: [],
+    notTaken: [],
+  },
+  {
+    key: 33,
+    name: "CS2030 Programming Methodology II",
+    prereqFulfilled: true,
+    taken: [{ key: 1, name: "CS1010 or its equivalent" }],
+    notTaken: [],
+  },
+  {
     key: 1,
     name: "CS2102 Database Systems",
     prereqFulfilled: false,
@@ -35,9 +56,19 @@ const moduleList = [
     ],
   },
   {
+    key: 34,
+    name: "CS2040S Data Structures and Algorithms",
+    prereqFulfilled: false,
+    taken: [
+      { key: 1, name: "MA1100 or CS1231" },
+      { key: 2, name: "CS1010 or its equivalent" },
+    ],
+    notTaken: [],
+  },
+  {
     key: 6,
     name: "CS2106 Operating Systems",
-    prereqFulfilled: true,
+    prereqFulfilled: false,
     taken: [{ key: 1, name: "CS2100 or EE2007 or EE2024 or EE2028" }],
     notTaken: [],
   },
@@ -86,17 +117,6 @@ const moduleList = [
     ],
   },
   {
-    key: 13,
-    name: "MA1521 Calculus for Computing",
-    prereqFulfilled: true,
-    taken: [{ key: 7, name: "CS1231" }],
-    notTaken: [
-      { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
-      { key: 2, name: "ST2131 / ST2132" },
-      { key: 3, name: "CS1101S / CS1100 / CS1010 / CS1010S" },
-    ],
-  },
-  {
     key: 14,
     name: "MA3110 Mathematical Analysis II",
     prereqFulfilled: false,
@@ -110,7 +130,7 @@ const moduleList = [
   {
     key: 15,
     name: "MA2101 Linear Algebra II",
-    prereqFulfilled: true,
+    prereqFulfilled: false,
     taken: [{ key: 7, name: "CS1231" }],
     notTaken: [
       { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
@@ -132,7 +152,7 @@ const moduleList = [
   {
     key: 17,
     name: "MA2108 Mathematical Analysis I",
-    prereqFulfilled: true,
+    prereqFulfilled: false,
     taken: [{ key: 7, name: "CS1231" }],
     notTaken: [
       { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },
@@ -143,7 +163,7 @@ const moduleList = [
   {
     key: 18,
     name: "MA2104 Multivariable Calculus",
-    prereqFulfilled: true,
+    prereqFulfilled: false,
     taken: [{ key: 7, name: "CS1231" }],
     notTaken: [
       { key: 1, name: "CS2040 / CS2020 / CS2010 / CS2030" },

@@ -2,15 +2,29 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
 import { Icon } from "react-native-eva-icons";
+import FirebaseDB from "../FirebaseDB";
 
 const FocusAreaChoice = (props) => {
   const [toggled, setToggle] = useState(false);
+
+  const userInfo = FirebaseDB.firestore().collection("users");
+  const userID = FirebaseDB.auth().currentUser.uid;
 
   return (
     <TouchableOpacity
       style={styles.main}
       activeOpacity={0.65}
-      onPress={() => setToggle(!toggled)}
+      onPress={() => {
+        userInfo
+          .doc(userID)
+          .update({
+            focusArea: toggled
+              ? FirebaseDB.firestore.FieldValue.arrayRemove(props.text)
+              : FirebaseDB.firestore.FieldValue.arrayUnion(props.text),
+          })
+          .catch((error) => alert(error));
+        setToggle(!toggled);
+      }}
     >
       <Text
         style={{

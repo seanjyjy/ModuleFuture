@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
@@ -39,14 +39,14 @@ const Foundation = ({ navigation, route }) => {
     {
       key: 2,
       name: "CS1231S Discrete Structures",
-      grade: "B+",
+      grade: "A",
       sem: "Y1S2",
       taken: true,
     },
     {
       key: 3,
       name: "CS2030 Programming Methodology II",
-      grade: "B+",
+      grade: "A-",
       sem: "Y1S2",
       taken: true,
     },
@@ -114,7 +114,7 @@ const Foundation = ({ navigation, route }) => {
     </View>
   );
 
-  const Box = (props) => (
+  const Box = () => (
     <View style={styles.container}>
       <View style={styles.header}>
         <View
@@ -203,7 +203,7 @@ const Foundation = ({ navigation, route }) => {
             height={30}
             fill="#232323"
             onPress={() =>
-              editMode ? setEdit(!editMode) : navigation.goBack()
+              editMode ? setEdit(!editMode) : navigation.navigate("Records")
             }
           />
         }
