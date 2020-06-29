@@ -163,6 +163,7 @@ const ChoosingOptions = ({ route }) => {
                   course: route.params?.item[1],
                   yearOfMatri: yearValue(parseInt(index1)),
                   expectedSemGrad: semValue(parseInt(index2)),
+                  focusArea: [],
                 };
                 const userRef = FirebaseDB.firestore().collection("users");
                 userRef

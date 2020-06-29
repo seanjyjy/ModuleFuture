@@ -27,10 +27,8 @@ const ContentPage = (props) => {
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
   useEffect(() => {
-    userInfo
-      .doc(userID)
-      .get()
-      .then((document) => {
+    const unsub = userInfo.doc(userID).onSnapshot(
+      (document) => {
         const val = document.data().expectedSemGrad;
         var tempArr = [];
         for (var i = 0; i <= num(val); i++) {
@@ -38,8 +36,10 @@ const ContentPage = (props) => {
         }
         tempArr.push(Menu[10]);
         setCardArray(tempArr);
-      })
-      .catch((error) => alert(error));
+      },
+      (error) => alert(error)
+    );
+    return () => unsub();
   }, [userID]);
   //   const plansArrayRef = FirebaseDB.firestore()
   //   .collection("plansArray")

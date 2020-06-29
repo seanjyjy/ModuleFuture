@@ -124,7 +124,9 @@ const Filter = ({ navigation }) => {
     { name: "No Exam", key: 2 },
   ];
 
-  const textWithIcon2 = (name) => <FilterItem text={name} box={false} />;
+  const textWithIcon2 = (name) => (
+    <FilterItem text={name} box={false} reset={clearFilters} />
+  );
 
   const filterSection = (array, name) => (
     <FilterSection array={array} name={name} reset={clearFilters} />

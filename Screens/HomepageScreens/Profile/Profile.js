@@ -4,10 +4,11 @@ import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
 import FirebaseDB from "../../../FirebaseDB";
+import { database } from "firebase";
 
 const Profile = ({ navigation, route }) => {
   const course = () => navigation.navigate("Course", { course1: course1 });
-  const focus = () => navigation.navigate("Focus");
+  const focus = () => navigation.navigate("Focus", { fa: focusArea });
   const graduation = () => navigation.navigate("Graduation", { sem: gradSem });
 
   const [course1, setCourse] = useState("");
@@ -17,6 +18,22 @@ const Profile = ({ navigation, route }) => {
 
   const userInfo = FirebaseDB.firestore().collection("users");
   const user = FirebaseDB.auth().currentUser.uid;
+
+  const getFocusAreas = (data) => {
+    if (data === undefined) {
+      return "none";
+    } else if (data.length > 1) {
+      let s;
+      for (let i = 0; i < data.length - 1; i++) {
+        s += data[i] + ", ";
+      }
+      s += data[data.length - 1];
+      return s;
+    } else {
+      return data[0];
+    }
+  };
+
   useEffect(() => {
     if (route.params?.semester) {
       setGradSem(route.params?.semester);
@@ -31,6 +48,7 @@ const Profile = ({ navigation, route }) => {
         .then((document) => {
           setCourse(document.data().course);
           setGradSem(document.data().expectedSemGrad);
+          setFocusArea(getFocusAreas(document.data().focusArea));
         })
         .catch((error) => alert(error));
     }

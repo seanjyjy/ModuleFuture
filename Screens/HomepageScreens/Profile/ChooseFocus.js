@@ -7,7 +7,7 @@ import FocusAreaChoice from "../../../Component/FocusAreaChoice";
 import { FlatList } from "react-native-gesture-handler";
 import specialisations from "../../../Data/Specialisations";
 
-const Focus = ({ navigation }) => {
+const Focus = ({ navigation, route }) => {
   const textWithIcon2 = (name) => <FocusAreaChoice text={name} />;
   return (
     <View style={{ flex: 1 }}>
