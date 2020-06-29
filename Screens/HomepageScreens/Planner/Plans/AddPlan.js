@@ -6,16 +6,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  interpolate,
   FlatList,
-  ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
 import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
-import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FirebaseDB from "../../../../FirebaseDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -38,16 +35,21 @@ const AddPlan = ({ route }) => {
     }
     if (route.params?.modDetails) {
       const tempArr = [];
+      let keyToBe = data.length;
+      for (let i = 0; i < data.length; i++) {
+        tempArr.push(data[i]);
+      }
       const receivedArr = route.params?.modDetails[0];
-      for (var i = 0; i < route.params?.modDetails[1]; i++) {
+      for (let i = 0; i < route.params?.modDetails[1]; i++) {
         tempArr.push({
-          key: i.toString(),
+          key: keyToBe.toString(),
           clash: false,
           moduleName: receivedArr[i],
           TargetGrade: "",
           NumMcs: "4",
           FinalGrade: "",
         });
+        keyToBe++;
       }
       setData(tempArr);
     }
