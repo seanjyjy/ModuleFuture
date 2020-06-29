@@ -39,14 +39,14 @@ const Foundation = ({ navigation, route }) => {
     {
       key: 2,
       name: "CS1231S Discrete Structures",
-      grade: "B+",
+      grade: "A",
       sem: "Y1S2",
       taken: true,
     },
     {
       key: 3,
       name: "CS2030 Programming Methodology II",
-      grade: "B+",
+      grade: "A-",
       sem: "Y1S2",
       taken: true,
     },

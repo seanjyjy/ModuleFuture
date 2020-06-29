@@ -133,7 +133,7 @@ const Records = ({ navigation }) => {
   /* --------------------------------------------Content headers------------------------------------------------ */
 
   const text1 = MCstaken ? "MCs taken" : "No. taken";
-  const text2 = MCstaken ? "26 / 38" : "6 / 9";
+  const text2 = MCstaken ? "12 / 28" : "3 / 7";
 
   const menu = () => {
     if (currentType === "Type") {
