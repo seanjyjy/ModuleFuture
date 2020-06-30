@@ -7,7 +7,7 @@ import {
 import ContentPage from "./ContentPage";
 import ProgressPage from "./ProgressPage";
 
-const Planner = () => {
+const Planner = (data) => {
   const AuthStack = createStackNavigator();
 
   return (
@@ -23,7 +23,9 @@ const Planner = () => {
         },
       }}
     >
-      <AuthStack.Screen name="Content Page" component={ContentPage} />
+      <AuthStack.Screen name="Content Page">
+        {(props) => <ContentPage {...props} extraData={data.extraData} />}
+      </AuthStack.Screen>
       <AuthStack.Screen name="ProgressPage" component={ProgressPage} />
     </AuthStack.Navigator>
   );

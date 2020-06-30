@@ -16,7 +16,6 @@ import { Asset } from "expo-asset";
 import FirebaseDB from "./FirebaseDB";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
-
 import Login from "./Screens/Login/Login";
 import DetailsCollection from "./Screens/Login/DetailsCollection";
 import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
@@ -141,7 +140,11 @@ export default function App() {
                 >
                   {data.user ? (
                     <>
-                      <AuthStack.Screen name="Homepage" component={Homepage} />
+                      <AuthStack.Screen name="Homepage">
+                        {(props) => (
+                          <Homepage {...props} extraData={data.user} />
+                        )}
+                      </AuthStack.Screen>
                       <AuthStack.Screen
                         name="ProgressPageSettings"
                         component={ProgressPageSettings}

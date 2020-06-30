@@ -148,14 +148,16 @@ const TabBar = ({ state, descriptors, navigation }) => {
   );
 };
 
-const HomeTabNavigator = () => {
+const Homepage = (data) => {
   const Tab = createBottomTabNavigator();
   const val = useSafeArea().bottom;
 
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-        <Tab.Screen name="Planner" component={Planner} />
+        <Tab.Screen name="Planner">
+          {(props) => <Planner {...props} extraData={data.extraData} />}
+        </Tab.Screen>
         <Tab.Screen name="Records" component={RecordsStack} />
         <Tab.Screen name="Focus" component={FocusArea} />
         <Tab.Screen name="Module" component={ModulePage} />
@@ -168,9 +170,9 @@ const HomeTabNavigator = () => {
   );
 };
 
-const Homepage = () => {
-  return HomeTabNavigator();
-};
+// const Homepage = (props) => {
+//   return HomeTabNavigator(props);
+// };
 
 export default Homepage;
 

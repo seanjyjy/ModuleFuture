@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -10,38 +11,78 @@ import {
   ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-
 import Entypo from "react-native-vector-icons/Entypo";
 import CardWallet from "../../../Component/CardWallet";
 import { useNavigation } from "@react-navigation/native";
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 import { Menu } from "../../../Data/CardList";
 import FirebaseDB from "../../../FirebaseDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const ContentPage = (props) => {
   const navigation = useNavigation();
-  const [cardArray, setCardArray] = useState([]);
-  const [arrToPass, setArrToPass] = useState([]);
+  const isFocused = useIsFocused();
+  //const [arrToPass, setArrToPass] = useState([]);
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
+  const num = (val) => {
+    return val === "Y3S1"
+      ? 4
+      : val === "Y3S2"
+      ? 5
+      : val === "Y4S1"
+      ? 6
+      : val === "Y4S2"
+      ? 7
+      : val === "Y5S1"
+      ? 8
+      : 9;
+  };
+
+  const theArray = (val) => {
+    const arr = [];
+    for (let i = 0; i < num(val); i++) {
+      arr.push(Menu[i]);
+    }
+    arr.push(Menu[10]);
+    return arr;
+  };
+
+  const [cardArray, setCardArray] = useState(
+    theArray(props.extraData.expectedSemGrad)
+  );
+
+  const [y, setY] = useState(new Animated.Value(0));
   useEffect(() => {
-    const unsub = userInfo.doc(userID).onSnapshot(
-      (document) => {
+    userInfo
+      .doc(userID)
+      .get()
+      .then((document) => {
         const val = document.data().expectedSemGrad;
         var tempArr = [];
-        for (var i = 0; i <= num(val); i++) {
+        for (var i = 0; i < num(val); i++) {
           tempArr.push(Menu[i]);
         }
         tempArr.push(Menu[10]);
         setCardArray(tempArr);
-      },
-      (error) => alert(error)
-    );
-    return () => unsub();
-  }, [userID]);
-  //   const plansArrayRef = FirebaseDB.firestore()
+      })
+      .catch((error) => alert(error));
+  }, [isFocused]);
+  // const unsub = userInfo.doc(userID).onSnapshot(
+  //   (document) => {
+  // const val = document.data().expectedSemGrad;
+  // let tempArr = [];
+  // for (let i = 0; i < num(val); i++) {
+  //   tempArr.push(Menu[i]);
+  // }
+  // tempArr.push(Menu[10]);
+  // setCardArray(tempArr);
+  //   },
+  //   (error) => alert(error)
+  // );
+  // return () => unsub();
+  // const plansArrayRef = FirebaseDB.firestore()
   //   .collection("plansArray")
   //   .doc(userID.concat("_", item.PageName));
   // plansArrayRef
@@ -59,21 +100,7 @@ const ContentPage = (props) => {
   //     }
   //   })
   //   .catch((error) => alert(error));
-  const num = (val) => {
-    return val === "Y3S1"
-      ? 4
-      : val === "Y3S2"
-      ? 5
-      : val === "Y4S1"
-      ? 6
-      : val === "Y4S2"
-      ? 7
-      : val === "Y5S1"
-      ? 8
-      : 9;
-  };
 
-  const y = new Animated.Value(0);
   const onScroll = Animated.event(
     [
       {
