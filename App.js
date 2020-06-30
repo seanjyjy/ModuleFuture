@@ -37,6 +37,9 @@ import {
 import AddPlan from "./Screens/HomepageScreens/Planner/Plans/AddPlan";
 import ViewPlan from "./Screens/HomepageScreens/Planner/Plans/ViewPlan";
 import ChoosingOptions from "./Component/MakingClock";
+import Course from "./Screens/HomepageScreens/Profile/Course";
+import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
+import Year from "./Screens/HomepageScreens/Profile/Year";
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
@@ -160,6 +163,12 @@ export default function App() {
                       />
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
                       <AuthStack.Screen name="Filter" component={Filter} />
+                      <AuthStack.Screen name="Course" component={Course} />
+                      <AuthStack.Screen
+                        name="Graduation"
+                        component={Graduation}
+                      />
+                      <AuthStack.Screen name="Year" component={Year} />
                     </>
                   ) : (
                     <>

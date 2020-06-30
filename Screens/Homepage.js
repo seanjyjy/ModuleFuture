@@ -8,7 +8,7 @@ import {
   Animated,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ProfilePage from "./HomepageScreens/Profile/ProfilePage";
+import Profile from "./HomepageScreens/Profile/Profile";
 import RecordsStack from "./HomepageScreens/Records/RecordsStack";
 import ModulePage from "./HomepageScreens/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";
@@ -159,7 +159,7 @@ const HomeTabNavigator = () => {
         <Tab.Screen name="Records" component={RecordsStack} />
         <Tab.Screen name="Focus" component={FocusArea} />
         <Tab.Screen name="Module" component={ModulePage} />
-        <Tab.Screen name="Profile" component={ProfilePage} />
+        <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
       {val > 0 && (
         <View style={{ height: val - 5, backgroundColor: "white" }} />

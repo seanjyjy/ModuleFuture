@@ -5,10 +5,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FirebaseDB from "../../../FirebaseDB";
 import { Pressed, NotPressed } from "./Buttons";
 
-const Course = ({ navigation, route }) => {
+const Year = ({ navigation, route }) => {
   useEffect(() => {
-    change(route.params?.course1);
-  }, [currentCourse]);
+    change(route.params?.year);
+  }, [currentYear]);
 
   const userInfo = FirebaseDB.firestore().collection("users");
   const user = FirebaseDB.auth().currentUser.uid;
@@ -21,68 +21,62 @@ const Course = ({ navigation, route }) => {
   );
 
   let current = -1;
-  const arr = [
-    "Computer Science",
-    "Business Analytics",
-    "Information Systems",
-    "Information Security",
-    "Computer Engineering",
-  ];
+  const arr = ["2016", "2017", "2018", "2019", "2020"];
 
-  const [CS, setCS] = useState(notPressed("Computer Science"));
-  const [BA, setBA] = useState(notPressed("Business Analytics"));
-  const [IS, setIS] = useState(notPressed("Information Systems"));
-  const [InfoSec, setInfoSec] = useState(notPressed("Information Security"));
-  const [CEG, setCEG] = useState(notPressed("Computer Engineering"));
-  const [currentCourse, setCourse] = useState(3);
+  const [CS, setCS] = useState(notPressed("2016"));
+  const [BA, setBA] = useState(notPressed("2017"));
+  const [IS, setIS] = useState(notPressed("2018"));
+  const [InfoSec, setInfoSec] = useState(notPressed("2019"));
+  const [CEG, setCEG] = useState(notPressed("2020"));
+  const [currentYear, setYear] = useState(3);
 
   const deSelect = (current) => {
     if (current === 0) {
-      setCS(notPressed("Computer Science"));
+      setCS(notPressed("2016"));
     } else if (current === 1) {
-      setBA(notPressed("Business Analytics"));
+      setBA(notPressed("2017"));
     } else if (current === 2) {
-      setIS(notPressed("Information Systems"));
+      setIS(notPressed("2018"));
     } else if (current === 3) {
-      setInfoSec(notPressed("Information Security"));
+      setInfoSec(notPressed("2019"));
     } else if (current === 4) {
-      setCEG(notPressed("Computer Engineering"));
+      setCEG(notPressed("2020"));
     }
   };
 
   const change = (props) => {
-    if (props === "Computer Science" && current !== 0) {
-      setCS(pressed("Computer Science"));
+    if (props === "2016" && current !== 0) {
+      setCS(pressed("2016"));
       deSelect(current);
       current = 0;
-      setCourse(current);
-    } else if (props === "Business Analytics" && current !== 1) {
-      setBA(pressed("Business Analytics"));
+      setYear(current);
+    } else if (props === "2017" && current !== 1) {
+      setBA(pressed("2017"));
       deSelect(current);
       current = 1;
-      setCourse(current);
-    } else if (props === "Information Systems" && current !== 2) {
-      setIS(pressed("Information Systems"));
+      setYear(current);
+    } else if (props === "2018" && current !== 2) {
+      setIS(pressed("2018"));
       deSelect(current);
       current = 2;
-      setCourse(current);
-    } else if (props === "Information Security" && current !== 3) {
-      setInfoSec(pressed("Information Security"));
+      setYear(current);
+    } else if (props === "2019" && current !== 3) {
+      setInfoSec(pressed("2019"));
       deSelect(current);
       current = 3;
-      setCourse(current);
-    } else if (props === "Computer Engineering" && current !== 4) {
-      setCEG(pressed("Computer Engineering"));
+      setYear(current);
+    } else if (props === "2020" && current !== 4) {
+      setCEG(pressed("2020"));
       deSelect(current);
       current = 4;
-      setCourse(current);
+      setYear(current);
     }
   };
 
   return (
     <View style={{ flex: 1 }}>
       <Header
-        str={"Course"}
+        str={"Year"}
         leftChildren={
           <Ionicons
             name="md-arrow-round-back"
@@ -92,7 +86,7 @@ const Course = ({ navigation, route }) => {
               userInfo
                 .doc(user)
                 .update({
-                  course: arr[currentCourse],
+                  yearOfMatri: arr[currentYear],
                 })
                 .catch((error) => alert(error));
               navigation.navigate("Profile", {});
@@ -112,4 +106,4 @@ const Course = ({ navigation, route }) => {
   );
 };
 
-export default Course;
+export default Year;
