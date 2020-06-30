@@ -161,7 +161,9 @@ const Homepage = (data) => {
         <Tab.Screen name="Records" component={RecordsStack} />
         <Tab.Screen name="Focus" component={FocusArea} />
         <Tab.Screen name="Module" component={ModulePage} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Profile">
+          {(props) => <Profile {...props} extraData={data.extraData} />}
+        </Tab.Screen>
       </Tab.Navigator>
       {val > 0 && (
         <View style={{ height: val - 5, backgroundColor: "white" }} />

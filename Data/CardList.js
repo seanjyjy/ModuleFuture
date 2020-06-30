@@ -54,7 +54,7 @@ const card9 = (
 const card10 = (
   <Image source={require("../assets/y5s2.png")} style={styles.card} />
 );
-const card11 = <View style={{ width: 0.8 * width, height: 200 }}></View>;
+const card11 = <View style={{ width: 0.8 * width, height: 100 }}></View>;
 
 export let Menu = [
   {

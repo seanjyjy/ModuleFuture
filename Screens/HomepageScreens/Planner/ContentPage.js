@@ -42,7 +42,7 @@ const ContentPage = (props) => {
 
   const theArray = (val) => {
     const arr = [];
-    for (let i = 0; i < num(val); i++) {
+    for (let i = 0; i <= num(val); i++) {
       arr.push(Menu[i]);
     }
     arr.push(Menu[10]);
@@ -61,7 +61,7 @@ const ContentPage = (props) => {
       .then((document) => {
         const val = document.data().expectedSemGrad;
         var tempArr = [];
-        for (var i = 0; i < num(val); i++) {
+        for (var i = 0; i <= num(val); i++) {
           tempArr.push(Menu[i]);
         }
         tempArr.push(Menu[10]);
@@ -180,21 +180,31 @@ const ContentPage = (props) => {
               const plansArrayRef = FirebaseDB.firestore()
                 .collection("plansArray")
                 .doc(userID.concat("_", item.PageName));
-              plansArrayRef
-                .get()
-                .then((document) => {
-                  const val = document.data();
-                  if (val !== undefined) {
-                    const arr = val.yearSem;
-                    //setArrToPass(arr);
-                    navigation.navigate(item.PageName, { item: [userID, arr] });
-                  } else {
-                    plansArrayRef.set({ yearSem: [] });
-                    //setArrToPass([]);
-                    navigation.navigate(item.PageName, { item: [userID, []] });
-                  }
-                })
-                .catch((error) => alert(error));
+              plansArrayRef.onSnapshot((document) => {
+                const val = document.data();
+                if (val !== undefined) {
+                  const arr = val.yearSem;
+                  navigation.navigate(item.PageName, { item: [userID, arr] });
+                } else {
+                  plansArrayRef.set({ yearSem: [] });
+                  navigation.navigate(item.PageName, { item: [userID, []] });
+                }
+              });
+              // plansArrayRef
+              //   .get()
+              //   .then((document) => {
+              //     const val = document.data();
+              //     if (val !== undefined) {
+              //       const arr = val.yearSem;
+              //       //setArrToPass(arr);
+              //       navigation.navigate(item.PageName, { item: [userID, arr] });
+              //     } else {
+              //       plansArrayRef.set({ yearSem: [] });
+              //       //setArrToPass([]);
+              //       navigation.navigate(item.PageName, { item: [userID, []] });
+              //     }
+              //   })
+              //   .catch((error) => alert(error));
             });
           }}
           {...{ onScroll }}

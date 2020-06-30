@@ -4,30 +4,31 @@ import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
 import FirebaseDB from "../../../FirebaseDB";
-
-const Profile = ({ navigation, route }) => {
+import { useNavigation } from "@react-navigation/native";
+const Profile = (props) => {
+  const navigation = useNavigation();
   const course = () => navigation.navigate("Course", { course1: course1 });
   const yearTransition = () => navigation.navigate("Year", { year: year });
   const graduation = () => navigation.navigate("Graduation", { sem: gradSem });
 
-  const [course1, setCourse] = useState("");
-  const [gradSem, setGradSem] = useState("");
-  const [year, setYear] = useState("");
+  const [course1, setCourse] = useState(props.extraData.course);
+  const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
+  const [year, setYear] = useState(props.extraData.yearOfMatri);
 
   const userInfo = FirebaseDB.firestore().collection("users");
   const user = FirebaseDB.auth().currentUser.uid;
 
-  useEffect(() => {
-    userInfo
-      .doc(user)
-      .get()
-      .then((document) => {
-        setCourse(document.data().course);
-        setGradSem(document.data().expectedSemGrad);
-        setYear(document.data().yearOfMatri);
-      })
-      .catch((error) => alert(error));
-  }, [userInfo]);
+  // useEffect(() => {
+  //   userInfo
+  //     .doc(user)
+  //     .get()
+  //     .then((document) => {
+  //       setCourse(document.data().course);
+  //       setGradSem(document.data().expectedSemGrad);
+  //       setYear(document.data().yearOfMatri);
+  //     })
+  //     .catch((error) => alert(error));
+  // }, [userInfo]);
 
   const signOutUser = async () => {
     try {

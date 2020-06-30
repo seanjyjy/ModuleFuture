@@ -9,8 +9,8 @@ const height = Dimensions.get("window").height;
 
 const ChoosingOptions = ({ route }) => {
   const [isLoading, setIsLoading] = useState("");
-  const [index1, setIndex1] = useState("");
-  const [index2, setIndex2] = useState("");
+  const [index1, setIndex1] = useState(4);
+  const [index2, setIndex2] = useState(4);
   const yearValue = (val) => {
     return val === 1
       ? "2016"
