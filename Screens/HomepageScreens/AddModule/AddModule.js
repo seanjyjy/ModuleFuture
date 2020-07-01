@@ -73,24 +73,32 @@ const AddModule = ({ navigation, route }) => {
     return (taken.length / len) * 100;
   };
 
+  /*
+Filter: 
+When entering from planner: Filter all modules planned
+Entering from records: Filter all modules mapped (to course) + planned
+Prereq: matched with whatever is planned / taken
+
+*/
+
   const holders = (item) => (
     <Container
-      name={item.name}
-      prereq={item.prereqFulfilled}
+      name={item.code + "" + item.title}
+      prereq={true}
       button1Press={() => {
         setItem(item);
-        setSplit(compute(item.taken, item.notTaken));
+        // setSplit(compute(item.taken, item.notTaken));
         setModalVisible(true);
       }}
       button2Press={() => null}
       incr={() => {
         addVal(MCcount + 1);
-        const newSet = modules.add(item.name.substring(0, 7));
+        const newSet = modules.add(item.code);
         add(newSet);
       }}
       decr={() => {
         addVal(MCcount - 1);
-        modules.delete(item.name.substring(0, 7));
+        modules.delete(item.code);
         let newSet = modules;
         add(newSet);
       }}
@@ -194,7 +202,7 @@ const AddModule = ({ navigation, route }) => {
           const val = route.params?.item;
           const iterator1 = modules.values();
           const mods = [];
-          for (var i = 0; i < MCcount; i++) {
+          for (let i = 0; i < MCcount; i++) {
             mods.push(iterator1.next().value);
           }
           navigation.navigate(val, { modDetails: [mods, MCcount] });

@@ -95,7 +95,7 @@ const Course = ({ navigation, route }) => {
                   course: arr[currentCourse],
                 })
                 .catch((error) => alert(error));
-              navigation.navigate("Profile", {});
+              navigation.navigate("Profile", { course: arr[currentCourse] });
             }}
           />
         }

@@ -3,8 +3,9 @@ import { View } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../../FirebaseDB";
-import { useNavigation } from "@react-navigation/native";
+
 const Profile = (props) => {
   const navigation = useNavigation();
   const course = () => navigation.navigate("Course", { course1: course1 });
@@ -15,20 +16,13 @@ const Profile = (props) => {
   const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
   const [year, setYear] = useState(props.extraData.yearOfMatri);
 
-  const userInfo = FirebaseDB.firestore().collection("users");
-  const user = FirebaseDB.auth().currentUser.uid;
+  const isFocused = useIsFocused();
 
-  // useEffect(() => {
-  //   userInfo
-  //     .doc(user)
-  //     .get()
-  //     .then((document) => {
-  //       setCourse(document.data().course);
-  //       setGradSem(document.data().expectedSemGrad);
-  //       setYear(document.data().yearOfMatri);
-  //     })
-  //     .catch((error) => alert(error));
-  // }, [userInfo]);
+  useEffect(() => {
+    if (props.route.params?.course) setCourse(props.route.params?.course);
+    if (props.route.params?.grad) setGradSem(props.route.params?.grad);
+    if (props.route.params?.year) setYear(props.route.params?.year);
+  }, [isFocused]);
 
   const signOutUser = async () => {
     try {

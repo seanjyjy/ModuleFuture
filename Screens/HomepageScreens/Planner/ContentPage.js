@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -13,7 +13,6 @@ import {
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Entypo from "react-native-vector-icons/Entypo";
 import CardWallet from "../../../Component/CardWallet";
-import { useNavigation } from "@react-navigation/native";
 
 import { Menu } from "../../../Data/CardList";
 import FirebaseDB from "../../../FirebaseDB";

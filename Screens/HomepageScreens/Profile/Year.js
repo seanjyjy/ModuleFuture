@@ -89,7 +89,7 @@ const Year = ({ navigation, route }) => {
                   yearOfMatri: arr[currentYear],
                 })
                 .catch((error) => alert(error));
-              navigation.navigate("Profile", {});
+              navigation.navigate("Profile", { year: arr[currentYear] });
             }}
           />
         }
