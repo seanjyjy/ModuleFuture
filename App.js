@@ -14,6 +14,7 @@ import { ApplicationProvider } from "@ui-kitten/components";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
 import FirebaseDB from "./FirebaseDB";
+import ModuleListWithKey from "./Data/ModuleListWithKey";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
 import Login from "./Screens/Login/Login";
@@ -116,6 +117,21 @@ export default function App() {
         setData({ loading: true });
       }
     });
+    // const moduleArr = FirebaseDB.firestore().collection("ModuleList");
+    // FirebaseDB.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     usersRef
+    //       .doc(user.uid)
+    //       .get()
+    //       .then((document) => {
+    //         const userData = document.data();
+    //         setData({ user: userData, loading: true });
+    //       })
+    //       .catch((error) => error);
+    //   } else {
+    //     setData({ loading: true });
+    //   }
+    // });
   }, []);
 
   return (
@@ -161,10 +177,14 @@ export default function App() {
                       <AuthStack.Screen name="Y5S1" component={Y5S1} />
                       <AuthStack.Screen name="Y5S2" component={Y5S2} />
                       <AuthStack.Screen name="AddPlan" component={AddPlan} />
-                      <AuthStack.Screen
-                        name="AddModule"
-                        component={AddModule}
-                      />
+                      <AuthStack.Screen name="AddModule">
+                        {(props) => (
+                          <AddModule
+                            {...props}
+                            moduleList={ModuleListWithKey()}
+                          />
+                        )}
+                      </AuthStack.Screen>
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
                       <AuthStack.Screen name="Filter" component={Filter} />
                       <AuthStack.Screen name="Course" component={Course} />

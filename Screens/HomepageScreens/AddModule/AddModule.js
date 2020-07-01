@@ -15,12 +15,13 @@ import BottomBar from "../../../Component/BottomBar";
 import Modal from "react-native-modal";
 import Cross from "../../../Component/Cross";
 import Container from "../../../Component/Container";
-import moduleList from "../../../Data/ModuleList";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const AddModule = ({ navigation, route }) => {
+const AddModule = (props) => {
+  const moduleList = props.moduleList;
+
   const header = (
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
@@ -55,7 +56,7 @@ const AddModule = ({ navigation, route }) => {
             width={28}
             height={28}
             name="options-2-outline"
-            onPress={() => navigation.navigate("Filter")}
+            onPress={() => props.navigation.navigate("Filter")}
           />
         </View>
       </View>
@@ -83,7 +84,7 @@ Prereq: matched with whatever is planned / taken
 
   const holders = (item) => (
     <Container
-      name={item.code + "" + item.title}
+      name={item.moduleCode + " " + item.title}
       prereq={true}
       button1Press={() => {
         setItem(item);
@@ -199,13 +200,13 @@ Prereq: matched with whatever is planned / taken
       <BottomBar
         leftText={`Modules added: ${MCcount}`}
         transition={() => {
-          const val = route.params?.item;
+          const val = props.route.params?.item;
           const iterator1 = modules.values();
           const mods = [];
           for (let i = 0; i < MCcount; i++) {
             mods.push(iterator1.next().value);
           }
-          navigation.navigate(val, { modDetails: [mods, MCcount] });
+          props.navigation.navigate(val, { modDetails: [mods, MCcount] });
         }}
         rightText={"Add modules"}
         size={"33%"}

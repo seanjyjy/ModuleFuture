@@ -13,7 +13,6 @@ const Records = ({ navigation }) => {
   const [currentType, changeType] = useState("Type");
   const [type, setTypeVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
-
   {
     /* --------------------------------------------Ellipsis------------------------------------------------ */
   }
