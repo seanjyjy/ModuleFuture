@@ -50,7 +50,7 @@ const AddPlan = ({ route }) => {
         tempArr.push({
           key: keyTobe.toString(),
           clash: false,
-          moduleName: receivedArr[i],
+          moduleName: receivedArr[i].code,
           TargetGrade: "",
           NumMcs: "4",
           FinalGrade: "",

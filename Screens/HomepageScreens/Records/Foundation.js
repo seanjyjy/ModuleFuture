@@ -12,6 +12,28 @@ const height = Dimensions.get("window").height;
 const Foundation = ({ navigation, route }) => {
   const [editMode, setEdit] = useState(false);
 
+  useEffect(() => {
+    if (route.params?.modDetails) {
+      const tempArr = [];
+      for (let i = 0; i < data.length; i++) {
+        tempArr.push(data[i]);
+      }
+      let keyTobe = data.length + 1;
+      const receivedArr = route.params?.modDetails[0];
+      for (let i = 0; i < route.params?.modDetails[1]; i++) {
+        tempArr.push({
+          key: keyTobe.toString(),
+          name: receivedArr[i].code + " " + receivedArr[i].name,
+          grade: "",
+          sem: "",
+          taken: false,
+        });
+        keyTobe++;
+      }
+      setData(tempArr);
+    }
+  }, [route.params?.modDetails]);
+
   /*
   React.useEffect(() => {
     if (route.params?.mods) {
@@ -148,7 +170,9 @@ const Foundation = ({ navigation, route }) => {
         }
       />
       {editMode ? (
-        <AddModuleButton func={() => navigation.navigate("AddModule")} />
+        <AddModuleButton
+          func={() => navigation.navigate("AddModule", { item: "Foundation" })}
+        />
       ) : (
         <EditButton func={() => setEdit(!editMode)} />
       )}

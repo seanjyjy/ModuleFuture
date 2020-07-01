@@ -20,15 +20,13 @@ const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const AddModule = (props) => {
-  const moduleList = props.moduleList;
-
   const header = (
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
         <Cross
           top={12}
           left={0}
-          transition={() => navigation.goBack()}
+          transition={() => props.navigation.goBack()}
           text={"Add a module"}
         />
         <View style={styles.second}>
@@ -44,8 +42,19 @@ const AddModule = (props) => {
               <View style={{ flex: 1 }}>
                 <TextInput
                   placeholder="Module code, name"
-                  style={{ ...globalFontStyles.OSSB_15, marginLeft: 10 }}
+                  style={{ ...globalFontStyles.OSR_14, marginLeft: 10 }}
                   placeholderTextColor="#76768080"
+                  autoCapitalize="words"
+                  onChangeText={(text) => {
+                    setSearch(text);
+                    let newList = fullList.filter((item) =>
+                      (item.moduleCode + " " + item.title)
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
+                    );
+                    setParameters(newList);
+                  }}
+                  // onEndEditing={() => setParameters(moduleList)}
                 ></TextInput>
               </View>
             </TouchableWithoutFeedback>
@@ -63,11 +72,14 @@ const AddModule = (props) => {
     </View>
   );
 
+  const fullList = props.moduleList;
+  const [moduleList, setParameters] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [current, setItem] = useState(moduleList[0]);
   const [split, setSplit] = useState(0);
   const [modules, add] = useState(new Set()); // modules are stored here
+  const [search, setSearch] = useState("");
 
   const compute = (taken, notTaken) => {
     const len = taken.length + notTaken.length;
@@ -94,13 +106,14 @@ Prereq: matched with whatever is planned / taken
       button2Press={() => null}
       incr={() => {
         addVal(MCcount + 1);
-        const newSet = modules.add(item.code);
+        modules.add({ code: item.moduleCode, name: item.title });
+        const newSet = modules;
         add(newSet);
       }}
       decr={() => {
         addVal(MCcount - 1);
-        modules.delete(item.code);
-        let newSet = modules;
+        modules.delete({ code: item.moduleCode, name: item.title });
+        const newSet = modules;
         add(newSet);
       }}
     />
