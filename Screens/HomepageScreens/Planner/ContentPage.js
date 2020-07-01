@@ -23,7 +23,6 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const ContentPage = (props) => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  //const [arrToPass, setArrToPass] = useState([]);
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
   const num = (val) => {
@@ -55,51 +54,17 @@ const ContentPage = (props) => {
 
   const [y, setY] = useState(new Animated.Value(0));
   useEffect(() => {
-    userInfo
-      .doc(userID)
-      .get()
-      .then((document) => {
-        const val = document.data().expectedSemGrad;
-        var tempArr = [];
-        for (var i = 0; i <= num(val); i++) {
-          tempArr.push(Menu[i]);
-        }
-        tempArr.push(Menu[10]);
-        setCardArray(tempArr);
-      })
-      .catch((error) => alert(error));
+    const unsub = userInfo.doc(userID).onSnapshot((document) => {
+      const val = document.data().expectedSemGrad;
+      let tempArr = [];
+      for (let i = 0; i <= num(val); i++) {
+        tempArr.push(Menu[i]);
+      }
+      tempArr.push(Menu[10]);
+      setCardArray(tempArr);
+    });
+    return () => unsub();
   }, [isFocused]);
-  // const unsub = userInfo.doc(userID).onSnapshot(
-  //   (document) => {
-  // const val = document.data().expectedSemGrad;
-  // let tempArr = [];
-  // for (let i = 0; i < num(val); i++) {
-  //   tempArr.push(Menu[i]);
-  // }
-  // tempArr.push(Menu[10]);
-  // setCardArray(tempArr);
-  //   },
-  //   (error) => alert(error)
-  // );
-  // return () => unsub();
-  // const plansArrayRef = FirebaseDB.firestore()
-  //   .collection("plansArray")
-  //   .doc(userID.concat("_", item.PageName));
-  // plansArrayRef
-  //   .get()
-  //   .then((document) => {
-  //     const val = document.data();
-  //     if (val !== undefined) {
-  //       const arr = val.yearSem;
-  //       setArrToPass(arr);
-  //       //navigation.navigate(item.PageName, { item: [userID, arr] });
-  //     } else {
-  //       plansArrayRef.set({ yearSem: [] });
-  //       setArrToPass([]);
-  //       //navigation.navigate(item.PageName, { item: [userID, []] });
-  //     }
-  //   })
-  //   .catch((error) => alert(error));
 
   const onScroll = Animated.event(
     [
@@ -150,7 +115,6 @@ const ContentPage = (props) => {
             >
               <Entypo
                 name="bar-graph"
-                //color="#918989"
                 color="#A5A0A0"
                 size={30}
                 style={{ left: 25, top: 8 }}
@@ -180,31 +144,19 @@ const ContentPage = (props) => {
               const plansArrayRef = FirebaseDB.firestore()
                 .collection("plansArray")
                 .doc(userID.concat("_", item.PageName));
-              plansArrayRef.onSnapshot((document) => {
-                const val = document.data();
-                if (val !== undefined) {
-                  const arr = val.yearSem;
-                  navigation.navigate(item.PageName, { item: [userID, arr] });
-                } else {
-                  plansArrayRef.set({ yearSem: [] });
-                  navigation.navigate(item.PageName, { item: [userID, []] });
-                }
-              });
-              // plansArrayRef
-              //   .get()
-              //   .then((document) => {
-              //     const val = document.data();
-              //     if (val !== undefined) {
-              //       const arr = val.yearSem;
-              //       //setArrToPass(arr);
-              //       navigation.navigate(item.PageName, { item: [userID, arr] });
-              //     } else {
-              //       plansArrayRef.set({ yearSem: [] });
-              //       //setArrToPass([]);
-              //       navigation.navigate(item.PageName, { item: [userID, []] });
-              //     }
-              //   })
-              //   .catch((error) => alert(error));
+              plansArrayRef
+                .get()
+                .then((document) => {
+                  const val = document.data();
+                  if (val !== undefined) {
+                    const arr = val.yearSem;
+                    navigation.navigate(item.PageName, { item: [userID, arr] });
+                  } else {
+                    plansArrayRef.set({ yearSem: [] });
+                    navigation.navigate(item.PageName, { item: [userID, []] });
+                  }
+                })
+                .catch((error) => alert(error));
             });
           }}
           {...{ onScroll }}

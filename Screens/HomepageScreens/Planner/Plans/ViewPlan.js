@@ -7,14 +7,19 @@ import {
   TouchableOpacity,
   ImageBackground,
   FlatList,
+  Animated,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import EntypoIcon from "react-native-vector-icons/Entypo";
+import { Avatar } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
-import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { useSafeArea } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { Icon } from "react-native-eva-icons";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import Modal from "react-native-modal";
+import FirebaseDB from "../../../../FirebaseDB";
+import Tabs from "./Tabs";
+
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
@@ -24,6 +29,7 @@ const ViewPlan = ({ route }) => {
   const heightToAdjust = usaBTM > 0 ? (usaBTM - 20) / 2 : 0;
   const title = route.params?.item[0];
   const [dataArray, setDataArray] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     if (route.params?.item[1]) {
       const arrayOfModules = route.params?.item[1];
@@ -39,15 +45,7 @@ const ViewPlan = ({ route }) => {
       setDataArray(tempArr);
     }
   }, [route.params?.item[0], route.params?.item[1]]);
-  // const demoArray = [
-  //   { moduleName: "CS1101S", TargetGrade: "A", NumMcs: "4", index: 0 },
-  //   { moduleName: "CS1231S", TargetGrade: "A", NumMcs: "4", index: 1 },
-  //   { moduleName: "MA1101R", TargetGrade: "A-", NumMcs: "4", index: 2 },
-  //   { moduleName: "MA1521", TargetGrade: "B+", NumMcs: "4", index: 3 },
-  //   { moduleName: "GES1021", TargetGrade: "B", NumMcs: "4", index: 4 },
-  //   { moduleName: "GER1000H", TargetGrade: "B-", NumMcs: "4", index: 5 },
-  //   { moduleName: "ST1131", TargetGrade: "C+", NumMcs: "4", index: 6 },
-  // ];
+
   const colorArray = [
     { top: "#fff2ab", btm: "#fff7d1", pin: "#EB0000" },
     { top: "#ffcce5", btm: "#ffe4f1", pin: "#EE82EE" },
@@ -55,74 +53,186 @@ const ViewPlan = ({ route }) => {
     { top: "#e7cfff", btm: "#f2e6ff", pin: "#FF00FF" },
     { top: "#cbf1c4", btm: "#e4f9e0", pin: "brown" },
   ];
-  //list-outline
-  const MenuIcon = () => (
-    <Icon
-      fill="#232323"
-      width={30}
-      height={30}
-      name="list-outline"
-      onPress={toggleMenu}
-      style={{ right: 15, bottom: 10 }}
-    />
-  );
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
+
+  const signOutUser = async () => {
+    try {
+      await FirebaseDB.auth().signOut();
+    } catch (error) {
+      alert(error);
+    }
   };
 
-  const [menuVisible, setMenuVisible] = useState(false);
-  const dropDownList = () => {
+  const HomeButton = (
+    <Tabs
+      icon={<MaterialIcon name="home-outline" size={28} color="#726F6F" />}
+      text="Home"
+      viewDesign={{ borderTopWidth: 1, borderColor: "#E2E2E2" }}
+      iconStyle={{ right: 3 }}
+      func={() => {
+        setModalVisible(false);
+        navigation.navigate("Content Page");
+      }}
+    />
+  );
+
+  const SignOut = (
+    <Tabs
+      icon={<MaterialIcon size={25} name="logout" color="#726F6F" />}
+      text="SignOut"
+      viewDesign={{
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: "#E2E2E2",
+      }}
+      func={() => {
+        setModalVisible(false);
+        signOutUser();
+      }}
+    />
+  );
+
+  const SmartRecall = (dest) => (
+    <Tabs
+      icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
+      text={dest}
+      iconStyle={{ right: 3 }}
+      viewDesign={{
+        borderColor: "#E2E2E2",
+        borderBottomWidth: 1,
+      }}
+      func={() => {
+        setModalVisible(false);
+        navigation.navigate(route.params?.item[2].toString());
+      }}
+    />
+  );
+  const ProgressButon = (
+    <Tabs
+      icon={<EntypoIcon name="bar-graph" color="#726F6F" size={22} />}
+      text="Progress"
+      iconStyle={{ right: 3 }}
+      wordStyle={{
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: "#E2E2E2",
+      }}
+      func={() => {
+        setModalVisible(false);
+        navigation.navigate("ProgressPage");
+      }}
+    />
+  );
+  const customDrawer = () => {
     return (
-      <OverflowMenu
-        visible={menuVisible}
-        anchor={MenuIcon}
-        onBackdropPress={toggleMenu}
-        style={{ right: 15, bottom: 10 }}
+      <Modal
+        animationInTiming={250}
+        animationOutTiming={400}
+        isVisible={modalVisible}
+        animationIn="slideInLeft"
+        animationOut="slideOutLeft"
+        deviceHeight={height}
+        deviceWidth={width}
+        backdropOpacity={0.3}
+        onBackdropPress={() => setModalVisible(false)}
       >
-        <MenuItem
-          title={"Home"}
-          onPress={() => {
-            toggleMenu();
-            navigation.navigate("Content Page");
+        <View
+          style={{
+            width: 0.5 * width,
+            height: height,
+            backgroundColor: "white",
+            right: 0.1 * width,
           }}
-          activeOpacity={0.9}
-        />
-        <MenuItem
-          title={"Plans"}
-          onPress={() => {
-            toggleMenu();
-            navigation.navigate(route.params?.item[2].toString());
-          }}
-          activeOpacity={0.9}
-        />
-        <MenuItem
-          title={"Edit"}
-          onPress={() => {
-            toggleMenu();
-            console.log("LOL");
-          }}
-          activeOpacity={0.9}
-        />
-      </OverflowMenu>
+        >
+          <View style={{ flex: 7 }}>
+            {/* "Profile information portion" */}
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1 }} />
+              <View
+                style={{
+                  flex: 2,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar
+                  style={styles.avatar}
+                  size="giant"
+                  source={require("../../../../assets/JumpingMan.png")}
+                />
+              </View>
+              <View style={styles.oneCenter}>
+                <Text
+                  style={{ ...globalFontStyles.NB_14, right: 0.045 * width }}
+                >
+                  Current Sem:
+                </Text>
+              </View>
+            </View>
+            {/* contains all the tabs */}
+            <View style={{ flex: 3 }}>
+              <View style={{ flex: 2 }}>
+                {/* can be used to include more tabs here------- (2 more) if want more 
+                then increase this flex and decrease the flex below*/}
+                {HomeButton}
+                {ProgressButon}
+                {SmartRecall(route.params?.item[2].toString())}
+                <View style={{ flex: 2 }} />
+                {/* ------------------------------------------ */}
+              </View>
+              <View style={{ flex: 2 }} />
+            </View>
+          </View>
+          <View style={{ flex: 1 }}>
+            {SignOut}
+            <View style={{ flex: 1 }} />
+          </View>
+        </View>
+      </Modal>
     );
   };
+
   const Header = () => {
     return (
-      <View style={styles.headerDesign}>
-        <View style={{ ...styles.hundredCenter, flex: 1 }}>
-          {dropDownList()}
-        </View>
-        <View style={{ ...styles.hundredCenter, flex: 2 }}>
-          <Text style={styles.headerText}>{title}</Text>
-        </View>
-        <View style={{ ...styles.hundredCenter, flex: 1 }}>
-          <Text
-            style={{ bottom: 12, ...globalFontStyles.NB_14, color: "#007AFF" }}
+      <>
+        <View style={styles.headerDesign}>
+          <View
+            style={{
+              ...styles.hundredCenter,
+              flex: 1,
+            }}
           >
-            Submit
-          </Text>
+            {/* {dropDownList()} */}
+            <FeatherIcon
+              size={27}
+              name="list"
+              color="#232323"
+              style={{ bottom: 7, right: 0.04 * width }}
+              onPress={() => {
+                setModalVisible(true);
+              }}
+            />
+          </View>
+          <View style={{ ...styles.hundredCenter, flex: 2 }}>
+            <Text style={styles.headerText}>{title}</Text>
+          </View>
+          <View style={{ ...styles.hundredCenter, flex: 1 }}>
+            <Text
+              onPress={() => {
+                console.log(dataArray);
+                navigation.navigate("AddPlan", dataArray);
+              }}
+              style={{
+                bottom: 12,
+                ...globalFontStyles.NB_14,
+                color: "#007AFF",
+              }}
+            >
+              Edit
+            </Text>
+          </View>
         </View>
-      </View>
+        {customDrawer()}
+      </>
     );
   };
 
@@ -307,5 +417,11 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: "center",
     alignItems: "flex-start",
+  },
+  drawer: {
+    height: height,
+  },
+  avatar: {
+    margin: 8,
   },
 });

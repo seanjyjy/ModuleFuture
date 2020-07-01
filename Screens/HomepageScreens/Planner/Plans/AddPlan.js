@@ -59,6 +59,9 @@ const AddPlan = ({ route }) => {
       }
       setData(tempArr);
     }
+    // if (route.params?.plansFromViewPlan) {
+    //   setData(route.params?.plansFromViewPlan);
+    // }
   }, [docLoc, route.params?.modDetails]);
 
   const navigation = useNavigation();

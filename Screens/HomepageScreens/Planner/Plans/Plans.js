@@ -10,7 +10,7 @@ import {
   ImageBackground,
   Keyboard,
 } from "react-native";
-
+import { useIsFocused } from "@react-navigation/native";
 import Header from "../../../../Component/Header";
 import Icons from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -132,20 +132,6 @@ const Plans = (props) => {
   //const [size, setSize] = useState(thisPageInfo[1].length);
   const [size, setSize] = useState(0);
   useEffect(() => {
-    // plansArrayRef
-    //   .get()
-    //   .then((document) => {
-    //     const val = document.data();
-    //     if (val !== undefined) {
-    //       const arr = val.yearSem;
-    //       setSize(arr.length);
-    //       setCurrentArr(arr);
-    //     } else {
-    //       plansArrayRef.set({ yearSem: [] });
-    //       setCurrentArr([]);
-    //     }
-    //   })
-    //   .catch((error) => alert(error));
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
         const val = document.data();
@@ -165,6 +151,7 @@ const Plans = (props) => {
 
   const [selected, setSelected] = React.useState(new Map().set("1", true));
   const [planName, setPlanName] = useState("Plan 1");
+  const [currentID, setCurrentID] = useState("1");
   const onSelect = React.useCallback(
     (key) => {
       const newSelected = new Map();
@@ -173,7 +160,7 @@ const Plans = (props) => {
     },
     [selected]
   );
-  const [currentID, setCurrentID] = useState("1");
+
   const setCurrentlyPressID = (val) => {
     if (val === currentID) {
       setCurrentID("-1");
