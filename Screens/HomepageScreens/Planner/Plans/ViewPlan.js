@@ -11,11 +11,13 @@ import {
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import EntypoIcon from "react-native-vector-icons/Entypo";
+import AntIcon from "react-native-vector-icons/AntDesign";
 import { Avatar } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import { useSafeArea } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/FontAwesome";
 import Modal from "react-native-modal";
 import FirebaseDB from "../../../../FirebaseDB";
 import Tabs from "./Tabs";
@@ -27,24 +29,36 @@ const ViewPlan = ({ route }) => {
   const navigation = useNavigation();
   const usaBTM = useSafeArea().bottom;
   const heightToAdjust = usaBTM > 0 ? (usaBTM - 20) / 2 : 0;
-  const title = route.params?.item[0];
+  const [title, setTitle] = useState("");
   const [dataArray, setDataArray] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [docLoc, setDocLoc] = useState("");
+  const [fromWhere, setFromWhere] = useState("");
+  const [size, setSize] = useState("");
+  const [favourite, setfavourite] = useState(false);
+  const [currentSem, setCurrentSem] = useState("");
   useEffect(() => {
-    if (route.params?.item[1]) {
-      const arrayOfModules = route.params?.item[1];
+    if (route.params?.item) {
+      setDocLoc(route.params?.item[1]);
+      const arrayOfModules = route.params?.item[4];
       const tempArr = [];
       for (var i = 0; i < arrayOfModules.length; i++) {
         tempArr.push({
-          moduleName: arrayOfModules[i].moduleName,
+          moduleCode: arrayOfModules[i].moduleCode,
           TargetGrade: arrayOfModules[i].TargetGrade,
           NumMcs: "4",
-          key: parseInt(arrayOfModules[i].key),
+          clash: arrayOfModules[i].clash,
+          key: arrayOfModules[i].key,
+          FinalGrade: arrayOfModules[i].FinalGrade,
         });
       }
       setDataArray(tempArr);
+      setSize(route.params?.item[2]);
+      setFromWhere(route.params?.item[3]);
+      setTitle(route.params?.item[0]);
+      //whatsTheCurrentSem(docLoc);
     }
-  }, [route.params?.item[0], route.params?.item[1]]);
+  }, [route.params?.item[0], route.params?.item[4]]);
 
   const colorArray = [
     { top: "#fff2ab", btm: "#fff7d1", pin: "#EB0000" },
@@ -54,6 +68,18 @@ const ViewPlan = ({ route }) => {
     { top: "#cbf1c4", btm: "#e4f9e0", pin: "brown" },
   ];
 
+  // need to get current year and approximate time? in order to calculate current semester
+  const whatsTheCurrentSem = (val) => {
+    const len = val.length;
+    const userID = docLoc.substring(0, len - 5);
+    const userRef = FirebaseDB.firestore().collection("users").doc(userID);
+    userRef
+      .get((document) => {
+        const val = document.data();
+        const year = val.yearOfMatri;
+      })
+      .then((error) => alert(error));
+  };
   const signOutUser = async () => {
     try {
       await FirebaseDB.auth().signOut();
@@ -70,7 +96,7 @@ const ViewPlan = ({ route }) => {
       iconStyle={{ right: 3 }}
       func={() => {
         setModalVisible(false);
-        navigation.navigate("Content Page");
+        setTimeout(() => navigation.navigate("Content Page"), 400);
       }}
     />
   );
@@ -86,7 +112,7 @@ const ViewPlan = ({ route }) => {
       }}
       func={() => {
         setModalVisible(false);
-        signOutUser();
+        setTimeout(() => signOutUser(), 400);
       }}
     />
   );
@@ -102,7 +128,10 @@ const ViewPlan = ({ route }) => {
       }}
       func={() => {
         setModalVisible(false);
-        navigation.navigate(route.params?.item[2].toString());
+        setTimeout(
+          () => navigation.navigate(route.params?.item[3].toString()),
+          400
+        );
       }}
     />
   );
@@ -118,7 +147,64 @@ const ViewPlan = ({ route }) => {
       }}
       func={() => {
         setModalVisible(false);
-        navigation.navigate("ProgressPage");
+        setTimeout(() => navigation.navigate("ProgressPage"), 400);
+      }}
+    />
+  );
+
+  const FocusButton = (
+    <Tabs
+      icon={<Icon name="crosshairs" color="#726F6F" size={22} />}
+      text="Focus"
+      iconStyle={{ right: 3 }}
+      wordStyle={{
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: "#E2E2E2",
+      }}
+      func={() => {
+        setModalVisible(false);
+        setTimeout(() => navigation.navigate("Focus"), 400);
+      }}
+    />
+  );
+  const RecordsButton = (
+    <Tabs
+      icon={<Icon name="book" color="#726F6F" size={22} />}
+      text="Records"
+      iconStyle={{ right: 3 }}
+      func={() => {
+        setModalVisible(false);
+        setTimeout(() => navigation.navigate("Records"), 400);
+      }}
+    />
+  );
+
+  const ProfileButton = (
+    <Tabs
+      icon={<Icon name="user-circle" color="#726F6F" size={22} />}
+      text="Profile"
+      iconStyle={{ right: 3 }}
+      wordStyle={{
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: "#E2E2E2",
+      }}
+      func={() => {
+        setModalVisible(false);
+        setTimeout(() => navigation.navigate("Profile"), 400);
+      }}
+    />
+  );
+
+  const ModuleButton = (
+    <Tabs
+      icon={<Icon name="search" color="#726F6F" size={22} />}
+      text="Module"
+      iconStyle={{ right: 3 }}
+      func={() => {
+        setModalVisible(false);
+        setTimeout(() => navigation.navigate("Module"), 400);
       }}
     />
   );
@@ -170,16 +256,20 @@ const ViewPlan = ({ route }) => {
             </View>
             {/* contains all the tabs */}
             <View style={{ flex: 3 }}>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex: 3 }}>
                 {/* can be used to include more tabs here------- (2 more) if want more 
                 then increase this flex and decrease the flex below*/}
                 {HomeButton}
                 {ProgressButon}
-                {SmartRecall(route.params?.item[2].toString())}
-                <View style={{ flex: 2 }} />
+
+                {RecordsButton}
+                {FocusButton}
+                {ModuleButton}
+                {ProfileButton}
+                {SmartRecall(route.params?.item[3].toString())}
                 {/* ------------------------------------------ */}
               </View>
-              <View style={{ flex: 2 }} />
+              <View style={{ flex: 1 }} />
             </View>
           </View>
           <View style={{ flex: 1 }}>
@@ -190,7 +280,41 @@ const ViewPlan = ({ route }) => {
       </Modal>
     );
   };
-
+  const loadData = async () => {
+    const len = docLoc.length;
+    const userID = docLoc.substring(0, len - 5);
+    const userRef = FirebaseDB.firestore().collection("users").doc(userID);
+    userRef.set(
+      {
+        favPlanInfo: [title, docLoc, size, fromWhere],
+        favPlanArray: dataArray,
+      },
+      { merge: true }
+    );
+  };
+  const emptyHeart = (
+    <AntIcon
+      size={25}
+      name="hearto"
+      style={{ right: 0.03 * width }}
+      color="#FFF8DC"
+      onPress={() => {
+        setfavourite(true);
+        loadData();
+      }}
+    />
+  );
+  const filledheart = (
+    <AntIcon
+      size={25}
+      name="heart"
+      style={{ right: 0.03 * width }}
+      color="red"
+      onPress={() => {
+        setfavourite(false);
+      }}
+    />
+  );
   const Header = () => {
     return (
       <>
@@ -218,8 +342,10 @@ const ViewPlan = ({ route }) => {
           <View style={{ ...styles.hundredCenter, flex: 1 }}>
             <Text
               onPress={() => {
-                console.log(dataArray);
-                navigation.navigate("AddPlan", dataArray);
+                navigation.navigate("AddPlan", {
+                  item: [title, docLoc, size, fromWhere, dataArray],
+                  from: "ViewPlan",
+                });
               }}
               style={{
                 bottom: 12,
@@ -236,7 +362,7 @@ const ViewPlan = ({ route }) => {
     );
   };
 
-  const StickyPad = (moduleName, TargetGrade, NumMcs, key) => {
+  const StickyPad = (moduleCode, TargetGrade, FinalGrade, NumMcs, key) => {
     return (
       <View
         style={{
@@ -270,7 +396,7 @@ const ViewPlan = ({ route }) => {
                 ...globalFontStyles.NB_15,
                 color: "#4a4e5d",
               }}
-            >{`Module: ${moduleName}`}</Text>
+            >{`Module: ${moduleCode}`}</Text>
           </View>
           <View
             style={{
@@ -282,6 +408,24 @@ const ViewPlan = ({ route }) => {
               style={{ left: 15, ...globalFontStyles.NB_15, color: "#4a4e5d" }}
             >{`Target grade: ${TargetGrade}`}</Text>
           </View>
+          {FinalGrade === "" ? (
+            <></>
+          ) : (
+            <View
+              style={{
+                ...styles.twoStart,
+                backgroundColor: colorArray[key % 5].btm,
+              }}
+            >
+              <Text
+                style={{
+                  left: 15,
+                  ...globalFontStyles.NB_15,
+                  color: "#4a4e5d",
+                }}
+              >{`Final grade: ${FinalGrade}`}</Text>
+            </View>
+          )}
           <View
             style={{
               ...styles.twoStart,
@@ -315,9 +459,23 @@ const ViewPlan = ({ route }) => {
           }}
         >
           <View style={styles.headerAtPlan}>
-            <Text style={{ ...globalFontStyles.NB_24, color: "#FFF8DC" }}>
-              My Plans
-            </Text>
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={{ ...globalFontStyles.NB_24, color: "#FFF8DC" }}>
+                  My Plans
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                }}
+              >
+                {favourite ? filledheart : emptyHeart}
+              </View>
+            </View>
             <View style={styles.lineAtPlan} />
           </View>
 
@@ -330,10 +488,11 @@ const ViewPlan = ({ route }) => {
               keyExtractor={(item) => item.key}
               renderItem={({ item }) =>
                 StickyPad(
-                  item.moduleName,
+                  item.moduleCode,
                   item.TargetGrade,
+                  item.FinalGrade,
                   item.NumMcs,
-                  item.key
+                  parseInt(item.key)
                 )
               }
             />

@@ -121,16 +121,20 @@ function RectInfoSelected({
 
 const Plans = (props) => {
   const navigation = useNavigation();
-  //const thisPageInfo = props.nextPageInfo;
-  //const userID = thisPageInfo[0];
   const info = props.data;
   const userID = info[0];
+  const fromWhere = props.headerTitle;
+  const docLoc = userID.concat("_", fromWhere);
   const plansArrayRef = FirebaseDB.firestore()
     .collection("plansArray")
-    .doc(userID.concat("_", props.headerTitle));
+    .doc(docLoc);
   const [currentArr, setCurrentArr] = useState(info[1]);
-  //const [size, setSize] = useState(thisPageInfo[1].length);
+  const [selected, setSelected] = React.useState(new Map().set("1", true));
+  const [planName, setPlanName] = useState("Plan 1");
+  const [currentID, setCurrentID] = useState("1");
+  const [modalVisible, setModalVisible] = useState(false);
   const [size, setSize] = useState(0);
+  const [showDustBin, setShowDustBin] = useState(true);
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
@@ -139,9 +143,13 @@ const Plans = (props) => {
           const arr = val.yearSem;
           setSize(arr.length);
           setCurrentArr(arr);
+          if (arr.length === 0) {
+            setShowDustBin(false);
+          }
         } else {
           plansArrayRef.set({ yearSem: [] });
           setCurrentArr([]);
+          setShowDustBin(false);
         }
       },
       (error) => alert(error)
@@ -149,11 +157,13 @@ const Plans = (props) => {
     return () => unsub();
   }, [userID]);
 
-  const [selected, setSelected] = React.useState(new Map().set("1", true));
-  const [planName, setPlanName] = useState("Plan 1");
-  const [currentID, setCurrentID] = useState("1");
   const onSelect = React.useCallback(
     (key) => {
+      if (!selected.get(key)) {
+        setShowDustBin(true);
+      } else {
+        setShowDustBin(false);
+      }
       const newSelected = new Map();
       newSelected.set(key, !selected.get(key));
       setSelected(newSelected);
@@ -168,14 +178,6 @@ const Plans = (props) => {
       setCurrentID(val);
     }
   };
-  const data = [
-    { key: "1", value: true },
-    { key: "2", value: false },
-    { key: "3", value: false },
-    { key: "4", value: false },
-  ]; // demo
-
-  const [modalVisible, setModalVisible] = useState(false);
 
   // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
@@ -249,6 +251,7 @@ const Plans = (props) => {
                   size,
                   props.headerTitle,
                 ],
+                from: "Plans",
               });
             }}
           >
@@ -260,6 +263,45 @@ const Plans = (props) => {
       </Modal>
     );
   };
+
+  const emptySpace = (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+      }}
+    />
+  );
+  const dustBin = (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+      }}
+    >
+      <Icon
+        style={{ bottom: 20 }}
+        name="trash-2-outline"
+        width={30}
+        height={20}
+        fill="#232323"
+        onPress={() => {
+          const item = currentArr[parseInt(currentID) - 1];
+          const currentPlanName =
+            currentArr[parseInt(currentID) - 1].nameOfPlan;
+          const plansItselfRef = FirebaseDB.firestore()
+            .collection("plansItself")
+            .doc(userID.concat("_", props.headerTitle, "_", currentPlanName))
+            .delete();
+          const newCurrentArr = currentArr.filter((x) => x.key !== currentID);
+          setCurrentArr(newCurrentArr);
+          plansArrayRef.update({ yearSem: newCurrentArr });
+        }}
+      />
+    </View>
+  );
   return (
     <View style={{ flex: 1, minHeight: hp("100%") }}>
       <View style={styles.header}>
@@ -298,23 +340,8 @@ const Plans = (props) => {
               {props.headerTitle}
             </Text>
           </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                bottom: 18,
-                ...globalFontStyles.NB_14,
-                color: "#007AFF",
-              }}
-            >
-              Edit
-            </Text>
-          </View>
+
+          {showDustBin ? dustBin : emptySpace}
         </ImageBackground>
       </View>
       <View style={{ flex: 6, backgroundColor: "#f9f9f9" }}>
@@ -363,8 +390,10 @@ const Plans = (props) => {
                     navigation.navigate("ViewPlan", {
                       item: [
                         thisPlanName,
+                        docLoc,
+                        size,
+                        fromWhere,
                         moduleInformations,
-                        props.headerTitle,
                       ],
                     });
                   }

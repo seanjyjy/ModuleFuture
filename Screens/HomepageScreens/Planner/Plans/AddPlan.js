@@ -25,8 +25,8 @@ const AddPlan = ({ route }) => {
   const [planNameValue, setPlanName] = useState("Plan 1");
   const [size, setSize] = useState(0);
   const [docLoc, setDocLoc] = useState("");
-  const [data, setData] = useState([]); // might need to use async storage?
-
+  const [data, setData] = useState([]);
+  const [fromWhere, setFromWhere] = useState("");
   const deleteItem = (modName) => {
     setData((newData) => {
       return newData.filter((todo) => todo.moduleName !== modName);
@@ -34,12 +34,14 @@ const AddPlan = ({ route }) => {
   };
 
   useEffect(() => {
-    if (route.params?.item) {
+    if (route.params?.item && route.params?.from !== "AddModule") {
       setPlanName(route.params?.item[0]);
       setSize(route.params?.item[2]);
       setDocLoc(route.params?.item[1]);
+      setFromWhere(route.params?.item[3]);
+      if (route.params?.item[4]) setData(route.params?.item[4]);
     }
-    if (route.params?.modDetails) {
+    if (route.params?.modDetails && route.params?.from === "AddModule") {
       const tempArr = [];
       for (let i = 0; i < data.length; i++) {
         tempArr.push(data[i]);
@@ -50,7 +52,7 @@ const AddPlan = ({ route }) => {
         tempArr.push({
           key: keyTobe.toString(),
           clash: false,
-          moduleName: receivedArr[i].code,
+          moduleCode: receivedArr[i].code,
           TargetGrade: "",
           NumMcs: "4",
           FinalGrade: "",
@@ -59,10 +61,7 @@ const AddPlan = ({ route }) => {
       }
       setData(tempArr);
     }
-    // if (route.params?.plansFromViewPlan) {
-    //   setData(route.params?.plansFromViewPlan);
-    // }
-  }, [docLoc, route.params?.modDetails]);
+  }, [route.params.item[4], route.params?.modDetails, route.params?.from]);
 
   const navigation = useNavigation();
   const Header = () => (
@@ -93,19 +92,20 @@ const AddPlan = ({ route }) => {
           plansArrayRef.update({
             yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
               key: (size + 1).toString(),
-              nameOfPlan: route.params?.item[0],
+              nameOfPlan: planNameValue,
             }),
           });
           const plansItself = FirebaseDB.firestore()
             .collection("plansItself")
-            .doc(docLoc.concat("_", route.params?.item[0]));
+            .doc(docLoc.concat("_", planNameValue));
           plansItself.set({
-            nameOfPlan: route.params?.item[0],
+            nameOfPlan: planNameValue,
             planInfo: data,
-            fromWhere: route.params?.item[3],
+            fromWhere: fromWhere,
           });
+
           navigation.navigate("ViewPlan", {
-            item: [route.params?.item[0], data, route.params?.item[3]],
+            item: [planNameValue, docLoc, size, fromWhere, data],
           });
         }}
         style={styles.flexOneCenterFlexEnd}

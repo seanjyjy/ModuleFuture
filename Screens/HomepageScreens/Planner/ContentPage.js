@@ -13,7 +13,7 @@ import {
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Entypo from "react-native-vector-icons/Entypo";
 import CardWallet from "../../../Component/CardWallet";
-
+import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { Menu } from "../../../Data/CardList";
 import FirebaseDB from "../../../FirebaseDB";
 const width = Dimensions.get("window").width;
@@ -82,17 +82,41 @@ const ContentPage = (props) => {
         >
           <View
             style={{
-              flex: 5,
+              flex: 1,
               justifyContent: "flex-end",
-              alignItems: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <FontisoIcon
+              name="favorite"
+              size={22}
+              color="#A5A0A0"
+              style={{ right: 0.05 * width, bottom: 0.02 * height }}
+              onPress={() => {
+                const title = props.extraData.favPlanInfo[0];
+                const docLoc = props.extraData.favPlanInfo[1];
+                const size = props.extraData.favPlanInfo[2];
+                const fromWhere = props.extraData.favPlanInfo[3];
+                const dataArray = props.extraData.favPlanArray;
+                navigation.navigate("ViewPlan", {
+                  item: [title, docLoc, size, fromWhere, dataArray],
+                });
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flex: 2,
+              justifyContent: "flex-end",
+              alignItems: "center",
             }}
           >
             <Text
               style={{
-                ...globalFontStyles.NB_34,
+                ...globalFontStyles.NB_28,
                 color: "#FB5581",
-                left: 30,
                 bottom: 5,
+                left: 3,
               }}
             >
               Planner
@@ -101,7 +125,7 @@ const ContentPage = (props) => {
 
           <View
             style={{
-              flex: 2,
+              flex: 1,
               justifyContent: "flex-end",
               alignItems: "center",
             }}
@@ -115,8 +139,8 @@ const ContentPage = (props) => {
               <Entypo
                 name="bar-graph"
                 color="#A5A0A0"
-                size={30}
-                style={{ left: 25, top: 8 }}
+                size={25}
+                style={{ left: 25, top: 0.015 * height }}
               />
             </TouchableOpacity>
           </View>
@@ -127,7 +151,6 @@ const ContentPage = (props) => {
           height: 5,
           width: "100%",
           backgroundColor: "#f9f9f9",
-          // or no bgColor
         }}
       />
 

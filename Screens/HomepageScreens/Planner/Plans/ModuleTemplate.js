@@ -24,14 +24,14 @@ const height = Dimensions.get("window").height;
 
 const ModuleTemplate = (props) => {
   const clash = props.dataObj.clash;
-  const moduleName = props.dataObj.moduleName;
+  const moduleCode = props.dataObj.moduleCode;
   const TargetGrade = props.dataObj.TargetGrade;
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState("");
   const [text1, setText1] = useState("");
   const [clashValue, setClash] = useState(clash);
   const [TargetGradeValue, setTargetGrade] = useState(TargetGrade);
-  const [FinalGrade, setFinalGrade] = useState("");
+  const [FinalGrade, setFinalGrade] = useState(props.dataObj.FinalGrade);
   const [menuVisible, setMenuVisible] = useState(false);
   const [TargetOrFinal, setTargetOrFinal] = useState(0);
   const MenuIcon = () => (
@@ -59,7 +59,7 @@ const ModuleTemplate = (props) => {
           title={"Delete"}
           onPress={() => {
             const deleteMethod = props.deleteMethod;
-            deleteMethod(moduleName);
+            deleteMethod(moduleCode);
             toggleMenu();
           }}
           activeOpacity={0.9}
@@ -110,10 +110,8 @@ const ModuleTemplate = (props) => {
               onChangeText={(val) => {
                 if (whatType === 0) {
                   setText(val);
-                  props.dataObj.TargetGrade = val;
                 } else {
                   setText1(val);
-                  props.dataObj.FinalGrade = val;
                 }
               }}
             />
@@ -147,10 +145,14 @@ const ModuleTemplate = (props) => {
               Keyboard.dismiss();
               if (whatType === 0) {
                 setTargetGrade(text.toString().toUpperCase());
+                props.dataObj.TargetGrade = text.toString().toUpperCase();
               } else {
                 setFinalGrade(text1.toString().toUpperCase());
+                props.dataObj.FinalGrade = text1.toString().toUpperCase();
               }
               setModalVisible(false);
+              setText("");
+              setText1("");
             }}
           >
             <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
@@ -177,7 +179,7 @@ const ModuleTemplate = (props) => {
           <View style={styles.recHeader}>
             <View />
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              {moduleName}
+              {moduleCode}
             </Text>
             {Ellipsis()}
           </View>

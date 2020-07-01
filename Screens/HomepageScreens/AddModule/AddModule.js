@@ -219,7 +219,11 @@ Prereq: matched with whatever is planned / taken
           for (let i = 0; i < MCcount; i++) {
             mods.push(iterator1.next().value);
           }
-          props.navigation.navigate(val, { modDetails: [mods, MCcount] });
+          // you can use if else to check val to see where to navigate to so we dont clash
+          props.navigation.navigate(val, {
+            modDetails: [mods, MCcount],
+            from: "AddModule",
+          });
         }}
         rightText={"Add modules"}
         size={"33%"}
