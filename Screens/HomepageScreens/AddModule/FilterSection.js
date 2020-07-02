@@ -14,7 +14,13 @@ const FilterSection = (props) => {
     <FilterItem text={name} box={true} reset={props.reset} />
   );
   const convert = (text) =>
-    text === "Level" ? "levels" : text === "Code" ? "codes" : text;
+    text === "Level"
+      ? "levels"
+      : text === "Department"
+      ? "departments"
+      : text === "Semester"
+      ? "semesters"
+      : text;
 
   const [noOfItems, setNum] = useState(3);
   const array = props.array;

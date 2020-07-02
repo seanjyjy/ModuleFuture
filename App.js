@@ -14,7 +14,7 @@ import { ApplicationProvider } from "@ui-kitten/components";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
 import FirebaseDB from "./FirebaseDB";
-import ModuleListWithKey from "./Data/ModuleListWithKey";
+import ModuleListWithKey from "./Data/ModuleListMoreInfo";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
 import Login from "./Screens/Login/Login";

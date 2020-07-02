@@ -47,14 +47,14 @@ const AddPlan = ({ route }) => {
         tempArr.push(data[i]);
       }
       let keyTobe = data.length;
-      const receivedArr = route.params?.modDetails[0];
-      for (let i = 0; i < route.params?.modDetails[1]; i++) {
+      const receivedArr = route.params?.modDetails;
+      for (let i = 0; i < receivedArr.length; i++) {
         tempArr.push({
           key: keyTobe.toString(),
           clash: false,
           moduleCode: receivedArr[i].code,
           TargetGrade: "",
-          NumMcs: "4",
+          NumMcs: receivedArr[i].MC,
           FinalGrade: "",
         });
         keyTobe++;

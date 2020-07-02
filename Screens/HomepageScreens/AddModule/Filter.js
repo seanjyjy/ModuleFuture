@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,10 +18,24 @@ import { useSafeArea } from "react-native-safe-area-context";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const Filter = ({ navigation }) => {
-  const [numMods, update] = useState("400+");
+const Filter = ({ navigation, route }) => {
+  useEffect(() => {
+    if (route.params?.moduleList) {
+      const num = route.params?.moduleList;
+      setList(num);
+      update(numConversion(num));
+    }
+  });
+
+  const numConversion = (num) => {
+    const rounded = Math.floor((num - 50).toPrecision(2));
+    return rounded + "+";
+  };
+
+  const [numMods, update] = useState(null);
   const [sortState1, setSortState1] = useState("Default");
   const [sortState2, setSortState2] = useState("Default");
+  const [list, setList] = useState(null);
 
   const header = (
     <View style={styles.header}>
@@ -119,9 +133,354 @@ const Filter = ({ navigation }) => {
     { name: "More than 8", key: 4 },
   ];
 
+  const semesters = [
+    { name: "Semester 1", key: 1 },
+    { name: "Semester 2", key: 2 },
+    { name: "Special Term I", key: 3 },
+    { name: "Special Term II", key: 4 },
+  ];
+
   const other = [
     { name: "S/U Option", key: 1 },
     { name: "No Exam", key: 2 },
+  ];
+
+  const departments = [
+    {
+      key: 18,
+      name: "Computer Science",
+    },
+    {
+      key: 17,
+      name: "Information Systems and Analytics",
+    },
+    {
+      key: 37,
+      name: "Mathematics",
+    },
+    {
+      key: 39,
+      name: "Statistics and Applied Probability",
+    },
+    {
+      key: 9,
+      name: "BIZ Dean's Office",
+    },
+    {
+      key: 43,
+      name: "Electrical and Computer Engineering",
+    },
+    {
+      key: 22,
+      name: "Computing and Engineering Programme",
+    },
+    { key: 0, name: "Accounting" },
+    {
+      key: 14,
+      name: "Management and Organisation",
+    },
+    {
+      key: 13,
+      name: "Marketing",
+    },
+    {
+      key: 8,
+      name: "Analytics and Operations",
+    },
+    { key: 74, name: "Alice Lee Center for Nursing Studies" },
+    {
+      key: 6,
+      name: "Anatomy",
+    },
+    {
+      key: 3,
+      name: "Architecture",
+    },
+    {
+      key: 70,
+      name: "Biochemistry",
+    },
+    {
+      key: 11,
+      name: "Biological Sciences",
+    },
+    {
+      key: 15,
+      name: "Biomedical Engineering",
+    },
+    {
+      key: 16,
+      name: "Building",
+    },
+    {
+      key: 30,
+      name: "Center for Engl Lang Comms",
+    },
+    {
+      key: 77,
+      name: "Center for Quantum Technologies",
+    },
+    {
+      key: 35,
+      name: "Centre for Language Studies",
+    },
+    {
+      key: 26,
+      name: "Chemical and Biomolecular Engineering",
+    },
+    {
+      key: 25,
+      name: "Chemistry",
+    },
+    {
+      key: 23,
+      name: "Chinese Studies",
+    },
+    {
+      key: 24,
+      name: "Chua Thian Poh Comm Leader Center",
+    },
+    {
+      key: 21,
+      name: "Civil and Environmental Engineering",
+    },
+    {
+      key: 81,
+      name: "College of Alice and Peter Tan",
+    },
+    {
+      key: 31,
+      name: "Communications and New Media",
+    },
+
+    {
+      key: 41,
+      name: "Division of Graduate Dental Studies",
+    },
+    {
+      key: 5,
+      name: "Division of Graduate Medical Studies",
+    },
+    {
+      key: 65,
+      name: "Duke-NUS Dean's Office",
+    },
+    {
+      key: 42,
+      name: "Economics",
+    },
+
+    {
+      key: 47,
+      name: "Engineering Science Programme",
+    },
+    {
+      key: 46,
+      name: "English Language and Literature",
+    },
+    {
+      key: 4,
+      name: "FASS Dean's Office/Office of Programmes",
+    },
+    {
+      key: 12,
+      name: "Finance",
+    },
+    {
+      key: 33,
+      name: "FoD Dean's Office",
+    },
+    {
+      key: 45,
+      name: "FoE Dean's Office",
+    },
+    {
+      key: 68,
+      name: "FoL Dean's Office",
+    },
+    {
+      key: 38,
+      name: "FoS Dean's Office",
+    },
+    {
+      key: 62,
+      name: "Food Science and Technology",
+    },
+    {
+      key: 52,
+      name: "Geography",
+    },
+    {
+      key: 1,
+      name: "History",
+    },
+    {
+      key: 67,
+      name: "Industrial Design",
+    },
+    {
+      key: 63,
+      name: "Industrial Systems Engineering and Management",
+    },
+
+    {
+      key: 34,
+      name: "Institute of Systems Science",
+    },
+    {
+      key: 54,
+      name: "Japanese Studies",
+    },
+    {
+      key: 75,
+      name: "LKYSPP Dean's Office",
+    },
+    {
+      key: 69,
+      name: "Logistics Inst - Asia Pac",
+    },
+    {
+      key: 60,
+      name: "Malay Studies",
+    },
+    {
+      key: 73,
+      name: "Materials Science and Engineering",
+    },
+
+    {
+      key: 44,
+      name: "Mechanical Engineering",
+    },
+    {
+      key: 72,
+      name: "Mechanobiology Institute (MBI)",
+    },
+    {
+      key: 57,
+      name: "Microbiology and Immunology",
+    },
+    {
+      key: 66,
+      name: "NGS Dean's Office",
+    },
+    {
+      key: 78,
+      name: "NUS Entrepreneurship Centre",
+    },
+    {
+      key: 20,
+      name: "NUS Medicine Dean's Office",
+    },
+    {
+      key: 2,
+      name: "Office of Sr Dy Pres and Provost",
+    },
+    {
+      key: 76,
+      name: "Pathology",
+    },
+    {
+      key: 71,
+      name: "Pharmacology",
+    },
+    {
+      key: 55,
+      name: "Pharmacy",
+    },
+    {
+      key: 50,
+      name: "Philosophy",
+    },
+    {
+      key: 28,
+      name: "Physics",
+    },
+    {
+      key: 59,
+      name: "Physiology",
+    },
+    {
+      key: 48,
+      name: "Political Science",
+    },
+    {
+      key: 61,
+      name: "Psychology",
+    },
+    {
+      key: 32,
+      name: "Real Estate",
+    },
+    {
+      key: 82,
+      name: "Residential College 4",
+    },
+    {
+      key: 36,
+      name: "Ridge View Residential College",
+    },
+    {
+      key: 51,
+      name: "Risk Management Institute",
+    },
+    {
+      key: 27,
+      name: "SCALE Dean's Office",
+    },
+    {
+      key: 10,
+      name: "SDE Dean's Office",
+    },
+    {
+      key: 58,
+      name: "SSH School of Public Health Dean's Office",
+    },
+    {
+      key: 29,
+      name: "SoC Dean's Office",
+    },
+    {
+      key: 64,
+      name: "Social Work",
+    },
+    {
+      key: 49,
+      name: "Sociology",
+    },
+    {
+      key: 53,
+      name: "South Asian Studies",
+    },
+    {
+      key: 19,
+      name: "Southeast Asian Studies",
+    },
+
+    {
+      key: 7,
+      name: "Strategy and Policy",
+    },
+    {
+      key: 40,
+      name: "Temasek Defence Systems Inst",
+    },
+    {
+      key: 80,
+      name: "Tembusu College",
+    },
+    {
+      key: 79,
+      name: "University Scholars Programme",
+    },
+    {
+      key: 56,
+      name: "YSTCM Dean's Office",
+    },
+    {
+      key: 83,
+      name: "Yale-NUS College",
+    },
   ];
 
   const textWithIcon2 = (name) => (
@@ -152,8 +511,9 @@ const Filter = ({ navigation }) => {
   );
 
   const section = [
+    { key: 4, array: semesters, string: "Semester" },
     { key: 1, array: levels, string: "Level" },
-    { key: 2, array: codes, string: "Code" },
+    { key: 2, array: departments, string: "Department" },
     { key: 3, array: MCs, string: "MCs" },
   ];
 

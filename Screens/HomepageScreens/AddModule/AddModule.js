@@ -25,14 +25,13 @@ const AddModule = (props) => {
       <View style={{ padding: width * 0.05 }}>
         <Cross
           top={12}
-          left={0}
           transition={() => props.navigation.goBack()}
           text={"Add a module"}
         />
         <View style={styles.second}>
           <View style={styles.item2}>
             <Icon
-              style={{ marginLeft: 10 }}
+              style={{ marginLeft: 10, marginRight: 12 }}
               fill="#76768080"
               width={20}
               height={20}
@@ -42,19 +41,15 @@ const AddModule = (props) => {
               <View style={{ flex: 1 }}>
                 <TextInput
                   placeholder="Module code, name"
-                  style={{ ...globalFontStyles.OSR_14, marginLeft: 10 }}
                   placeholderTextColor="#76768080"
                   autoCapitalize="words"
                   onChangeText={(text) => {
                     setSearch(text);
                     let newList = fullList.filter((item) =>
-                      (item.moduleCode + " " + item.title)
-                        .toLowerCase()
-                        .includes(search.toLowerCase())
+                      item.name.toLowerCase().includes(search.toLowerCase())
                     );
                     setParameters(newList);
                   }}
-                  // onEndEditing={() => setParameters(moduleList)}
                 ></TextInput>
               </View>
             </TouchableWithoutFeedback>
@@ -65,13 +60,16 @@ const AddModule = (props) => {
             width={28}
             height={28}
             name="options-2-outline"
-            onPress={() => props.navigation.navigate("Filter")}
+            onPress={() =>
+              props.navigation.navigate("Filter", { moduleList: fullList })
+            }
           />
         </View>
       </View>
     </View>
   );
 
+  const locationFrom = props.route.params?.item;
   const fullList = props.moduleList;
   const [moduleList, setParameters] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
@@ -86,11 +84,13 @@ const AddModule = (props) => {
     return (taken.length / len) * 100;
   };
 
+  const valAdded = (item) => (locationFrom === "AddPlan" ? item.MC : 1);
+
   /*
 Filter: 
 When entering from planner: Filter all modules planned
 Entering from records: Filter all modules mapped (to course) + planned
-Prereq: matched with whatever is planned / taken
+Prereq: matched with whatever is planned / take
 
 */
 
@@ -103,16 +103,22 @@ Prereq: matched with whatever is planned / taken
         // setSplit(compute(item.taken, item.notTaken));
         setModalVisible(true);
       }}
-      button2Press={() => null}
+      button2Press={() => {
+        console.log(item.semesters);
+      }}
       incr={() => {
-        addVal(MCcount + 1);
-        modules.add({ code: item.moduleCode, name: item.title });
+        addVal(MCcount + valAdded(item));
+        modules.add({ code: item.moduleCode, name: item.title, MC: item.MC });
         const newSet = modules;
         add(newSet);
       }}
       decr={() => {
-        addVal(MCcount - 1);
-        modules.delete({ code: item.moduleCode, name: item.title });
+        addVal(MCcount - valAdded(item));
+        modules.delete({
+          code: item.moduleCode,
+          name: item.title,
+          MC: item.MC,
+        });
         const newSet = modules;
         add(newSet);
       }}
@@ -196,6 +202,8 @@ Prereq: matched with whatever is planned / taken
     );
   };
 
+  const moduleOrMC = locationFrom === "AddPlan" ? "MC count" : "Modules Added";
+
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
@@ -211,17 +219,10 @@ Prereq: matched with whatever is planned / taken
       </View>
       {modal(split, 100 - split)}
       <BottomBar
-        leftText={`Modules added: ${MCcount}`}
+        leftText={`${moduleOrMC}: ${MCcount}`}
         transition={() => {
-          const val = props.route.params?.item;
-          const iterator1 = modules.values();
-          const mods = [];
-          for (let i = 0; i < MCcount; i++) {
-            mods.push(iterator1.next().value);
-          }
-          // you can use if else to check val to see where to navigate to so we dont clash
-          props.navigation.navigate(val, {
-            modDetails: [mods, MCcount],
+          props.navigation.navigate(locationFrom, {
+            modDetails: Array.from(modules),
             from: "AddModule",
           });
         }}

@@ -23,9 +23,14 @@ const FilterItem = (props) => {
       activeOpacity={0.65}
       onPress={() => setToggle(!toggled)}
     >
-      <Text style={{ ...globalFontStyles.NR_14, color: "black" }}>
-        {props.text}
-      </Text>
+      <View style={{ width: "88%" }}>
+        <Text
+          numberOfLines={1}
+          style={{ ...globalFontStyles.NR_14, color: "black" }}
+        >
+          {props.text}
+        </Text>
+      </View>
       <View>
         {props.box ? (
           <Icon

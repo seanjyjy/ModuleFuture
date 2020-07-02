@@ -40,19 +40,7 @@ const ViewPlan = ({ route }) => {
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
-      const arrayOfModules = route.params?.item[4];
-      const tempArr = [];
-      for (var i = 0; i < arrayOfModules.length; i++) {
-        tempArr.push({
-          moduleCode: arrayOfModules[i].moduleCode,
-          TargetGrade: arrayOfModules[i].TargetGrade,
-          NumMcs: "4",
-          clash: arrayOfModules[i].clash,
-          key: arrayOfModules[i].key,
-          FinalGrade: arrayOfModules[i].FinalGrade,
-        });
-      }
-      setDataArray(tempArr);
+      setDataArray(route.params?.item[4]);
       setSize(route.params?.item[2]);
       setFromWhere(route.params?.item[3]);
       setTitle(route.params?.item[0]);
