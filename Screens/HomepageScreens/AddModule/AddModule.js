@@ -108,7 +108,12 @@ Prereq: matched with whatever is planned / take
       }}
       incr={() => {
         addVal(MCcount + valAdded(item));
-        modules.add({ code: item.moduleCode, name: item.title, MC: item.MC });
+        modules.add({
+          code: item.moduleCode,
+          name: item.title,
+          MC: item.MC,
+          suOption: item.suOption,
+        });
         const newSet = modules;
         add(newSet);
       }}
@@ -118,6 +123,7 @@ Prereq: matched with whatever is planned / take
           code: item.moduleCode,
           name: item.title,
           MC: item.MC,
+          suOption: item.suOption,
         });
         const newSet = modules;
         add(newSet);
