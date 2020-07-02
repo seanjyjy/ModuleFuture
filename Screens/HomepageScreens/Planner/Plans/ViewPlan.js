@@ -14,6 +14,7 @@ import EntypoIcon from "react-native-vector-icons/Entypo";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import { Avatar } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
+import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { useSafeArea } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -37,6 +38,9 @@ const ViewPlan = ({ route }) => {
   const [size, setSize] = useState("");
   const [favourite, setfavourite] = useState(false);
   const [currentSem, setCurrentSem] = useState("");
+  const [arr2, setarr2] = useState([]);
+  const [arr3, setarr3] = useState([]);
+  const [arr4, setarr4] = useState([]);
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
@@ -45,6 +49,21 @@ const ViewPlan = ({ route }) => {
       setFromWhere(route.params?.item[3]);
       setTitle(route.params?.item[0]);
       //whatsTheCurrentSem(docLoc);
+      infoExtractor(
+        route.params?.item[1],
+        semList[(calculatorOfSem(route.params?.item[3]) + 1) % 9],
+        (val) => setarr2(val)
+      );
+      infoExtractor(
+        route.params?.item[1],
+        semList[(calculatorOfSem(route.params?.item[3]) + 2) % 9],
+        (val) => setarr3(val)
+      );
+      infoExtractor(
+        route.params?.item[1],
+        semList[(calculatorOfSem(route.params?.item[3]) + 3) % 9],
+        (val) => setarr4(val)
+      );
     }
   }, [route.params?.item[0], route.params?.item[4]]);
 
@@ -56,23 +75,79 @@ const ViewPlan = ({ route }) => {
     { top: "#cbf1c4", btm: "#e4f9e0", pin: "brown" },
   ];
 
-  // need to get current year and approximate time? in order to calculate current semester
-  const whatsTheCurrentSem = (val) => {
+  const userIDextractor = (val) => {
     const len = val.length;
     const userID = docLoc.substring(0, len - 5);
-    const userRef = FirebaseDB.firestore().collection("users").doc(userID);
-    userRef
-      .get((document) => {
-        const val = document.data();
-        const year = val.yearOfMatri;
-      })
-      .then((error) => alert(error));
+    return userID;
   };
-  const signOutUser = async () => {
-    try {
-      await FirebaseDB.auth().signOut();
-    } catch (error) {
-      alert(error);
+
+  const infoExtractor = (docLoc, whatSem, func) => {
+    const plansArrayRef = FirebaseDB.firestore()
+      .collection("plansArray")
+      .doc(userIDextractor(docLoc).concat("_", whatSem));
+    plansArrayRef
+      .get()
+      .then((document) => {
+        const val = document.data();
+        if (val !== undefined) {
+          const arr = val.yearSem;
+          func(arr);
+        } else {
+          plansArrayRef.set({ yearSem: [] });
+          func([]);
+        }
+      })
+      .then((error) => {});
+  };
+  // need to get current year and approximate time? in order to calculate current semester
+  // const whatsTheCurrentSem = (val) => {
+  //   const userID = userIDextractor(val);
+  //   const userRef = FirebaseDB.firestore().collection("users").doc(userID);
+  //   userRef
+  //     .get((document) => {
+  //       const val = document.data();
+  //       const year = val.yearOfMatri;
+  //     })
+  //     .then((error) => alert(error));
+  // };
+  // const signOutUser = async () => {
+  //   try {
+  //     await FirebaseDB.auth().signOut();
+  //   } catch (error) {
+  //     alert(error);
+  //   }
+  // };
+  const semList = [
+    "Y1S1",
+    "Y1S2",
+    "Y2S1",
+    "Y2S2",
+    "Y3S1",
+    "Y3S2",
+    "Y4S1",
+    "Y4S2",
+  ];
+  const calculatorOfSem = (val) => {
+    if (val === "Y1S1") {
+      return 0;
+    } else if (val === "Y1S2") {
+      return 1;
+    } else if (val === "Y2S1") {
+      return 2;
+    } else if (val === "Y2S2") {
+      return 3;
+    } else if (val === "Y3S1") {
+      return 4;
+    } else if (val === "Y3S2") {
+      return 5;
+    } else if (val === "Y4S1") {
+      return 6;
+    } else if (val === "Y4S2") {
+      return 7;
+    } else if (val === "Y5S1") {
+      return 8;
+    } else {
+      return 9;
     }
   };
 
@@ -110,16 +185,13 @@ const ViewPlan = ({ route }) => {
       icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
       text={dest}
       iconStyle={{ right: 3 }}
-      viewDesign={{
+      wordStyle={{
         borderColor: "#E2E2E2",
         borderBottomWidth: 1,
       }}
       func={() => {
         setModalVisible(false);
-        setTimeout(
-          () => navigation.navigate(route.params?.item[3].toString()),
-          400
-        );
+        setTimeout(() => navigation.navigate(fromWhere), 400);
       }}
     />
   );
@@ -140,10 +212,10 @@ const ViewPlan = ({ route }) => {
     />
   );
 
-  const FocusButton = (
+  const SmartRecall2 = (
     <Tabs
-      icon={<Icon name="crosshairs" color="#726F6F" size={22} />}
-      text="Focus"
+      icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
+      text={semList[(calculatorOfSem(fromWhere) + 1) % 9]}
       iconStyle={{ right: 3 }}
       wordStyle={{
         borderBottomWidth: 1,
@@ -152,50 +224,61 @@ const ViewPlan = ({ route }) => {
       }}
       func={() => {
         setModalVisible(false);
-        setTimeout(() => navigation.navigate("Focus"), 400);
+        setTimeout(
+          () =>
+            navigation.navigate(semList[(calculatorOfSem(fromWhere) + 1) % 9], {
+              item: [userIDextractor(docLoc), arr2],
+            }),
+          400
+        );
       }}
     />
   );
-  const RecordsButton = (
+  const SmartRecall3 = (
     <Tabs
-      icon={<Icon name="book" color="#726F6F" size={22} />}
-      text="Records"
+      wordStyle={{
+        borderBottomWidth: 1,
+        borderColor: "#E2E2E2",
+      }}
+      icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
+      text={semList[(calculatorOfSem(fromWhere) + 2) % 9]}
       iconStyle={{ right: 3 }}
       func={() => {
         setModalVisible(false);
-        setTimeout(() => navigation.navigate("Records"), 400);
+        setTimeout(
+          () =>
+            navigation.navigate(semList[(calculatorOfSem(fromWhere) + 2) % 9], {
+              item: [userIDextractor(docLoc), arr3],
+            }),
+          400
+        );
       }}
     />
   );
 
-  const ProfileButton = (
+  const SmartRecall4 = (
     <Tabs
-      icon={<Icon name="user-circle" color="#726F6F" size={22} />}
-      text="Profile"
+      icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
+      text={semList[(calculatorOfSem(fromWhere) + 3) % 9]}
       iconStyle={{ right: 3 }}
-      wordStyle={{
+      viewDesign={{
         borderBottomWidth: 1,
-        borderTopWidth: 1,
         borderColor: "#E2E2E2",
       }}
       func={() => {
         setModalVisible(false);
-        setTimeout(() => navigation.navigate("Profile"), 400);
+        setTimeout(
+          () =>
+            navigation.navigate(semList[(calculatorOfSem(fromWhere) + 3) % 9], {
+              item: [userIDextractor(docLoc), arr4],
+            }),
+
+          400
+        );
       }}
     />
   );
 
-  const ModuleButton = (
-    <Tabs
-      icon={<Icon name="search" color="#726F6F" size={22} />}
-      text="Module"
-      iconStyle={{ right: 3 }}
-      func={() => {
-        setModalVisible(false);
-        setTimeout(() => navigation.navigate("Module"), 400);
-      }}
-    />
-  );
   const customDrawer = () => {
     return (
       <Modal
@@ -211,7 +294,7 @@ const ViewPlan = ({ route }) => {
       >
         <View
           style={{
-            width: 0.5 * width,
+            width: 0.6 * width,
             height: height,
             backgroundColor: "white",
             right: 0.1 * width,
@@ -244,17 +327,33 @@ const ViewPlan = ({ route }) => {
             </View>
             {/* contains all the tabs */}
             <View style={{ flex: 3 }}>
-              <View style={{ flex: 3 }}>
+              <View style={{ flex: 2 }}>
                 {/* can be used to include more tabs here------- (2 more) if want more 
                 then increase this flex and decrease the flex below*/}
-                {HomeButton}
-                {ProgressButon}
-
-                {RecordsButton}
-                {FocusButton}
-                {ModuleButton}
-                {ProfileButton}
-                {SmartRecall(route.params?.item[3].toString())}
+                <View style={{ flex: 3 }}>
+                  {HomeButton}
+                  {ProgressButon}
+                  {SmartRecall(fromWhere)}
+                </View>
+                <Text
+                  style={{
+                    ...globalFontStyles.NB_15,
+                    left: 0.11 * width,
+                    top: 0.01 * height,
+                  }}
+                >
+                  Also see
+                </Text>
+                <View
+                  style={{
+                    flex: 3,
+                    top: 0.02 * height,
+                  }}
+                >
+                  {SmartRecall2}
+                  {SmartRecall3}
+                  {SmartRecall4}
+                </View>
                 {/* ------------------------------------------ */}
               </View>
               <View style={{ flex: 1 }} />
@@ -269,8 +368,7 @@ const ViewPlan = ({ route }) => {
     );
   };
   const loadData = async () => {
-    const len = docLoc.length;
-    const userID = docLoc.substring(0, len - 5);
+    const userID = userIDextractor(docLoc);
     const userRef = FirebaseDB.firestore().collection("users").doc(userID);
     userRef.set(
       {
@@ -281,10 +379,10 @@ const ViewPlan = ({ route }) => {
     );
   };
   const emptyHeart = (
-    <AntIcon
+    <FontisoIcon
       size={25}
-      name="hearto"
-      style={{ right: 0.03 * width }}
+      name="favorite"
+      style={{ left: 0.02 * width, opacity: 0.3 }}
       color="#FFF8DC"
       onPress={() => {
         setfavourite(true);
@@ -293,11 +391,11 @@ const ViewPlan = ({ route }) => {
     />
   );
   const filledheart = (
-    <AntIcon
+    <FontisoIcon
       size={25}
-      name="heart"
-      style={{ right: 0.03 * width }}
-      color="red"
+      name="favorite"
+      style={{ left: 0.02 * width }}
+      color="#FFF8DC"
       onPress={() => {
         setfavourite(false);
       }}
@@ -313,7 +411,6 @@ const ViewPlan = ({ route }) => {
               flex: 1,
             }}
           >
-            {/* {dropDownList()} */}
             <FeatherIcon
               size={27}
               name="list"
@@ -321,6 +418,7 @@ const ViewPlan = ({ route }) => {
               style={{ bottom: 7, right: 0.04 * width }}
               onPress={() => {
                 setModalVisible(true);
+                // activate the rest
               }}
             />
           </View>
@@ -447,20 +545,17 @@ const ViewPlan = ({ route }) => {
           }}
         >
           <View style={styles.headerAtPlan}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flex: 1 }} />
-              <View style={{ flex: 1 }}>
-                <Text style={{ ...globalFontStyles.NB_24, color: "#FFF8DC" }}>
-                  My Plans
-                </Text>
-              </View>
+            <View style={styles.oneCenter}>
               <View
                 style={{
                   flex: 1,
-                  justifyContent: "center",
-                  alignItems: "flex-start",
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
+                <Text style={{ ...globalFontStyles.NB_24, color: "#FFF8DC" }}>
+                  My Plans
+                </Text>
                 {favourite ? filledheart : emptyHeart}
               </View>
             </View>

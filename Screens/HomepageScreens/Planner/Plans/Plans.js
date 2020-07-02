@@ -130,11 +130,13 @@ const Plans = (props) => {
     .doc(docLoc);
   const [currentArr, setCurrentArr] = useState(info[1]);
   const [selected, setSelected] = React.useState(new Map().set("1", true));
-  const [planName, setPlanName] = useState("Plan 1");
+  const [planName, setPlanName] = useState("");
   const [currentID, setCurrentID] = useState("1");
   const [modalVisible, setModalVisible] = useState(false);
   const [size, setSize] = useState(0);
   const [showDustBin, setShowDustBin] = useState(true);
+  const [alertText, setAlertText] = useState(false);
+  const [alertText1, setAlertText1] = useState(false);
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
@@ -179,6 +181,15 @@ const Plans = (props) => {
     }
   };
 
+  const existBefore = (val, arr) => {
+    let truth = false;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].nameOfPlan === val) {
+        truth = true;
+      }
+    }
+    return truth;
+  };
   // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
     return (
@@ -201,6 +212,7 @@ const Plans = (props) => {
               height: 0.04 * height,
               borderWidth: 1,
               borderColor: "#D0CECE",
+              bottom: 5,
             }}
           >
             <TextInput
@@ -209,10 +221,35 @@ const Plans = (props) => {
                 height: 0.04 * height,
                 left: 5,
               }}
-              placeholder="e.g. EZ CAP 5.0"
+              placeholder="e.g. Main Plan"
               onChangeText={(val) => setPlanName(val)}
             />
           </View>
+          {alertText || alertText1 ? (
+            alertText ? (
+              <Text
+                style={{
+                  ...globalFontStyles.OSR_12,
+                  bottom: 4,
+                  color: "#cc0000",
+                }}
+              >
+                Please enter a plan name
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  ...globalFontStyles.OSR_12,
+                  bottom: 4,
+                  color: "#cc0000",
+                }}
+              >
+                This plan name exists already!
+              </Text>
+            )
+          ) : (
+            <View />
+          )}
         </View>
         <View
           style={{
@@ -225,6 +262,8 @@ const Plans = (props) => {
           <TouchableOpacity
             onPress={() => {
               Keyboard.dismiss();
+              setAlertText(false);
+              setAlertText1(false);
               setModalVisible(false);
             }}
             activeOpacity={0.9}
@@ -242,17 +281,24 @@ const Plans = (props) => {
             style={styles.flexOneCenter}
             activeOpacity={0.9}
             onPress={() => {
-              Keyboard.dismiss();
-              setModalVisible(false);
-              navigation.navigate("AddPlan", {
-                item: [
-                  planName,
-                  userID.concat("_", props.headerTitle),
-                  size,
-                  props.headerTitle,
-                ],
-                from: "Plans",
-              });
+              if (existBefore(planName, currentArr) || planName.length <= 0) {
+                if (planName.length <= 0) setAlertText(true);
+                if (existBefore(planName, currentArr)) setAlertText1(true);
+              } else {
+                Keyboard.dismiss();
+                setAlertText(false);
+                setAlertText1(false);
+                setModalVisible(false);
+                navigation.navigate("AddPlan", {
+                  item: [
+                    planName,
+                    userID.concat("_", props.headerTitle),
+                    size,
+                    props.headerTitle,
+                  ],
+                  from: "Plans",
+                });
+              }
             }}
           >
             <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
@@ -503,7 +549,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-start",
     alignItems: "center",
-    top: 30,
+    top: 15,
   },
   input: {
     borderWidth: 1,

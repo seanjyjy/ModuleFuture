@@ -93,14 +93,21 @@ const ContentPage = (props) => {
               color="#A5A0A0"
               style={{ right: 0.05 * width, bottom: 0.02 * height }}
               onPress={() => {
-                const title = props.extraData.favPlanInfo[0];
-                const docLoc = props.extraData.favPlanInfo[1];
-                const size = props.extraData.favPlanInfo[2];
-                const fromWhere = props.extraData.favPlanInfo[3];
-                const dataArray = props.extraData.favPlanArray;
-                navigation.navigate("ViewPlan", {
-                  item: [title, docLoc, size, fromWhere, dataArray],
-                });
+                if (
+                  props.extraData.favPlanArray &&
+                  props.extraData.favPlanInfo
+                ) {
+                  const title = props.extraData.favPlanInfo[0];
+                  const docLoc = props.extraData.favPlanInfo[1];
+                  const size = props.extraData.favPlanInfo[2];
+                  const fromWhere = props.extraData.favPlanInfo[3];
+                  const dataArray = props.extraData.favPlanArray;
+                  navigation.navigate("ViewPlan", {
+                    item: [title, docLoc, size, fromWhere, dataArray],
+                  });
+                } else {
+                  alert("You have no select a favourite plan yet!");
+                }
               }}
             />
           </View>
