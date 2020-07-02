@@ -9,6 +9,7 @@ import {
   interpolate,
   FlatList,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
@@ -27,6 +28,7 @@ const AddPlan = ({ route }) => {
   const [docLoc, setDocLoc] = useState("");
   const [data, setData] = useState([]);
   const [fromWhere, setFromWhere] = useState("");
+  const [block, setBlock] = useState("true");
   const deleteItem = (modName) => {
     setData((newData) => {
       return newData.filter((todo) => todo.moduleName !== modName);
@@ -66,6 +68,71 @@ const AddPlan = ({ route }) => {
   }, [route.params.item[4], route.params?.modDetails, route.params?.from]);
 
   const navigation = useNavigation();
+  const userIDextractor = (val) => {
+    const len = val.length;
+    const userID = docLoc.substring(0, len - 5);
+    return userID;
+  };
+  const checkMcs = (arr) => {
+    let num = 0;
+    for (let i = 0; i < arr.length; i++) {
+      num += parseInt(arr[i].NumMcs);
+    }
+
+    return num < 18;
+  };
+
+  const FinalGradesEntered = (val) => {
+    let truth = true;
+    for (let i = 0; i < val.length; i++) {
+      if (val[i].FinalGrade === "") {
+        truth = false;
+        break;
+      }
+    }
+    return truth;
+  };
+
+  const nextPage = () => {
+    // if (FinalGradesEntered(data)) {
+    //   const usersModulesDetailsRef = FirebaseDB.firestore()
+    //     .collection("usersModulesDetails")
+    //     .doc(userIDextractor(docLoc));
+    //   for (let i = 0; i < data.length; i++) {
+    //     usersModulesDetailsRef.update({
+    //       ModulesDetails: FirebaseDB.firestore.FieldValue.arrayUnion({
+    //         moduleCode: data[i].moduleCode,
+    //         moduleName: "",
+    //         FinalGrade: data[i].FinalGrade,
+    //         NumMcs: data[i].NumMcs,
+    //       }),
+    //     });
+    //   }
+    // }
+
+    const plansArrayRef = FirebaseDB.firestore()
+      .collection("plansArray")
+      .doc(docLoc);
+    plansArrayRef.update({
+      yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
+        key: (size + 1).toString(),
+        nameOfPlan: planNameValue,
+      }),
+    });
+
+    const plansItself = FirebaseDB.firestore()
+      .collection("plansItself")
+      .doc(docLoc.concat("_", planNameValue));
+    plansItself.set({
+      nameOfPlan: planNameValue,
+      planInfo: data,
+      fromWhere: fromWhere,
+    });
+
+    return navigation.navigate("ViewPlan", {
+      item: [planNameValue, docLoc, size, fromWhere, data],
+    });
+  };
   const Header = () => (
     <View style={styles.headerDesign}>
       <TouchableOpacity
@@ -88,27 +155,25 @@ const AddPlan = ({ route }) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          const plansArrayRef = FirebaseDB.firestore()
-            .collection("plansArray")
-            .doc(docLoc);
-          plansArrayRef.update({
-            yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
-              key: (size + 1).toString(),
-              nameOfPlan: planNameValue,
-            }),
-          });
-          const plansItself = FirebaseDB.firestore()
-            .collection("plansItself")
-            .doc(docLoc.concat("_", planNameValue));
-          plansItself.set({
-            nameOfPlan: planNameValue,
-            planInfo: data,
-            fromWhere: fromWhere,
-          });
-
-          navigation.navigate("ViewPlan", {
-            item: [planNameValue, docLoc, size, fromWhere, data],
-          });
+          if (checkMcs(data) && block) {
+            Alert.alert(
+              "Warning",
+              "You need a minimum of 18 MCs per semester! If you're sure, press Continue to advance",
+              [
+                { text: "Cancel", onPress: () => {} },
+                {
+                  text: "Continue",
+                  onPress: () => {
+                    setBlock("false");
+                    nextPage();
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          } else {
+            nextPage();
+          }
         }}
         style={styles.flexOneCenterFlexEnd}
         activeOpacity={0.9}
