@@ -1,7 +1,7 @@
 import moduleInfo from "./ModuleInfo.json";
 import moduleList from "./ModuleList.json";
 
-const ModuleListWithKey = () => {
+const ModuleListWithKey = (item) => {
   const hasExam = (item) => {
     if (item.length === 2) {
       if (item[0]?.examDuration || item[1]?.examDuration) {
@@ -35,8 +35,10 @@ const ModuleListWithKey = () => {
 
   let arr = [];
   let k = 0;
-  for (let i = 0; i < moduleInfo.length; i++) {
-    let current = moduleInfo[i];
+  let current;
+  let i = 0;
+  for (; i < moduleInfo.length; i++) {
+    current = moduleInfo[i];
     if (current.semesterData.length !== 0) {
       arr[k] = {
         moduleCode: current.moduleCode,
@@ -53,6 +55,7 @@ const ModuleListWithKey = () => {
       k++;
     }
   }
+  // item.
   return arr;
 };
 

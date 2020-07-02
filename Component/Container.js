@@ -13,7 +13,7 @@ const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const Container = (props) => {
-  const [plus, changeState] = useState(true);
+  // const [plus, changeState] = useState(true);
 
   return (
     <View style={styles.container}>
@@ -79,16 +79,12 @@ const Container = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* Firebase to handle modules being added */}
       <Icon
-        name={plus ? "plus-circle" : "minus-circle"}
+        name={"plus-circle"}
         width={43}
         height={43}
-        fill={plus ? "#3FE2D3" : "#FF6B6B"}
-        onPress={() => {
-          plus ? props.incr() : props.decr();
-          changeState(!plus);
-        }}
+        fill={"#3FE2D3"}
+        onPress={() => props.incr()}
       />
     </View>
   );

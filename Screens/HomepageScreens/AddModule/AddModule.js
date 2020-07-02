@@ -70,7 +70,7 @@ const AddModule = (props) => {
   );
 
   const locationFrom = props.route.params?.item;
-  const fullList = props.moduleList;
+  const [fullList, setOriginalList] = useState(props.moduleList);
   const [moduleList, setParameters] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -104,7 +104,8 @@ Prereq: matched with whatever is planned / take
         setModalVisible(true);
       }}
       button2Press={() => {
-        console.log(item.semesters);
+        // console.log(item.semesters);
+        return null;
       }}
       incr={() => {
         addVal(MCcount + valAdded(item));
@@ -113,20 +114,14 @@ Prereq: matched with whatever is planned / take
           name: item.title,
           MC: item.MC,
           suOption: item.suOption,
+          title: current.title,
         });
-        const newSet = modules;
-        add(newSet);
-      }}
-      decr={() => {
-        addVal(MCcount - valAdded(item));
-        modules.delete({
-          code: item.moduleCode,
-          name: item.title,
-          MC: item.MC,
-          suOption: item.suOption,
-        });
-        const newSet = modules;
-        add(newSet);
+        let nextList = moduleList.filter(
+          (x) => x.moduleCode !== item.moduleCode
+        );
+        let fl = fullList.filter((x) => x.moduleCode !== item.moduleCode);
+        setOriginalList(fl);
+        setParameters(nextList);
       }}
     />
   );

@@ -76,6 +76,8 @@ export default function App() {
     user: null,
   });
 
+  const [modLoading, setModLoading] = useState(false);
+
   const loadAssetAsync = async () => {
     const imageAssets = cacheImages([
       require("./assets/loginbackgroundtest2.png"),

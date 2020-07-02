@@ -53,6 +53,7 @@ const AddPlan = ({ route }) => {
           key: keyTobe.toString(),
           clash: false,
           moduleCode: receivedArr[i].code,
+          title: receivedArr[i].title,
           TargetGrade: "",
           NumMcs: receivedArr[i].MC,
           FinalGrade: "",

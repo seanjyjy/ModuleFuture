@@ -1,0 +1,8 @@
+Taken:
+- finalGrade
+- moduleCode
+- moduleName
+- numMcs
+
+Planned:
+- 
