@@ -83,7 +83,7 @@ const AddModule = (props) => {
       add(set);
       setOriginalList(newList);
       setParameters(newList);
-      addVal(arr.length);
+      addVal(props.route.params?.value);
     }
   }, [props.route.params?.newModules, loading]);
 

@@ -58,7 +58,12 @@ const SeeModules = ({ navigation, route }) => {
   const header = () => (
     <View style={styles.headerDesign}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("AddModule", { newModules: modArr })}
+        onPress={() =>
+          navigation.navigate("AddModule", {
+            newModules: modArr,
+            value: MCcount,
+          })
+        }
         style={styles.flexOneCenterFlexEnd}
         activeOpacity={0.9}
       >
