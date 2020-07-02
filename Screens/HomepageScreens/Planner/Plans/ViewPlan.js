@@ -42,6 +42,7 @@ const ViewPlan = ({ route }) => {
   const [arr3, setarr3] = useState([]);
   const [arr4, setarr4] = useState([]);
   useEffect(() => {
+    console.log("hello world");
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
       setDataArray(route.params?.item[4]);
@@ -49,23 +50,25 @@ const ViewPlan = ({ route }) => {
       setFromWhere(route.params?.item[3]);
       setTitle(route.params?.item[0]);
       //whatsTheCurrentSem(docLoc);
-      infoExtractor(
-        route.params?.item[1],
-        semList[(calculatorOfSem(route.params?.item[3]) + 1) % 9],
-        (val) => setarr2(val)
-      );
-      infoExtractor(
-        route.params?.item[1],
-        semList[(calculatorOfSem(route.params?.item[3]) + 2) % 9],
-        (val) => setarr3(val)
-      );
-      infoExtractor(
-        route.params?.item[1],
-        semList[(calculatorOfSem(route.params?.item[3]) + 3) % 9],
-        (val) => setarr4(val)
-      );
+      if (route.params?.item[1] && route.params?.item[3]) {
+        infoExtractor(
+          route.params?.item[1],
+          semList[(calculatorOfSem(route.params?.item[3]) + 1) % 9],
+          (val) => setarr2(val)
+        );
+        infoExtractor(
+          route.params?.item[1],
+          semList[(calculatorOfSem(route.params?.item[3]) + 2) % 9],
+          (val) => setarr3(val)
+        );
+        infoExtractor(
+          route.params?.item[1],
+          semList[(calculatorOfSem(route.params?.item[3]) + 3) % 9],
+          (val) => setarr4(val)
+        );
+      }
     }
-  }, [route.params?.item[0], route.params?.item[4]]);
+  }, [route.params?.item]);
 
   const colorArray = [
     { top: "#fff2ab", btm: "#fff7d1", pin: "#EB0000" },
@@ -77,14 +80,15 @@ const ViewPlan = ({ route }) => {
 
   const userIDextractor = (val) => {
     const len = val.length;
-    const userID = docLoc.substring(0, len - 5);
+    const userID = val.substring(0, len - 5);
     return userID;
   };
 
   const infoExtractor = (docLoc, whatSem, func) => {
+    const docLocCurr = userIDextractor(docLoc).concat("_", whatSem);
     const plansArrayRef = FirebaseDB.firestore()
       .collection("plansArray")
-      .doc(userIDextractor(docLoc).concat("_", whatSem));
+      .doc(docLocCurr);
     plansArrayRef
       .get()
       .then((document) => {
@@ -110,13 +114,13 @@ const ViewPlan = ({ route }) => {
   //     })
   //     .then((error) => alert(error));
   // };
-  // const signOutUser = async () => {
-  //   try {
-  //     await FirebaseDB.auth().signOut();
-  //   } catch (error) {
-  //     alert(error);
-  //   }
-  // };
+  const signOutUser = async () => {
+    try {
+      await FirebaseDB.auth().signOut();
+    } catch (error) {
+      alert(error);
+    }
+  };
   const semList = [
     "Y1S1",
     "Y1S2",
