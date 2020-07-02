@@ -47,7 +47,7 @@ const FilterSection = (props) => {
       </Text>
       <FlatList
         data={array.slice(0, noOfItems)}
-        keyExtractor={(item) => item.key.toString()}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => textWithIcon1(item.name)}
       />
       <View

@@ -22,6 +22,7 @@ import DetailsCollection from "./Screens/Login/DetailsCollection";
 import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
 import AddModule from "./Screens/HomepageScreens/AddModule/AddModule";
 import Filter from "./Screens/HomepageScreens/AddModule/Filter";
+import SeeModules from "./Screens/HomepageScreens/AddModule/SeeModules";
 import {
   Y1S1,
   Y1S2,
@@ -187,6 +188,10 @@ export default function App() {
                           />
                         )}
                       </AuthStack.Screen>
+                      <AuthStack.Screen
+                        name="SeeModules"
+                        component={SeeModules}
+                      />
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
                       <AuthStack.Screen name="Filter" component={Filter} />
                       <AuthStack.Screen name="Course" component={Course} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -13,8 +13,6 @@ const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const Container = (props) => {
-  // const [plus, changeState] = useState(true);
-
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "column", flex: 1 }}>

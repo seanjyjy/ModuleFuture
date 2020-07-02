@@ -34,22 +34,6 @@ const Foundation = ({ navigation, route }) => {
     }
   }, [route.params?.modDetails]);
 
-  /*
-  React.useEffect(() => {
-    if (route.params?.mods) {
-      console.log("ANY");
-      const array = Array.from(route.params?.mods);
-      let i = data.length;
-      let newArr = array.map((module) => {
-        const code = module.name.substring(0, 7);
-        i++;
-        return { key: i, clash: false, moduleName: code, TargetGrade: "" };
-      });
-      setData([...data, newArr]);
-    }
-  });
-  */
-
   const [data, setData] = useState([
     {
       key: 1,

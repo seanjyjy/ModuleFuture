@@ -41,11 +41,10 @@ const ModuleListWithKey = (item) => {
     current = moduleInfo[i];
     if (current.semesterData.length !== 0) {
       arr[k] = {
-        moduleCode: current.moduleCode,
+        code: current.moduleCode,
         title: current.title,
         name: current.moduleCode + " " + current.title,
         level: firstDigit(current.moduleCode),
-        key: k,
         MC: parseInt(current.moduleCredit),
         department: current.department,
         suOption: hasSu(current),

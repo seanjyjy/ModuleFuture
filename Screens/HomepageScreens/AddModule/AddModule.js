@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -69,13 +69,32 @@ const AddModule = (props) => {
     </View>
   );
 
+  useEffect(() => {
+    if (props.route.params?.newModules) {
+      const newList = fullList;
+      const arr = props.route.params?.newModules;
+      let set = new Set(arr);
+      for (const mod of modules) {
+        if (!set.has(mod)) {
+          // console.log(mod);
+          newList.push(mod);
+        }
+      }
+      add(set);
+      setOriginalList(newList);
+      setParameters(newList);
+      addVal(arr.length);
+    }
+  }, [props.route.params?.newModules, loading]);
+
+  const [loading, setLoading] = useState(true);
   const locationFrom = props.route.params?.item;
   const [fullList, setOriginalList] = useState(props.moduleList);
   const [moduleList, setParameters] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [current, setItem] = useState(moduleList[0]);
-  const [split, setSplit] = useState(0);
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [current, setItem] = useState(moduleList[0]);
+  // const [split, setSplit] = useState(0);
   const [modules, add] = useState(new Set()); // modules are stored here
   const [search, setSearch] = useState("");
 
@@ -96,7 +115,7 @@ Prereq: matched with whatever is planned / take
 
   const holders = (item) => (
     <Container
-      name={item.moduleCode + " " + item.title}
+      name={item.name}
       prereq={true}
       button1Press={() => {
         setItem(item);
@@ -109,23 +128,16 @@ Prereq: matched with whatever is planned / take
       }}
       incr={() => {
         addVal(MCcount + valAdded(item));
-        modules.add({
-          code: item.moduleCode,
-          name: item.title,
-          MC: item.MC,
-          suOption: item.suOption,
-          title: current.title,
-        });
-        let nextList = moduleList.filter(
-          (x) => x.moduleCode !== item.moduleCode
-        );
-        let fl = fullList.filter((x) => x.moduleCode !== item.moduleCode);
+        modules.add(item);
+        let nextList = moduleList.filter((x) => x.code !== item.code);
+        let fl = fullList.filter((x) => x.code !== item.code);
         setOriginalList(fl);
         setParameters(nextList);
       }}
     />
   );
 
+  /*
   const textWithIcon = (name) => (
     <View
       style={{
@@ -155,7 +167,7 @@ Prereq: matched with whatever is planned / take
       </View>
     </View>
   );
-
+  
   const modal = (portion1, portion2) => {
     return (
       <Modal
@@ -202,6 +214,7 @@ Prereq: matched with whatever is planned / take
       </Modal>
     );
   };
+  */
 
   const moduleOrMC = locationFrom === "AddPlan" ? "MC count" : "Modules Added";
 
@@ -212,19 +225,20 @@ Prereq: matched with whatever is planned / take
         <FlatList
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
           data={moduleList}
-          keyExtractor={(item) => item.key.toString()}
+          keyExtractor={(item) => item.code}
           renderItem={({ item }) => holders(item)}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<View style={{ height: height * 0.06 - 20 }} />}
         />
       </View>
-      {modal(split, 100 - split)}
+      {/* {modal(split, 100 - split)} */}
       <BottomBar
         leftText={`${moduleOrMC}: ${MCcount}`}
         transition={() => {
-          props.navigation.navigate(locationFrom, {
+          props.navigation.navigate("SeeModules", {
             modDetails: Array.from(modules),
-            from: "AddModule",
+            location: locationFrom,
+            MC: MCcount,
           });
         }}
         rightText={"Add modules"}
