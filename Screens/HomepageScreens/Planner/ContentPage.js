@@ -16,6 +16,7 @@ import CardWallet from "../../../Component/CardWallet";
 import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { Menu } from "../../../Data/CardList";
 import FirebaseDB from "../../../FirebaseDB";
+import { set } from "react-native-reanimated";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -24,6 +25,7 @@ const ContentPage = (props) => {
   const isFocused = useIsFocused();
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
+  const [CapArray, setCapArray] = useState([]);
   const num = (val) => {
     return val === "Y3S1"
       ? 4
@@ -55,6 +57,7 @@ const ContentPage = (props) => {
   useEffect(() => {
     const unsub = userInfo.doc(userID).onSnapshot((document) => {
       const val = document.data().expectedSemGrad;
+      setCapArray(document.data().CapArray);
       let tempArr = [];
       for (let i = 0; i <= num(val); i++) {
         tempArr.push(Menu[i]);
@@ -139,7 +142,8 @@ const ContentPage = (props) => {
           >
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("ProgressPage", { usersDetails: userID });
+                console.log(CapArray);
+                navigation.navigate("ProgressPage", { usersDetails: CapArray });
               }}
               style={{ width: 50, height: 50 }}
             >

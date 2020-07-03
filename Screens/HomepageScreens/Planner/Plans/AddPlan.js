@@ -171,7 +171,9 @@ const AddPlan = ({ route }) => {
           totalSum += semSum;
           totalMc += semMc;
           newOverallCap =
-            totalMc === semMc ? semCap : (totalSum / totalMc).toFixed(2);
+            totalMc === semMc
+              ? semCap
+              : parseFloat((totalSum / totalMc).toFixed(2));
 
           const usersRef = FirebaseDB.firestore()
             .collection("users")
@@ -180,16 +182,34 @@ const AddPlan = ({ route }) => {
             const tempVal = document.data();
             if (tempVal.CapArray !== undefined) {
               const tempArr = [];
+              let pushed = false;
+              let index = 0;
+
               for (let i = 0; i < tempVal.CapArray.length; i++) {
-                if (tempVal.CapArray[i].Semester !== fromWhere) {
-                  tempArr.push[tempVal.CapArray[i]];
+                if (tempVal.CapArray[index].Semester !== fromWhere) {
+                  tempArr.push(tempVal.CapArray[index]);
+                  index++;
                 } else {
                   tempArr.push({
                     SemestralCap: semCap,
                     OverallCap: newOverallCap,
                     Semester: fromWhere,
+                    SemestralMc: semMc,
+                    OverallMc: totalMc,
                   });
+                  pushed = true;
                 }
+              }
+              if (pushed) {
+                tempArr.push(tempVal.CapArray[tempVal.CapArray.length - 1]);
+              } else {
+                tempArr.push({
+                  SemestralCap: semCap,
+                  OverallCap: newOverallCap,
+                  Semester: fromWhere,
+                  SemestralMc: semMc,
+                  OverallMc: totalMc,
+                });
               }
               usersRef.update({
                 CapArray: tempArr,
@@ -202,6 +222,8 @@ const AddPlan = ({ route }) => {
                       SemestralCap: semCap,
                       OverallCap: newOverallCap,
                       Semester: fromWhere,
+                      SemestralMc: semMc,
+                      OverallMc: totalMc,
                     },
                   ],
                 },
@@ -209,27 +231,43 @@ const AddPlan = ({ route }) => {
               );
             }
           });
-          if (val.usersModulesArray.length > 0) {
+          if (val !== undefined) {
             const tempArr2 = [];
+            let pushed = false;
+            let index = 0;
             for (let i = 0; i < val.usersModulesArray.length; i++) {
-              if (val.usersModulesArray[i].Semester !== fromWhere) {
-                tempArr2.push(val.usersModulesArray[i]);
+              if (val.usersModulesArray[index].Semester !== fromWhere) {
+                tempArr2.push(val.usersModulesArray[index]);
+                index++;
               } else {
                 tempArr2.push({
                   Semester: fromWhere,
                   ModulesDetailsArray: modulesDetailsArray,
                 });
+                pushed = true;
               }
+            }
+            if (pushed) {
+              tempArr2.push(
+                val.usersModulesArray[val.usersModulesArray.length - 1]
+              );
+            } else {
+              tempArr2.push({
+                Semester: fromWhere,
+                ModulesDetailsArray: modulesDetailsArray,
+              });
             }
             usersModulesDetailsRef.set({
               usersModulesArray: tempArr2,
             });
           } else {
             usersModulesDetailsRef.set({
-              usersModulesArray: {
-                Semester: fromWhere,
-                ModulesDetailsArray: modulesDetailsArray,
-              },
+              usersModulesArray: [
+                {
+                  Semester: fromWhere,
+                  ModulesDetailsArray: modulesDetailsArray,
+                },
+              ],
             });
           }
         })

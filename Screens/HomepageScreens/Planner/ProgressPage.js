@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -19,112 +19,69 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const ProgressPage = ({ navigation, route }) => {
-  const [semData, setSemData] = useState([]);
-  //const [lineData, setLineData] = useState([]);
-  const [showGraph, setShowGraph] = useState(true);
-  React.useEffect(() => {
-    console.log("heokasdf");
+  const [lineData, setLineData] = useState([]);
+  const [showGraph, setShowGraph] = useState(false);
+  const [OverallData, setOverallData] = useState([]);
+  useEffect(() => {
+    console.log("Came here!");
     if (route.params?.items) {
+      console.log("did i come here after settings?");
       setMCprogressTotal(route.params?.items[0]);
       setcapGoalDenominator(route.params?.items[1]);
-      setProgress((Math.min(MCs, MCprogressTotal) / MCprogressTotal) * 100);
+      setProgress(
+        (Math.min(MCs, route.params?.items[0]) / route.params?.items[0]) * 100
+      );
       setProgress2(
-        (Math.min(cap, capGoalDenominator) / capGoalDenominator) * 100
+        (Math.min(cap, route.params?.items[1]) / route.params?.items[1]) * 100
       );
     }
     if (route.params?.usersDetails) {
-      // setUserID(route.params?.usersDetails);
-      // const usersModulesDetailsRef = FirebaseDB.firestore()
-      //   .collection("usersModulesDetails")
-      //   .doc(route.params?.usersDetails);
-      // usersModulesDetailsRef
-      //   .get()
-      //   .then((document) => {
-      //     const val = document.data();
-      //     if (val !== undefined) {
-      //       const labels = [];
-      //       const data = [];
-      //       const semestralData = [];
-      //       let totalSum = 0;
-      //       let totalMc = 0;
-      //       const arr = val.usersModulesArray;
-      //       for (let i = 0; i < arr.length; i++) {
-      // let semSum = 0;
-      // let semMc = 0;
-      //         labels.push(arr[i].Semester);
-      //         for (let j = 0; j < arr[i].ModulesDetailsArray.length; j++) {
-      //           const mc = arr[i].ModulesDetailsArray[j].NumMcs;
-      //           const points = GradeToPoint(
-      //             arr[i].ModulesDetailsArray[j].FinalGrade
-      //           );
-      //           semSum += mc * points;
-      //           semMc += mc;
-      //         }
-      //         totalSum += semSum;
-      //         totalMc += semMc;
-      //         semestralData.push({
-      //           Semester: arr[i].Semester,
-      //           SemestralCAP: (semSum / semMc).toFixed(2),
-      //           NumMcs: semMc,
-      //         });
-      //         data.push((totalSum / totalMc).toFixed(2));
-      //       }
-      //       setSemData(semestralData);
-      //       setLineData({
-      //         labels: labels,
-      //         datasets: [{ data: data, strokeWidth: 2 }],
-      //       });
-      //       setShowGraph(true);
-      //     } else {
-      //       setLineData({
-      //         Labels: [],
-      //         datasets: [{ data: [], strokeWidth: 2 }],
-      //       });
-      //     }
-      //   })
-      //   .catch((error) => alert(error));
+      const arr = route.params?.usersDetails;
+      if (arr.length > 0) {
+        let usersCurrentCap = arr[arr.length - 1].OverallCap;
+        let tempLabels = [];
+        let tempData = [];
+        for (let i = 0; i < arr.length; i++) {
+          tempLabels.push(arr[i].Semester);
+          tempData.push(arr[i].OverallCap);
+        }
+        setLineData({
+          labels: tempLabels,
+          datasets: [
+            {
+              data: tempData,
+              strokeWidth: 2,
+            },
+          ],
+        });
+        setOverallData(route.params?.usersDetails);
+        setCap(usersCurrentCap);
+        setMCs(arr[arr.length - 1].OverallMc);
+        setShowGraph(true);
+        setProgress(
+          (Math.min(arr[arr.length - 1].OverallMc, MCprogressTotal) /
+            MCprogressTotal) *
+            100
+        );
+        setProgress2(
+          (Math.min(arr[arr.length - 1].OverallCap, capGoalDenominator) /
+            capGoalDenominator) *
+            100
+        );
+      }
     }
   }, [route.params?.items, route.params?.usersDetails]);
 
   // ***********************************************this data is going to get from the back end data*****************************************************
-  const lineData = {
-    labels: ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"],
-    datasets: [
-      {
-        data: [3.9, 4.58, 4.15, 4.32, 4.75, 4.8],
-        strokeWidth: 2,
-      },
-    ],
-  };
 
-  const GradeToPoint = (val) => {
-    return val === "A+" || val === "A"
-      ? 5.0
-      : val === "A-"
-      ? 4.5
-      : val === "B+"
-      ? 4.0
-      : val === "B"
-      ? 3.5
-      : val === "B-"
-      ? 3.0
-      : val === "C+"
-      ? 2.5
-      : val === "C"
-      ? 2.0
-      : val === "D+"
-      ? 1.5
-      : val === "D"
-      ? 1.0
-      : 0;
-  };
-  // const [linedata, setLineData] = useState({});
   const [userID, setUserID] = useState("");
-  const [cap, setCap] = useState(4.8); // ********************************** 8this data is calculated from user's current standing *************************************
-  const [MCs, setMCs] = useState(120); //**********************************/ this data is calculated from user's current standing ************************************
-  const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0);
-  const [SemesterCap, setSemesterCap] = useState(0);
-  const [OverallCap, setOverallCap] = useState(0);
+  const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
+  const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
+
+  const [OverallMCsTakenForThatSem, setOverallMCsTakenForThatSem] = useState(0);
+  const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0); // to be used in the graph?
+  const [SemesterCap, setSemesterCap] = useState(0); // to be used in the graph?
+  const [OverallCap, setOverallCap] = useState(0); // to be used in the graph?
 
   const [MCprogressTotal, setMCprogressTotal] = useState(160); // this data is to get from the User (160 as the default value)
   const [capGoalDenominator, setcapGoalDenominator] = useState(5); // this data is to get from the User (5 as the default value)
@@ -153,6 +110,13 @@ const ProgressPage = ({ navigation, route }) => {
       strokeDasharray: "",
       opacity: "1",
     },
+  };
+
+  const ModalData = (index, func1, func2, func3, func4) => {
+    func1(OverallData[index].OverallCap);
+    func2(OverallData[index].OverallMc);
+    func3(OverallData[index].SemestralCap);
+    func4(OverallData[index].SemestralMc);
   };
 
   const TextonPopup = (props) => (
@@ -195,6 +159,7 @@ const ProgressPage = ({ navigation, route }) => {
           }}
         >
           <TextonPopup name="Overall CAP" cap={OverallCap} />
+          <TextonPopup name="Overall Mc" cap={OverallMCsTakenForThatSem} />
           <TextonPopup name="Semester CAP" cap={SemesterCap} />
           <TextonPopup name="MCs taken" cap={MCsTakenForThatSem} />
         </View>
@@ -261,27 +226,14 @@ const ProgressPage = ({ navigation, route }) => {
           <View style={{ ...styles.largerRec, overflow: "hidden" }}>
             {showGraph ? (
               <LineChart
-                onDataPointClick={({ value }) => {
-                  setOverallCap(value);
-                  if (value === 3.9) {
-                    setSemesterCap(3.9);
-                    setMCsTakenForThatSem(20);
-                  } else if (value === 4.58) {
-                    setSemesterCap(5.0);
-                    setMCsTakenForThatSem(40);
-                  } else if (value === 4.15) {
-                    setSemesterCap(4.0);
-                    setMCsTakenForThatSem(60);
-                  } else if (value === 4.32) {
-                    setSemesterCap(4.75);
-                    setMCsTakenForThatSem(80);
-                  } else if (value === 4.75) {
-                    setSemesterCap(5.0);
-                    setMCsTakenForThatSem(100);
-                  } else {
-                    setSemesterCap(5.0);
-                    setMCsTakenForThatSem(120);
-                  }
+                onDataPointClick={({ index }) => {
+                  ModalData(
+                    index,
+                    (val) => setOverallCap(val),
+                    (val) => setOverallMCsTakenForThatSem(val),
+                    (val) => setSemesterCap(val),
+                    (val) => setMCsTakenForThatSem(val)
+                  );
                   setModalVisible(true);
                 }}
                 data={lineData}
