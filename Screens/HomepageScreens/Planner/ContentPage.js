@@ -139,7 +139,7 @@ const ContentPage = (props) => {
           >
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("ProgressPage");
+                navigation.navigate("ProgressPage", { usersDetails: userID });
               }}
               style={{ width: 50, height: 50 }}
             >

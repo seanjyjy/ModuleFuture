@@ -334,16 +334,42 @@ const Plans = (props) => {
         height={20}
         fill="#232323"
         onPress={() => {
-          const item = currentArr[parseInt(currentID) - 1];
-          const currentPlanName =
-            currentArr[parseInt(currentID) - 1].nameOfPlan;
-          const plansItselfRef = FirebaseDB.firestore()
-            .collection("plansItself")
-            .doc(userID.concat("_", props.headerTitle, "_", currentPlanName))
-            .delete();
-          const newCurrentArr = currentArr.filter((x) => x.key !== currentID);
-          setCurrentArr(newCurrentArr);
-          plansArrayRef.update({ yearSem: newCurrentArr });
+          if (currentArr.length > 0) {
+            plansArrayRef
+              .get()
+              .then((document) => {
+                const val = document.data();
+                if (val !== undefined) {
+                  const arr = val.yearSem;
+                  const newArr = [];
+                  let keyValue = 0;
+                  for (let i = 0; i < arr.length; i++) {
+                    if (arr[i].key !== currentID) {
+                      newArr.push({
+                        key: (keyValue + 1).toString(),
+                        nameOfPlan: arr[i].nameOfPlan,
+                      });
+                      keyValue++;
+                    } else {
+                      const currentPlanName = arr[i].nameOfPlan;
+                      FirebaseDB.firestore()
+                        .collection("plansItself")
+                        .doc(
+                          userID.concat(
+                            "_",
+                            props.headerTitle,
+                            "_",
+                            currentPlanName
+                          )
+                        )
+                        .delete();
+                    }
+                  }
+                  plansArrayRef.set({ yearSem: newArr });
+                }
+              })
+              .catch((error) => alert(error));
+          }
         }}
       />
     </View>
@@ -418,7 +444,8 @@ const Plans = (props) => {
             activeOpacity={0.9}
             style={styles.enterButton}
             onPress={() => {
-              if (parseInt(currentID) - 1 < 0) {
+              // come here later to solve the problem!
+              if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
                 alert("Please select or create a plan");
               } else {
                 const currentPlanName =

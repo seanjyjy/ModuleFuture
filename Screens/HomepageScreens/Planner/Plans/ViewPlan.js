@@ -41,8 +41,9 @@ const ViewPlan = ({ route }) => {
   const [arr2, setarr2] = useState([]);
   const [arr3, setarr3] = useState([]);
   const [arr4, setarr4] = useState([]);
+  const [userID, setUserID] = useState("");
+  const [userRef, setUserRef] = useState("");
   useEffect(() => {
-    console.log("hello world");
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
       setDataArray(route.params?.item[4]);
@@ -65,6 +66,12 @@ const ViewPlan = ({ route }) => {
           route.params?.item[1],
           semList[(calculatorOfSem(route.params?.item[3]) + 3) % 9],
           (val) => setarr4(val)
+        );
+        setUserID(route.params?.item[1]);
+        setUserRef(
+          FirebaseDB.firestore()
+            .collection("users")
+            .doc(userIDextractor(route.params?.item[1]))
         );
       }
     }
@@ -211,7 +218,14 @@ const ViewPlan = ({ route }) => {
       }}
       func={() => {
         setModalVisible(false);
-        setTimeout(() => navigation.navigate("ProgressPage"), 400);
+
+        setTimeout(
+          () =>
+            navigation.navigate("ProgressPage", {
+              usersDetails: userIDextractor(docLoc),
+            }),
+          400
+        );
       }}
     />
   );
@@ -372,8 +386,8 @@ const ViewPlan = ({ route }) => {
     );
   };
   const loadData = async () => {
-    const userID = userIDextractor(docLoc);
-    const userRef = FirebaseDB.firestore().collection("users").doc(userID);
+    //const userID = userIDextractor(docLoc);
+    //const userRef = FirebaseDB.firestore().collection("users").doc(userID);
     userRef.set(
       {
         favPlanInfo: [title, docLoc, size, fromWhere],

@@ -13,12 +13,17 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
 import Modal from "react-native-modal";
+import FirebaseDB from "../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const ProgressPage = ({ navigation, route }) => {
+  const [semData, setSemData] = useState([]);
+  //const [lineData, setLineData] = useState([]);
+  const [showGraph, setShowGraph] = useState(true);
   React.useEffect(() => {
+    console.log("heokasdf");
     if (route.params?.items) {
       setMCprogressTotal(route.params?.items[0]);
       setcapGoalDenominator(route.params?.items[1]);
@@ -27,10 +32,62 @@ const ProgressPage = ({ navigation, route }) => {
         (Math.min(cap, capGoalDenominator) / capGoalDenominator) * 100
       );
     }
-  });
+    if (route.params?.usersDetails) {
+      // setUserID(route.params?.usersDetails);
+      // const usersModulesDetailsRef = FirebaseDB.firestore()
+      //   .collection("usersModulesDetails")
+      //   .doc(route.params?.usersDetails);
+      // usersModulesDetailsRef
+      //   .get()
+      //   .then((document) => {
+      //     const val = document.data();
+      //     if (val !== undefined) {
+      //       const labels = [];
+      //       const data = [];
+      //       const semestralData = [];
+      //       let totalSum = 0;
+      //       let totalMc = 0;
+      //       const arr = val.usersModulesArray;
+      //       for (let i = 0; i < arr.length; i++) {
+      // let semSum = 0;
+      // let semMc = 0;
+      //         labels.push(arr[i].Semester);
+      //         for (let j = 0; j < arr[i].ModulesDetailsArray.length; j++) {
+      //           const mc = arr[i].ModulesDetailsArray[j].NumMcs;
+      //           const points = GradeToPoint(
+      //             arr[i].ModulesDetailsArray[j].FinalGrade
+      //           );
+      //           semSum += mc * points;
+      //           semMc += mc;
+      //         }
+      //         totalSum += semSum;
+      //         totalMc += semMc;
+      //         semestralData.push({
+      //           Semester: arr[i].Semester,
+      //           SemestralCAP: (semSum / semMc).toFixed(2),
+      //           NumMcs: semMc,
+      //         });
+      //         data.push((totalSum / totalMc).toFixed(2));
+      //       }
+      //       setSemData(semestralData);
+      //       setLineData({
+      //         labels: labels,
+      //         datasets: [{ data: data, strokeWidth: 2 }],
+      //       });
+      //       setShowGraph(true);
+      //     } else {
+      //       setLineData({
+      //         Labels: [],
+      //         datasets: [{ data: [], strokeWidth: 2 }],
+      //       });
+      //     }
+      //   })
+      //   .catch((error) => alert(error));
+    }
+  }, [route.params?.items, route.params?.usersDetails]);
 
   // ***********************************************this data is going to get from the back end data*****************************************************
-  const linedata = {
+  const lineData = {
     labels: ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"],
     datasets: [
       {
@@ -39,6 +96,30 @@ const ProgressPage = ({ navigation, route }) => {
       },
     ],
   };
+
+  const GradeToPoint = (val) => {
+    return val === "A+" || val === "A"
+      ? 5.0
+      : val === "A-"
+      ? 4.5
+      : val === "B+"
+      ? 4.0
+      : val === "B"
+      ? 3.5
+      : val === "B-"
+      ? 3.0
+      : val === "C+"
+      ? 2.5
+      : val === "C"
+      ? 2.0
+      : val === "D+"
+      ? 1.5
+      : val === "D"
+      ? 1.0
+      : 0;
+  };
+  // const [linedata, setLineData] = useState({});
+  const [userID, setUserID] = useState("");
   const [cap, setCap] = useState(4.8); // ********************************** 8this data is calculated from user's current standing *************************************
   const [MCs, setMCs] = useState(120); //**********************************/ this data is calculated from user's current standing ************************************
   const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0);
@@ -178,44 +259,48 @@ const ProgressPage = ({ navigation, route }) => {
       >
         <View style={styles.largerRec}>
           <View style={{ ...styles.largerRec, overflow: "hidden" }}>
-            <LineChart
-              onDataPointClick={({ value }) => {
-                setOverallCap(value);
-                if (value === 3.9) {
-                  setSemesterCap(3.9);
-                  setMCsTakenForThatSem(20);
-                } else if (value === 4.58) {
-                  setSemesterCap(5.0);
-                  setMCsTakenForThatSem(40);
-                } else if (value === 4.15) {
-                  setSemesterCap(4.0);
-                  setMCsTakenForThatSem(60);
-                } else if (value === 4.32) {
-                  setSemesterCap(4.75);
-                  setMCsTakenForThatSem(80);
-                } else if (value === 4.75) {
-                  setSemesterCap(5.0);
-                  setMCsTakenForThatSem(100);
-                } else {
-                  setSemesterCap(5.0);
-                  setMCsTakenForThatSem(120);
-                }
-                setModalVisible(true);
-              }}
-              data={linedata}
-              width={width * 0.95}
-              height={height * 0.36}
-              yAxisInterval={1}
-              yLabelsOffset={10}
-              segments={4}
-              chartConfig={chartConfig}
-              bezier
-              style={{
-                marginRight: 30,
-                marginVertical: 8,
-                borderRadius: 20,
-              }}
-            />
+            {showGraph ? (
+              <LineChart
+                onDataPointClick={({ value }) => {
+                  setOverallCap(value);
+                  if (value === 3.9) {
+                    setSemesterCap(3.9);
+                    setMCsTakenForThatSem(20);
+                  } else if (value === 4.58) {
+                    setSemesterCap(5.0);
+                    setMCsTakenForThatSem(40);
+                  } else if (value === 4.15) {
+                    setSemesterCap(4.0);
+                    setMCsTakenForThatSem(60);
+                  } else if (value === 4.32) {
+                    setSemesterCap(4.75);
+                    setMCsTakenForThatSem(80);
+                  } else if (value === 4.75) {
+                    setSemesterCap(5.0);
+                    setMCsTakenForThatSem(100);
+                  } else {
+                    setSemesterCap(5.0);
+                    setMCsTakenForThatSem(120);
+                  }
+                  setModalVisible(true);
+                }}
+                data={lineData}
+                width={width * 0.95}
+                height={height * 0.36}
+                yAxisInterval={1}
+                yLabelsOffset={10}
+                segments={4}
+                chartConfig={chartConfig}
+                bezier
+                style={{
+                  marginRight: 30,
+                  marginVertical: 8,
+                  borderRadius: 20,
+                }}
+              />
+            ) : (
+              <View />
+            )}
             {popoutBox(OverallCap, SemesterCap, MCsTakenForThatSem)}
           </View>
         </View>

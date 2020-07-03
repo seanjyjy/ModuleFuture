@@ -93,22 +93,148 @@ const AddPlan = ({ route }) => {
     return truth;
   };
 
+  const TargetGradesFilled = (val) => {
+    let truth = true;
+    for (let i = 0; i < val.length; i++) {
+      if (val[i].TargetGrade === "") {
+        truth = false;
+        break;
+      }
+    }
+    return truth;
+  };
+
+  const GradeToPoint = (val) => {
+    return val === "A+" || val === "A"
+      ? 5.0
+      : val === "A-"
+      ? 4.5
+      : val === "B+"
+      ? 4.0
+      : val === "B"
+      ? 3.5
+      : val === "B-"
+      ? 3.0
+      : val === "C+"
+      ? 2.5
+      : val === "C"
+      ? 2.0
+      : val === "D+"
+      ? 1.5
+      : val === "D"
+      ? 1.0
+      : 0;
+  };
   const nextPage = () => {
-    // if (FinalGradesEntered(data)) {
-    //   const usersModulesDetailsRef = FirebaseDB.firestore()
-    //     .collection("usersModulesDetails")
-    //     .doc(userIDextractor(docLoc));
-    //   for (let i = 0; i < data.length; i++) {
-    //     usersModulesDetailsRef.update({
-    //       ModulesDetails: FirebaseDB.firestore.FieldValue.arrayUnion({
-    //         moduleCode: data[i].moduleCode,
-    //         moduleName: "",
-    //         FinalGrade: data[i].FinalGrade,
-    //         NumMcs: data[i].NumMcs,
-    //       }),
-    //     });
-    //   }
-    // }
+    if (FinalGradesEntered(data)) {
+      let semCap = 0;
+      let newOverallCap = 0;
+      const usersModulesDetailsRef = FirebaseDB.firestore()
+        .collection("usersModulesDetails")
+        .doc(userIDextractor(docLoc));
+      usersModulesDetailsRef
+        .get()
+        .then((document) => {
+          const val = document.data();
+          if (val === undefined) {
+            usersModulesDetailsRef.set({ usersModulesArray: [] });
+          }
+          const modulesDetailsArray = [];
+          let semSum = 0;
+          let semMc = 0;
+          for (let i = 0; i < data.length; i++) {
+            modulesDetailsArray.push({
+              moduleCode: data[i].moduleCode,
+              moduleName: data[i].title,
+              FinalGrade: data[i].FinalGrade,
+              NumMcs: data[i].NumMcs,
+            });
+            semSum += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
+            semMc += data[i].NumMcs;
+          }
+          semCap = parseFloat((semSum / semMc).toFixed(2));
+          let totalSum = 0;
+          let totalMc = 0;
+          if (val !== undefined) {
+            const arr = val.usersModulesArray;
+            for (let i = 0; i < arr.length; i++) {
+              for (let j = 0; j < arr[i].ModulesDetailsArray.length; j++) {
+                const mc = arr[i].ModulesDetailsArray[j].NumMcs;
+                const points = GradeToPoint(
+                  arr[i].ModulesDetailsArray[j].FinalGrade
+                );
+                totalSum += mc * points;
+                totalMc += mc;
+              }
+            }
+          }
+          totalSum += semSum;
+          totalMc += semMc;
+          newOverallCap =
+            totalMc === semMc ? semCap : (totalSum / totalMc).toFixed(2);
+
+          const usersRef = FirebaseDB.firestore()
+            .collection("users")
+            .doc(userIDextractor(docLoc));
+          usersRef.get().then((document) => {
+            const tempVal = document.data();
+            if (tempVal.CapArray !== undefined) {
+              const tempArr = [];
+              for (let i = 0; i < tempVal.CapArray.length; i++) {
+                if (tempVal.CapArray[i].Semester !== fromWhere) {
+                  tempArr.push[tempVal.CapArray[i]];
+                } else {
+                  tempArr.push({
+                    SemestralCap: semCap,
+                    OverallCap: newOverallCap,
+                    Semester: fromWhere,
+                  });
+                }
+              }
+              usersRef.update({
+                CapArray: tempArr,
+              });
+            } else {
+              usersRef.set(
+                {
+                  CapArray: [
+                    {
+                      SemestralCap: semCap,
+                      OverallCap: newOverallCap,
+                      Semester: fromWhere,
+                    },
+                  ],
+                },
+                { merge: true }
+              );
+            }
+          });
+          if (val.usersModulesArray.length > 0) {
+            const tempArr2 = [];
+            for (let i = 0; i < val.usersModulesArray.length; i++) {
+              if (val.usersModulesArray[i].Semester !== fromWhere) {
+                tempArr2.push(val.usersModulesArray[i]);
+              } else {
+                tempArr2.push({
+                  Semester: fromWhere,
+                  ModulesDetailsArray: modulesDetailsArray,
+                });
+              }
+            }
+            usersModulesDetailsRef.set({
+              usersModulesArray: tempArr2,
+            });
+          } else {
+            usersModulesDetailsRef.set({
+              usersModulesArray: {
+                Semester: fromWhere,
+                ModulesDetailsArray: modulesDetailsArray,
+              },
+            });
+          }
+        })
+        .catch((error) => {});
+    }
 
     const plansArrayRef = FirebaseDB.firestore()
       .collection("plansArray")
@@ -129,10 +255,14 @@ const AddPlan = ({ route }) => {
       fromWhere: fromWhere,
     });
 
+    // ----------------figure out how to reset the data!--------------------------------------------------------------------------------
+    const newArr = data.map((x) => x);
+    setData([]);
     return navigation.navigate("ViewPlan", {
-      item: [planNameValue, docLoc, size, fromWhere, data],
+      item: [planNameValue, docLoc, size, fromWhere, newArr],
     });
   };
+
   const Header = () => (
     <View style={styles.headerDesign}>
       <TouchableOpacity
@@ -155,7 +285,11 @@ const AddPlan = ({ route }) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          if (checkMcs(data) && block) {
+          if (data.length === 0) {
+            alert("Please choose some modules into your plans");
+          } else if (!TargetGradesFilled(data)) {
+            alert("Please fill in your target grades to advance");
+          } else if (checkMcs(data) && block) {
             Alert.alert(
               "Warning",
               "You need a minimum of 18 MCs per semester! If you're sure, press Continue to advance",
@@ -199,6 +333,7 @@ const AddPlan = ({ route }) => {
       {Header()}
       <View style={styles.container}>
         <FlatList
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
           data={data}

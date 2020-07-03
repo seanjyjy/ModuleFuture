@@ -92,7 +92,6 @@ const ModuleTemplate = (props) => {
         val === "C" ||
         val === "D+" ||
         val === "D" ||
-        val === "D" ||
         val === "F" ||
         val === "S" ||
         val === "CSCU"
