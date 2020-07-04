@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, Dimensions, FlatList } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import BottomBar from "../../../Component/BottomBar";
 import Cross from "../../../Component/Cross";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FilterItem from "../../../Component/FilterItem";
 import FilterSection from "./FilterSection";
 import { useSafeArea } from "react-native-safe-area-context";
@@ -25,8 +17,9 @@ const Filter = ({ navigation, route }) => {
       setList(array);
       update(numConversion(array.length));
     }
+    console.log(route.params?.origList.length);
     const currentFilters = route.params?.currentFilters;
-    if (currentFilters !== 0) {
+    if (currentFilters.length !== 0) {
       setFilterArr(currentFilters);
       const newSet = new Set();
       currentFilters.forEach((x) => newSet.add(x.name));
@@ -45,11 +38,9 @@ const Filter = ({ navigation, route }) => {
     }
   };
 
-  const fullList = route.params.origList;
+  const [fullList, setFL] = useState(route.params.origList);
   const [numMods, update] = useState(0);
   const [filterSet, setFilterSet] = useState(new Set());
-  const [sortState1, setSortState1] = useState("Default");
-  const [sortState2, setSortState2] = useState("Default");
   const [list, setList] = useState([]);
   const [filterArr, setFilterArr] = useState([]);
   const [clearFilters, clear] = useState(false);
@@ -64,60 +55,6 @@ const Filter = ({ navigation, route }) => {
         transition={() => navigation.goBack()}
         text={"Filter"}
       />
-    </View>
-  );
-
-  const sortButton = (boolean, setter, name) => {
-    const setSort = () =>
-      boolean === "Default"
-        ? "Ascending"
-        : boolean === "Ascending"
-        ? "Descending"
-        : "Default";
-
-    return (
-      <TouchableOpacity
-        style={{
-          ...styles.sortButton,
-          backgroundColor: boolean === "Default" ? "white" : "#232323",
-          borderRightWidth: name === "Level" ? 0.1 : 0.6,
-          marginLeft: name === "Level" ? 1 : 0,
-        }}
-        activeOpacity={0.95}
-        onPress={() => setter(setSort())}
-      >
-        <Text
-          style={{
-            ...globalFontStyles.NSB_17,
-            color: boolean === "Default" ? "#232323" : "white",
-          }}
-        >
-          {name}
-        </Text>
-        <View>
-          {boolean === "Default" ? null : (
-            <MaterialCommunityIcons
-              name={
-                boolean === "Descending" ? "arrow-down-bold" : "arrow-up-bold"
-              }
-              size={19}
-              color="white"
-            />
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const sort = (
-    <View style={styles.sortComponent}>
-      <Text style={{ ...globalFontStyles.NSB_17, color: "#232323" }}>
-        Sort by
-      </Text>
-      <View style={{ flexDirection: "row", marginTop: 14, marginBottom: 30 }}>
-        {sortButton(sortState1, setSortState1, "Level")}
-        {sortButton(sortState2, setSortState2, "Code")}
-      </View>
     </View>
   );
 
@@ -235,6 +172,8 @@ const Filter = ({ navigation, route }) => {
   ];
 
   const handleClick = (name, bool, category) => {
+    console.log(bool);
+
     if (bool) {
       filterArr.push({ name: name, cat: category });
       setFilterArr(filterArr);
@@ -327,7 +266,7 @@ const Filter = ({ navigation, route }) => {
   );
 
   const otherSection = (
-    <View style={{ marginTop: 35, marginBottom: 15 }}>
+    <View style={{ marginTop: 35, paddingBottom: 15 }}>
       <Text
         style={{
           ...globalFontStyles.NSB_17,
@@ -352,12 +291,20 @@ const Filter = ({ navigation, route }) => {
     { array: MCs, category: "MC" },
   ];
 
+  const FilterHeader = (
+    <View style={styles.headerComponent}>
+      <Text style={{ ...globalFontStyles.NB_17, color: "#232323" }}>
+        Filter by
+      </Text>
+    </View>
+  );
+
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       {header}
       <View style={{ marginBottom: 155, width: "83.6%" }}>
         <FlatList
-          ListHeaderComponent={sort}
+          ListHeaderComponent={FilterHeader}
           ListFooterComponent={otherSection}
           data={section}
           keyExtractor={(item) => item.category}
@@ -371,6 +318,7 @@ const Filter = ({ navigation, route }) => {
           navigation.navigate("AddModule", {
             afterFilter: list,
             currentFilters: filterArr,
+            locationFrom: "Filter",
           })
         }
         rightText={`Show ${numMods} modules`}
@@ -409,19 +357,9 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 3,
   },
-  sortButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    height: 30,
-    width: 90,
-    borderWidth: 0.6,
-  },
-  sortComponent: {
-    borderBottomWidth: StyleSheet.hairlineWidth * 3,
-    borderBottomColor: "#7070704D",
-    alignSelf: "stretch",
+  headerComponent: {
     paddingTop: 20,
     alignItems: "center",
+    marginBottom: -5,
   },
 });

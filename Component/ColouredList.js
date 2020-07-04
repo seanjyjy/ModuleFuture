@@ -21,7 +21,7 @@ const ColouredList = (props) => {
     const circle = (
       <View
         style={{
-          backgroundColor: colors[key - 1],
+          backgroundColor: colors[(key - 1) % 8],
           width: 0.03 * width,
           height: 0.03 * width,
           borderRadius: (0.03 * width) / 2,
@@ -81,7 +81,9 @@ const ColouredList = (props) => {
         props.transition();
       }}
     >
-      <View style={{ ...styles.colorTop, backgroundColor: colors[key - 1] }}>
+      <View
+        style={{ ...styles.colorTop, backgroundColor: colors[(key - 1) % 8] }}
+      >
         <View style={{ width: "90%" }}>
           <Text
             style={{

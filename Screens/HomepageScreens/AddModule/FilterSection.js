@@ -30,11 +30,9 @@ const FilterSection = (props) => {
       ? "semesters"
       : text;
 
-  const [noOfItems, setNum] = useState(3);
   const array = props.array;
   const maxSize = array.length;
-  const incrSize = () => setNum(noOfItems + 6);
-  const decrSize = () => setNum(noOfItems - 6);
+  const [showAll, show] = useState(false);
 
   return (
     <View
@@ -54,7 +52,7 @@ const FilterSection = (props) => {
         {props.name}
       </Text>
       <FlatList
-        data={array.slice(0, noOfItems)}
+        data={showAll ? array : array.slice(0, 3)}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => textWithIcon1(item.name)}
       />
@@ -66,14 +64,14 @@ const FilterSection = (props) => {
           marginBottom: 30,
         }}
       >
-        {noOfItems < maxSize ? (
+        {!showAll ? (
           <View>
             <TouchableOpacity
               style={{
                 paddingLeft: 4,
               }}
               activeOpacity={0.9}
-              onPress={() => incrSize()}
+              onPress={() => show(true)}
             >
               <Text
                 style={{
@@ -89,12 +87,12 @@ const FilterSection = (props) => {
         ) : (
           <View></View>
         )}
-        {noOfItems > 3 ? (
+        {showAll ? (
           <View>
             <TouchableOpacity
               style={{ paddingRight: 8 }}
               activeOpacity={0.9}
-              onPress={() => decrSize()}
+              onPress={() => show(false)}
             >
               <Text
                 style={{
