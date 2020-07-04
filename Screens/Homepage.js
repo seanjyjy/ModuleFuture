@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "./HomepageScreens/Profile/Profile";
-import RecordsStack from "./HomepageScreens/Records/RecordsStack";
+import Records from "./HomepageScreens/Records/Records";
 import ModulePage from "./HomepageScreens/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";
 import FocusArea from "./HomepageScreens/FocusArea/FocusArea";
@@ -158,7 +158,7 @@ const Homepage = (data) => {
         <Tab.Screen name="Planner">
           {(props) => <Planner {...props} extraData={data.extraData} />}
         </Tab.Screen>
-        <Tab.Screen name="Records" component={RecordsStack} />
+        <Tab.Screen name="Records" component={Records} />
         <Tab.Screen name="Focus" component={FocusArea} />
         <Tab.Screen name="Module" component={ModulePage} />
         <Tab.Screen name="Profile">

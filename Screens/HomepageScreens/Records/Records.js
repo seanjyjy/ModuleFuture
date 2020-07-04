@@ -5,6 +5,7 @@ import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import ColouredList from "../../../Component/ColouredList";
+import FullView from "../../../Component/FullView";
 
 const Records = ({ navigation }) => {
   // Default states
@@ -51,11 +52,15 @@ const Records = ({ navigation }) => {
     currentType === "Type" || currentType === "Code" ? "Level" : "Type";
 
   const renderOverflowMenuAction = () => {
-    const option = (item1, item2) => (
+    const option = (menu1, menu2) => (
       <MenuItem
-        title={text(item1())}
+        title={text(menu1())}
         onPress={() => {
-          toggle(!item2);
+          if (menu1() === numTaken()) {
+            toggle(!menu2);
+          } else {
+            setView(!menu2);
+          }
           toggleMenu();
         }}
         activeOpacity={0.9}
@@ -126,7 +131,7 @@ const Records = ({ navigation }) => {
     "#8F9ED5",
     "#CE6F73",
     "#241161",
-    // "#6c2386",
+    "#6c2386",
   ];
 
   /* --------------------------------------------Content headers------------------------------------------------ */

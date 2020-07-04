@@ -41,6 +41,7 @@ import ChoosingOptions from "./Component/MakingClock";
 import Course from "./Screens/HomepageScreens/Profile/Course";
 import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
 import Year from "./Screens/HomepageScreens/Profile/Year";
+import Foundation from "./Screens/HomepageScreens/Records/Foundation";
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
@@ -193,6 +194,10 @@ export default function App() {
                         component={SeeModules}
                       />
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
+                      <AuthStack.Screen
+                        name="Foundation"
+                        component={Foundation}
+                      />
                       <AuthStack.Screen name="Filter" component={Filter} />
                       <AuthStack.Screen name="Course" component={Course} />
                       <AuthStack.Screen
