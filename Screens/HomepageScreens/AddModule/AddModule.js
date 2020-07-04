@@ -5,6 +5,7 @@ import {
   View,
   Dimensions,
   FlatList,
+  Animated,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
@@ -78,13 +79,13 @@ const AddModule = (props) => {
   );
 
   useEffect(() => {
-    if (props.route.params?.currentFilters && props.route.params?.afterFilter) {
+    if (props.route.params?.locationFrom === "Filter") {
       const newList = props.route.params?.afterFilter;
       setFullList(newList);
       setModuleList(newList);
       setFilterArr(props.route.params?.currentFilters);
     } else if (
-      props.route.params?.newModules &&
+      props.route.params?.locationFrom === "SeeModules" &&
       props.route.params?.value !== MCcount
     ) {
       const arr = props.route.params?.reAddedModules;
@@ -95,6 +96,7 @@ const AddModule = (props) => {
       }
       setFullList(newList);
       setModuleList(newList);
+      setOrigList(origList);
       add(props.route.params?.newModules);
       addVal(props.route.params?.value);
     }
@@ -148,7 +150,8 @@ Prereq: matched with whatever is planned / take
         let fl = fullList.filter((x) => x.code !== item.code);
         setFullList(fl);
         setModuleList(nextList);
-        setOrigList(origList.filter((x) => x.code !== x.code));
+        let oL = origList.filter((x) => x.code !== item.code);
+        setOrigList(oL);
       }}
     />
   );
