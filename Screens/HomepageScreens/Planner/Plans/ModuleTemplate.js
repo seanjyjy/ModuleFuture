@@ -94,7 +94,8 @@ const ModuleTemplate = (props) => {
         val === "D" ||
         val === "F" ||
         val === "S" ||
-        val === "CSCU"
+        val === "CS" ||
+        val === "CU"
       ) {
         return true;
       } else {
@@ -121,7 +122,7 @@ const ModuleTemplate = (props) => {
         <View style={styles.flexOneCenter}>
           <View
             style={{
-              width: 0.4 * width,
+              width: 0.5 * width,
               height: 0.04 * height,
               borderWidth: 1,
               borderColor: "#D0CECE",
@@ -130,11 +131,11 @@ const ModuleTemplate = (props) => {
           >
             <TextInput
               style={{
-                width: 0.4 * width,
+                width: 0.5 * width,
                 height: 0.04 * height,
                 left: 5,
               }}
-              placeholder="S - A+ or CSCU only"
+              placeholder="S - A+ / CS / CU only"
               onChangeText={(val) => {
                 if (whatType === 0) {
                   setText(val);
@@ -152,7 +153,7 @@ const ModuleTemplate = (props) => {
                 color: "#cc0000",
               }}
             >
-              Please enter a valid grade, S - A+ or CSCU
+              Please enter a valid grade, S - A+ or CS or CU
             </Text>
           ) : (
             <View />

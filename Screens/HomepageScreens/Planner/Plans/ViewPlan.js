@@ -37,13 +37,15 @@ const ViewPlan = ({ route }) => {
   const [fromWhere, setFromWhere] = useState("");
   const [size, setSize] = useState("");
   const [favourite, setfavourite] = useState(false);
-  const [currentSem, setCurrentSem] = useState("");
+  const [arr1, setarr1] = useState([]);
   const [arr2, setarr2] = useState([]);
   const [arr3, setarr3] = useState([]);
   const [arr4, setarr4] = useState([]);
   const [userID, setUserID] = useState("");
   const [userRef, setUserRef] = useState("");
+  const [semList, setSemList] = useState([]);
   const [userDetails, setUserDetails] = useState([]);
+  const [arrToUse, setArrToUse] = useState([]);
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
@@ -53,31 +55,57 @@ const ViewPlan = ({ route }) => {
       setTitle(route.params?.item[0]);
       //whatsTheCurrentSem(docLoc);
       if (route.params?.item[1] && route.params?.item[3]) {
-        infoExtractor(
-          route.params?.item[1],
-          semList[(calculatorOfSem(route.params?.item[3]) + 1) % 9],
-          (val) => setarr2(val)
+        setUserID(userIDextractor(route.params?.item[1]));
+        setUserRef(
+          FirebaseDB.firestore()
+            .collection("users")
+            .doc(userIDextractor(route.params?.item[1]))
         );
-        infoExtractor(
-          route.params?.item[1],
-          semList[(calculatorOfSem(route.params?.item[3]) + 2) % 9],
-          (val) => setarr3(val)
-        );
-        infoExtractor(
-          route.params?.item[1],
-          semList[(calculatorOfSem(route.params?.item[3]) + 3) % 9],
-          (val) => setarr4(val)
-        );
-        setUserID(route.params?.item[1]);
         const userRef = FirebaseDB.firestore()
           .collection("users")
           .doc(userIDextractor(route.params?.item[1]));
-        setUserRef(userRef);
         userRef
           .get()
           .then((document) => {
             const val = document.data();
             setUserDetails(val);
+            const sem = val.expectedSemGrad;
+            let arrLength = 0;
+            if (calculatorOfSem(sem) <= 5) {
+              setSemList(semListY3S2);
+              arrLength = 6;
+            } else if (calculatorOfSem(sem) <= 7) {
+              setSemList(semListY4S2);
+              arrLength = 8;
+            } else {
+              setSemList(semListY5S2);
+              arrLength = 10;
+            }
+            const arrToUse = whatArrayOfInfoToDisplay(
+              route.params?.item[3],
+              arrLength
+            );
+            setArrToUse(arrToUse);
+            infoExtractor(
+              route.params?.item[1],
+              semList[calculatorOfSem(route.params?.item[3]) % 9],
+              (val) => setarr1(val)
+            );
+            infoExtractor(
+              route.params?.item[1],
+              semListY5S2[arrToUse[0]],
+              (val) => setarr2(val)
+            );
+            infoExtractor(
+              route.params?.item[1],
+              semListY5S2[arrToUse[1]],
+              (val) => setarr3(val)
+            );
+            infoExtractor(
+              route.params?.item[1],
+              semListY5S2[arrToUse[2]],
+              (val) => setarr4(val)
+            );
           })
           .catch((error) => alert(error));
       }
@@ -117,6 +145,22 @@ const ViewPlan = ({ route }) => {
       })
       .then((error) => {});
   };
+
+  const whatArrayOfInfoToDisplay = (val, arrLength) => {
+    const num = calculatorOfSem(val);
+    if (num === 0) {
+      // represents the first year
+      return [1, 2, 3];
+    } else if (arrLength - 2 === num) {
+      // represents the 2nd last year
+      return [num + 1, num - 1, num - 2];
+    } else if (arrLength - 1 === num) {
+      // represents the last year
+      return [num - 1, num - 2, num - 3];
+    } else {
+      return [num - 1, num + 1, num + 2];
+    }
+  };
   // need to get current year and approximate time? in order to calculate current semester
   // const whatsTheCurrentSem = (val) => {
   //   const userID = userIDextractor(val);
@@ -128,6 +172,10 @@ const ViewPlan = ({ route }) => {
   //     })
   //     .then((error) => alert(error));
   // };
+
+  const semListY3S2 = ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"];
+  const semListY4S2 = [...semListY3S2, "Y4S1", "Y4S2"];
+  const semListY5S2 = [...semListY4S2, "Y5S1", "Y5S2"];
   const signOutUser = async () => {
     try {
       await FirebaseDB.auth().signOut();
@@ -135,16 +183,7 @@ const ViewPlan = ({ route }) => {
       alert(error);
     }
   };
-  const semList = [
-    "Y1S1",
-    "Y1S2",
-    "Y2S1",
-    "Y2S2",
-    "Y3S1",
-    "Y3S2",
-    "Y4S1",
-    "Y4S2",
-  ];
+
   const calculatorOfSem = (val) => {
     if (val === "Y1S1") {
       return 0;
@@ -209,7 +248,13 @@ const ViewPlan = ({ route }) => {
       }}
       func={() => {
         setModalVisible(false);
-        setTimeout(() => navigation.navigate(fromWhere), 400);
+        setTimeout(
+          () =>
+            navigation.navigate(fromWhere, {
+              item: [userIDextractor(docLoc), arr1],
+            }),
+          400
+        );
       }}
     />
   );
@@ -242,7 +287,7 @@ const ViewPlan = ({ route }) => {
   const SmartRecall2 = (
     <Tabs
       icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
-      text={semList[(calculatorOfSem(fromWhere) + 1) % 9]}
+      text={semListY5S2[arrToUse[0]]}
       iconStyle={{ right: 3 }}
       wordStyle={{
         borderBottomWidth: 1,
@@ -253,7 +298,7 @@ const ViewPlan = ({ route }) => {
         setModalVisible(false);
         setTimeout(
           () =>
-            navigation.navigate(semList[(calculatorOfSem(fromWhere) + 1) % 9], {
+            navigation.navigate(semListY5S2[arrToUse[0]], {
               item: [userIDextractor(docLoc), arr2],
             }),
           400
@@ -268,13 +313,13 @@ const ViewPlan = ({ route }) => {
         borderColor: "#E2E2E2",
       }}
       icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
-      text={semList[(calculatorOfSem(fromWhere) + 2) % 9]}
+      text={semListY5S2[arrToUse[1]]}
       iconStyle={{ right: 3 }}
       func={() => {
         setModalVisible(false);
         setTimeout(
           () =>
-            navigation.navigate(semList[(calculatorOfSem(fromWhere) + 2) % 9], {
+            navigation.navigate(semListY5S2[arrToUse[1]], {
               item: [userIDextractor(docLoc), arr3],
             }),
           400
@@ -286,7 +331,7 @@ const ViewPlan = ({ route }) => {
   const SmartRecall4 = (
     <Tabs
       icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
-      text={semList[(calculatorOfSem(fromWhere) + 3) % 9]}
+      text={semListY5S2[arrToUse[2]]}
       iconStyle={{ right: 3 }}
       viewDesign={{
         borderBottomWidth: 1,
@@ -296,7 +341,7 @@ const ViewPlan = ({ route }) => {
         setModalVisible(false);
         setTimeout(
           () =>
-            navigation.navigate(semList[(calculatorOfSem(fromWhere) + 3) % 9], {
+            navigation.navigate(semListY5S2[arrToUse[2]], {
               item: [userIDextractor(docLoc), arr4],
             }),
 
@@ -395,8 +440,6 @@ const ViewPlan = ({ route }) => {
     );
   };
   const loadData = async () => {
-    //const userID = userIDextractor(docLoc);
-    //const userRef = FirebaseDB.firestore().collection("users").doc(userID);
     userRef.set(
       {
         favPlanInfo: [title, docLoc, size, fromWhere],
