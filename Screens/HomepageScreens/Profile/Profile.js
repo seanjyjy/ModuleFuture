@@ -15,6 +15,7 @@ const Profile = (props) => {
   const [course1, setCourse] = useState(props.extraData.course);
   const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
   const [year, setYear] = useState(props.extraData.yearOfMatri);
+  const email = props.extraData.email;
 
   const isFocused = useIsFocused();
 
@@ -56,6 +57,7 @@ const Profile = (props) => {
           transition={() => graduation()}
           right={gradSem}
         />
+        <ProfileButton0 left={"Email"} transition={() => null} right={email} />
         <View style={{ alignItems: "center" }}>
           <LogoutButton func={() => signOutUser()} />
         </View>
