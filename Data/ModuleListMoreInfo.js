@@ -2,18 +2,18 @@ import moduleInfo from "./ModuleInfo.json";
 import moduleList from "./ModuleList.json";
 
 const ModuleListWithKey = (item) => {
-  const hasExam = (item) => {
+  const noExam = (item) => {
     if (item.length === 2) {
       if (item[0]?.examDuration || item[1]?.examDuration) {
-        return true;
-      } else {
         return false;
+      } else {
+        return true;
       }
     } else if (item.length === 1) {
       if (item[0]?.examDuration) {
-        return true;
-      } else {
         return false;
+      } else {
+        return true;
       }
     }
   };
@@ -28,9 +28,8 @@ const ModuleListWithKey = (item) => {
 
   const firstDigit = (item) => {
     let i = 0;
-    for (; item[i] < "0" || item[i] > "9"; i++) {
-      return i;
-    }
+    for (; item[i] < "0" || item[i] > "9"; i++) {}
+    return parseInt(item.charAt(i));
   };
 
   let arr = [];
@@ -41,15 +40,15 @@ const ModuleListWithKey = (item) => {
     current = moduleInfo[i];
     if (current.semesterData.length !== 0) {
       arr[k] = {
-        code: current.moduleCode,
-        title: current.title,
+        code: current.moduleCode, // string
+        title: current.title, // string
         name: current.moduleCode + " " + current.title,
-        level: firstDigit(current.moduleCode),
-        MC: parseInt(current.moduleCredit),
-        department: current.department,
-        suOption: hasSu(current),
-        semesters: moduleList[k].semesters,
-        hasExam: hasExam(current.semesterData),
+        Level: firstDigit(current.moduleCode) * 1000,
+        MC: parseInt(current.moduleCredit), // number
+        Department: current.department, // string
+        suOption: hasSu(current), // boolean
+        Semester: new Set(moduleList[k].semesters), // array
+        noExam: noExam(current.semesterData), // boolean
       };
       k++;
     }

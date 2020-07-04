@@ -20,6 +20,8 @@ const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const AddModule = (props) => {
+  const current = React.createRef();
+
   const header = (
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
@@ -48,8 +50,9 @@ const AddModule = (props) => {
                     let newList = fullList.filter((item) =>
                       item.name.toLowerCase().includes(search.toLowerCase())
                     );
-                    setParameters(newList);
+                    setModuleList(newList);
                   }}
+                  ref={current}
                 ></TextInput>
               </View>
             </TouchableWithoutFeedback>
@@ -60,9 +63,14 @@ const AddModule = (props) => {
             width={28}
             height={28}
             name="options-2-outline"
-            onPress={() =>
-              props.navigation.navigate("Filter", { moduleList: fullList })
-            }
+            onPress={() => {
+              props.navigation.navigate("Filter", {
+                moduleList: fullList,
+                currentFilters: filterArr,
+                origList: origList,
+              });
+              current.current.clear();
+            }}
           />
         </View>
       </View>
@@ -70,32 +78,38 @@ const AddModule = (props) => {
   );
 
   useEffect(() => {
-    if (props.route.params?.newModules) {
+    if (props.route.params?.currentFilters && props.route.params?.afterFilter) {
+      const newList = props.route.params?.afterFilter;
+      setFullList(newList);
+      setModuleList(newList);
+      setFilterArr(props.route.params?.currentFilters);
+    } else if (
+      props.route.params?.newModules &&
+      props.route.params?.value !== MCcount
+    ) {
+      const arr = props.route.params?.reAddedModules;
       const newList = fullList;
-      const arr = props.route.params?.newModules;
-      let set = new Set(arr);
-      for (const mod of modules) {
-        if (!set.has(mod)) {
-          // console.log(mod);
-          newList.push(mod);
-        }
+      for (let i = 0; i < arr.length; i++) {
+        fullList.push(arr[i]);
+        origList.push(arr[i]);
       }
-      add(set);
-      setOriginalList(newList);
-      setParameters(newList);
+      setFullList(newList);
+      setModuleList(newList);
+      add(props.route.params?.newModules);
       addVal(props.route.params?.value);
     }
-  }, [props.route.params?.newModules, loading]);
+  }, [props.route.params?.newModules, props.route.params?.currentFilters]);
 
-  const [loading, setLoading] = useState(true);
+  const [filterArr, setFilterArr] = useState([]);
   const locationFrom = props.route.params?.item;
-  const [fullList, setOriginalList] = useState(props.moduleList);
-  const [moduleList, setParameters] = useState(props.moduleList);
+  const [origList, setOrigList] = useState(props.moduleList);
+  const [fullList, setFullList] = useState(props.moduleList);
+  const [moduleList, setModuleList] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
   // const [modalVisible, setModalVisible] = useState(false);
   // const [current, setItem] = useState(moduleList[0]);
   // const [split, setSplit] = useState(0);
-  const [modules, add] = useState(new Set()); // modules are stored here
+  const [modules, add] = useState([]); // modules are stored here
   const [search, setSearch] = useState("");
 
   const compute = (taken, notTaken) => {
@@ -128,11 +142,13 @@ Prereq: matched with whatever is planned / take
       }}
       incr={() => {
         addVal(MCcount + valAdded(item));
-        modules.add(item);
+        modules.push(item);
+        add(modules);
         let nextList = moduleList.filter((x) => x.code !== item.code);
         let fl = fullList.filter((x) => x.code !== item.code);
-        setOriginalList(fl);
-        setParameters(nextList);
+        setFullList(fl);
+        setModuleList(nextList);
+        setOrigList(origList.filter((x) => x.code !== x.code));
       }}
     />
   );
@@ -234,12 +250,14 @@ Prereq: matched with whatever is planned / take
       {/* {modal(split, 100 - split)} */}
       <BottomBar
         leftText={`${moduleOrMC}: ${MCcount}`}
+        clearAll={() => null}
         transition={() => {
           props.navigation.navigate("SeeModules", {
-            modDetails: Array.from(modules),
+            modDetails: modules,
             location: locationFrom,
             MC: MCcount,
           });
+          current.current.clear();
         }}
         rightText={"Add modules"}
         size={"33%"}

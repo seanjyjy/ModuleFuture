@@ -192,6 +192,7 @@ const Records = ({ navigation }) => {
         leftChildren={<View />}
         rightChildren={renderOverflowMenuAction()}
       />
+      {selector()}
     </View>
   );
 };

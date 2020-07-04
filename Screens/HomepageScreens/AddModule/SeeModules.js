@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import { useIsFocused } from "@react-navigation/native";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -17,18 +16,18 @@ const height = Dimensions.get("window").height;
 const SeeModules = ({ navigation, route }) => {
   const [modArr, setModArr] = useState([]);
   const [MCcount, setMCcount] = useState(0);
+  const [arr, setArr] = useState([]);
   const text =
     route.params.location === "AddPlan" ? "Total MCs: " : "Total modules: ";
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (route.params?.modDetails) {
       setModArr(route.params?.modDetails);
       setMCcount(route.params?.MC);
     }
-  }, [isFocused, route.params?.modDetails]);
+  }, [route.params?.modDetails]);
 
-  const holders = (name, code, mc) => (
+  const holders = (item) => (
     <View style={styles.headerText}>
       <View style={{ width: width * 0.7 }}>
         <Text
@@ -38,7 +37,7 @@ const SeeModules = ({ navigation, route }) => {
             color: "#232323",
           }}
         >
-          {`${name}`}
+          {`${item.name}`}
         </Text>
       </View>
       <Icon
@@ -47,9 +46,12 @@ const SeeModules = ({ navigation, route }) => {
         height={17}
         fill="#232323"
         onPress={() => {
-          const newList = modArr.filter((x) => x.code !== code);
+          const newList = modArr.filter((x) => x.code !== item.code);
           setModArr(newList);
-          setMCcount(MCcount - (text === "Total MCs: " ? mc : 1));
+          setMCcount(MCcount - (text === "Total MCs: " ? item.MC : 1));
+          let current = arr;
+          current.push(item);
+          setArr(current);
         }}
       />
     </View>
@@ -62,6 +64,7 @@ const SeeModules = ({ navigation, route }) => {
           navigation.navigate("AddModule", {
             newModules: modArr,
             value: MCcount,
+            reAddedModules: arr,
           })
         }
         style={styles.flexOneCenterFlexEnd}
@@ -160,7 +163,7 @@ const SeeModules = ({ navigation, route }) => {
         <FlatList
           data={modArr}
           keyExtractor={(item) => item.code}
-          renderItem={({ item }) => holders(item.name, item.code, item.MC)}
+          renderItem={({ item }) => holders(item)}
           ListFooterComponent={
             <Text
               style={{

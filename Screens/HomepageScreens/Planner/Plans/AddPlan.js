@@ -6,7 +6,6 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  interpolate,
   FlatList,
   ImageBackground,
   Alert,
@@ -15,7 +14,6 @@ import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
 import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
-import { CommonActions } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FirebaseDB from "../../../../FirebaseDB";
 

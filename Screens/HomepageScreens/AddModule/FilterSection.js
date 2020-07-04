@@ -11,7 +11,15 @@ import FilterItem from "../../../Component/FilterItem";
 
 const FilterSection = (props) => {
   const textWithIcon1 = (name) => (
-    <FilterItem text={name} box={true} reset={props.reset} />
+    <FilterItem
+      text={name}
+      box={true}
+      reset={props.reset}
+      click={(name, bool) => {
+        props.click(name, bool);
+      }}
+      filterSet={props.filterSet}
+    />
   );
   const convert = (text) =>
     text === "Level"

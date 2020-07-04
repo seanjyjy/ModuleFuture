@@ -16,12 +16,18 @@ const FilterItem = (props) => {
   if (toggled && props.reset) {
     setToggle(false);
   }
+  if (!toggled && props.filterSet.has(props.text)) {
+    setToggle(true);
+  }
 
   return (
     <TouchableOpacity
       style={styles.main}
       activeOpacity={0.65}
-      onPress={() => setToggle(!toggled)}
+      onPress={() => {
+        setToggle(!toggled);
+        props.click(props.text, !toggled);
+      }}
     >
       <View style={{ width: "88%" }}>
         <Text

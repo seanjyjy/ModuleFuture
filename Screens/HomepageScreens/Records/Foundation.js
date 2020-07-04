@@ -23,7 +23,7 @@ const Foundation = ({ navigation, route }) => {
       for (let i = 0; i < receivedArr.length; i++) {
         tempArr.push({
           key: keyTobe.toString(),
-          name: receivedArr[i].code + " " + receivedArr[i].name,
+          name: receivedArr[i].name,
           grade: "",
           sem: "",
           taken: false,
