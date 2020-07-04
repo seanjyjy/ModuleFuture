@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,7 @@ import FilterItem from "../../../Component/FilterItem";
 import FilterSection from "./FilterSection";
 import { useSafeArea } from "react-native-safe-area-context";
 
+export const TodosDispatch = React.createContext(null);
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
@@ -234,27 +235,6 @@ const Filter = ({ navigation, route }) => {
     { name: "Yale-NUS College" },
   ];
 
-  const handleClick = (name, bool, category) => {
-    if (bool) {
-      filterArr.push({ name: name, cat: category });
-      setFilterArr(filterArr);
-      addFilter(name, category);
-    } else {
-      const newArr = filterArr.filter((x) => x.name !== name);
-      setFilterArr(newArr);
-      filterAll(newArr);
-    }
-    update(numConversion(tempList.length));
-  };
-
-  const filterAll = (filters) => {
-    tempList = fullList;
-    setList(fullList);
-    for (let i = 0; i < filters.length; i++) {
-      addFilter(filters[i].name, filters[i].cat);
-    }
-  };
-
   const addFilter = (name, cat) => {
     try {
       if (cat === "S/U Option") {
@@ -302,28 +282,53 @@ const Filter = ({ navigation, route }) => {
     }
   };
 
+  const filterAll = (filters) => {
+    tempList = fullList;
+    setList(fullList);
+    for (let i = 0; i < filters.length; i++) {
+      addFilter(filters[i].name, filters[i].cat);
+    }
+  };
+
+  const handleClick = (name, bool, category) => {
+    if (bool) {
+      filterArr.push({ name: name, cat: category });
+      setFilterArr(filterArr);
+      addFilter(name, category);
+    } else {
+      const newArr = filterArr.filter((x) => x.name !== name);
+      setFilterArr(newArr);
+      filterAll(newArr);
+    }
+    update(numConversion(tempList.length));
+  };
+
+  const reducer = (state, action) => {
+    handleClick(action.name, action.state, action.cat);
+  };
+  const [state, dispatch] = useReducer(reducer);
+
   const textWithIcon2 = (name) => (
-    <FilterItem
-      text={name}
-      box={false}
-      click={(name, bool) => {
-        handleClick(name, bool, name);
-      }}
-      reset={clearFilters}
-      filterSet={filterSet}
-    />
+    <TodosDispatch.Provider value={dispatch}>
+      <FilterItem
+        text={name}
+        category={name}
+        box={false}
+        reset={clearFilters}
+        filterSet={filterSet}
+      />
+    </TodosDispatch.Provider>
   );
 
   const filterSection = (array, category) => (
-    <FilterSection
-      array={array}
-      name={category}
-      reset={clearFilters}
-      click={(name, bool) => {
-        handleClick(name, bool, category);
-      }}
-      filterSet={filterSet}
-    />
+    <TodosDispatch.Provider value={dispatch}>
+      <FilterSection
+        array={array}
+        name={category}
+        reset={clearFilters}
+        filterSet={filterSet}
+      />
+    </TodosDispatch.Provider>
   );
 
   const otherSection = (

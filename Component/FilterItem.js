@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,9 +9,11 @@ import {
 import { globalFontStyles } from "./GlobalFont";
 import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
 import { Icon } from "react-native-eva-icons";
+import { TodosDispatch } from "../Screens/HomepageScreens/AddModule/Filter";
 
 const FilterItem = (props) => {
   const [toggled, setToggle] = useState(false);
+  const dispatch = useContext(TodosDispatch);
 
   if (toggled && props.reset) {
     setToggle(false);
@@ -26,7 +28,7 @@ const FilterItem = (props) => {
       activeOpacity={0.65}
       onPress={() => {
         setToggle(!toggled);
-        props.click(props.text, !toggled);
+        dispatch({ name: props.text, cat: props.category, state: !toggled });
       }}
     >
       <View style={{ width: "88%" }}>
