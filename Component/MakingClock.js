@@ -163,6 +163,9 @@ const ChoosingOptions = ({ route }) => {
                   course: route.params?.item[1],
                   yearOfMatri: yearValue(parseInt(index1)),
                   expectedSemGrad: semValue(parseInt(index2)),
+                  TargetCAP: 5,
+                  totalMCs: 160,
+                  CapArray: [],
                 };
                 const userRef = FirebaseDB.firestore().collection("users");
                 userRef

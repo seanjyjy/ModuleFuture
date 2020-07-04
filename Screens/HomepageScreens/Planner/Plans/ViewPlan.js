@@ -43,6 +43,7 @@ const ViewPlan = ({ route }) => {
   const [arr4, setarr4] = useState([]);
   const [userID, setUserID] = useState("");
   const [userRef, setUserRef] = useState("");
+  const [userDetails, setUserDetails] = useState([]);
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
@@ -68,11 +69,17 @@ const ViewPlan = ({ route }) => {
           (val) => setarr4(val)
         );
         setUserID(route.params?.item[1]);
-        setUserRef(
-          FirebaseDB.firestore()
-            .collection("users")
-            .doc(userIDextractor(route.params?.item[1]))
-        );
+        const userRef = FirebaseDB.firestore()
+          .collection("users")
+          .doc(userIDextractor(route.params?.item[1]));
+        setUserRef(userRef);
+        userRef
+          .get()
+          .then((document) => {
+            const val = document.data();
+            setUserDetails(val);
+          })
+          .catch((error) => alert(error));
       }
     }
   }, [route.params?.item]);
@@ -222,7 +229,9 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate("ProgressPage", {
-              usersDetails: userIDextractor(docLoc),
+              usersDetails: userDetails,
+              from: "ViewPlan",
+              userID: userID,
             }),
           400
         );

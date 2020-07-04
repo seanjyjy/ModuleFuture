@@ -7,15 +7,15 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-
 import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
+import FirebaseDB from "../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ProgressPageSettings = ({ navigation }) => {
-  //const [NumInterval, setNumInterval] = useState(4);
+const ProgressPageSettings = ({ navigation, route }) => {
+  const userID = route.params?.userID;
   const [totalMCs, setTotalMCs] = useState(160);
   const [TargetCAP, setTargetCAP] = useState(5);
 
@@ -70,8 +70,16 @@ const ProgressPageSettings = ({ navigation }) => {
         </View>
         <TouchableOpacity
           onPress={() => {
+            const usersRef = FirebaseDB.firestore()
+              .collection("users")
+              .doc(userID);
+            usersRef.update({
+              totalMCs: parseInt(totalMCs),
+              TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
+            });
             navigation.navigate("ProgressPage", {
               items: [totalMCs, TargetCAP],
+              from: "ProgressPageSettings",
             });
           }}
           activeOpacity={0.9}
