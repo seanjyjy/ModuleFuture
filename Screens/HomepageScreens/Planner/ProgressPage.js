@@ -23,9 +23,7 @@ const ProgressPage = ({ navigation, route }) => {
   const [showGraph, setShowGraph] = useState(false);
   const [OverallData, setOverallData] = useState([]);
   useEffect(() => {
-    console.log("Came here!");
     if (route.params?.items) {
-      console.log("did i come here after settings?");
       setMCprogressTotal(route.params?.items[0]);
       setcapGoalDenominator(route.params?.items[1]);
       setProgress(

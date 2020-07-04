@@ -171,7 +171,7 @@ const Records = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
-        leftChildren={<View />}
+        leftChildren={null}
         rightChildren={renderOverflowMenuAction()}
       />
       {selector()}
