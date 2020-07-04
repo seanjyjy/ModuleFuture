@@ -25,7 +25,7 @@ const ContentPage = (props) => {
   const isFocused = useIsFocused();
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
-  const [CapArray, setCapArray] = useState([]);
+  const [userDetails, setUserDetails] = useState([]);
   const num = (val) => {
     return val === "Y3S1"
       ? 4
@@ -57,7 +57,7 @@ const ContentPage = (props) => {
   useEffect(() => {
     const unsub = userInfo.doc(userID).onSnapshot((document) => {
       const val = document.data().expectedSemGrad;
-      setCapArray(document.data().CapArray);
+      setUserDetails(document.data());
       let tempArr = [];
       for (let i = 0; i <= num(val); i++) {
         tempArr.push(Menu[i]);
@@ -109,7 +109,7 @@ const ContentPage = (props) => {
                     item: [title, docLoc, size, fromWhere, dataArray],
                   });
                 } else {
-                  alert("You have no select a favourite plan yet!");
+                  alert("You have not selected a favourite plan yet!");
                 }
               }}
             />
@@ -142,8 +142,11 @@ const ContentPage = (props) => {
           >
             <TouchableOpacity
               onPress={() => {
-                console.log(CapArray);
-                navigation.navigate("ProgressPage", { usersDetails: CapArray });
+                navigation.navigate("ProgressPage", {
+                  usersDetails: userDetails,
+                  from: "ContentPage",
+                  userID: userID,
+                });
               }}
               style={{ width: 50, height: 50 }}
             >
