@@ -18,7 +18,7 @@ export const Y3S1 = ({ route }) => (
   <Plans headerTitle="Y3S1" data={route.params?.item}></Plans>
 );
 export const Y3S2 = ({ route }) => (
-  <Plans headerTitle="Y3S1" data={route.params?.item}></Plans>
+  <Plans headerTitle="Y3S2" data={route.params?.item}></Plans>
 );
 export const Y4S1 = ({ route }) => (
   <Plans headerTitle="Y4S1" data={route.params?.item}></Plans>

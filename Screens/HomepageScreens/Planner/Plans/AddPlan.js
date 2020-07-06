@@ -185,7 +185,9 @@ const AddPlan = ({ route }) => {
               NumMcs: data[i].NumMcs,
             });
             semSum += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
-            semMc += data[i].NumMcs;
+            if (data[i].FinalGrade !== "S") {
+              semMc += data[i].NumMcs;
+            }
           }
           semCap = parseFloat((semSum / semMc).toFixed(2));
           let totalSum = 0;
@@ -200,7 +202,6 @@ const AddPlan = ({ route }) => {
           if (val !== undefined) {
             let arr = val.usersModulesArray;
             arr = insertionSort(arr);
-            console.log(arr);
             for (let i = 0; i < arr.length; i++) {
               if (arr[i].Semester === fromWhere) {
                 pushed = true;
@@ -253,7 +254,7 @@ const AddPlan = ({ route }) => {
                     OverallCap: parseFloat((semSum / semMc).toFixed(2)),
                     Semester: fromWhere,
                     SemestralMc: semMc,
-                    OverallMc: totalMc,
+                    OverallMc: semMc,
                   },
                 ],
               },
@@ -315,13 +316,14 @@ const AddPlan = ({ route }) => {
       nameOfPlan: planNameValue,
       planInfo: data,
       fromWhere: fromWhere,
+      amIfavourite: false,
     });
 
     // ----------------figure out how to reset the data!--------------------------------------------------------------------------------
     const newArr = data.map((x) => x);
     setData([]);
     return navigation.navigate("ViewPlan", {
-      item: [planNameValue, docLoc, size, fromWhere, newArr],
+      item: [planNameValue, docLoc, size, fromWhere, newArr, false],
     });
   };
 

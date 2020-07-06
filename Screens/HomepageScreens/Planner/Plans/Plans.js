@@ -460,6 +460,7 @@ const Plans = (props) => {
                   if (info !== undefined) {
                     const moduleInformations = info.planInfo;
                     const thisPlanName = info.nameOfPlan;
+                    const amIfavourite = info.amIfavourite;
                     navigation.navigate("ViewPlan", {
                       item: [
                         thisPlanName,
@@ -467,6 +468,7 @@ const Plans = (props) => {
                         size,
                         fromWhere,
                         moduleInformations,
+                        amIfavourite,
                       ],
                     });
                   }

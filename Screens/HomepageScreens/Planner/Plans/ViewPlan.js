@@ -4,21 +4,17 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  TouchableOpacity,
-  ImageBackground,
   FlatList,
   Animated,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import EntypoIcon from "react-native-vector-icons/Entypo";
-import AntIcon from "react-native-vector-icons/AntDesign";
 import { Avatar } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { useSafeArea } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import Icon from "react-native-vector-icons/FontAwesome";
 import Modal from "react-native-modal";
 import FirebaseDB from "../../../../FirebaseDB";
 import Tabs from "./Tabs";
@@ -53,6 +49,7 @@ const ViewPlan = ({ route }) => {
       setSize(route.params?.item[2]);
       setFromWhere(route.params?.item[3]);
       setTitle(route.params?.item[0]);
+      setfavourite(route.params?.item[5]);
       //whatsTheCurrentSem(docLoc);
       if (route.params?.item[1] && route.params?.item[3]) {
         setUserID(userIDextractor(route.params?.item[1]));
@@ -216,7 +213,10 @@ const ViewPlan = ({ route }) => {
       iconStyle={{ right: 3 }}
       func={() => {
         setModalVisible(false);
-        setTimeout(() => navigation.navigate("Content Page"), 400);
+        setTimeout(
+          () => navigation.navigate("Content Page", { item: [] }),
+          400
+        );
       }}
     />
   );
@@ -448,6 +448,15 @@ const ViewPlan = ({ route }) => {
       { merge: true }
     );
   };
+  const unLoadData = async () => {
+    userRef.set(
+      {
+        favPlanInfo: [],
+        favPlanArray: [],
+      },
+      { merge: true }
+    );
+  };
   const emptyHeart = (
     <FontisoIcon
       size={25}
@@ -468,6 +477,7 @@ const ViewPlan = ({ route }) => {
       color="#FFF8DC"
       onPress={() => {
         setfavourite(false);
+        unLoadData();
       }}
     />
   );

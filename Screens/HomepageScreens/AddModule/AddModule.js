@@ -242,6 +242,7 @@ Prereq: matched with whatever is planned / take
       {header}
       <View style={{ marginBottom: 200 }}>
         <FlatList
+          keyboardShouldPersistTaps="always"
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
           data={moduleList}
           keyExtractor={(item) => item.code}

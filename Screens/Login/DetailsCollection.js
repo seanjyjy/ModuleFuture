@@ -184,7 +184,7 @@ const DetailsCollection = ({ route }) => {
 const styles = StyleSheet.create({
   shape: {
     width: 0.95 * width,
-    height: 0.09 * height,
+    height: 0.085 * height,
     borderRadius: 40,
     borderColor: "#364F6B",
     borderWidth: 1,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   newShape: {
     margin: 10,
     width: 0.95 * width,
-    height: 0.09 * height,
+    height: 0.085 * height,
     borderRadius: 40,
     borderColor: "#364F6B",
     borderWidth: 1,
