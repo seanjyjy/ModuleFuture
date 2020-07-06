@@ -57,7 +57,6 @@ const AddPlan = ({ route }) => {
           TargetGrade: "",
           NumMcs: receivedArr[i].MC,
           FinalGrade: "",
-          suOption: receivedArr[i].suOption,
         });
         keyTobe++;
       }

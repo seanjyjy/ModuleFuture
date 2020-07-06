@@ -1,7 +1,7 @@
 import moduleInfo from "./ModuleInfo.json";
 import moduleList from "./ModuleList.json";
 
-const ModuleListWithKey = (item) => {
+const ModuleListWithKey = () => {
   const noExam = (item) => {
     if (item.length === 2) {
       if (item[0]?.examDuration || item[1]?.examDuration) {
@@ -29,7 +29,9 @@ const ModuleListWithKey = (item) => {
   const firstDigit = (item) => {
     let i = 0;
     for (; item[i] < "0" || item[i] > "9"; i++) {}
-    return parseInt(item.charAt(i));
+    const level = parseInt(item.charAt(i));
+    const modCode = item.substring(0, i);
+    return [modCode, level];
   };
 
   let arr = [];
@@ -39,13 +41,19 @@ const ModuleListWithKey = (item) => {
   for (; i < moduleInfo.length; i++) {
     current = moduleInfo[i];
     if (current.semesterData.length !== 0) {
+      codeArr = firstDigit(current.moduleCode);
       arr[k] = {
         code: current.moduleCode, // string
         title: current.title, // string
         name: current.moduleCode + " " + current.title,
-        Level: firstDigit(current.moduleCode) * 1000,
+        lowerCasedName: (
+          current.moduleCode +
+          " " +
+          current.title
+        ).toLowerCase(),
+        codePrefix: codeArr[0],
+        Level: codeArr[1] * 1000,
         MC: parseInt(current.moduleCredit), // number
-        Department: current.department, // string
         suOption: hasSu(current), // boolean
         Semester: new Set(moduleList[k].semesters), // array
         noExam: noExam(current.semesterData), // boolean
@@ -53,7 +61,6 @@ const ModuleListWithKey = (item) => {
       k++;
     }
   }
-  // item.
   return arr;
 };
 
