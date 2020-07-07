@@ -40,7 +40,7 @@ const ViewPlan = ({ route }) => {
   const [userID, setUserID] = useState("");
   const [userRef, setUserRef] = useState("");
   const [semList, setSemList] = useState([]);
-  const [userDetails, setUserDetails] = useState([]);
+  const [usersDetails, setUsersDetails] = useState([]);
   const [arrToUse, setArrToUse] = useState([]);
   useEffect(() => {
     if (route.params?.item) {
@@ -61,50 +61,47 @@ const ViewPlan = ({ route }) => {
         const userRef = FirebaseDB.firestore()
           .collection("users")
           .doc(userIDextractor(route.params?.item[1]));
-        userRef
-          .get()
-          .then((document) => {
-            const val = document.data();
-            setUserDetails(val);
-            const sem = val.expectedSemGrad;
-            let arrLength = 0;
-            if (calculatorOfSem(sem) <= 5) {
-              setSemList(semListY3S2);
-              arrLength = 6;
-            } else if (calculatorOfSem(sem) <= 7) {
-              setSemList(semListY4S2);
-              arrLength = 8;
-            } else {
-              setSemList(semListY5S2);
-              arrLength = 10;
-            }
-            const arrToUse = whatArrayOfInfoToDisplay(
-              route.params?.item[3],
-              arrLength
-            );
-            setArrToUse(arrToUse);
-            infoExtractor(
-              route.params?.item[1],
-              semList[calculatorOfSem(route.params?.item[3]) % 9],
-              (val) => setarr1(val)
-            );
-            infoExtractor(
-              route.params?.item[1],
-              semListY5S2[arrToUse[0]],
-              (val) => setarr2(val)
-            );
-            infoExtractor(
-              route.params?.item[1],
-              semListY5S2[arrToUse[1]],
-              (val) => setarr3(val)
-            );
-            infoExtractor(
-              route.params?.item[1],
-              semListY5S2[arrToUse[2]],
-              (val) => setarr4(val)
-            );
-          })
-          .catch((error) => alert(error));
+        userRef.onSnapshot((document) => {
+          const val = document.data();
+          setUsersDetails(val);
+          const sem = val.expectedSemGrad;
+          let arrLength = 0;
+          if (calculatorOfSem(sem) <= 5) {
+            setSemList(semListY3S2);
+            arrLength = 6;
+          } else if (calculatorOfSem(sem) <= 7) {
+            setSemList(semListY4S2);
+            arrLength = 8;
+          } else {
+            setSemList(semListY5S2);
+            arrLength = 10;
+          }
+          const arrToUse = whatArrayOfInfoToDisplay(
+            route.params?.item[3],
+            arrLength
+          );
+          setArrToUse(arrToUse);
+          infoExtractor(
+            route.params?.item[1],
+            semList[calculatorOfSem(route.params?.item[3]) % 9],
+            (val) => setarr1(val)
+          );
+          infoExtractor(
+            route.params?.item[1],
+            semListY5S2[arrToUse[0]],
+            (val) => setarr2(val)
+          );
+          infoExtractor(
+            route.params?.item[1],
+            semListY5S2[arrToUse[1]],
+            (val) => setarr3(val)
+          );
+          infoExtractor(
+            route.params?.item[1],
+            semListY5S2[arrToUse[2]],
+            (val) => setarr4(val)
+          );
+        });
       }
     }
   }, [route.params?.item]);
@@ -274,7 +271,7 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate("ProgressPage", {
-              usersDetails: userDetails,
+              usersDetails: usersDetails,
               from: "ViewPlan",
               userID: userID,
             }),
@@ -440,6 +437,26 @@ const ViewPlan = ({ route }) => {
     );
   };
   const loadData = async () => {
+    userRef.get().then((document) => {
+      const val = document.data();
+      const favPlanInfo = val.favPlanInfo;
+      if (favPlanInfo.length > 0) {
+        const plansItselfRef2 = FirebaseDB.firestore()
+          .collection("plansItself")
+          .doc(favPlanInfo[1].concat("_", favPlanInfo[0]));
+        plansItselfRef2.update({
+          amIfavourite: false,
+        });
+      }
+    });
+
+    const plansItselfRef = FirebaseDB.firestore()
+      .collection("plansItself")
+      .doc(docLoc.concat("_", title));
+    plansItselfRef.update({
+      amIfavourite: true,
+    });
+
     userRef.set(
       {
         favPlanInfo: [title, docLoc, size, fromWhere],
@@ -449,6 +466,13 @@ const ViewPlan = ({ route }) => {
     );
   };
   const unLoadData = async () => {
+    const plansItselfRef = FirebaseDB.firestore()
+      .collection("plansItself")
+      .doc(docLoc.concat("_", title));
+    plansItselfRef.update({
+      amIfavourite: false,
+    }),
+      { merge: true };
     userRef.set(
       {
         favPlanInfo: [],

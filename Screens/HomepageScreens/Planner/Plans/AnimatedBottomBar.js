@@ -4,7 +4,10 @@ import { Icon } from "react-native-eva-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const width = Dimensions.get("window").width;
-const AnimatedBottomBar = ({ translateY }) => {
+const AnimatedBottomBar = ({ translateY, dataArray }) => {
+  // console.log("------------");
+  // console.log(dataArray);
+  // console.log("------------");
   const navigation = useNavigation();
   return (
     <Animated.View

@@ -27,9 +27,9 @@ const AddPlan = ({ route }) => {
   const [data, setData] = useState([]);
   const [fromWhere, setFromWhere] = useState("");
   const [block, setBlock] = useState("true");
-  const deleteItem = (modName) => {
+  const deleteItem = (moduleCode) => {
     setData((newData) => {
-      return newData.filter((todo) => todo.moduleName !== modName);
+      return newData.filter((todo) => todo.moduleCode !== moduleCode);
     });
   };
 
@@ -219,10 +219,12 @@ const AddPlan = ({ route }) => {
                   const points = GradeToPoint(
                     arr[i].ModulesDetailsArray[j].FinalGrade
                   );
-                  thisSemMC += mc;
-                  thisSemSum += mc * points;
-                  totalSum += mc * points;
-                  totalMc += mc;
+                  if (arr[i].ModulesDetailsArray[j].FinalGrade !== "S") {
+                    thisSemMC += mc;
+                    thisSemSum += mc * points;
+                    totalSum += mc * points;
+                    totalMc += mc;
+                  }
                 }
               }
               tempArr.push({
@@ -301,17 +303,28 @@ const AddPlan = ({ route }) => {
           }
         })
         .catch((error) => {});
+      const plansArrayRef = FirebaseDB.firestore()
+        .collection("plansArray")
+        .doc(docLoc);
+      plansArrayRef.update({
+        yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
+          key: (size + 1).toString(),
+          nameOfPlan: planNameValue,
+          useInCap: true,
+        }),
+      });
+    } else {
+      const plansArrayRef = FirebaseDB.firestore()
+        .collection("plansArray")
+        .doc(docLoc);
+      plansArrayRef.update({
+        yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
+          key: (size + 1).toString(),
+          nameOfPlan: planNameValue,
+          useInCap: false,
+        }),
+      });
     }
-
-    const plansArrayRef = FirebaseDB.firestore()
-      .collection("plansArray")
-      .doc(docLoc);
-    plansArrayRef.update({
-      yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
-        key: (size + 1).toString(),
-        nameOfPlan: planNameValue,
-      }),
-    });
 
     const plansItself = FirebaseDB.firestore()
       .collection("plansItself")
@@ -414,7 +427,10 @@ const AddPlan = ({ route }) => {
           }}
         />
       </View>
-      <AnimatedBottomBar translateY={translateY}></AnimatedBottomBar>
+      <AnimatedBottomBar
+        translateY={translateY}
+        dataArray={data}
+      ></AnimatedBottomBar>
     </>
   );
 };

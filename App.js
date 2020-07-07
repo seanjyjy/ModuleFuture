@@ -106,6 +106,7 @@ export default function App() {
     await Promise.all([fontAssets, ...imageAssets]);
   };
   useEffect(() => {
+    console.log("----NO SPASM-------");
     const usersRef = FirebaseDB.firestore().collection("users");
     FirebaseDB.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -135,7 +136,7 @@ export default function App() {
     //   } else {
     //     setData({ loading: true });
     //   }
-    // });
+    // });]
   }, []);
 
   return (
