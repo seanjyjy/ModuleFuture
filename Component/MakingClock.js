@@ -5,6 +5,8 @@ import { globalFontStyles } from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
 import BackgroundFaded from "../Screens/Backgrounds/BackgroundFaded";
 import FirebaseDB from "../FirebaseDB";
+import { CS2019Types, CS2019Codes, CS2019Levels } from "../Data/Types";
+
 const height = Dimensions.get("window").height;
 
 const ChoosingOptions = ({ route }) => {
@@ -160,8 +162,8 @@ const ChoosingOptions = ({ route }) => {
                   name: route.params?.item[0].name,
                   password: route.params?.item[0].password,
                   email: route.params?.item[0].email,
-                  course: route.params?.item[1],
-                  yearOfMatri: yearValue(parseInt(index1)),
+                  course: route.params?.item[1], // required
+                  yearOfMatri: yearValue(parseInt(index1)), // required
                   expectedSemGrad: semValue(parseInt(index2)),
                   TargetCAP: 5,
                   totalMCs: 160,
@@ -169,17 +171,31 @@ const ChoosingOptions = ({ route }) => {
                   favPlanArray: [],
                   favPlanInfo: [],
                 };
-                const userRef = FirebaseDB.firestore().collection("users");
-                userRef
-                  .doc(uid)
-                  .set(data)
-                  .then(() => {
-                    setIsLoading(false);
-                  })
-                  .catch((error) => {
-                    setIsLoading(false);
-                    alert(error);
-                  });
+
+                // records
+                const FB = FirebaseDB.firestore();
+                const batch = FB.batch();
+                const courseAndYear = data.course + " " + data.yearOfMatri;
+
+                // typeArray
+                const array = CS2019Types;
+                const typeRef = FB.collection("typeArray").doc(uid);
+                batch.set(typeRef, array);
+
+                // codeArray
+                const array2 = CS2019Codes;
+                const codeRef = FB.collection("codeArray").doc(uid);
+                batch.set(codeRef, array2);
+
+                // levelArray
+                const array3 = CS2019Levels;
+                const levelRef = FB.collection("levelArray").doc(uid);
+                batch.set(levelRef, array3);
+
+                const userRef = FB.collection("users").doc(uid);
+                batch.set(userRef, data);
+
+                batch.commit();
               })
               .catch((error) => {
                 setIsLoading(false);

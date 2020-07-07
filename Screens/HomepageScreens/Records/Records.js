@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Header from "../../../Component/Header";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
@@ -7,13 +8,26 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import ColouredList from "../../../Component/ColouredList";
 import FullView from "../../../Component/FullView";
 
-const Records = ({ navigation }) => {
+const Records = (props) => {
+  useEffect(() => {
+    // if (props.route?.params !== undefined) {
+    // } else {
+    // }
+  }, [isFocused]);
+
+  const isFocused = useIsFocused();
+  const navigation = useNavigation();
+
   // Default states
   const [MCstaken, toggle] = useState(true);
   const [catView, setView] = useState(true);
   const [currentType, changeType] = useState("Type");
-  const [type, setTypeVisible] = useState(false);
+  const [typeSelection, setTypeVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [type, setType] = useState(props.recordsData[0].cat);
+  const [level, setLevel] = useState(props.recordsData[1].cat);
+  const [code, setCode] = useState(props.recordsData[2].cat);
+
   {
     /* --------------------------------------------Ellipsis------------------------------------------------ */
   }
@@ -32,7 +46,7 @@ const Records = ({ navigation }) => {
   };
 
   const toggleTypeMenu = () => {
-    setTypeVisible(!type);
+    setTypeVisible(!typeSelection);
   };
 
   /* --------------------------------------------Selector---------------------------------------- */
@@ -111,7 +125,7 @@ const Records = ({ navigation }) => {
     );
     return (
       <OverflowMenu
-        visible={type}
+        visible={typeSelection}
         anchor={viewType}
         onBackdropPress={toggleTypeMenu}
       >
@@ -137,38 +151,14 @@ const Records = ({ navigation }) => {
   /* --------------------------------------------Content headers------------------------------------------------ */
 
   const text1 = MCstaken ? "MCs taken" : "No. taken";
-  const text2 = MCstaken ? "12 / 28" : "3 / 7";
 
   const menu = () => {
     if (currentType === "Type") {
-      return [
-        { key: 1, name: "Foundation" },
-        { key: 2, name: "Specialisation" },
-        { key: 3, name: "Maths and Sciences" },
-        { key: 4, name: "Depth" },
-        { key: 5, name: "IT Professionalism" },
-        { key: 6, name: "UE" },
-        { key: 7, name: "GEM" },
-      ];
+      return type;
     } else if (currentType === "Level") {
-      return [
-        { key: 1, name: "1000s" },
-        { key: 2, name: "2000s" },
-        { key: 3, name: "3000s" },
-        { key: 4, name: "4000s" },
-        { key: 5, name: "5000s" },
-        { key: 6, name: "8000s" },
-        { key: 7, name: "8000s" },
-      ];
+      return level;
     } else {
-      return [
-        { key: 1, name: "CS" },
-        { key: 2, name: "MA" },
-        { key: 3, name: "ST" },
-        { key: 4, name: "ES" },
-        { key: 5, name: "IS" },
-        { key: 6, name: "CM" },
-      ];
+      return code;
     }
   };
 
@@ -183,9 +173,7 @@ const Records = ({ navigation }) => {
       <ColouredList
         colors={colors}
         transition={() => navigation.navigate("Foundation")}
-        text1={text1}
-        text2={text2}
-        text3={"4.5"}
+        mcsOrNum={text1}
         array={menu()}
       />
     </View>
@@ -194,7 +182,7 @@ const Records = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
-        leftChildren={<View />}
+        leftChildren={null}
         rightChildren={renderOverflowMenuAction()}
       />
       {selector()}

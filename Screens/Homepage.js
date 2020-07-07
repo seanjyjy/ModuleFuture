@@ -158,7 +158,9 @@ const Homepage = (data) => {
         <Tab.Screen name="Planner">
           {(props) => <Planner {...props} extraData={data.extraData} />}
         </Tab.Screen>
-        <Tab.Screen name="Records" component={Records} />
+        <Tab.Screen name="Records">
+          {(props) => <Records {...props} recordsData={data.recordsData} />}
+        </Tab.Screen>
         <Tab.Screen name="Focus" component={FocusArea} />
         <Tab.Screen name="Module" component={ModulePage} />
         <Tab.Screen name="Profile">

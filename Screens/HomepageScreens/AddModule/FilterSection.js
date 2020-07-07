@@ -54,6 +54,7 @@ const FilterSection = (props) => {
         {props.name}
       </Text>
       <FlatList
+        initialNumToRender={20}
         data={array.slice(0, noOfItems)}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => textWithIcon1(item.name)}

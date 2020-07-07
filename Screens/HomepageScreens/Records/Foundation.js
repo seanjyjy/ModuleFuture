@@ -36,52 +36,31 @@ const Foundation = ({ navigation, route }) => {
 
   const [data, setData] = useState([
     {
-      key: 1,
       name: "CS1101S Programming Methodology",
-      grade: "B+",
-      sem: "Y1S1",
       taken: true,
     },
     {
-      key: 2,
       name: "CS1231S Discrete Structures",
-      grade: "A",
-      sem: "Y1S2",
       taken: true,
     },
     {
-      key: 3,
       name: "CS2030 Programming Methodology II",
-      grade: "A-",
-      sem: "Y1S2",
       taken: true,
     },
     {
-      key: 4,
       name: "CS2040S Data Structures and Algorithms",
-      grade: "",
-      sem: "",
       taken: false,
     },
     {
-      key: 5,
       name: "CS2105 Introduction to Computer Networks",
-      grade: "",
-      sem: "",
       taken: false,
     },
     {
-      key: 6,
       name: "CS2106 Operating Systems",
-      grade: "",
-      sem: "",
       taken: false,
     },
     {
-      key: 7,
       name: "CS3230 Design and Analysis of Algorithms",
-      grade: "",
-      sem: "",
       taken: false,
     },
   ]);
@@ -148,7 +127,7 @@ const Foundation = ({ navigation, route }) => {
       </View>
       <FlatList
         data={data}
-        keyExtractor={(item) => item.key.toString()}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) =>
           holders(item.name, item.grade, item.sem, item.taken)
         }
