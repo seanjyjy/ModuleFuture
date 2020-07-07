@@ -16,7 +16,6 @@ import CardWallet from "../../../Component/CardWallet";
 import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { Menu } from "../../../Data/CardList";
 import FirebaseDB from "../../../FirebaseDB";
-import { set } from "react-native-reanimated";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);

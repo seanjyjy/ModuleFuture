@@ -5,7 +5,6 @@ import {
   View,
   Dimensions,
   FlatList,
-  Animated,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
@@ -56,7 +55,7 @@ const AddModule = (props) => {
                       (item) =>
                         item.lowerCasedName.indexOf(text.toLowerCase()) !== -1
                     );
-                    setModuleList(new Set(newList));
+                    setModuleList(newList);
                   }}
                   ref={current}
                 ></TextInput>
@@ -247,7 +246,7 @@ Prereq: matched with whatever is planned / take
         <FlatList
           keyboardShouldPersistTaps="always"
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
-          data={Array.from(moduleList)}
+          data={moduleList}
           extraData={modules}
           keyExtractor={(item) => item.code}
           renderItem={({ item }) => holders(item)}

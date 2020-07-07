@@ -44,7 +44,6 @@ const ModuleListWithKey = () => {
       codeArr = firstDigit(current.moduleCode);
       arr[k] = {
         code: current.moduleCode, // string
-        title: current.title, // string
         name: current.moduleCode + " " + current.title,
         lowerCasedName: (
           current.moduleCode +

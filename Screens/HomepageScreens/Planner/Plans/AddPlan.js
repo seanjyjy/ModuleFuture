@@ -53,9 +53,12 @@ const AddPlan = ({ route }) => {
           key: keyTobe.toString(),
           clash: false,
           moduleCode: receivedArr[i].code,
-          title: receivedArr[i].title,
-          TargetGrade: "",
+          name: receivedArr[i].name,
+          codePrefix: receivedArr[i].codePrefix,
+          Level: receivedArr[i].Level,
+          suOption: receivedArr[i].suOption,
           NumMcs: receivedArr[i].MC,
+          TargetGrade: "",
           FinalGrade: "",
         });
         keyTobe++;
@@ -179,9 +182,11 @@ const AddPlan = ({ route }) => {
           for (let i = 0; i < data.length; i++) {
             modulesDetailsArray.push({
               moduleCode: data[i].moduleCode,
-              moduleName: data[i].title,
+              moduleName: data[i].name,
               FinalGrade: data[i].FinalGrade,
               NumMcs: data[i].NumMcs,
+              Level: data[i].Level,
+              codePrefix: data[i].codePrefix,
             });
             semSum += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
             if (data[i].FinalGrade !== "S") {
