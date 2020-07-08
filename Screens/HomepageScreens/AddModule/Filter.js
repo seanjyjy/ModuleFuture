@@ -481,7 +481,7 @@ const Filter = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       {header}
-      <View style={{ marginBottom: height * 0.25, width: "83.6%" }}>
+      <View style={{ marginBottom: height * 0.21, width: "83.6%" }}>
         <FlatList
           ListHeaderComponent={FilterHeader}
           ListFooterComponent={otherSection}

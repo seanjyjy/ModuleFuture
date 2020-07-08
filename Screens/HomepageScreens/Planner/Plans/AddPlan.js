@@ -9,6 +9,7 @@ import {
   FlatList,
   ImageBackground,
   Alert,
+  ToastAndroid,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
@@ -104,6 +105,33 @@ const AddPlan = ({ route }) => {
     return truth;
   };
 
+  const yearExtractor = (val) => {
+    const len = val.length;
+    return val.substring(len - 4);
+  };
+
+  const searchSem = (val) => {
+    if (val === "Y1S2") {
+      return "Y1S1";
+    } else if (val === "Y2S1") {
+      return "Y1S2";
+    } else if (val === "Y2S2") {
+      return "Y2S1";
+    } else if (val === "Y3S1") {
+      return "Y2S2";
+    } else if (val === "Y3S2") {
+      return "Y3S1";
+    } else if (val === "Y4S1") {
+      return "Y3S2";
+    } else if (val === "Y4S2") {
+      return "Y4S1";
+    } else if (val === "Y5S1") {
+      return "Y4S2";
+    } else {
+      return "Y5S1";
+    }
+  };
+
   const GradeToPoint = (val) => {
     return val === "A+" || val === "A"
       ? 5.0
@@ -163,9 +191,17 @@ const AddPlan = ({ route }) => {
     return arr;
   };
 
+  const lettersChecker = (val) => {
+    if (val !== "S" && val !== "CS" && val !== "CU") {
+      return true;
+    } else {
+      return false;
+    }
+  };
   const nextPage = () => {
     if (FinalGradesEntered(data)) {
       let semCap = 0;
+      // -----------------UPDATING USERS MODULES DETAILS HERE  && USERS CAP ARRAY -------------------------------------------------
       const usersModulesDetailsRef = FirebaseDB.firestore()
         .collection("usersModulesDetails")
         .doc(userIDextractor(docLoc));
@@ -179,6 +215,7 @@ const AddPlan = ({ route }) => {
           const modulesDetailsArray = [];
           let semSum = 0;
           let semMc = 0;
+          let semTotalMc = 0;
           for (let i = 0; i < data.length; i++) {
             modulesDetailsArray.push({
               moduleCode: data[i].moduleCode,
@@ -189,63 +226,103 @@ const AddPlan = ({ route }) => {
               codePrefix: data[i].codePrefix,
             });
             semSum += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
-            if (data[i].FinalGrade !== "S") {
+            if (lettersChecker(data[i].FinalGrade)) {
               semMc += data[i].NumMcs;
             }
+            semTotalMc += data[i].NumMcs;
           }
           semCap = parseFloat((semSum / semMc).toFixed(2));
-          let totalSum = 0;
-          let totalMc = 0;
+          let totalSum = 0; // total CAP SUM
+          let totalMc = 0; // total MC
+          let totalMcUsedInCap = 0; // MC that are used in overall calculation
           let pushed = false;
           let tempArr = [];
           const usersRef = FirebaseDB.firestore()
             .collection("users")
             .doc(userIDextractor(docLoc));
+
           let thisSemSum = 0;
-          let thisSemMC = 0;
+          let thisSemMc = 0;
+          let thisSemMcUsedInCap = 0;
           if (val !== undefined) {
             let arr = val.usersModulesArray;
+            let DontexistBeforeInOldArray = true;
+            for (let i = 0; i < arr.length; i++) {
+              if (arr[i].Semester === fromWhere) {
+                DontexistBeforeInOldArray = false;
+                break;
+              }
+            }
+            if (DontexistBeforeInOldArray) {
+              arr.push({ Semester: fromWhere });
+            }
             arr = insertionSort(arr);
+
             for (let i = 0; i < arr.length; i++) {
               if (arr[i].Semester === fromWhere) {
                 pushed = true;
                 totalSum += semSum;
-                totalMc += semMc;
-                thisSemMC += semMc;
                 thisSemSum += semSum;
+
+                totalMc += semTotalMc;
+                thisSemMc += semTotalMc;
+
+                totalMcUsedInCap += semMc;
+                thisSemMcUsedInCap += semMc;
               } else {
                 for (let j = 0; j < arr[i].ModulesDetailsArray.length; j++) {
                   const mc = arr[i].ModulesDetailsArray[j].NumMcs;
                   const points = GradeToPoint(
                     arr[i].ModulesDetailsArray[j].FinalGrade
                   );
-                  if (arr[i].ModulesDetailsArray[j].FinalGrade !== "S") {
-                    thisSemMC += mc;
+                  if (
+                    lettersChecker(arr[i].ModulesDetailsArray[j].FinalGrade)
+                  ) {
                     thisSemSum += mc * points;
                     totalSum += mc * points;
-                    totalMc += mc;
+                    totalMcUsedInCap += mc;
+                    thisSemMcUsedInCap += mc;
                   }
+                  thisSemMc += mc;
+                  totalMc += mc;
                 }
               }
               tempArr.push({
-                SemestralCap: parseFloat((thisSemSum / thisSemMC).toFixed(2)),
-                OverallCap: parseFloat((totalSum / totalMc).toFixed(2)),
                 Semester: arr[i].Semester,
-                SemestralMc: semMc,
+
+                SemestralCap: parseFloat(
+                  (thisSemSum / thisSemMcUsedInCap).toFixed(2)
+                ),
+                OverallCap: parseFloat(
+                  (totalSum / totalMcUsedInCap).toFixed(2)
+                ),
+
+                SemestralMc: thisSemMc,
                 OverallMc: totalMc,
+                TotalMcUsedInCap: totalMcUsedInCap,
+                MCcountedToCap: thisSemMcUsedInCap,
               });
-              thisSemMC = 0;
+              // RESET THE IMPORTANT VALUES
+              thisSemMc = 0;
               thisSemSum = 0;
+              thisSemMcUsedInCap = 0;
             }
             if (!pushed) {
               totalSum += semSum;
-              totalMc += semMc;
+              totalMc += semTotalMc;
+              totalMcUsedInCap += semMc;
               tempArr.push({
-                SemestralCap: semCap,
-                OverallCap: parseFloat((totalSum / totalMc).toFixed(2)),
                 Semester: fromWhere,
-                SemestralMc: semMc,
-                OverallMc: totalMc,
+
+                SemestralCap: semCap,
+                OverallCap: parseFloat(
+                  (totalSum / totalMcUsedInCap).toFixed(2)
+                ),
+
+                SemestralMc: semTotalMc, // semester total MC
+                OverallMc: totalMc, // overall total MC
+                TotalMcUsedInCap: totalMcUsedInCap, //mc that is counted in overall
+                MCcountedToCap: semMc, // mc that is counted in cap
               });
             }
             usersRef.update({
@@ -256,11 +333,15 @@ const AddPlan = ({ route }) => {
               {
                 CapArray: [
                   {
+                    Semester: fromWhere,
+
                     SemestralCap: semCap,
                     OverallCap: parseFloat((semSum / semMc).toFixed(2)),
-                    Semester: fromWhere,
-                    SemestralMc: semMc,
-                    OverallMc: semMc,
+
+                    SemestralMc: semTotalMc,
+                    OverallMc: semTotalMc,
+                    OverallMcCountedToCap: semMc,
+                    MCcountedToCap: semMc,
                   },
                 ],
               },
@@ -303,29 +384,220 @@ const AddPlan = ({ route }) => {
           }
         })
         .catch((error) => {});
-      const plansArrayRef = FirebaseDB.firestore()
-        .collection("plansArray")
-        .doc(docLoc);
-      plansArrayRef.update({
-        yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
-          key: (size + 1).toString(),
-          nameOfPlan: planNameValue,
-          useInCap: true,
-        }),
-      });
-    } else {
-      const plansArrayRef = FirebaseDB.firestore()
-        .collection("plansArray")
-        .doc(docLoc);
-      plansArrayRef.update({
-        yearSem: FirebaseDB.firestore.FieldValue.arrayUnion({
-          key: (size + 1).toString(),
-          nameOfPlan: planNameValue,
-          useInCap: false,
-        }),
-      });
-    }
+      // -----------------UPDATING PLANS ARRAY WITH FINAL GRADE-------------------------------------------------
+      const thisYear = yearExtractor(docLoc);
+      let totalPreviousSum = 0;
+      let totalPreviousMcCounted = 0;
+      let thisPlanSum1 = 0;
+      let thisPlanMc1 = 0;
+      let thisPlanMcUsedInCap1 = 0;
+      let Plannedcap = 0;
+      let theOverallCap = 0;
+      for (let i = 0; i < data.length; i++) {
+        thisPlanSum1 += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
+        if (lettersChecker(data[i].TargetGrade)) {
+          thisPlanMcUsedInCap1 += data[i].NumMcs;
+        }
+        thisPlanMc1 += data[i].NumMcs;
+      }
 
+      if (thisYear !== "Y1S1") {
+        const semToSearch = searchSem(thisYear);
+        const userRef = FirebaseDB.firestore()
+          .collection("users")
+          .doc(userIDextractor(docLoc));
+        userRef
+          .get()
+          .then((document) => {
+            const val = document.data();
+            const arr = val.CapArray;
+            for (let i = 0; i < arr.length; i++) {
+              if (arr[i].Semester === semToSearch) {
+                totalPreviousMcCounted += arr[i].MCcountedToCap;
+                totalPreviousSum += arr[i].MCcountedToCap * arr[i].OverallCap;
+              }
+            }
+            theOverallCap = parseFloat(
+              (
+                (thisPlanSum1 + totalPreviousSum) /
+                (thisPlanMcUsedInCap1 + totalPreviousMcCounted)
+              ).toFixed(2)
+            );
+          })
+
+          .catch((error) => {});
+      }
+
+      Plannedcap = parseFloat((thisPlanSum1 / thisPlanMcUsedInCap1).toFixed(2));
+
+      const plansArrayRef = FirebaseDB.firestore()
+        .collection("plansArray")
+        .doc(docLoc);
+
+      plansArrayRef
+        .get()
+        .then((document) => {
+          const val = document.data();
+          const arr = val.yearSem;
+
+          if (arr.length > 0) {
+            let pushed = false;
+            const newPlansArr = [];
+            for (let i = 0; i < arr.length; i++) {
+              if (arr[i].nameOfPlan === planNameValue) {
+                newPlansArr.push({
+                  key: (i + 1).toString(),
+                  nameOfPlan: planNameValue,
+                  useInCap: true,
+                  SemestralCap: Plannedcap,
+                  PlannedCap: 0,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  MCs: thisPlanMc1,
+                  LastUpdated: 0,
+                });
+                pushed = true;
+              } else {
+                newPlansArr.push(arr[i]);
+              }
+            }
+            if (!pushed) {
+              newPlansArr.push({
+                key: (arr.length + 1).toString(),
+                nameOfPlan: planNameValue,
+                useInCap: true,
+                SemestralCap: Plannedcap,
+                PlannedCap: 0,
+                OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                MCs: thisPlanMc1,
+                LastUpdated: 0,
+              });
+            }
+            plansArrayRef.set({
+              yearSem: newPlansArr,
+            });
+          } else {
+            plansArrayRef.set({
+              yearSem: [
+                {
+                  key: (1).toString(),
+                  nameOfPlan: planNameValue,
+                  useInCap: true,
+                  SemestralCap: Plannedcap,
+                  PlannedCap: 0,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  MCs: thisPlanMc1,
+                  LastUpdated: 0,
+                },
+              ],
+            });
+          }
+        })
+        .catch((error) => {});
+    } else {
+      // -----------------UPDATING PLANS ARRAY when no FINAL GRADE -------------------------------------------------
+      const thisYear = yearExtractor(docLoc);
+      let totalPreviousSum = 0;
+      let totalPreviousMcCounted = 0;
+      if (thisYear !== "Y1S1") {
+        const semToSearch = searchSem(thisYear);
+        const userRef = FirebaseDB.firestore()
+          .collection("users")
+          .doc(userIDextractor(docLoc));
+        userRef.get().then((document) => {
+          const val = document.data();
+          const arr = val.CapArray;
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].Semester === semToSearch) {
+              totalPreviousMcCounted = arr[i].MCcountedToCap;
+              totalPreviousSum = arr[i].MCcountedToCap * arr[i].OverallCap;
+              break;
+            }
+          }
+        });
+      }
+      let thisPlanSum = 0;
+      let thisPlanMc = 0;
+      let thisPlanMcUsedInCap = 0;
+      let Plannedcap = 0;
+      let theOverallCap = 0;
+      for (let i = 0; i < data.length; i++) {
+        thisPlanSum += data[i].NumMcs * GradeToPoint(data[i].TargetGrade);
+        if (lettersChecker(data[i].TargetGrade)) {
+          thisPlanMcUsedInCap += data[i].NumMcs;
+        }
+        thisPlanMc += data[i].NumMcs;
+      }
+      Plannedcap = parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2));
+      theOverallCap = parseFloat(
+        (
+          (thisPlanSum + totalPreviousSum) /
+          (thisPlanMcUsedInCap + totalPreviousMcCounted)
+        ).toFixed(2)
+      );
+      const plansArrayRef = FirebaseDB.firestore()
+        .collection("plansArray")
+        .doc(docLoc);
+
+      plansArrayRef
+        .get()
+        .then((document) => {
+          const val = document.data();
+          const arr = val.yearSem;
+          if (arr.length > 0) {
+            let pushed = false;
+            const newPlansArr = [];
+            for (let i = 0; i < arr.length; i++) {
+              if (arr[i].nameOfPlan === planNameValue) {
+                newPlansArr.push({
+                  key: (i + 1).toString(),
+                  nameOfPlan: planNameValue,
+                  useInCap: false,
+                  SemestralCap: 0,
+                  PlannedCap: Plannedcap,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  MCs: thisPlanMc,
+                  LastUpdated: 0,
+                });
+                pushed = true;
+              } else {
+                newPlansArr.push(arr[i]);
+              }
+            }
+            if (!pushed) {
+              newPlansArr.push({
+                key: (arr.length + 1).toString(),
+                nameOfPlan: planNameValue,
+                useInCap: false,
+                SemestralCap: 0,
+                PlannedCap: Plannedcap,
+                OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                MCs: thisPlanMc,
+                LastUpdated: 0,
+              });
+            }
+            plansArrayRef.set({
+              yearSem: newPlansArr,
+            });
+          } else {
+            plansArrayRef.set({
+              yearSem: [
+                {
+                  key: (1).toString(),
+                  nameOfPlan: planNameValue,
+                  useInCap: false,
+                  SemestralCap: 0,
+                  PlannedCap: Plannedcap,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  MCs: thisPlanMc,
+                  LastUpdated: 0,
+                },
+              ],
+            });
+          }
+        })
+        .catch((error) => {});
+    }
+    // -----------------UPDATING PLANSitself array-------------------------------------------------
     const plansItself = FirebaseDB.firestore()
       .collection("plansItself")
       .doc(docLoc.concat("_", planNameValue));
@@ -367,9 +639,15 @@ const AddPlan = ({ route }) => {
       <TouchableOpacity
         onPress={() => {
           if (data.length === 0) {
-            alert("Please choose some modules into your plans");
-          } else if (!TargetGradesFilled(data)) {
-            alert("Please fill in your target grades to advance");
+            Alert.alert(
+              "Notice",
+              "You haven't added any modules into your plan",
+              [{ text: "Cancel", onPress: () => {} }],
+              { cancelable: false }
+            );
+            // alert("Please add some modules into your plans");
+            // } else if (!TargetGradesFilled(data)) {
+            //   alert("Please fill in your target grades to advance");
           } else if (checkMcs(data) && block) {
             Alert.alert(
               "Warning",

@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Ionicon from "react-native-vector-icons/Ionicons";
@@ -140,6 +141,11 @@ const ProgressPage = ({ navigation, route }) => {
   const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
   const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
 
+  const [
+    OverallMCsTakenForThatSemUsedInCap,
+    setOverallMCsTakenForThatSemUsedInCap,
+  ] = useState(0);
+  const [OverAllMcsUsedInCap, setOverallMcsUsedInCap] = useState(0);
   const [OverallMCsTakenForThatSem, setOverallMCsTakenForThatSem] = useState(0);
   const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0); // to be used in the graph?
   const [SemesterCap, setSemesterCap] = useState(0); // to be used in the graph?
@@ -215,11 +221,22 @@ const ProgressPage = ({ navigation, route }) => {
     },
   };
 
-  const ModalData = (index, func1, func2, func3, func4, func5) => {
+  const ModalData = (
+    index,
+    func1,
+    func2,
+    func3,
+    func4,
+    func5,
+    func6,
+    func7
+  ) => {
     func1(OverallData[index].OverallCap);
     func2(OverallData[index].OverallMc);
     func3(OverallData[index].SemestralCap);
     func4(OverallData[index].SemestralMc);
+    func6(OverallData[index].MCcountedToCap);
+    func7(OverallData[index].TotalMcUsedInCap);
     if (index === 0) {
       func5(OverallData[index].OverallCap);
     } else {
@@ -251,13 +268,13 @@ const ProgressPage = ({ navigation, route }) => {
         }}
       >
         <View style={styles.progressTextStyle}>
-          <Text style={{ ...globalFontStyles.NB_15, color: "#2D4056" }}>
+          <Text style={{ ...globalFontStyles.NB_13, color: "#2D4056" }}>
             {props.name}
           </Text>
         </View>
         <View
           style={{
-            flex: 5,
+            flex: 4,
             ...styles.centerMax,
             bottom: 0.005 * height,
           }}
@@ -384,8 +401,24 @@ const ProgressPage = ({ navigation, route }) => {
               extraProps={{ left: 4 }}
             />
             <TextonPopup
-              name="MCs taken"
+              name="Semestral Mc"
               cap={MCsTakenForThatSem}
+              needChangeColor={false}
+              bottom={5}
+              extraProps={{ right: 4 }}
+            />
+          </View>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TextonPopup
+              name={"    Overall Mc \ncounted to CAP"}
+              cap={OverAllMcsUsedInCap}
+              needChangeColor={false}
+              bottom={5}
+              extraProps={{ left: 4 }}
+            />
+            <TextonPopup
+              name={"  Semestral Mc \ncounted to CAP"}
+              cap={OverallMCsTakenForThatSemUsedInCap}
               needChangeColor={false}
               bottom={5}
               extraProps={{ right: 4 }}
@@ -456,7 +489,9 @@ const ProgressPage = ({ navigation, route }) => {
                     (val) => setOverallMCsTakenForThatSem(val),
                     (val) => setSemesterCap(val),
                     (val) => setMCsTakenForThatSem(val),
-                    (val) => setPreviousCap(val)
+                    (val) => setPreviousCap(val),
+                    (val) => setOverallMCsTakenForThatSemUsedInCap(val),
+                    (val) => setOverallMcsUsedInCap(val)
                   );
                   setModalVisible(true);
                 }}
@@ -758,9 +793,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalBox: {
-    backgroundColor: "#F8F8FD",
+    backgroundColor: Platform.OS === "android" ? "#F6F6F6" : "#F8F8FD",
     alignSelf: "center",
-    marginVertical: height * 0.25,
+    marginVertical: height * 0.2,
     width: width * 0.9,
     borderRadius: 25,
   },
@@ -780,7 +815,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderBottomWidth: 1,
-    borderColor: "#E2E6E4",
+    borderColor: Platform.OS === "android" ? "#DDDEDE" : "#E2E6E4",
   },
   TextonPopupStyle: {
     flex: 1,
@@ -789,7 +824,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 0.01 * height,
     borderRadius: 20,
-    backgroundColor: "white",
+    backgroundColor: Platform.OS === "android" ? "#EFF0F8" : "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -797,7 +832,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    elevation: 3,
   },
   holdingGraph: {
     flex: 11,

@@ -244,7 +244,7 @@ Prereq: matched with whatever is planned / take
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
-      <View style={{ marginBottom: 200 }}>
+      <View style={{ marginBottom: 0.25 * height }}>
         <FlatList
           keyboardShouldPersistTaps="always"
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}

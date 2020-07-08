@@ -41,6 +41,12 @@ function RectInfoSelected({
   imageLink,
   idChange,
   nameOfPlan,
+  SemestralCap,
+  OverallCap,
+  MCs,
+  LastUpdated,
+  PlannedCap,
+  useInCap,
 }) {
   return (
     <TouchableOpacity
@@ -60,7 +66,7 @@ function RectInfoSelected({
               {selected ? "Current" : ""}
             </Text>
           </View>
-          <View style={{ flex: 7 }}>
+          <View style={{ flex: 10 }}>
             <View style={{ flex: 1 }}>
               <Text
                 style={{
@@ -80,7 +86,9 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                Semester Cap:
+                {useInCap
+                  ? `Semestral Cap: ${SemestralCap}`
+                  : `Planned Cap: ${PlannedCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -90,7 +98,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                Overall Cap:
+                {`Overall Cap: ${OverallCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -100,7 +108,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                MCs:
+                {`MCs: ${MCs}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -110,7 +118,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                Last Updated:
+                {`Last Updated: ${LastUpdated}`}
               </Text>
             </View>
           </View>
@@ -138,6 +146,7 @@ const Plans = (props) => {
   const [showDustBin, setShowDustBin] = useState(true);
   const [alertText, setAlertText] = useState(false);
   const [alertText1, setAlertText1] = useState(false);
+
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
@@ -146,6 +155,7 @@ const Plans = (props) => {
           const arr = val.yearSem;
           setSize(arr.length);
           setCurrentArr(arr);
+
           if (arr.length === 0) {
             setShowDustBin(false);
           }
@@ -192,6 +202,14 @@ const Plans = (props) => {
     return truth;
   };
 
+  const lettersChecker = (val) => {
+    if (val !== "S" && val !== "CS" && val !== "CU") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const GradeToPoint = (val) => {
     return val === "A+" || val === "A"
       ? 5.0
@@ -229,44 +247,20 @@ const Plans = (props) => {
           <Text style={styles.popoutheader}>Name of Plan</Text>
         </View>
         <View style={{ ...styles.flexOneCenter }}>
-          <View
-            style={{
-              width: 0.4 * width,
-              height: 0.04 * height,
-              borderWidth: 1,
-              borderColor: "#D0CECE",
-              bottom: 5,
-            }}
-          >
+          <View style={styles.textIntputContainerStyle}>
             <TextInput
-              style={{
-                width: 0.4 * width,
-                height: 0.04 * height,
-                left: 5,
-              }}
+              style={styles.textInputStyle}
               placeholder="e.g. Main Plan"
               onChangeText={(val) => setPlanName(val)}
             />
           </View>
           {alertText || alertText1 ? (
             alertText ? (
-              <Text
-                style={{
-                  ...globalFontStyles.OSR_12,
-                  bottom: 4,
-                  color: "#cc0000",
-                }}
-              >
+              <Text style={styles.alertTextStyle}>
                 Please enter a plan name
               </Text>
             ) : (
-              <Text
-                style={{
-                  ...globalFontStyles.OSR_12,
-                  bottom: 4,
-                  color: "#cc0000",
-                }}
-              >
+              <Text style={styles.alertTextStyle}>
                 This plan name exists already!
               </Text>
             )
@@ -274,14 +268,7 @@ const Plans = (props) => {
             <View />
           )}
         </View>
-        <View
-          style={{
-            flex: 1,
-            borderTopWidth: 1,
-            borderColor: "#D0CECE",
-            flexDirection: "row",
-          }}
-        >
+        <View style={styles.holdingCancelAndConfirm}>
           <TouchableOpacity
             onPress={() => {
               Keyboard.dismiss();
@@ -333,23 +320,9 @@ const Plans = (props) => {
     );
   };
 
-  const emptySpace = (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "flex-end",
-        alignItems: "center",
-      }}
-    />
-  );
+  const emptySpace = <View style={styles.dustBinStyle} />;
   const dustBin = (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "flex-end",
-        alignItems: "center",
-      }}
-    >
+    <View style={styles.dustBinStyle}>
       <Icon
         style={{ bottom: 20 }}
         name="trash-2-outline"
@@ -378,9 +351,20 @@ const Plans = (props) => {
                   if (justDelete) {
                     // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAY
                     let tempArr = [];
+                    let tempIndex = 0;
                     for (let i = 0; i < arr.length; i++) {
                       if (arr[i].key !== currentID) {
-                        tempArr.push(arr[i]);
+                        tempArr.push({
+                          LastUpdated: arr[i].LastUpdated,
+                          MCs: arr[i].MCs,
+                          OverallCap: arr[i].OverallCap,
+                          PlannedCap: arr[i].PlannedCap,
+                          SemestralCap: arr[i].SemestralCap,
+                          key: (tempIndex + 1).toString(),
+                          nameOfPlan: arr[i].nameOfPlan,
+                          useInCap: arr[i].useInCap,
+                        });
+                        tempIndex++;
                       }
                     }
                     plansArrayRef.set({ yearSem: tempArr });
@@ -406,12 +390,24 @@ const Plans = (props) => {
                           text: "Continue",
                           onPress: () => {
                             let tempArr = [];
+                            let tempIndex = 0;
                             for (let i = 0; i < arr.length; i++) {
                               if (arr[i].key !== currentID) {
-                                tempArr.push(arr[i]);
+                                tempArr.push({
+                                  LastUpdated: arr[i].LastUpdated,
+                                  MCs: arr[i].MCs,
+                                  OverallCap: arr[i].OverallCap,
+                                  PlannedCap: arr[i].PlannedCap,
+                                  SemestralCap: arr[i].SemestralCap,
+                                  key: (tempIndex + 1).toString(),
+                                  nameOfPlan: arr[i].nameOfPlan,
+                                  useInCap: arr[i].useInCap,
+                                });
+                                tempIndex++;
                               }
                             }
                             plansArrayRef.set({ yearSem: tempArr });
+                            // deletion in plansArray
                             const currentPlanName = arr[pos].nameOfPlan;
 
                             const usersModulesDetailsRef = FirebaseDB.firestore()
@@ -427,48 +423,52 @@ const Plans = (props) => {
                                 const tempArr2 = [];
                                 let totalSum = 0;
                                 let totalMc = 0;
+                                let totalMcUsedInCap = 0;
                                 for (let k = 0; k < arr1.length; k++) {
                                   let semSum = 0;
                                   let semMc = 0;
+                                  let semTotalMcUsedInCap = 0;
                                   if (arr1[k].Semester !== props.headerTitle) {
                                     nextArr.push(arr1[k]);
-                                    for (
-                                      let j = 0;
-                                      j < arr1[k].ModulesDetailsArray.length;
-                                      j++
-                                    ) {
-                                      const mc =
-                                        arr1[k].ModulesDetailsArray[j].NumMcs;
+                                    const refPoint =
+                                      arr1[k].ModulesDetailsArray;
+                                    for (let j = 0; j < refPoint.length; j++) {
+                                      const mc = refPoint[j].NumMcs;
                                       const points = GradeToPoint(
-                                        arr1[k].ModulesDetailsArray[j]
-                                          .FinalGrade
+                                        refPoint[j].FinalGrade
                                       );
                                       if (
-                                        arr1[k].ModulesDetailsArray[j]
-                                          .FinalGrade !== "S"
+                                        lettersChecker(refPoint[j].FinalGrade)
                                       ) {
-                                        semMc += mc;
+                                        semTotalMcUsedInCap += mc;
+                                        totalMcUsedInCap += mc;
                                         semSum += mc * points;
                                         totalSum += mc * points;
-                                        totalMc += mc;
                                       }
+                                      totalMc += mc;
+                                      semMc += mc;
                                     }
                                     tempArr2.push({
                                       SemestralCap: parseFloat(
-                                        (semSum / semMc).toFixed(2)
+                                        (semSum / semTotalMcUsedInCap).toFixed(
+                                          2
+                                        )
                                       ),
                                       OverallCap: parseFloat(
-                                        (totalSum / totalMc).toFixed(2)
+                                        (totalSum / totalMcUsedInCap).toFixed(2)
                                       ),
                                       Semester: arr1[k].Semester,
                                       SemestralMc: semMc,
                                       OverallMc: totalMc,
+                                      MCcountedToCap: semTotalMcUsedInCap,
+                                      TotalMcUsedInCap: totalMcUsedInCap,
                                     });
                                   }
                                   semMc = 0;
                                   semSum = 0;
                                 }
 
+                                // deletion in usersRef
                                 const usersRef = FirebaseDB.firestore()
                                   .collection("users")
                                   .doc(userID);
@@ -476,6 +476,7 @@ const Plans = (props) => {
                                   CapArray: tempArr2,
                                 });
 
+                                //deletion in usersModulesDetailsRef
                                 FirebaseDB.firestore()
                                   .collection("plansItself")
                                   .doc(
@@ -565,6 +566,20 @@ const Plans = (props) => {
               imageLink={(parseInt(item.key) - 1) % 4}
               idChange={(val) => setCurrentlyPressID(val)}
               nameOfPlan={item.nameOfPlan}
+              SemestralCap={
+                currentArr.length > 0
+                  ? currentArr[parseInt(item.key) - 1].SemestralCap
+                  : 0
+              }
+              OverallCap={currentArr[parseInt(item.key) - 1].OverallCap}
+              MCs={
+                currentArr.length > 0
+                  ? currentArr[parseInt(item.key) - 1].MCs
+                  : 0
+              }
+              LastUpdated={"24/04/20 DEMO"}
+              PlannedCap={currentArr[parseInt(item.key) - 1].PlannedCap}
+              useInCap={currentArr[parseInt(item.key) - 1].useInCap}
             />
           )}
         />
@@ -767,5 +782,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 1.0,
     elevation: 2,
+  },
+  textIntputContainerStyle: {
+    width: 0.4 * width,
+    height: 0.04 * height,
+    borderWidth: 1,
+    borderColor: "#D0CECE",
+    bottom: 5,
+  },
+  textInputStyle: {
+    width: 0.4 * width,
+    height: 0.04 * height,
+    left: 5,
+  },
+  alertTextStyle: {
+    ...globalFontStyles.OSR_12,
+    bottom: 4,
+    color: "#cc0000",
+  },
+  holdingCancelAndConfirm: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderColor: "#D0CECE",
+    flexDirection: "row",
+  },
+  dustBinStyle: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 });
