@@ -49,7 +49,7 @@ const Filter = ({ navigation, route }) => {
   const header = (
     <View style={styles.header}>
       <Cross
-        top={19 + useSafeArea().top > 24 ? 10 : 0}
+        top={19 + useSafeArea().top > 24 ? 15 : 0}
         left={20}
         transition={() => navigation.goBack()}
         text={"Filter"}
@@ -481,7 +481,7 @@ const Filter = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       {header}
-      <View style={{ marginBottom: 155, width: "83.6%" }}>
+      <View style={{ marginBottom: height * 0.25, width: "83.6%" }}>
         <FlatList
           ListHeaderComponent={FilterHeader}
           ListFooterComponent={otherSection}

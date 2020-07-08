@@ -110,8 +110,10 @@ const AddModule = (props) => {
     }
   }, [props.route.params?.newModules, props.route.params?.currentFilters]);
 
-  const [filterArr, setFilterArr] = useState([]);
+  // TODO: Tag modules that are already planned in the current plan
+  const modulesPlanned = props.route.params?.modulesPlanned;
   const locationFrom = props.route.params?.item;
+  const [filterArr, setFilterArr] = useState([]);
   const [origList, setOrigList] = useState(new Set(props.moduleList));
   const [fullList, setFullList] = useState(new Set(props.moduleList));
   const [moduleList, setModuleList] = useState(props.moduleList);

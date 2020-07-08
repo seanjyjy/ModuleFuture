@@ -9,6 +9,7 @@ import {
   TextInput,
   ImageBackground,
   Keyboard,
+  Alert,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import Header from "../../../../Component/Header";
@@ -190,6 +191,28 @@ const Plans = (props) => {
     }
     return truth;
   };
+
+  const GradeToPoint = (val) => {
+    return val === "A+" || val === "A"
+      ? 5.0
+      : val === "A-"
+      ? 4.5
+      : val === "B+"
+      ? 4.0
+      : val === "B"
+      ? 3.5
+      : val === "B-"
+      ? 3.0
+      : val === "C+"
+      ? 2.5
+      : val === "C"
+      ? 2.0
+      : val === "D+"
+      ? 1.5
+      : val === "D"
+      ? 1.0
+      : 0;
+  };
   // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
     return (
@@ -341,31 +364,140 @@ const Plans = (props) => {
                 const val = document.data();
                 if (val !== undefined) {
                   const arr = val.yearSem;
-                  const newArr = [];
-                  let keyValue = 0;
+                  let justDelete = false;
+                  let pos = 0;
                   for (let i = 0; i < arr.length; i++) {
-                    if (arr[i].key !== currentID) {
-                      newArr.push({
-                        key: (keyValue + 1).toString(),
-                        nameOfPlan: arr[i].nameOfPlan,
-                      });
-                      keyValue++;
-                    } else {
-                      const currentPlanName = arr[i].nameOfPlan;
-                      FirebaseDB.firestore()
-                        .collection("plansItself")
-                        .doc(
-                          userID.concat(
-                            "_",
-                            props.headerTitle,
-                            "_",
-                            currentPlanName
-                          )
-                        )
-                        .delete();
+                    if (arr[i].key === currentID) {
+                      pos = i;
+                      if (!arr[i].useInCap) {
+                        justDelete = true;
+                        break;
+                      }
                     }
                   }
-                  plansArrayRef.set({ yearSem: newArr });
+                  if (justDelete) {
+                    // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAY
+                    let tempArr = [];
+                    for (let i = 0; i < arr.length; i++) {
+                      if (arr[i].key !== currentID) {
+                        tempArr.push(arr[i]);
+                      }
+                    }
+                    plansArrayRef.set({ yearSem: tempArr });
+                    const currentPlanName = arr[pos].nameOfPlan;
+                    FirebaseDB.firestore()
+                      .collection("plansItself")
+                      .doc(
+                        userID.concat(
+                          "_",
+                          props.headerTitle,
+                          "_",
+                          currentPlanName
+                        )
+                      )
+                      .delete();
+                  } else {
+                    Alert.alert(
+                      "Warning",
+                      "This plan contains the data for your CAP calculation! \n If you're sure you want to remove, press Continue to advance",
+                      [
+                        { text: "Cancel", onPress: () => {} },
+                        {
+                          text: "Continue",
+                          onPress: () => {
+                            let tempArr = [];
+                            for (let i = 0; i < arr.length; i++) {
+                              if (arr[i].key !== currentID) {
+                                tempArr.push(arr[i]);
+                              }
+                            }
+                            plansArrayRef.set({ yearSem: tempArr });
+                            const currentPlanName = arr[pos].nameOfPlan;
+
+                            const usersModulesDetailsRef = FirebaseDB.firestore()
+                              .collection("usersModulesDetails")
+                              .doc(userID);
+
+                            usersModulesDetailsRef
+                              .get()
+                              .then((document) => {
+                                const val = document.data();
+                                const arr1 = val.usersModulesArray;
+                                const nextArr = [];
+                                const tempArr2 = [];
+                                let totalSum = 0;
+                                let totalMc = 0;
+                                for (let k = 0; k < arr1.length; k++) {
+                                  let semSum = 0;
+                                  let semMc = 0;
+                                  if (arr1[k].Semester !== props.headerTitle) {
+                                    nextArr.push(arr1[k]);
+                                    for (
+                                      let j = 0;
+                                      j < arr1[k].ModulesDetailsArray.length;
+                                      j++
+                                    ) {
+                                      const mc =
+                                        arr1[k].ModulesDetailsArray[j].NumMcs;
+                                      const points = GradeToPoint(
+                                        arr1[k].ModulesDetailsArray[j]
+                                          .FinalGrade
+                                      );
+                                      if (
+                                        arr1[k].ModulesDetailsArray[j]
+                                          .FinalGrade !== "S"
+                                      ) {
+                                        semMc += mc;
+                                        semSum += mc * points;
+                                        totalSum += mc * points;
+                                        totalMc += mc;
+                                      }
+                                    }
+                                    tempArr2.push({
+                                      SemestralCap: parseFloat(
+                                        (semSum / semMc).toFixed(2)
+                                      ),
+                                      OverallCap: parseFloat(
+                                        (totalSum / totalMc).toFixed(2)
+                                      ),
+                                      Semester: arr1[k].Semester,
+                                      SemestralMc: semMc,
+                                      OverallMc: totalMc,
+                                    });
+                                  }
+                                  semMc = 0;
+                                  semSum = 0;
+                                }
+
+                                const usersRef = FirebaseDB.firestore()
+                                  .collection("users")
+                                  .doc(userID);
+                                usersRef.update({
+                                  CapArray: tempArr2,
+                                });
+
+                                FirebaseDB.firestore()
+                                  .collection("plansItself")
+                                  .doc(
+                                    userID.concat(
+                                      "_",
+                                      props.headerTitle,
+                                      "_",
+                                      currentPlanName
+                                    )
+                                  )
+                                  .delete();
+                                usersModulesDetailsRef.set({
+                                  usersModulesArray: nextArr,
+                                });
+                              })
+                              .catch((error) => {});
+                          },
+                        },
+                      ],
+                      { cancelable: false }
+                    );
+                  }
                 }
               })
               .catch((error) => alert(error));

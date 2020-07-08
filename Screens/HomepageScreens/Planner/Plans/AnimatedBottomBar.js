@@ -4,7 +4,7 @@ import { Icon } from "react-native-eva-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const width = Dimensions.get("window").width;
-const AnimatedBottomBar = ({ translateY }) => {
+const AnimatedBottomBar = ({ translateY, dataArray }) => {
   const navigation = useNavigation();
   return (
     <Animated.View
@@ -19,7 +19,12 @@ const AnimatedBottomBar = ({ translateY }) => {
         height={70}
         fill={"#FB5581"}
         style={{ bottom: 10 }}
-        onPress={() => navigation.navigate("AddModule", { item: "AddPlan" })}
+        onPress={() =>
+          navigation.navigate("AddModule", {
+            item: "AddPlan",
+            modulesPlanned: dataArray,
+          })
+        }
       />
     </Animated.View>
   );

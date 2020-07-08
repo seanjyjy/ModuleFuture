@@ -24,7 +24,7 @@ const ContentPage = (props) => {
   const isFocused = useIsFocused();
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
-  const [userDetails, setUserDetails] = useState([]);
+  const [usersDetails, setUsersDetails] = useState([]);
 
   const [title, setTitle] = useState("");
   const [docLoc, setDocLoc] = useState("");
@@ -60,48 +60,48 @@ const ContentPage = (props) => {
   const [y, setY] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    if (props.route?.params !== undefined) {
-      const unsub = userInfo.doc(userID).onSnapshot((document) => {
-        const data = document.data();
-        const val = data.expectedSemGrad;
-        setUserDetails(data);
-        if (data.favPlanArray.length > 0 && data.favPlanInfo.length > 0) {
-          setFavPlanArray(data.favPlanArray);
-          setFavPlanInfo(data.favPlanInfo);
-          setTitle(data.favPlanInfo[0]);
-          setDocLoc(data.favPlanInfo[1]);
-          setSize(data.favPlanInfo[2]);
-          setFromWhere(data.favPlanInfo[3]);
-          setDataArray(data.favPlanArray);
-        } else {
-          setFavPlanArray([]);
-          setFavPlanInfo([]);
-        }
-        let tempArr = [];
-        for (let i = 0; i <= num(val); i++) {
-          tempArr.push(Menu[i]);
-        }
-        tempArr.push(Menu[10]);
-        setCardArray(tempArr);
-      });
-      return () => unsub();
-    } else {
-      if (
-        props.extraData.favPlanArray.length > 0 &&
-        props.extraData.favPlanInfo.length > 0
-      ) {
-        setFavPlanArray(props.extraData.favPlanArray);
-        setFavPlanInfo(props.extraData.favPlanInfo);
-        setTitle(props.extraData.favPlanInfo[0]);
-        setDocLoc(props.extraData.favPlanInfo[1]);
-        setSize(props.extraData.favPlanInfo[2]);
-        setFromWhere(props.extraData.favPlanInfo[3]);
-        setDataArray(props.extraData.favPlanArray);
+    //if (props.route?.params !== undefined) {
+    const unsub = userInfo.doc(userID).onSnapshot((document) => {
+      const data = document.data();
+      const val = data.expectedSemGrad;
+      setUsersDetails(data);
+      if (data.favPlanArray.length > 0 && data.favPlanInfo.length > 0) {
+        setFavPlanArray(data.favPlanArray);
+        setFavPlanInfo(data.favPlanInfo);
+        setTitle(data.favPlanInfo[0]);
+        setDocLoc(data.favPlanInfo[1]);
+        setSize(data.favPlanInfo[2]);
+        setFromWhere(data.favPlanInfo[3]);
+        setDataArray(data.favPlanArray);
+      } else {
+        setFavPlanArray([]);
+        setFavPlanInfo([]);
       }
-      setUserDetails(props.extraData);
-      setCardArray(theArray(props.extraData.expectedSemGrad));
-    }
-  }, [isFocused, props.extraData]);
+      let tempArr = [];
+      for (let i = 0; i <= num(val); i++) {
+        tempArr.push(Menu[i]);
+      }
+      tempArr.push(Menu[10]);
+      setCardArray(tempArr);
+    });
+    return () => unsub();
+    // } else {
+    //   if (
+    //     props.extraData.favPlanArray.length > 0 &&
+    //     props.extraData.favPlanInfo.length > 0
+    //   ) {
+    //     setFavPlanArray(props.extraData.favPlanArray);
+    //     setFavPlanInfo(props.extraData.favPlanInfo);
+    //     setTitle(props.extraData.favPlanInfo[0]);
+    //     setDocLoc(props.extraData.favPlanInfo[1]);
+    //     setSize(props.extraData.favPlanInfo[2]);
+    //     setFromWhere(props.extraData.favPlanInfo[3]);
+    //     setDataArray(props.extraData.favPlanArray);
+    //   }
+    //   setUsersDetails(props.extraData);
+    //   setCardArray(theArray(props.extraData.expectedSemGrad));
+    // }
+  }, []);
 
   const onScroll = Animated.event(
     [
@@ -170,7 +170,7 @@ const ContentPage = (props) => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("ProgressPage", {
-                  usersDetails: userDetails,
+                  usersDetails: usersDetails,
                   from: "ContentPage",
                   userID: userID,
                 });
