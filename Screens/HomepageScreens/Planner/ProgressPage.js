@@ -15,6 +15,7 @@ import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
 import Modal from "react-native-modal";
 import FirebaseDB from "../../../FirebaseDB";
+import { set } from "react-native-reanimated";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -24,6 +25,7 @@ const ProgressPage = ({ navigation, route }) => {
   const [showGraph, setShowGraph] = useState(false);
   const [OverallData, setOverallData] = useState([]);
   const [previousCap, setPreviousCap] = useState(0);
+  const [allowClicks, setAllowClicks] = useState(false);
   useEffect(() => {
     if (route.params?.items && route.params?.from === "ProgressPageSettings") {
       const first = route.params?.items[0];
@@ -46,6 +48,7 @@ const ProgressPage = ({ navigation, route }) => {
       );
       setTextToShow(whatText((Math.min(cap, second) / second) * 100));
     }
+
     if (
       route.params?.usersDetails &&
       route.params?.usersDetails.CapArray.length > 0 &&
@@ -106,32 +109,37 @@ const ProgressPage = ({ navigation, route }) => {
               100
           )
         );
-      } else {
-        setLineData({
-          labels: [
-            "Y1S1",
-            "Y1S2",
-            "Y2S1",
-            "Y2S2",
-            "Y3S1",
-            "Y3S2",
-            "Y4S1",
-            "Y4S2",
-          ],
-          datasets: [
-            {
-              data: [0],
-              strokeWidth: 2,
-            },
-          ],
-        });
-        setShowGraph(true);
-        setProgress(0);
-        setProgress2(0);
-        setCircleLeft(whatCircle(0, 0, 160, "#169A7F"));
-        setCircleRight(whatCircle(0, 0, 5, "#B25DE4"));
-        setTextToShow(whatText(0));
       }
+      setAllowClicks(true);
+    } else {
+      setAllowClicks(false);
+      //GET THE DATA FROM THE USERS
+      setLineData({
+        labels: [
+          "Y1S1",
+          "Y1S2",
+          "Y2S1",
+          "Y2S2",
+          "Y3S1",
+          "Y3S2",
+          "Y4S1",
+          "Y4S2",
+          "Y5S1",
+          "Y5S2",
+        ],
+        datasets: [
+          {
+            data: [0],
+            strokeWidth: 2,
+          },
+        ],
+      });
+      setShowGraph(true);
+      setProgress(0);
+      setProgress2(0);
+      setCircleLeft(whatCircle(0, 0, 160, "#169A7F"));
+      setCircleRight(whatCircle(0, 0, 5, "#B25DE4"));
+      setTextToShow(whatText(0));
     }
   }, [route.params?.items, route.params?.usersDetails]);
 
@@ -483,17 +491,19 @@ const ProgressPage = ({ navigation, route }) => {
             {showGraph ? (
               <LineChart
                 onDataPointClick={({ index }) => {
-                  ModalData(
-                    index,
-                    (val) => setOverallCap(val),
-                    (val) => setOverallMCsTakenForThatSem(val),
-                    (val) => setSemesterCap(val),
-                    (val) => setMCsTakenForThatSem(val),
-                    (val) => setPreviousCap(val),
-                    (val) => setOverallMCsTakenForThatSemUsedInCap(val),
-                    (val) => setOverallMcsUsedInCap(val)
-                  );
-                  setModalVisible(true);
+                  if (allowClicks) {
+                    ModalData(
+                      index,
+                      (val) => setOverallCap(val),
+                      (val) => setOverallMCsTakenForThatSem(val),
+                      (val) => setSemesterCap(val),
+                      (val) => setMCsTakenForThatSem(val),
+                      (val) => setPreviousCap(val),
+                      (val) => setOverallMCsTakenForThatSemUsedInCap(val),
+                      (val) => setOverallMcsUsedInCap(val)
+                    );
+                    setModalVisible(true);
+                  }
                 }}
                 data={lineData}
                 width={width * 0.95}

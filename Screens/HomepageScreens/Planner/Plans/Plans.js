@@ -323,12 +323,9 @@ const Plans = (props) => {
   const emptySpace = <View style={styles.dustBinStyle} />;
   const dustBin = (
     <View style={styles.dustBinStyle}>
-      <Icon
-        style={{ bottom: 20 }}
-        name="trash-2-outline"
-        width={30}
-        height={20}
-        fill="#232323"
+      <TouchableOpacity
+        style={styles.tempDustBinHolder}
+        activeOpacity={0.9}
         onPress={() => {
           if (currentArr.length > 0) {
             plansArrayRef
@@ -504,7 +501,9 @@ const Plans = (props) => {
               .catch((error) => alert(error));
           }
         }}
-      />
+      >
+        <Icon name="trash-2-outline" width={30} height={20} fill="#232323" />
+      </TouchableOpacity>
     </View>
   );
   return (
@@ -810,5 +809,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+  tempDustBinHolder: {
+    width: 35,
+    height: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 10,
   },
 });
