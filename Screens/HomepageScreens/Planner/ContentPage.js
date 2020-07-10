@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Animated,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -46,15 +47,6 @@ const ContentPage = (props) => {
       : val === "Y5S1"
       ? 8
       : 9;
-  };
-
-  const theArray = (val) => {
-    const arr = [];
-    for (let i = 0; i <= num(val); i++) {
-      arr.push(Menu[i]);
-    }
-    arr.push(Menu[10]);
-    return arr;
   };
 
   const [y, setY] = useState(new Animated.Value(0));
@@ -136,7 +128,12 @@ const ContentPage = (props) => {
                     item: [title, docLoc, size, fromWhere, dataArray, true],
                   });
                 } else {
-                  alert("You have not selected a favourite plan yet!");
+                  Alert.alert(
+                    "Oops",
+                    "You have not selected a favourite plan yet!",
+                    [{ text: "Cancel", onPress: () => {} }],
+                    { cancelable: false }
+                  );
                 }
               }}
             />
@@ -204,6 +201,16 @@ const ContentPage = (props) => {
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) => {
             return CardWallet(y, item.key.toString(), item.card, () => {
+              const arr = usersDetails.SelectedPlansInfo;
+              let totalMCs = 0;
+              let totalSum = 0;
+              for (let i = 0; i < arr.length; i++) {
+                if (arr[i].Semester === item.PageName) {
+                  break;
+                }
+                totalMCs += arr[i].McUsedInCap;
+                totalSum += arr[i].McUsedInCap * arr[i].Cap;
+              }
               const plansArrayRef = FirebaseDB.firestore()
                 .collection("plansArray")
                 .doc(userID.concat("_", item.PageName));
@@ -213,10 +220,33 @@ const ContentPage = (props) => {
                   const val = document.data();
                   if (val !== undefined) {
                     const arr = val.yearSem;
-                    navigation.navigate(item.PageName, { item: [userID, arr] });
+                    const selected = val.selected;
+                    let infoForNextPage = [];
+                    for (let i = 0; i < arr.length; i++) {
+                      const newTotalMcs = totalMCs + arr[i].MCs;
+                      const newTotalSum = totalSum + arr[i].MCs * arr[i].Cap;
+                      infoForNextPage.push({
+                        SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
+                        OverallCap: parseFloat(
+                          (newTotalSum / newTotalMcs).toFixed(2)
+                        ),
+                        PlannedOverallCap: parseFloat(
+                          (newTotalSum / newTotalMcs).toFixed(2)
+                        ),
+                        PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
+                        MCs: arr[i].MCs,
+                        LastUpdated: arr[i].LastUpdated,
+                        useInCap: arr[i].useInCap,
+                      });
+                    }
+                    return navigation.navigate(item.PageName, {
+                      item: [userID, arr, selected, infoForNextPage],
+                    });
                   } else {
-                    plansArrayRef.set({ yearSem: [] });
-                    navigation.navigate(item.PageName, { item: [userID, []] });
+                    plansArrayRef.set({ yearSem: [], selected: "-1" });
+                    return navigation.navigate(item.PageName, {
+                      item: [userID, [], "-1", []],
+                    });
                   }
                 })
                 .catch((error) => alert(error));

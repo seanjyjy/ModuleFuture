@@ -94,16 +94,38 @@ const AddPlan = ({ route }) => {
     return truth;
   };
 
-  const TargetGradesFilled = (val) => {
-    let truth = true;
-    for (let i = 0; i < val.length; i++) {
-      if (val[i].TargetGrade === "") {
-        truth = false;
-        break;
-      }
-    }
-    return truth;
+  const haveAPastHistory = async (docLoc) => {
+    const plansArrayRef = FirebaseDB.firestore()
+      .collection("plansArray")
+      .doc(docLoc);
+    let isThereAPast = false;
+    let name = "";
+    await plansArrayRef
+      .get()
+      .then((document) => {
+        const val = document.data();
+        const arr = val.yearSem;
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].useInCap && arr[i].nameOfPlan !== planNameValue) {
+            name = arr[i].nameOfPlan;
+            isThereAPast = true;
+            break;
+          }
+        }
+      })
+      .catch((error) => {});
+    return [isThereAPast, name, yearExtractor(docLoc)];
   };
+  // const TargetGradesFilled = (val) => {
+  //   let truth = true;
+  //   for (let i = 0; i < val.length; i++) {
+  //     if (val[i].TargetGrade === "") {
+  //       truth = false;
+  //       break;
+  //     }
+  //   }
+  //   return truth;
+  // };
 
   const yearExtractor = (val) => {
     const len = val.length;
@@ -196,6 +218,27 @@ const AddPlan = ({ route }) => {
       return true;
     } else {
       return false;
+    }
+  };
+  const isThisExtraAlert = (name, year) => {
+    Alert.alert(
+      "Warning",
+      "You have entered the Final Grades for this semester before, are you sure you want to overwrite it?" +
+        "\n" +
+        ` You can choose to delete or edit ${name}'s final grade in semester ${year}`,
+      [
+        { text: "Cancel", onPress: () => {} },
+        { text: "Continue", onPress: () => nextPage() },
+      ],
+      { cancelable: false }
+    );
+  };
+  const firstChecks = async () => {
+    const temp = await haveAPastHistory(docLoc);
+    if (temp[0] && FinalGradesEntered(data)) {
+      isThisExtraAlert(temp[1], temp[2]);
+    } else {
+      nextPage();
     }
   };
   const nextPage = () => {
@@ -385,14 +428,13 @@ const AddPlan = ({ route }) => {
         })
         .catch((error) => {});
       // -----------------UPDATING PLANS ARRAY WITH FINAL GRADE-------------------------------------------------
-      const thisYear = yearExtractor(docLoc);
-      let totalPreviousSum = 0;
-      let totalPreviousMcCounted = 0;
+
       let thisPlanSum1 = 0;
       let thisPlanMc1 = 0;
       let thisPlanMcUsedInCap1 = 0;
-      let Plannedcap = 0;
-      let theOverallCap = 0;
+
+      let Plannedcap = 0; // the users planned cap for the semester
+
       for (let i = 0; i < data.length; i++) {
         thisPlanSum1 += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
         if (lettersChecker(data[i].TargetGrade)) {
@@ -400,45 +442,95 @@ const AddPlan = ({ route }) => {
         }
         thisPlanMc1 += data[i].NumMcs;
       }
-
-      if (thisYear !== "Y1S1") {
-        const semToSearch = searchSem(thisYear);
-        const userRef = FirebaseDB.firestore()
-          .collection("users")
-          .doc(userIDextractor(docLoc));
-        userRef
-          .get()
-          .then((document) => {
-            const val = document.data();
-            const arr = val.CapArray;
-            for (let i = 0; i < arr.length; i++) {
-              if (arr[i].Semester === semToSearch) {
-                totalPreviousMcCounted += arr[i].MCcountedToCap;
-                totalPreviousSum += arr[i].MCcountedToCap * arr[i].OverallCap;
-              }
-            }
-            theOverallCap = parseFloat(
-              (
-                (thisPlanSum1 + totalPreviousSum) /
-                (thisPlanMcUsedInCap1 + totalPreviousMcCounted)
-              ).toFixed(2)
-            );
-          })
-
-          .catch((error) => {});
-      }
-
-      Plannedcap = parseFloat((thisPlanSum1 / thisPlanMcUsedInCap1).toFixed(2));
-
       const plansArrayRef = FirebaseDB.firestore()
         .collection("plansArray")
         .doc(docLoc);
+
+      // let didLastYearPlanWithFinalGradesExist = false;
+      // if (thisYear !== "Y1S1") {
+      //   const semToSearch = searchSem(thisYear);
+      //   const userRef = FirebaseDB.firestore()
+      //     .collection("users")
+      //     .doc(userIDextractor(docLoc));
+      //   userRef
+      //     .get()
+      //     .then((document) => {
+      //       const val = document.data();
+      //       const arr = val.CapArray;
+      //       for (let i = 0; i < arr.length; i++) {
+      //         if (arr[i].Semester === semToSearch) {
+      //           totalPreviousMcCounted += arr[i].MCcountedToCap;
+      //           totalPreviousSum += arr[i].MCcountedToCap * arr[i].OverallCap;
+      //           didLastYearPlanWithFinalGradesExist = true;
+      //           break;
+      //         }
+      //       }
+      //       theOverallCap = parseFloat(
+      //         (
+      //           (thisPlanSum1 + totalPreviousSum) /
+      //           (thisPlanMcUsedInCap1 + totalPreviousMcCounted)
+      //         ).toFixed(2)
+      //       );
+      //     })
+
+      //     .catch((error) => {});
+      // }
+
+      Plannedcap = parseFloat((thisPlanSum1 / thisPlanMcUsedInCap1).toFixed(2));
+
+      const userRef = FirebaseDB.firestore()
+        .collection("users")
+        .doc(userIDextractor(docLoc));
+
+      userRef.get().then((document) => {
+        const val = document.data();
+        let arr = val.SelectedPlansInfo;
+        let dontExistBefore = true;
+        let pushed = false;
+        let tempArr = [];
+        const newObjToPush = {
+          Semester: yearExtractor(docLoc),
+          Cap: Plannedcap,
+          McUsedInCap: thisPlanMcUsedInCap1,
+          useInCap: true,
+        };
+        if (arr.length > 0) {
+          const toCompareYear = yearExtractor(docLoc);
+          for (let i = 0; i < arr.length; i++) {
+            if (toCompareYear === arr[i].Semester) {
+              dontExistBefore = false;
+              break;
+            }
+          }
+
+          if (dontExistBefore) {
+            arr.push(newObjToPush);
+          }
+          arr = insertionSort(arr);
+
+          for (let i = 0; i < arr.length; i++) {
+            if (toCompareYear === arr[i].Semester) {
+              pushed = true;
+              tempArr.push(newObjToPush);
+            } else {
+              tempArr.push(arr[i]);
+            }
+          }
+          if (!pushed) {
+            tempArr.push(newObjToPush);
+          }
+          userRef.update({ SelectedPlansInfo: tempArr });
+        } else {
+          userRef.update({ SelectedPlansInfo: [newObjToPush] });
+        }
+      });
 
       plansArrayRef
         .get()
         .then((document) => {
           const val = document.data();
           const arr = val.yearSem;
+          const thisPlanLength = arr.length;
 
           if (arr.length > 0) {
             let pushed = false;
@@ -449,10 +541,9 @@ const AddPlan = ({ route }) => {
                   key: (i + 1).toString(),
                   nameOfPlan: planNameValue,
                   useInCap: true,
-                  SemestralCap: Plannedcap,
-                  PlannedCap: 0,
-                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  Cap: Plannedcap,
                   MCs: thisPlanMc1,
+                  MCsCountedToCap: thisPlanMcUsedInCap1,
                   LastUpdated: 0,
                 });
                 pushed = true;
@@ -465,61 +556,43 @@ const AddPlan = ({ route }) => {
                 key: (arr.length + 1).toString(),
                 nameOfPlan: planNameValue,
                 useInCap: true,
-                SemestralCap: Plannedcap,
-                PlannedCap: 0,
-                OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                Cap: Plannedcap,
                 MCs: thisPlanMc1,
+                MCsCountedToCap: thisPlanMcUsedInCap1,
                 LastUpdated: 0,
               });
             }
             plansArrayRef.set({
               yearSem: newPlansArr,
+              selected: (thisPlanLength + 1).toString(),
             });
           } else {
             plansArrayRef.set({
               yearSem: [
                 {
-                  key: (1).toString(),
+                  key: "1",
                   nameOfPlan: planNameValue,
                   useInCap: true,
-                  SemestralCap: Plannedcap,
-                  PlannedCap: 0,
-                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  Cap: Plannedcap,
                   MCs: thisPlanMc1,
+                  MCsCountedToCap: thisPlanMcUsedInCap1,
                   LastUpdated: 0,
                 },
               ],
+              selected: "1",
             });
           }
         })
         .catch((error) => {});
     } else {
       // -----------------UPDATING PLANS ARRAY when no FINAL GRADE -------------------------------------------------
-      const thisYear = yearExtractor(docLoc);
-      let totalPreviousSum = 0;
-      let totalPreviousMcCounted = 0;
-      if (thisYear !== "Y1S1") {
-        const semToSearch = searchSem(thisYear);
-        const userRef = FirebaseDB.firestore()
-          .collection("users")
-          .doc(userIDextractor(docLoc));
-        userRef.get().then((document) => {
-          const val = document.data();
-          const arr = val.CapArray;
-          for (let i = 0; i < arr.length; i++) {
-            if (arr[i].Semester === semToSearch) {
-              totalPreviousMcCounted = arr[i].MCcountedToCap;
-              totalPreviousSum = arr[i].MCcountedToCap * arr[i].OverallCap;
-              break;
-            }
-          }
-        });
-      }
+
       let thisPlanSum = 0;
       let thisPlanMc = 0;
       let thisPlanMcUsedInCap = 0;
+
       let Plannedcap = 0;
-      let theOverallCap = 0;
+
       for (let i = 0; i < data.length; i++) {
         thisPlanSum += data[i].NumMcs * GradeToPoint(data[i].TargetGrade);
         if (lettersChecker(data[i].TargetGrade)) {
@@ -527,13 +600,88 @@ const AddPlan = ({ route }) => {
         }
         thisPlanMc += data[i].NumMcs;
       }
+
+      // if (thisYear !== "Y1S1") {
+      //   const semToSearch = searchSem(thisYear);
+      //   const userRef = FirebaseDB.firestore()
+      //     .collection("users")
+      //     .doc(userIDextractor(docLoc));
+      //   userRef.get().then((document) => {
+      //     const val = document.data();
+      //     const arr = val.CapArray;
+      //     for (let i = 0; i < arr.length; i++) {
+      //       if (arr[i].Semester === semToSearch) {
+      //         totalPreviousMcCounted = arr[i].MCcountedToCap;
+      //         totalPreviousSum = arr[i].MCcountedToCap * arr[i].OverallCap;
+      //         break;
+      //       }
+      //     }
+      //     theOverallCap = parseFloat(
+      //       (
+      //         (thisPlanSum + totalPreviousSum) /
+      //         (thisPlanMcUsedInCap + totalPreviousMcCounted)
+      //       ).toFixed(2)
+      //     );
+      //   });
+      // }
+
       Plannedcap = parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2));
-      theOverallCap = parseFloat(
-        (
-          (thisPlanSum + totalPreviousSum) /
-          (thisPlanMcUsedInCap + totalPreviousMcCounted)
-        ).toFixed(2)
-      );
+
+      const userRef = FirebaseDB.firestore()
+        .collection("users")
+        .doc(userIDextractor(docLoc));
+
+      userRef.get().then((document) => {
+        const val = document.data();
+        let arr = val.SelectedPlansInfo;
+        let dontExistBefore = true;
+        let doIchangeCurrentArr = false;
+        let pushed = false;
+        let tempArr = [];
+        const newObjToPush = {
+          Semester: yearExtractor(docLoc),
+          Cap: Plannedcap,
+          McUsedInCap: thisPlanMcUsedInCap,
+          useInCap: false,
+        };
+        if (arr.length > 0) {
+          const toCompareYear = yearExtractor(docLoc);
+          for (let i = 0; i < arr.length; i++) {
+            if (toCompareYear === arr[i].Semester) {
+              dontExistBefore = false;
+              if (!arr[i].useInCap) {
+                doIchangeCurrentArr = true;
+              }
+              break;
+            }
+          }
+
+          if (dontExistBefore) {
+            arr.push(newObjToPush);
+          }
+          arr = insertionSort(arr);
+
+          for (let i = 0; i < arr.length; i++) {
+            if (toCompareYear === arr[i].Semester) {
+              if (doIchangeCurrentArr) {
+                tempArr.push(newObjToPush);
+              } else {
+                tempArr.push(arr[i]);
+              }
+              pushed = true;
+            } else {
+              tempArr.push(arr[i]);
+            }
+          }
+          if (!pushed) {
+            tempArr.push(newObjToPush);
+          }
+          userRef.update({ SelectedPlansInfo: tempArr });
+        } else {
+          userRef.update({ SelectedPlansInfo: [newObjToPush] });
+        }
+      });
+
       const plansArrayRef = FirebaseDB.firestore()
         .collection("plansArray")
         .doc(docLoc);
@@ -543,6 +691,7 @@ const AddPlan = ({ route }) => {
         .then((document) => {
           const val = document.data();
           const arr = val.yearSem;
+          const thisPlanLength = arr.length;
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -552,10 +701,9 @@ const AddPlan = ({ route }) => {
                   key: (i + 1).toString(),
                   nameOfPlan: planNameValue,
                   useInCap: false,
-                  SemestralCap: 0,
-                  PlannedCap: Plannedcap,
-                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  Cap: Plannedcap,
                   MCs: thisPlanMc,
+                  MCsCountedToCap: thisPlanMcUsedInCap,
                   LastUpdated: 0,
                 });
                 pushed = true;
@@ -568,30 +716,30 @@ const AddPlan = ({ route }) => {
                 key: (arr.length + 1).toString(),
                 nameOfPlan: planNameValue,
                 useInCap: false,
-                SemestralCap: 0,
-                PlannedCap: Plannedcap,
-                OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                Cap: Plannedcap,
                 MCs: thisPlanMc,
+                MCsCountedToCap: thisPlanMcUsedInCap,
                 LastUpdated: 0,
               });
             }
             plansArrayRef.set({
               yearSem: newPlansArr,
+              selected: (thisPlanLength + 1).toString(),
             });
           } else {
             plansArrayRef.set({
               yearSem: [
                 {
-                  key: (1).toString(),
+                  key: "1",
                   nameOfPlan: planNameValue,
                   useInCap: false,
-                  SemestralCap: 0,
-                  PlannedCap: Plannedcap,
-                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
+                  Cap: Plannedcap,
                   MCs: thisPlanMc,
+                  MCsCountedToCap: thisPlanMcUsedInCap,
                   LastUpdated: 0,
                 },
               ],
+              selected: "1",
             });
           }
         })
@@ -658,14 +806,16 @@ const AddPlan = ({ route }) => {
                   text: "Continue",
                   onPress: () => {
                     setBlock("false");
-                    nextPage();
+                    //nextPage();
+                    firstChecks();
                   },
                 },
               ],
               { cancelable: false }
             );
           } else {
-            nextPage();
+            firstChecks();
+            //nextPage();
           }
         }}
         style={styles.flexOneCenterFlexEnd}

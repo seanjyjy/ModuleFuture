@@ -37,6 +37,10 @@ const ViewPlan = ({ route }) => {
   const [arr2, setarr2] = useState([]);
   const [arr3, setarr3] = useState([]);
   const [arr4, setarr4] = useState([]);
+  const [selectPos1, setSelectPos1] = useState("");
+  const [selectPos2, setSelectPos2] = useState("");
+  const [selectPos3, setSelectPos3] = useState("");
+  const [selectPos4, setSelectPos4] = useState("");
   const [userID, setUserID] = useState("");
   const [userRef, setUserRef] = useState("");
   const [semList, setSemList] = useState([]);
@@ -84,22 +88,26 @@ const ViewPlan = ({ route }) => {
           infoExtractor(
             route.params?.item[1],
             semList[calculatorOfSem(route.params?.item[3]) % 9],
-            (val) => setarr1(val)
+            (val) => setarr1(val),
+            (val) => setSelectPos1(val)
           );
           infoExtractor(
             route.params?.item[1],
             semListY5S2[arrToUse[0]],
-            (val) => setarr2(val)
+            (val) => setarr2(val),
+            (val) => setSelectPos2(val)
           );
           infoExtractor(
             route.params?.item[1],
             semListY5S2[arrToUse[1]],
-            (val) => setarr3(val)
+            (val) => setarr3(val),
+            (val) => setSelectPos3(val)
           );
           infoExtractor(
             route.params?.item[1],
             semListY5S2[arrToUse[2]],
-            (val) => setarr4(val)
+            (val) => setarr4(val),
+            (val) => setSelectPos4(val)
           );
         });
       }
@@ -120,7 +128,7 @@ const ViewPlan = ({ route }) => {
     return userID;
   };
 
-  const infoExtractor = (docLoc, whatSem, func) => {
+  const infoExtractor = (docLoc, whatSem, func, func2) => {
     const docLocCurr = userIDextractor(docLoc).concat("_", whatSem);
     const plansArrayRef = FirebaseDB.firestore()
       .collection("plansArray")
@@ -131,10 +139,13 @@ const ViewPlan = ({ route }) => {
         const val = document.data();
         if (val !== undefined) {
           const arr = val.yearSem;
+          const arrLength = arr.length;
           func(arr);
+          func2((arrLength + 1).toString());
         } else {
           plansArrayRef.set({ yearSem: [] });
           func([]);
+          func2("1");
         }
       })
       .then((error) => {});
@@ -248,7 +259,7 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(fromWhere, {
-              item: [userIDextractor(docLoc), arr1],
+              item: [userIDextractor(docLoc), arr1, selectPos1],
             }),
           400
         );
@@ -296,7 +307,7 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[0]], {
-              item: [userIDextractor(docLoc), arr2],
+              item: [userIDextractor(docLoc), arr2, selectPos2],
             }),
           400
         );
@@ -317,7 +328,7 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[1]], {
-              item: [userIDextractor(docLoc), arr3],
+              item: [userIDextractor(docLoc), arr3, selectPos3],
             }),
           400
         );
@@ -339,7 +350,7 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[2]], {
-              item: [userIDextractor(docLoc), arr4],
+              item: [userIDextractor(docLoc), arr4, selectPos4],
             }),
 
           400

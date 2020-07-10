@@ -47,6 +47,7 @@ function RectInfoSelected({
   LastUpdated,
   PlannedCap,
   useInCap,
+  PlannedOverallCap,
 }) {
   return (
     <TouchableOpacity
@@ -98,7 +99,9 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                {`Overall Cap: ${OverallCap}`}
+                {useInCap
+                  ? `Overall Cap: ${OverallCap}`
+                  : `Planned Overall Cap: ${PlannedOverallCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -138,14 +141,15 @@ const Plans = (props) => {
     .collection("plansArray")
     .doc(docLoc);
   const [currentArr, setCurrentArr] = useState(info[1]);
-  const [selected, setSelected] = React.useState(new Map().set("1", true));
+  const [selected, setSelected] = React.useState(new Map().set(info[2], true));
   const [planName, setPlanName] = useState("");
-  const [currentID, setCurrentID] = useState("1");
+  const [currentID, setCurrentID] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [size, setSize] = useState(0);
   const [showDustBin, setShowDustBin] = useState(true);
   const [alertText, setAlertText] = useState(false);
   const [alertText1, setAlertText1] = useState(false);
+  const [arrForRect, setArrForRect] = useState(info[3]);
 
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
@@ -155,14 +159,22 @@ const Plans = (props) => {
           const arr = val.yearSem;
           setSize(arr.length);
           setCurrentArr(arr);
-
+          setCurrentID(val.selected);
+          if (val.selected === "-1") {
+            setShowDustBin(false);
+          } else {
+            setShowDustBin(true);
+          }
           if (arr.length === 0) {
             setShowDustBin(false);
+          } else {
+            setShowDustBin(true);
           }
         } else {
-          plansArrayRef.set({ yearSem: [] });
+          plansArrayRef.set({ yearSem: [], selected: "-1" });
           setCurrentArr([]);
           setShowDustBin(false);
+          setCurrentID("-1");
         }
       },
       (error) => alert(error)
@@ -346,7 +358,7 @@ const Plans = (props) => {
                     }
                   }
                   if (justDelete) {
-                    // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAY
+                    // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAN
                     let tempArr = [];
                     let tempIndex = 0;
                     for (let i = 0; i < arr.length; i++) {
@@ -354,9 +366,7 @@ const Plans = (props) => {
                         tempArr.push({
                           LastUpdated: arr[i].LastUpdated,
                           MCs: arr[i].MCs,
-                          OverallCap: arr[i].OverallCap,
-                          PlannedCap: arr[i].PlannedCap,
-                          SemestralCap: arr[i].SemestralCap,
+                          Cap: arr[i].Cap,
                           key: (tempIndex + 1).toString(),
                           nameOfPlan: arr[i].nameOfPlan,
                           useInCap: arr[i].useInCap,
@@ -364,7 +374,7 @@ const Plans = (props) => {
                         tempIndex++;
                       }
                     }
-                    plansArrayRef.set({ yearSem: tempArr });
+                    plansArrayRef.set({ yearSem: tempArr, selected: "1" });
                     const currentPlanName = arr[pos].nameOfPlan;
                     FirebaseDB.firestore()
                       .collection("plansItself")
@@ -388,14 +398,13 @@ const Plans = (props) => {
                           onPress: () => {
                             let tempArr = [];
                             let tempIndex = 0;
+
                             for (let i = 0; i < arr.length; i++) {
                               if (arr[i].key !== currentID) {
                                 tempArr.push({
                                   LastUpdated: arr[i].LastUpdated,
                                   MCs: arr[i].MCs,
-                                  OverallCap: arr[i].OverallCap,
-                                  PlannedCap: arr[i].PlannedCap,
-                                  SemestralCap: arr[i].SemestralCap,
+                                  Cap: arr[i].Cap,
                                   key: (tempIndex + 1).toString(),
                                   nameOfPlan: arr[i].nameOfPlan,
                                   useInCap: arr[i].useInCap,
@@ -403,7 +412,12 @@ const Plans = (props) => {
                                 tempIndex++;
                               }
                             }
-                            plansArrayRef.set({ yearSem: tempArr });
+
+                            plansArrayRef.set({
+                              yearSem: tempArr,
+                              selected: "1",
+                            });
+
                             // deletion in plansArray
                             const currentPlanName = arr[pos].nameOfPlan;
 
@@ -524,7 +538,20 @@ const Plans = (props) => {
               name="md-arrow-round-back"
               size={25}
               style={{ color: "#3E3E3E", left: 30, bottom: 15 }}
-              onPress={() => navigation.dispatch(CommonActions.goBack())}
+              onPress={() => {
+                // yearSem update here
+                if (currentArr.length > 0) {
+                  plansArrayRef.update({
+                    selected: currentID,
+                  });
+                } else {
+                  plansArrayRef.update({
+                    selected: "-1",
+                  });
+                }
+
+                navigation.dispatch(CommonActions.goBack());
+              }}
             />
           </View>
           <View
@@ -566,19 +593,22 @@ const Plans = (props) => {
               idChange={(val) => setCurrentlyPressID(val)}
               nameOfPlan={item.nameOfPlan}
               SemestralCap={
-                currentArr.length > 0
-                  ? currentArr[parseInt(item.key) - 1].SemestralCap
+                arrForRect.length > 0
+                  ? arrForRect[parseInt(item.key) - 1].SemestralCap
                   : 0
               }
-              OverallCap={currentArr[parseInt(item.key) - 1].OverallCap}
+              OverallCap={arrForRect[parseInt(item.key) - 1].OverallCap}
               MCs={
-                currentArr.length > 0
-                  ? currentArr[parseInt(item.key) - 1].MCs
+                arrForRect.length > 0
+                  ? arrForRect[parseInt(item.key) - 1].MCs
                   : 0
               }
+              PlannedCap={arrForRect[parseInt(item.key) - 1].PlannedCap}
+              PlannedOverallCap={
+                arrForRect[parseInt(item.key) - 1].PlannedOverallCap
+              }
+              useInCap={arrForRect[parseInt(item.key) - 1].useInCap}
               LastUpdated={"24/04/20 DEMO"}
-              PlannedCap={currentArr[parseInt(item.key) - 1].PlannedCap}
-              useInCap={currentArr[parseInt(item.key) - 1].useInCap}
             />
           )}
         />

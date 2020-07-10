@@ -170,6 +170,7 @@ const ChoosingOptions = ({ route }) => {
                   CapArray: [],
                   favPlanArray: [],
                   favPlanInfo: [],
+                  SelectedPlansInfo: [],
                 };
 
                 // records
