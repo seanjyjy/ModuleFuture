@@ -365,7 +365,6 @@ const AddPlan = ({ route }) => {
             const codePrefix = data[i].codePrefix;
             const modulePoints = NumMcs * GradeToPoint(FinalGrade);
             const bool = lettersChecker(FinalGrade);
-            console.log(moduleCode);
 
             // Check if moduleType exists
             const moduleType = "";
@@ -373,7 +372,6 @@ const AddPlan = ({ route }) => {
             if (moduleMapping[moduleCode] !== undefined) {
               moduleType = moduleMapping[moduleCode];
             }
-            console.log("stage 1");
             // Module is found in mapping
             if (moduleType !== "") {
               const indexType = typeObj[moduleType];
@@ -396,7 +394,6 @@ const AddPlan = ({ route }) => {
                 moduleType = "UE";
               }
             }
-            console.log("Stage 2");
             // Check if it is a new code
             if (codeObj[codePrefix] === undefined) {
               codeObj[codePrefix] = codeObj.cat.length;
@@ -423,14 +420,9 @@ const AddPlan = ({ route }) => {
                 points: 0,
               });
             }
-            console.log("Stage 3");
             const indexType = typeObj[moduleType];
             const indexCode = codeObj[codePrefix];
             const indexLevel = levelObj[Level.toString()];
-            console.log(codePrefix);
-            console.log(Level);
-            console.log(indexCode);
-            console.log(indexLevel);
 
             if (FinalGrade !== "CU") {
               typeObj.cat[indexType].mcsTaken += NumMcs;
@@ -440,7 +432,6 @@ const AddPlan = ({ route }) => {
               levelObj.cat[indexLevel].mcsTaken += NumMcs;
               levelObj.cat[indexLevel].numTaken += 1;
             }
-            console.log(bool);
             if (bool) {
               typeObj.cat[indexType].mcsUsedInCap += NumMcs;
               codeObj.cat[indexCode].mcsUsedInCap += NumMcs;
@@ -450,7 +441,6 @@ const AddPlan = ({ route }) => {
               codeObj.cat[indexCode].points += modulePoints;
               levelObj.cat[indexLevel].points += modulePoints;
             }
-            console.log("stage 4");
             newTaken.push({
               name: moduleName,
               code: moduleCode,
