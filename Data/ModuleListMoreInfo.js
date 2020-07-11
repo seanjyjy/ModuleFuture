@@ -1,5 +1,6 @@
 import moduleInfo from "./ModuleInfo.json";
 import moduleList from "./ModuleList.json";
+import { CSMapping } from "./Types";
 
 const ModuleListWithKey = () => {
   const noExam = (item) => {
@@ -29,7 +30,7 @@ const ModuleListWithKey = () => {
   const firstDigit = (item) => {
     let i = 0;
     for (; item[i] < "0" || item[i] > "9"; i++) {}
-    const level = parseInt(item.charAt(i));
+    const level = parseInt(item[i]);
     const modCode = item.substring(0, i);
     return [modCode, level];
   };

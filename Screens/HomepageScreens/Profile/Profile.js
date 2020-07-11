@@ -5,6 +5,7 @@ import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../../FirebaseDB";
+import { CS2019Mapping } from "../../../Data/Types";
 
 const Profile = (props) => {
   const navigation = useNavigation();
@@ -33,6 +34,14 @@ const Profile = (props) => {
     }
   };
 
+  const arr = [];
+  const mapping = [
+    "Foundation",
+    "IT Professionalism",
+    "Mathematics and Sciences",
+    "Breadth and Depth",
+  ];
+
   return (
     <View style={{ flex: 1 }}>
       <Header str={"Profile"} />
@@ -44,7 +53,19 @@ const Profile = (props) => {
       >
         <ProfileButton0
           left={"Course"}
-          transition={() => course()}
+          transition={() => {
+            // for (let i = 0; i < CS2019Mapping.length; i++) {
+            //   for (let j = 0; j < CS2019Mapping[i].length; j++) {
+            //     let k = 0;
+            //     const type = mapping[i];
+            //     for (; CS2019Mapping[i][j][k] !== " "; k++) {}
+            //     const str = CS2019Mapping[i][j].substring(0, k);
+            //     const news = "`" + str + "`" + ": " + "`" + type + "`,";
+            //     console.log(news);
+            //   }
+            // }
+            course();
+          }}
           right={course1}
         />
         <ProfileButton0

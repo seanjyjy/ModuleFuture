@@ -15,75 +15,78 @@ const Foundation = ({ navigation, route }) => {
   useEffect(() => {
     if (route.params?.modDetails) {
       const tempArr = [];
-      for (let i = 0; i < data.length; i++) {
-        tempArr.push(data[i]);
+      for (let i = 0; i < notTaken.length; i++) {
+        tempArr.push(notTaken[i]);
       }
-      let keyTobe = data.length + 1;
       const receivedArr = route.params?.modDetails;
       for (let i = 0; i < receivedArr.length; i++) {
-        tempArr.push({
-          key: keyTobe.toString(),
-          name: receivedArr[i].name,
-          grade: "",
-          sem: "",
-          taken: false,
-        });
-        keyTobe++;
+        tempArr.push(receivedArr[i].name);
       }
-      setData(tempArr);
+      setNotTaken(tempArr);
+    }
+    if (route.params?.taken) {
+      const type = route.params?.type;
+      const toMatch = route.params?.context;
+      const category =
+        type === "Type" ? "type" : type === "Code" ? "codePrefix" : "level";
+
+      const takenAll = route.params?.taken;
+      const notTakenAll = route.params?.notTaken;
+      const tempArr1 = [];
+      const tempArr2 = [];
+      for (let i = 0; i < takenAll.length; i++) {
+        if (allTaken[i][category] === toMatch) {
+          tempArr1.push(allTaken[i]);
+        }
+      }
+      for (let i = 0; i < notTakenAll.length; i++) {
+        if (notTakenAll[i][category] === toMatch) {
+          tempArr2.push(notTakenAll[i]);
+        }
+      }
+      setTaken(tempArr1);
+      setNotTaken(tempArr2);
     }
   }, [route.params?.modDetails]);
 
-  const [data, setData] = useState([
-    {
-      name: "CS1101S Programming Methodology",
-      taken: true,
-    },
-    {
-      name: "CS1231S Discrete Structures",
-      taken: true,
-    },
-    {
-      name: "CS2030 Programming Methodology II",
-      taken: true,
-    },
-    {
-      name: "CS2040S Data Structures and Algorithms",
-      taken: false,
-    },
-    {
-      name: "CS2105 Introduction to Computer Networks",
-      taken: false,
-    },
-    {
-      name: "CS2106 Operating Systems",
-      taken: false,
-    },
-    {
-      name: "CS3230 Design and Analysis of Algorithms",
-      taken: false,
-    },
-  ]);
+  const [taken, setTaken] = useState([]);
+  const [notTaken, setNotTaken] = useState([]);
 
-  const holders = (name, grade, sem, taken) => (
+  const holders = (item) => (
     <View style={styles.headerText}>
       <View style={{ width: width * (editMode ? 0.47 : 0.52) }}>
         <Text
           numberOfLines={1}
           style={{
             ...globalFontStyles.OSSB_14,
-            color: taken ? "#232323" : "#68686880",
+            color: "#232323",
           }}
         >
-          {name}
+          {item.name}
         </Text>
       </View>
       <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
-        {grade}
+        {item.grade}
       </Text>
       <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
-        {sem}
+        {item.sem}
       </Text>
+    </View>
+  );
+
+  const holders2 = (item) => (
+    <View style={styles.headerText}>
+      <View style={{ width: width * (editMode ? 0.47 : 0.52) }}>
+        <Text
+          numberOfLines={1}
+          style={{
+            ...globalFontStyles.OSSB_14,
+            color: "#68686880",
+          }}
+        >
+          {item.name}
+        </Text>
+      </View>
       {editMode ? (
         <Icon
           name="trash-2-outline"
@@ -91,8 +94,8 @@ const Foundation = ({ navigation, route }) => {
           height={17}
           fill="#232323"
           onPress={() => {
-            const newList = data.filter((x) => x.name !== name);
-            setData(newList);
+            const newList = notTaken.filter((x) => x.name !== item.name);
+            setNotTaken(newList);
           }}
         />
       ) : null}
@@ -126,10 +129,10 @@ const Foundation = ({ navigation, route }) => {
         </Text>
       </View>
       <FlatList
-        data={data}
-        keyExtractor={(item) => item.name}
+        data={taken.concat(notTaken)}
+        keyExtractor={(item) => item.name.toString()}
         renderItem={({ item }) =>
-          holders(item.name, item.grade, item.sem, item.taken)
+          taken in item ? holders(item) : holders2(item)
         }
       />
       {editMode ? (
@@ -145,7 +148,10 @@ const Foundation = ({ navigation, route }) => {
   const styles = StyleSheet.create({
     container: {
       width: width * 0.9,
-      height: Math.min(height * 0.8, data.length * 40 + 88),
+      height: Math.min(
+        height * 0.8,
+        (taken.length + notTaken.length) * 37 + 118
+      ),
       alignSelf: "center",
       marginTop: 20,
       borderRadius: 14,
@@ -182,7 +188,7 @@ const Foundation = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        str={editMode ? "" : "Foundation"}
+        str={editMode ? "" : route.params?.title}
         leftChildren={
           <Icon
             name={editMode ? "close-outline" : "chevron-left-outline"}
@@ -190,7 +196,7 @@ const Foundation = ({ navigation, route }) => {
             height={30}
             fill="#232323"
             onPress={() =>
-              editMode ? setEdit(!editMode) : navigation.navigate("Records")
+              editMode ? setEdit(!editMode) : navigation.goBack()
             }
           />
         }
