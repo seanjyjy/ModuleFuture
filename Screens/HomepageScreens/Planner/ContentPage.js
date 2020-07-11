@@ -239,11 +239,24 @@ const ContentPage = (props) => {
                         useInCap: arr[i].useInCap,
                       });
                     }
+                    plansArrayRef.update({
+                      ArrForRect: infoForNextPage,
+                    });
                     return navigation.navigate(item.PageName, {
-                      item: [userID, arr, selected, infoForNextPage],
+                      item: [
+                        userID,
+                        arr,
+                        selected,
+                        infoForNextPage,
+                        usersDetails.SelectedPlansInfo,
+                      ],
                     });
                   } else {
-                    plansArrayRef.set({ yearSem: [], selected: "-1" });
+                    plansArrayRef.set({
+                      yearSem: [],
+                      selected: "-1",
+                      ArrForRect: [],
+                    });
                     return navigation.navigate(item.PageName, {
                       item: [userID, [], "-1", []],
                     });

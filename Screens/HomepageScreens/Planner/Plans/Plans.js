@@ -150,6 +150,7 @@ const Plans = (props) => {
   const [alertText, setAlertText] = useState(false);
   const [alertText1, setAlertText1] = useState(false);
   const [arrForRect, setArrForRect] = useState(info[3]);
+  const [selectedplansinfo, setselectedplansinfo] = useState(info[4]);
 
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
@@ -157,9 +158,25 @@ const Plans = (props) => {
         const val = document.data();
         if (val !== undefined) {
           const arr = val.yearSem;
+          const arr2 = val.ArrForRect;
+          const selected = val.selected;
+          if (size > arr.length) {
+            //deletion occurs
+            setCurrentArr(arr);
+            setArrForRect(arr2);
+            setCurrentID(val.selected);
+            setSelected(new Map().set(selected, true));
+          } else {
+            //addition occurs
+            setArrForRect(props.data[3]);
+            setSelected(new Map().set(props.data[2], true));
+            setCurrentArr(props.data[1]);
+            setCurrentID(props.data[2]);
+            setShowDustBin(true);
+            setselectedplansinfo(props.data[4]);
+          }
           setSize(arr.length);
-          setCurrentArr(arr);
-          setCurrentID(val.selected);
+
           if (val.selected === "-1") {
             setShowDustBin(false);
           } else {
@@ -171,7 +188,7 @@ const Plans = (props) => {
             setShowDustBin(true);
           }
         } else {
-          plansArrayRef.set({ yearSem: [], selected: "-1" });
+          plansArrayRef.set({ yearSem: [], selected: "-1", ArrForRect: [] });
           setCurrentArr([]);
           setShowDustBin(false);
           setCurrentID("-1");
@@ -179,8 +196,9 @@ const Plans = (props) => {
       },
       (error) => alert(error)
     );
+
     return () => unsub();
-  }, [userID]);
+  }, [userID, props.data]);
 
   const onSelect = React.useCallback(
     (key) => {
@@ -346,21 +364,25 @@ const Plans = (props) => {
                 const val = document.data();
                 if (val !== undefined) {
                   const arr = val.yearSem;
+
                   let justDelete = false;
                   let pos = 0;
+                  let planName = "";
                   for (let i = 0; i < arr.length; i++) {
                     if (arr[i].key === currentID) {
                       pos = i;
+                      planName = arr[i].nameOfPlan;
                       if (!arr[i].useInCap) {
                         justDelete = true;
-                        break;
                       }
+                      break;
                     }
                   }
                   if (justDelete) {
                     // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAN
                     let tempArr = [];
                     let tempIndex = 0;
+                    let newarrForRect = [];
                     for (let i = 0; i < arr.length; i++) {
                       if (arr[i].key !== currentID) {
                         tempArr.push({
@@ -370,11 +392,14 @@ const Plans = (props) => {
                           key: (tempIndex + 1).toString(),
                           nameOfPlan: arr[i].nameOfPlan,
                           useInCap: arr[i].useInCap,
+                          MCsCountedToCap: arr[i].MCsCountedToCap,
                         });
                         tempIndex++;
+                        newarrForRect.push(arrForRect[i]);
                       }
                     }
-                    plansArrayRef.set({ yearSem: tempArr, selected: "1" });
+                    let whatPos = (parseInt(currentID) - 1).toString();
+                    //deletion in plansItself
                     const currentPlanName = arr[pos].nameOfPlan;
                     FirebaseDB.firestore()
                       .collection("plansItself")
@@ -387,6 +412,66 @@ const Plans = (props) => {
                         )
                       )
                       .delete();
+
+                    // updates in UserRef plansSelected info
+                    let newSelectedPlansInfo = [];
+                    let isThereApreviousFinalGrade = false;
+                    //let thepreviousObjFinalGrade;
+                    let previousObjNoFinalGrade;
+                    for (let i = 0; i < tempArr.length; i++) {
+                      if (tempArr[i].useInCap) {
+                        isThereApreviousFinalGrade = true;
+                        //   thepreviousObjFinalGrade = {
+                        //     Cap: tempArr[i].Cap,
+                        //     McUsedInCap: tempArr[i].MCsCountedToCap,
+                        //     Semester: props.headerTitle,
+                        //     useInCap: true,
+                        //     nameOfPlan: tempArr[i].nameOfPlan,
+                        //   };
+                        //   whatPos = tempArr[i].key;
+                        //   break;
+                      }
+                      if (tempArr[i].key === whatPos) {
+                        previousObjNoFinalGrade = {
+                          Cap: tempArr[i].Cap,
+                          McUsedInCap: tempArr[i].MCsCountedToCap,
+                          Semester: props.headerTitle,
+                          useInCap: false,
+                          nameOfPlan: tempArr[i].nameOfPlan,
+                        };
+                      }
+                    }
+                    for (let i = 0; i < selectedplansinfo.length; i++) {
+                      // checking if the plan to be deleted exist in selectedPlansInfo
+                      if (
+                        selectedplansinfo[i].nameOfPlan === planName &&
+                        !isThereApreviousFinalGrade
+                      ) {
+                        // if there is a previous final grade inputted, then we go to that
+                        // if (isThereApreviousFinalGrade)
+                        //   newSelectedPlansInfo.push(thepreviousObjFinalGrade);
+                        // else {
+                        // else we will just go to the closest plan if exist.
+                        if (whatPos !== "0")
+                          newSelectedPlansInfo.push(previousObjNoFinalGrade);
+
+                        //}
+                      } else newSelectedPlansInfo.push(selectedplansinfo[i]);
+                    }
+                    const userRef = FirebaseDB.firestore()
+                      .collection("users")
+                      .doc(userID);
+                    userRef.update({
+                      SelectedPlansInfo: newSelectedPlansInfo,
+                    });
+
+                    setselectedplansinfo(newSelectedPlansInfo);
+
+                    plansArrayRef.set({
+                      yearSem: tempArr,
+                      selected: whatPos,
+                      ArrForRect: newarrForRect,
+                    });
                   } else {
                     Alert.alert(
                       "Warning",
@@ -398,7 +483,7 @@ const Plans = (props) => {
                           onPress: () => {
                             let tempArr = [];
                             let tempIndex = 0;
-
+                            let newarrForRect = [];
                             for (let i = 0; i < arr.length; i++) {
                               if (arr[i].key !== currentID) {
                                 tempArr.push({
@@ -408,14 +493,76 @@ const Plans = (props) => {
                                   key: (tempIndex + 1).toString(),
                                   nameOfPlan: arr[i].nameOfPlan,
                                   useInCap: arr[i].useInCap,
+                                  MCsCountedToCap: arr[i].MCsCountedToCap,
                                 });
                                 tempIndex++;
+                                newarrForRect.push(arrForRect[i]);
+                              }
+                            }
+                            let whatPos = (parseInt(currentID) - 1).toString();
+
+                            let newSelectedPlansInfo = [];
+                            let isThereApreviousFinalGrade = false;
+                            let thepreviousObjFinalGrade;
+                            let previousObjNoFinalGrade;
+                            for (let i = 0; i < tempArr.length; i++) {
+                              if (tempArr[i].useInCap) {
+                                isThereApreviousFinalGrade = true;
+                                thepreviousObjFinalGrade = {
+                                  Cap: tempArr[i].Cap,
+                                  McUsedInCap: tempArr[i].MCsCountedToCap,
+                                  Semester: props.headerTitle,
+                                  useInCap: true,
+                                  nameOfPlan: tempArr[i].nameOfPlan,
+                                };
+                                whatPos = tempArr[i].key;
+                              } else {
+                                if (tempArr[i].key === whatPos) {
+                                  previousObjNoFinalGrade = {
+                                    Cap: tempArr[i].Cap,
+                                    McUsedInCap: tempArr[i].MCsCountedToCap,
+                                    Semester: props.headerTitle,
+                                    useInCap: false,
+                                    nameOfPlan: tempArr[i].nameOfPlan,
+                                  };
+                                }
                               }
                             }
 
+                            for (let i = 0; i < selectedplansinfo.length; i++) {
+                              // checking if the plan to be deleted exist in selectedPlansInfo
+                              if (
+                                selectedplansinfo[i].nameOfPlan === planName
+                              ) {
+                                // if there is a previous final grade inputted, then we go to that
+                                if (isThereApreviousFinalGrade)
+                                  newSelectedPlansInfo.push(
+                                    thepreviousObjFinalGrade
+                                  );
+                                else {
+                                  // else we will just go to the closest plan if exist.
+                                  if (whatPos !== "0") {
+                                    newSelectedPlansInfo.push(
+                                      previousObjNoFinalGrade
+                                    );
+                                  }
+                                }
+                              } else
+                                newSelectedPlansInfo.push(selectedplansinfo[i]);
+                            }
+                            const userRef = FirebaseDB.firestore()
+                              .collection("users")
+                              .doc(userID);
+                            userRef.update({
+                              SelectedPlansInfo: newSelectedPlansInfo,
+                            });
+
+                            setselectedplansinfo(newSelectedPlansInfo);
+
                             plansArrayRef.set({
                               yearSem: tempArr,
-                              selected: "1",
+                              selected: whatPos,
+                              ArrForRect: newarrForRect,
                             });
 
                             // deletion in plansArray
@@ -593,21 +740,35 @@ const Plans = (props) => {
               idChange={(val) => setCurrentlyPressID(val)}
               nameOfPlan={item.nameOfPlan}
               SemestralCap={
-                arrForRect.length > 0
+                arrForRect.length === currentArr.length
                   ? arrForRect[parseInt(item.key) - 1].SemestralCap
                   : 0
               }
-              OverallCap={arrForRect[parseInt(item.key) - 1].OverallCap}
+              OverallCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].OverallCap
+                  : 0
+              }
               MCs={
-                arrForRect.length > 0
+                arrForRect.length === currentArr.length
                   ? arrForRect[parseInt(item.key) - 1].MCs
                   : 0
               }
-              PlannedCap={arrForRect[parseInt(item.key) - 1].PlannedCap}
-              PlannedOverallCap={
-                arrForRect[parseInt(item.key) - 1].PlannedOverallCap
+              PlannedCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].PlannedCap
+                  : 0
               }
-              useInCap={arrForRect[parseInt(item.key) - 1].useInCap}
+              PlannedOverallCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].PlannedOverallCap
+                  : 0
+              }
+              useInCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].useInCap
+                  : 0
+              }
               LastUpdated={"24/04/20 DEMO"}
             />
           )}

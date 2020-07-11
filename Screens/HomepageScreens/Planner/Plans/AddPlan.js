@@ -221,6 +221,8 @@ const AddPlan = ({ route }) => {
     }
   };
   const isThisExtraAlert = (name, year) => {
+    // You have entered the final grades for this semester before. Inputting final grades in this plan
+    //will overwrite the final grades in the ${other plan}. Proceed?
     Alert.alert(
       "Warning",
       "You have entered the Final Grades for this semester before, are you sure you want to overwrite it?" +
@@ -493,6 +495,7 @@ const AddPlan = ({ route }) => {
           Cap: Plannedcap,
           McUsedInCap: thisPlanMcUsedInCap1,
           useInCap: true,
+          nameOfPlan: planNameValue,
         };
         if (arr.length > 0) {
           const toCompareYear = yearExtractor(docLoc);
@@ -531,7 +534,7 @@ const AddPlan = ({ route }) => {
           const val = document.data();
           const arr = val.yearSem;
           const thisPlanLength = arr.length;
-
+          const arr2 = val.ArrForRect;
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -565,6 +568,7 @@ const AddPlan = ({ route }) => {
             plansArrayRef.set({
               yearSem: newPlansArr,
               selected: (thisPlanLength + 1).toString(),
+              ArrForRect: arr2,
             });
           } else {
             plansArrayRef.set({
@@ -580,6 +584,7 @@ const AddPlan = ({ route }) => {
                 },
               ],
               selected: "1",
+              ArrForRect: arr2,
             });
           }
         })
@@ -643,6 +648,7 @@ const AddPlan = ({ route }) => {
           Cap: Plannedcap,
           McUsedInCap: thisPlanMcUsedInCap,
           useInCap: false,
+          nameOfPlan: planNameValue,
         };
         if (arr.length > 0) {
           const toCompareYear = yearExtractor(docLoc);
@@ -691,6 +697,7 @@ const AddPlan = ({ route }) => {
         .then((document) => {
           const val = document.data();
           const arr = val.yearSem;
+          const arr2 = val.ArrForRect;
           const thisPlanLength = arr.length;
           if (arr.length > 0) {
             let pushed = false;
@@ -725,6 +732,7 @@ const AddPlan = ({ route }) => {
             plansArrayRef.set({
               yearSem: newPlansArr,
               selected: (thisPlanLength + 1).toString(),
+              ArrForRect: arr2,
             });
           } else {
             plansArrayRef.set({
@@ -740,6 +748,7 @@ const AddPlan = ({ route }) => {
                 },
               ],
               selected: "1",
+              ArrForRect: arr2,
             });
           }
         })
