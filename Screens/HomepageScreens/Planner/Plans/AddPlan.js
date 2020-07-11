@@ -120,6 +120,29 @@ const AddPlan = ({ route }) => {
     return true;
   };
 
+  const haveAPastHistory = async (docLoc) => {
+    const plansArrayRef = FirebaseDB.firestore()
+      .collection("plansArray")
+      .doc(docLoc);
+    let isThereAPast = false;
+    let name = "";
+    await plansArrayRef
+      .get()
+      .then((document) => {
+        const val = document.data();
+        const arr = val.yearSem;
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].useInCap && arr[i].nameOfPlan !== planNameValue) {
+            name = arr[i].nameOfPlan;
+            isThereAPast = true;
+            break;
+          }
+        }
+      })
+      .catch((error) => {});
+    return [isThereAPast, name, yearExtractor(docLoc)];
+  };
+
   const TargetGradesFilled = (val) => {
     for (let i = 0; i < val.length; i++) {
       if (val[i].TargetGrade === "") {
@@ -456,8 +479,8 @@ const AddPlan = ({ route }) => {
             semTotalMc += NumMcs;
           }
           // End of for loop for data array
-          // Remove any codes / levels if needed
-          // Sort codes array according to mcs Taken
+          // Remove any codes / levels if needed??
+          // Sort codes array according to mcs Taken (done)
           const newCodes = [];
           for (let i = codeObj.fixed; i < codeObj.cat.length; i++) {
             if (codeObj.cat[i].mcsTaken !== 0) {
@@ -470,9 +493,9 @@ const AddPlan = ({ route }) => {
               });
             } else {
               delete codeObj[codeObj.cat[i].name];
+              needSorting = true;
             }
           }
-
           newCodes.sort((a, b) => {
             if (a.mcsTaken >= b.mcsTaken) {
               return -1;
@@ -489,22 +512,22 @@ const AddPlan = ({ route }) => {
           codeObj.cat = codeObj.cat.slice(0, codeObj.fixed).concat(newCodes);
 
           // level w/o sorting
-          const newLevels = [];
-          let keyId = levelObj.fixed;
-          for (let i = 0; i < levelObj.cat.length; i++) {
-            if (i < levelObj.fixed) {
-              newLevels.push(levelObj.cat[i]);
-            } else {
-              if (levelObj.cat[i].mcsTaken !== 0) {
-                keyId++;
-                levelObj.cat[i].key = keyId;
-                newLevels.push(levelObj.cat[i]);
-              } else {
-                delete levelObj[levelObj.cat[i].context.toString()];
-              }
-            }
-          }
-          levelObj.cat = newLevels;
+          // const newLevels = [];
+          // let keyId = levelObj.fixed;
+          // for (let i = 0; i < levelObj.cat.length; i++) {
+          //   if (i < levelObj.fixed) {
+          //     newLevels.push(levelObj.cat[i]);
+          //   } else {
+          //     if (levelObj.cat[i].mcsTaken !== 0) {
+          //       keyId++;
+          //       levelObj.cat[i].key = keyId;
+          //       newLevels.push(levelObj.cat[i]);
+          //     } else {
+          //       delete levelObj[levelObj.cat[i].context.toString()];
+          //     }
+          //   }
+          // }
+          // levelObj.cat = newLevels;
 
           const batch = fb.batch();
           batch.set(typeRef, typeObj);

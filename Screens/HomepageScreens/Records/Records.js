@@ -343,6 +343,143 @@ const Records = () => {
     );
   };
 
+  const FullView = (props) => {
+    if (currentType === "Type") {
+    } else if (currentType === "Code") {
+    } else {
+    }
+    const holders = (item) => (
+      <View style={styles.headerText}>
+        <View style={{ width: width * 0.52 }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              ...globalFontStyles.OSSB_12,
+              color: "#232323",
+            }}
+          >
+            {item.name}
+          </Text>
+        </View>
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_12,
+            color: "#232323",
+          }}
+        >
+          {item.grade}
+        </Text>
+        <Text style={{ ...globalFontStyles.OSSB_12, color: "#232323" }}>
+          {item.sem}
+        </Text>
+      </View>
+    );
+
+    const holders2 = (item) => (
+      <View style={styles.headerText}>
+        <View style={{ width: width * 0.52 }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              ...globalFontStyles.OSSB_12,
+              color: "#68686880",
+            }}
+          >
+            {item.name}
+          </Text>
+        </View>
+      </View>
+    );
+
+    const Box = () => (
+      <View style={styles.container}>
+        <View>
+          {/* check 11 or 12 size */}
+          <Text style={{ ...globalFontStyles.OSSB_12, color: "#232323" }}>
+            {}
+          </Text>
+        </View>
+        <View style={styles.header}>
+          <View
+            style={{
+              flexDirection: "row",
+              width: width * 0.71,
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>
+              Module
+            </Text>
+            <Text
+              style={{
+                ...globalFontStyles.OSB_13,
+                color: "#232323",
+              }}
+            >
+              Grade
+            </Text>
+          </View>
+          <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>
+            Sem
+          </Text>
+        </View>
+        <FlatList
+          // data={taken.concat(notTaken)}
+          keyExtractor={(item) => item.name.toString()}
+          renderItem={({ item }) =>
+            item.taken !== undefined ? holders(item) : holders2(item)
+          }
+        />
+      </View>
+    );
+
+    const styles = StyleSheet.create({
+      container: {
+        width: width * 0.9,
+        height: Math.min(
+          height * 0.88,
+          (taken.length + notTaken.length) * 37 + 118
+        ),
+        alignSelf: "center",
+        marginTop: 20,
+        borderRadius: 14,
+        borderColor: "#C6C6C6",
+        justifyContent: "space-between",
+        alignContent: "stretch",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
+        flexDirection: "column",
+        backgroundColor: "white",
+      },
+      header: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 10,
+        borderBottomColor: "#A0A0A0",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+      },
+      headerText: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 10,
+      },
+    });
+
+    return (
+      <View style={{ flex: 1 }}>
+        <Box />
+      </View>
+    );
+  };
+
   return catView ? (
     <View style={{ flex: 1 }}>
       <Header

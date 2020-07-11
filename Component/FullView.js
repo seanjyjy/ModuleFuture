@@ -83,7 +83,7 @@ const FullView = (props) => {
   const styles = StyleSheet.create({
     container: {
       width: width * 0.9,
-      height: Math.min(height * 0.8, props.data.length * 40 + 88),
+      height: Math.min(height * 0.88, props.data.length * 40 + 88),
       alignSelf: "center",
       marginTop: 20,
       borderRadius: 14,

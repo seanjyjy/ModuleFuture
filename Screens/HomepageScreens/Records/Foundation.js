@@ -117,19 +117,19 @@ const Foundation = ({ navigation, route }) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ ...globalFontStyles.OSB_17, color: "#232323" }}>
+          <Text style={{ ...globalFontStyles.OSB_16, color: "#232323" }}>
             {editMode ? "" : "Module"}
           </Text>
           <Text
             style={{
-              ...globalFontStyles.OSB_17,
+              ...globalFontStyles.OSB_16,
               color: "#232323",
             }}
           >
             {editMode ? "" : "Grade"}
           </Text>
         </View>
-        <Text style={{ ...globalFontStyles.OSB_17, color: "#232323" }}>
+        <Text style={{ ...globalFontStyles.OSB_16, color: "#232323" }}>
           {editMode ? "" : "Sem"}
         </Text>
       </View>
@@ -155,7 +155,7 @@ const Foundation = ({ navigation, route }) => {
       width: width * 0.9,
       height: Math.min(
         height * 0.88,
-        (taken.length + notTaken.length) * 37 + 118
+        (taken.length + notTaken.length) * 37 + 125
       ),
       alignSelf: "center",
       marginTop: 20,
@@ -180,6 +180,7 @@ const Foundation = ({ navigation, route }) => {
       flexDirection: "row",
       justifyContent: "space-between",
       padding: 10,
+      marginBottom: 8,
       borderBottomColor: "#A0A0A0",
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
