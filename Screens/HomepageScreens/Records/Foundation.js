@@ -35,8 +35,8 @@ const Foundation = ({ navigation, route }) => {
       const tempArr1 = [];
       const tempArr2 = [];
       for (let i = 0; i < takenAll.length; i++) {
-        if (allTaken[i][category] === toMatch) {
-          tempArr1.push(allTaken[i]);
+        if (takenAll[i][category] === toMatch) {
+          tempArr1.push(takenAll[i]);
         }
       }
       for (let i = 0; i < notTakenAll.length; i++) {
@@ -65,7 +65,12 @@ const Foundation = ({ navigation, route }) => {
           {item.name}
         </Text>
       </View>
-      <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
+      <Text
+        style={{
+          ...globalFontStyles.OSSB_14,
+          color: "#232323",
+        }}
+      >
         {item.grade}
       </Text>
       <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
@@ -132,7 +137,7 @@ const Foundation = ({ navigation, route }) => {
         data={taken.concat(notTaken)}
         keyExtractor={(item) => item.name.toString()}
         renderItem={({ item }) =>
-          taken in item ? holders(item) : holders2(item)
+          item.taken !== undefined ? holders(item) : holders2(item)
         }
       />
       {editMode ? (
@@ -149,7 +154,7 @@ const Foundation = ({ navigation, route }) => {
     container: {
       width: width * 0.9,
       height: Math.min(
-        height * 0.8,
+        height * 0.88,
         (taken.length + notTaken.length) * 37 + 118
       ),
       alignSelf: "center",

@@ -194,7 +194,7 @@ const Records = () => {
 
   const ColouredList = (props) => {
     const colors = props.colors;
-    const bool = props.text3 === "4.1";
+    const bool = false;
     const mcsOrNum = props.mcsOrNum;
     const array = props.array;
 
@@ -202,13 +202,14 @@ const Records = () => {
       const key = item.key;
       const numTaken = item.numTaken === 0 ? "-" : item.numTaken;
       const mcsTaken = item.mcsTaken === 0 ? "-" : item.mcsTaken;
-      const mcsReq = item["mcsRequired"] ? item.mcsRequired : 0;
-      const numReq = item["numRequired"] ? item.numRequired : 0;
+      const mcsReq = item.mcsRequired !== undefined ? item.mcsRequired : 0;
+      const numReq = item.numRequired !== undefined ? item.numRequired : 0;
       const CAP = () => {
         if (item.points === 0) {
           return "-";
         } else {
           const val = item.points / item.mcsUsedInCap;
+          // return Math.round((val + Number.EPSILON) * 100) / 100;
           return val.toFixed(2);
         }
       };
@@ -245,7 +246,7 @@ const Records = () => {
           }
         } else {
           if (numReq !== 0) {
-            return numTaken + " / " + mcsReq;
+            return numTaken + " / " + numReq;
           } else {
             return numTaken;
           }
@@ -298,7 +299,7 @@ const Records = () => {
               taken: taken,
               notTaken: notTaken,
               title: item.name,
-              context: item["context"] ? item.context : item.name,
+              context: item.context !== undefined ? item.context : item.name,
               type: currentType,
             });
           }}

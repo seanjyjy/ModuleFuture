@@ -28,6 +28,20 @@ const AddPlan = ({ route }) => {
   const [data, setData] = useState([]);
   const [fromWhere, setFromWhere] = useState("");
   const [block, setBlock] = useState("true");
+  const [moduleMapping, setModuleMapping] = useState({});
+  const [Types, setTypes] = useState({});
+  const [Codes, setCodes] = useState({});
+  const [Levels, setLevels] = useState({});
+  const [records, setRecords] = useState({});
+
+  const fb = FirebaseDB.firestore();
+  const userID = FirebaseDB.auth().currentUser.uid;
+  const typeRef = fb.collection("typeArray").doc(userID);
+  const codeRef = fb.collection("codeArray").doc(userID);
+  const levelRef = fb.collection("levelArray").doc(userID);
+  const recordsRef = fb.collection("records").doc(userID);
+  const moduleMappingRef = fb.collection("modulesMapping").doc(userID);
+
   const deleteItem = (moduleCode) => {
     setData((newData) => {
       return newData.filter((todo) => todo.moduleCode !== moduleCode);
@@ -66,6 +80,21 @@ const AddPlan = ({ route }) => {
       }
       setData(tempArr);
     }
+    moduleMappingRef.onSnapshot((document) => {
+      setModuleMapping(document.data());
+    });
+    recordsRef.onSnapshot((document) => {
+      setRecords(document.data());
+    });
+    typeRef.onSnapshot((document) => {
+      setTypes(document.data());
+    });
+    codeRef.onSnapshot((document) => {
+      setCodes(document.data());
+    });
+    levelRef.onSnapshot((document) => {
+      setLevels(document.data());
+    });
   }, [route.params.item[4], route.params?.modDetails, route.params?.from]);
 
   const navigation = useNavigation();
@@ -79,53 +108,26 @@ const AddPlan = ({ route }) => {
     for (let i = 0; i < arr.length; i++) {
       num += parseInt(arr[i].NumMcs);
     }
-
     return num < 18;
   };
 
   const FinalGradesEntered = (val) => {
-    let truth = true;
     for (let i = 0; i < val.length; i++) {
       if (val[i].FinalGrade === "") {
-        truth = false;
-        break;
+        return false;
       }
     }
-    return truth;
+    return true;
   };
 
-  const haveAPastHistory = async (docLoc) => {
-    const plansArrayRef = FirebaseDB.firestore()
-      .collection("plansArray")
-      .doc(docLoc);
-    let isThereAPast = false;
-    let name = "";
-    await plansArrayRef
-      .get()
-      .then((document) => {
-        const val = document.data();
-        const arr = val.yearSem;
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i].useInCap && arr[i].nameOfPlan !== planNameValue) {
-            name = arr[i].nameOfPlan;
-            isThereAPast = true;
-            break;
-          }
-        }
-      })
-      .catch((error) => {});
-    return [isThereAPast, name, yearExtractor(docLoc)];
+  const TargetGradesFilled = (val) => {
+    for (let i = 0; i < val.length; i++) {
+      if (val[i].TargetGrade === "") {
+        return false;
+      }
+    }
+    return true;
   };
-  // const TargetGradesFilled = (val) => {
-  //   let truth = true;
-  //   for (let i = 0; i < val.length; i++) {
-  //     if (val[i].TargetGrade === "") {
-  //       truth = false;
-  //       break;
-  //     }
-  //   }
-  //   return truth;
-  // };
 
   const yearExtractor = (val) => {
     const len = val.length;
@@ -220,34 +222,80 @@ const AddPlan = ({ route }) => {
       return false;
     }
   };
-  const isThisExtraAlert = (name, year) => {
-    Alert.alert(
-      "Warning",
-      "You have entered the Final Grades for this semester before, are you sure you want to overwrite it?" +
-        "\n" +
-        ` You can choose to delete or edit ${name}'s final grade in semester ${year}`,
-      [
-        { text: "Cancel", onPress: () => {} },
-        { text: "Continue", onPress: () => nextPage() },
-      ],
-      { cancelable: false }
-    );
-  };
-  const firstChecks = async () => {
-    const temp = await haveAPastHistory(docLoc);
-    if (temp[0] && FinalGradesEntered(data)) {
-      isThisExtraAlert(temp[1], temp[2]);
-    } else {
-      nextPage();
-    }
-  };
   const nextPage = () => {
     if (FinalGradesEntered(data)) {
       let semCap = 0;
-      // -----------------UPDATING USERS MODULES DETAILS HERE  && USERS CAP ARRAY -------------------------------------------------
+
+      const origTaken = records.taken;
+      const origNotTaken = records.notTaken;
+      const toInclude = new Set(records.mapping);
+      const newTaken = [];
+      const newNotTaken = [];
+
+      const newSet = new Set();
+      data.forEach((x) => newSet.add(x.moduleCode));
+
+      // Remove from taken
+      for (let i = 0; i < origTaken.length; i++) {
+        if (origTaken[i].sem === fromWhere) {
+          const numMcs = origTaken[i].numMcs;
+          const codePrefix = origTaken[i].codePrefix;
+          const type = origTaken[i].type;
+          const level = origTaken[i].level;
+          const code = origTaken[i].code;
+          const grade = origTaken[i].grade;
+          const modulePoints = numMcs * GradeToPoint(grade);
+          const bool = lettersChecker(grade);
+
+          // Deleted from original plan
+          if (!newSet.has(code)) {
+            if (toInclude.has(type)) {
+              newNotTaken.push({
+                name: origTaken[i].name,
+                type: type,
+                code: code,
+                level: level,
+                codePrefix: codePrefix,
+                numMcs: numMcs,
+              });
+            }
+          }
+          // Adjusting CAP and num taken
+          const indexType = Types[type];
+          const indexCode = Codes[codePrefix];
+          const indexLevel = Levels[level.toString()];
+          if (grade !== "CU") {
+            Types.cat[indexType].mcsTaken -= numMcs;
+            Types.cat[indexType].numTaken -= 1;
+            Codes.cat[indexCode].mcsTaken -= numMcs;
+            Codes.cat[indexCode].numTaken -= 1;
+            Levels.cat[indexLevel].mcsTaken -= numMcs;
+            Levels.cat[indexLevel].numTaken -= 1;
+          }
+          if (bool) {
+            Types.cat[indexType].mcsUsedInCap -= numMcs;
+            Codes.cat[indexCode].mcsUsedInCap -= numMcs;
+            Levels.cat[indexLevel].mcsUsedInCap -= numMcs;
+
+            Types.cat[indexType].points -= modulePoints;
+            Levels.cat[indexLevel].points -= modulePoints;
+            Codes.cat[indexCode].points -= modulePoints;
+          }
+        } else {
+          newTaken.push(origTaken[i]);
+        }
+      }
+      // Remove from not taken
+      for (let i = 0; i < origNotTaken.length; i++) {
+        if (!newSet.has(origNotTaken[i].code)) {
+          newNotTaken.push(origNotTaken[i]);
+        }
+      }
+
+      // -----------------UPDATING USERS MODULES DETAILS HERE && USERS CAP ARRAY -------------------------------------------------
       const usersModulesDetailsRef = FirebaseDB.firestore()
         .collection("usersModulesDetails")
-        .doc(userIDextractor(docLoc));
+        .doc(userID);
       usersModulesDetailsRef
         .get()
         .then((document) => {
@@ -259,21 +307,211 @@ const AddPlan = ({ route }) => {
           let semSum = 0;
           let semMc = 0;
           let semTotalMc = 0;
+          let typeObj = Types;
+          let codeObj = Codes;
+          let levelObj = Levels;
           for (let i = 0; i < data.length; i++) {
-            modulesDetailsArray.push({
-              moduleCode: data[i].moduleCode,
-              moduleName: data[i].name,
-              FinalGrade: data[i].FinalGrade,
-              NumMcs: data[i].NumMcs,
-              Level: data[i].Level,
-              codePrefix: data[i].codePrefix,
-            });
-            semSum += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
-            if (lettersChecker(data[i].FinalGrade)) {
-              semMc += data[i].NumMcs;
+            const moduleCode = data[i].moduleCode;
+            const moduleName = data[i].name;
+            const FinalGrade = data[i].FinalGrade;
+            const NumMcs = data[i].NumMcs;
+            const Level = data[i].Level;
+            const codePrefix = data[i].codePrefix;
+            const modulePoints = NumMcs * GradeToPoint(FinalGrade);
+            const bool = lettersChecker(FinalGrade);
+            console.log(moduleCode);
+
+            // Check if moduleType exists
+            const moduleType = "";
+            // Finding type
+            if (moduleMapping[moduleCode] !== undefined) {
+              moduleType = moduleMapping[moduleCode];
             }
-            semTotalMc += data[i].NumMcs;
+            console.log("stage 1");
+            // Module is found in mapping
+            if (moduleType !== "") {
+              const indexType = typeObj[moduleType];
+              if (
+                typeObj.cat[indexType].mcsTaken >=
+                typeObj.cat[indexType].mcsRequired
+              ) {
+                moduleType = "UE";
+              }
+            } else {
+              const len = typeObj.cat.length;
+              // TODO: Add in Residential Colleges for ULR!
+              if (
+                codePrefix.length === 3 &&
+                codePrefix.substring(0, 2) === "GE" &&
+                typeObj.cat[len - 1].mcsTaken < typeObj.cat[len - 1].mcsRequired
+              ) {
+                moduleType = "ULR";
+              } else {
+                moduleType = "UE";
+              }
+            }
+            console.log("Stage 2");
+            // Check if it is a new code
+            if (codeObj[codePrefix] === undefined) {
+              codeObj[codePrefix] = codeObj.cat.length;
+              codeObj.cat.push({
+                name: codePrefix,
+                key: codeObj.cat.length + 1,
+                mcsTaken: 0,
+                numTaken: 0,
+                mcsUsedInCap: 0,
+                points: 0,
+              });
+            }
+
+            // Check if it is a new level
+            if (levelObj[Level.toString()] === undefined) {
+              levelObj[Level.toString()] = levelObj.cat.length;
+              levelObj.cat.push({
+                name: Level.toString() + "s",
+                context: Level,
+                key: levelObj.cat.length + 1,
+                mcsTaken: 0,
+                numTaken: 0,
+                mcsUsedInCap: 0,
+                points: 0,
+              });
+            }
+            console.log("Stage 3");
+            const indexType = typeObj[moduleType];
+            const indexCode = codeObj[codePrefix];
+            const indexLevel = levelObj[Level.toString()];
+            console.log(codePrefix);
+            console.log(Level);
+            console.log(indexCode);
+            console.log(indexLevel);
+
+            if (FinalGrade !== "CU") {
+              typeObj.cat[indexType].mcsTaken += NumMcs;
+              typeObj.cat[indexType].numTaken += 1;
+              codeObj.cat[indexCode].mcsTaken += NumMcs;
+              codeObj.cat[indexCode].numTaken += 1;
+              levelObj.cat[indexLevel].mcsTaken += NumMcs;
+              levelObj.cat[indexLevel].numTaken += 1;
+            }
+            console.log(bool);
+            if (bool) {
+              typeObj.cat[indexType].mcsUsedInCap += NumMcs;
+              codeObj.cat[indexCode].mcsUsedInCap += NumMcs;
+              levelObj.cat[indexLevel].mcsUsedInCap += NumMcs;
+
+              typeObj.cat[indexType].points += modulePoints;
+              codeObj.cat[indexCode].points += modulePoints;
+              levelObj.cat[indexLevel].points += modulePoints;
+            }
+            console.log("stage 4");
+            newTaken.push({
+              name: moduleName,
+              code: moduleCode,
+              type: moduleType,
+              grade: FinalGrade,
+              level: Level,
+              codePrefix: codePrefix,
+              taken: true,
+              numMcs: NumMcs,
+              sem: fromWhere,
+            });
+
+            modulesDetailsArray.push({
+              moduleCode: moduleCode,
+              moduleName: moduleName,
+              FinalGrade: FinalGrade,
+              NumMcs: NumMcs,
+              Level: Level,
+              codePrefix: codePrefix,
+              // type: moduleType,
+            });
+            semSum += modulePoints;
+            if (bool) {
+              semMc += NumMcs;
+            }
+            semTotalMc += NumMcs;
           }
+          // End of for loop for data array
+          // Remove any codes / levels if needed
+          // Sort codes array according to mcs Taken
+          const newCodes = [];
+          for (let i = codeObj.fixed; i < codeObj.cat.length; i++) {
+            if (codeObj.cat[i].mcsTaken !== 0) {
+              newCodes.push({
+                name: codeObj.cat[i].name,
+                mcsTaken: codeObj.cat[i].mcsTaken,
+                numTaken: codeObj.cat[i].numTaken,
+                mcsUsedInCap: codeObj.cat[i].mcsUsedInCap,
+                points: codeObj.cat[i].points,
+              });
+            } else {
+              delete codeObj[codeObj.cat[i].name];
+            }
+          }
+
+          newCodes.sort((a, b) => {
+            if (a.mcsTaken >= b.mcsTaken) {
+              return -1;
+            } else {
+              return 1;
+            }
+          });
+          // reassign keys and indexes
+          for (let i = 0; i < newCodes.length; i++) {
+            newCodes[i].key = codeObj.fixed + i + 1;
+            codeObj[newCodes[i].name] = codeObj.fixed + i;
+          }
+
+          codeObj.cat = codeObj.cat.slice(0, codeObj.fixed).concat(newCodes);
+
+          // level w/o sorting
+          const newLevels = [];
+          let keyId = levelObj.fixed;
+          for (let i = 0; i < levelObj.cat.length; i++) {
+            if (i < levelObj.fixed) {
+              newLevels.push(levelObj.cat[i]);
+            } else {
+              if (levelObj.cat[i].mcsTaken !== 0) {
+                keyId++;
+                levelObj.cat[i].key = keyId;
+                newLevels.push(levelObj.cat[i]);
+              } else {
+                delete levelObj[levelObj.cat[i].context.toString()];
+              }
+            }
+          }
+          levelObj.cat = newLevels;
+
+          const batch = fb.batch();
+          batch.set(typeRef, typeObj);
+          batch.set(codeRef, codeObj);
+          batch.set(levelRef, levelObj);
+          batch.update(recordsRef, {
+            notTaken: newNotTaken.sort((a, b) => {
+              if (a.code <= b.code) {
+                return -1;
+              } else {
+                return 1;
+              }
+            }),
+            taken: newTaken.sort((a, b) => {
+              if (a.sem < b.sem) {
+                return -1;
+              } else if (a.sem === b.sem) {
+                if (a.code < b.code) {
+                  return -1;
+                } else {
+                  return 1;
+                }
+              } else {
+                return 1;
+              }
+            }),
+          });
+
+          batch.commit();
+
           semCap = parseFloat((semSum / semMc).toFixed(2));
           let totalSum = 0; // total CAP SUM
           let totalMc = 0; // total MC
@@ -282,7 +520,7 @@ const AddPlan = ({ route }) => {
           let tempArr = [];
           const usersRef = FirebaseDB.firestore()
             .collection("users")
-            .doc(userIDextractor(docLoc));
+            .doc(userID);
 
           let thisSemSum = 0;
           let thisSemMc = 0;
@@ -426,15 +664,16 @@ const AddPlan = ({ route }) => {
             });
           }
         })
-        .catch((error) => {});
+        .catch((error) => console.log(error));
       // -----------------UPDATING PLANS ARRAY WITH FINAL GRADE-------------------------------------------------
-
+      const thisYear = yearExtractor(docLoc);
+      let totalPreviousSum = 0;
+      let totalPreviousMcCounted = 0;
       let thisPlanSum1 = 0;
       let thisPlanMc1 = 0;
       let thisPlanMcUsedInCap1 = 0;
-
-      let Plannedcap = 0; // the users planned cap for the semester
-
+      let Plannedcap = 0;
+      let theOverallCap = 0;
       for (let i = 0; i < data.length; i++) {
         thisPlanSum1 += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
         if (lettersChecker(data[i].TargetGrade)) {
@@ -442,95 +681,43 @@ const AddPlan = ({ route }) => {
         }
         thisPlanMc1 += data[i].NumMcs;
       }
-      const plansArrayRef = FirebaseDB.firestore()
-        .collection("plansArray")
-        .doc(docLoc);
 
-      // let didLastYearPlanWithFinalGradesExist = false;
-      // if (thisYear !== "Y1S1") {
-      //   const semToSearch = searchSem(thisYear);
-      //   const userRef = FirebaseDB.firestore()
-      //     .collection("users")
-      //     .doc(userIDextractor(docLoc));
-      //   userRef
-      //     .get()
-      //     .then((document) => {
-      //       const val = document.data();
-      //       const arr = val.CapArray;
-      //       for (let i = 0; i < arr.length; i++) {
-      //         if (arr[i].Semester === semToSearch) {
-      //           totalPreviousMcCounted += arr[i].MCcountedToCap;
-      //           totalPreviousSum += arr[i].MCcountedToCap * arr[i].OverallCap;
-      //           didLastYearPlanWithFinalGradesExist = true;
-      //           break;
-      //         }
-      //       }
-      //       theOverallCap = parseFloat(
-      //         (
-      //           (thisPlanSum1 + totalPreviousSum) /
-      //           (thisPlanMcUsedInCap1 + totalPreviousMcCounted)
-      //         ).toFixed(2)
-      //       );
-      //     })
+      if (thisYear !== "Y1S1") {
+        const semToSearch = searchSem(thisYear);
+        const userRef = FirebaseDB.firestore().collection("users").doc(userID);
+        userRef
+          .get()
+          .then((document) => {
+            const val = document.data();
+            const arr = val.CapArray;
+            for (let i = 0; i < arr.length; i++) {
+              if (arr[i].Semester === semToSearch) {
+                totalPreviousMcCounted += arr[i].MCcountedToCap;
+                totalPreviousSum += arr[i].MCcountedToCap * arr[i].OverallCap;
+              }
+            }
+            theOverallCap = parseFloat(
+              (
+                (thisPlanSum1 + totalPreviousSum) /
+                (thisPlanMcUsedInCap1 + totalPreviousMcCounted)
+              ).toFixed(2)
+            );
+          })
 
-      //     .catch((error) => {});
-      // }
+          .catch((error) => console.log(error));
+      }
 
       Plannedcap = parseFloat((thisPlanSum1 / thisPlanMcUsedInCap1).toFixed(2));
 
-      const userRef = FirebaseDB.firestore()
-        .collection("users")
-        .doc(userIDextractor(docLoc));
-
-      userRef.get().then((document) => {
-        const val = document.data();
-        let arr = val.SelectedPlansInfo;
-        let dontExistBefore = true;
-        let pushed = false;
-        let tempArr = [];
-        const newObjToPush = {
-          Semester: yearExtractor(docLoc),
-          Cap: Plannedcap,
-          McUsedInCap: thisPlanMcUsedInCap1,
-          useInCap: true,
-        };
-        if (arr.length > 0) {
-          const toCompareYear = yearExtractor(docLoc);
-          for (let i = 0; i < arr.length; i++) {
-            if (toCompareYear === arr[i].Semester) {
-              dontExistBefore = false;
-              break;
-            }
-          }
-
-          if (dontExistBefore) {
-            arr.push(newObjToPush);
-          }
-          arr = insertionSort(arr);
-
-          for (let i = 0; i < arr.length; i++) {
-            if (toCompareYear === arr[i].Semester) {
-              pushed = true;
-              tempArr.push(newObjToPush);
-            } else {
-              tempArr.push(arr[i]);
-            }
-          }
-          if (!pushed) {
-            tempArr.push(newObjToPush);
-          }
-          userRef.update({ SelectedPlansInfo: tempArr });
-        } else {
-          userRef.update({ SelectedPlansInfo: [newObjToPush] });
-        }
-      });
+      const plansArrayRef = FirebaseDB.firestore()
+        .collection("plansArray")
+        .doc(docLoc);
 
       plansArrayRef
         .get()
         .then((document) => {
           const val = document.data();
           const arr = val.yearSem;
-          const thisPlanLength = arr.length;
 
           if (arr.length > 0) {
             let pushed = false;
@@ -541,9 +728,10 @@ const AddPlan = ({ route }) => {
                   key: (i + 1).toString(),
                   nameOfPlan: planNameValue,
                   useInCap: true,
-                  Cap: Plannedcap,
+                  SemestralCap: Plannedcap,
+                  PlannedCap: 0,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
                   MCs: thisPlanMc1,
-                  MCsCountedToCap: thisPlanMcUsedInCap1,
                   LastUpdated: 0,
                 });
                 pushed = true;
@@ -556,43 +744,61 @@ const AddPlan = ({ route }) => {
                 key: (arr.length + 1).toString(),
                 nameOfPlan: planNameValue,
                 useInCap: true,
-                Cap: Plannedcap,
+                SemestralCap: Plannedcap,
+                PlannedCap: 0,
+                OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
                 MCs: thisPlanMc1,
-                MCsCountedToCap: thisPlanMcUsedInCap1,
                 LastUpdated: 0,
               });
             }
             plansArrayRef.set({
               yearSem: newPlansArr,
-              selected: (thisPlanLength + 1).toString(),
             });
           } else {
             plansArrayRef.set({
               yearSem: [
                 {
-                  key: "1",
+                  key: (1).toString(),
                   nameOfPlan: planNameValue,
                   useInCap: true,
-                  Cap: Plannedcap,
+                  SemestralCap: Plannedcap,
+                  PlannedCap: 0,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
                   MCs: thisPlanMc1,
-                  MCsCountedToCap: thisPlanMcUsedInCap1,
                   LastUpdated: 0,
                 },
               ],
-              selected: "1",
             });
           }
         })
         .catch((error) => {});
     } else {
       // -----------------UPDATING PLANS ARRAY when no FINAL GRADE -------------------------------------------------
-
+      const thisYear = yearExtractor(docLoc);
+      let totalPreviousSum = 0;
+      let totalPreviousMcCounted = 0;
+      if (thisYear !== "Y1S1") {
+        const semToSearch = searchSem(thisYear);
+        const userRef = FirebaseDB.firestore()
+          .collection("users")
+          .doc(userIDextractor(docLoc));
+        userRef.get().then((document) => {
+          const val = document.data();
+          const arr = val.CapArray;
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].Semester === semToSearch) {
+              totalPreviousMcCounted = arr[i].MCcountedToCap;
+              totalPreviousSum = arr[i].MCcountedToCap * arr[i].OverallCap;
+              break;
+            }
+          }
+        });
+      }
       let thisPlanSum = 0;
       let thisPlanMc = 0;
       let thisPlanMcUsedInCap = 0;
-
       let Plannedcap = 0;
-
+      let theOverallCap = 0;
       for (let i = 0; i < data.length; i++) {
         thisPlanSum += data[i].NumMcs * GradeToPoint(data[i].TargetGrade);
         if (lettersChecker(data[i].TargetGrade)) {
@@ -600,88 +806,13 @@ const AddPlan = ({ route }) => {
         }
         thisPlanMc += data[i].NumMcs;
       }
-
-      // if (thisYear !== "Y1S1") {
-      //   const semToSearch = searchSem(thisYear);
-      //   const userRef = FirebaseDB.firestore()
-      //     .collection("users")
-      //     .doc(userIDextractor(docLoc));
-      //   userRef.get().then((document) => {
-      //     const val = document.data();
-      //     const arr = val.CapArray;
-      //     for (let i = 0; i < arr.length; i++) {
-      //       if (arr[i].Semester === semToSearch) {
-      //         totalPreviousMcCounted = arr[i].MCcountedToCap;
-      //         totalPreviousSum = arr[i].MCcountedToCap * arr[i].OverallCap;
-      //         break;
-      //       }
-      //     }
-      //     theOverallCap = parseFloat(
-      //       (
-      //         (thisPlanSum + totalPreviousSum) /
-      //         (thisPlanMcUsedInCap + totalPreviousMcCounted)
-      //       ).toFixed(2)
-      //     );
-      //   });
-      // }
-
       Plannedcap = parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2));
-
-      const userRef = FirebaseDB.firestore()
-        .collection("users")
-        .doc(userIDextractor(docLoc));
-
-      userRef.get().then((document) => {
-        const val = document.data();
-        let arr = val.SelectedPlansInfo;
-        let dontExistBefore = true;
-        let doIchangeCurrentArr = false;
-        let pushed = false;
-        let tempArr = [];
-        const newObjToPush = {
-          Semester: yearExtractor(docLoc),
-          Cap: Plannedcap,
-          McUsedInCap: thisPlanMcUsedInCap,
-          useInCap: false,
-        };
-        if (arr.length > 0) {
-          const toCompareYear = yearExtractor(docLoc);
-          for (let i = 0; i < arr.length; i++) {
-            if (toCompareYear === arr[i].Semester) {
-              dontExistBefore = false;
-              if (!arr[i].useInCap) {
-                doIchangeCurrentArr = true;
-              }
-              break;
-            }
-          }
-
-          if (dontExistBefore) {
-            arr.push(newObjToPush);
-          }
-          arr = insertionSort(arr);
-
-          for (let i = 0; i < arr.length; i++) {
-            if (toCompareYear === arr[i].Semester) {
-              if (doIchangeCurrentArr) {
-                tempArr.push(newObjToPush);
-              } else {
-                tempArr.push(arr[i]);
-              }
-              pushed = true;
-            } else {
-              tempArr.push(arr[i]);
-            }
-          }
-          if (!pushed) {
-            tempArr.push(newObjToPush);
-          }
-          userRef.update({ SelectedPlansInfo: tempArr });
-        } else {
-          userRef.update({ SelectedPlansInfo: [newObjToPush] });
-        }
-      });
-
+      theOverallCap = parseFloat(
+        (
+          (thisPlanSum + totalPreviousSum) /
+          (thisPlanMcUsedInCap + totalPreviousMcCounted)
+        ).toFixed(2)
+      );
       const plansArrayRef = FirebaseDB.firestore()
         .collection("plansArray")
         .doc(docLoc);
@@ -691,7 +822,6 @@ const AddPlan = ({ route }) => {
         .then((document) => {
           const val = document.data();
           const arr = val.yearSem;
-          const thisPlanLength = arr.length;
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -701,9 +831,10 @@ const AddPlan = ({ route }) => {
                   key: (i + 1).toString(),
                   nameOfPlan: planNameValue,
                   useInCap: false,
-                  Cap: Plannedcap,
+                  SemestralCap: 0,
+                  PlannedCap: Plannedcap,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
                   MCs: thisPlanMc,
-                  MCsCountedToCap: thisPlanMcUsedInCap,
                   LastUpdated: 0,
                 });
                 pushed = true;
@@ -716,30 +847,30 @@ const AddPlan = ({ route }) => {
                 key: (arr.length + 1).toString(),
                 nameOfPlan: planNameValue,
                 useInCap: false,
-                Cap: Plannedcap,
+                SemestralCap: 0,
+                PlannedCap: Plannedcap,
+                OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
                 MCs: thisPlanMc,
-                MCsCountedToCap: thisPlanMcUsedInCap,
                 LastUpdated: 0,
               });
             }
             plansArrayRef.set({
               yearSem: newPlansArr,
-              selected: (thisPlanLength + 1).toString(),
             });
           } else {
             plansArrayRef.set({
               yearSem: [
                 {
-                  key: "1",
+                  key: (1).toString(),
                   nameOfPlan: planNameValue,
                   useInCap: false,
-                  Cap: Plannedcap,
+                  SemestralCap: 0,
+                  PlannedCap: Plannedcap,
+                  OverallCap: thisYear === "Y1S1" ? Plannedcap : theOverallCap,
                   MCs: thisPlanMc,
-                  MCsCountedToCap: thisPlanMcUsedInCap,
                   LastUpdated: 0,
                 },
               ],
-              selected: "1",
             });
           }
         })
@@ -806,16 +937,14 @@ const AddPlan = ({ route }) => {
                   text: "Continue",
                   onPress: () => {
                     setBlock("false");
-                    //nextPage();
-                    firstChecks();
+                    nextPage();
                   },
                 },
               ],
               { cancelable: false }
             );
           } else {
-            firstChecks();
-            //nextPage();
+            nextPage();
           }
         }}
         style={styles.flexOneCenterFlexEnd}
