@@ -10,6 +10,7 @@ import { useSafeArea } from "react-native-safe-area-context";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
+console.disableYellowBox = true;
 const Filter = ({ navigation, route }) => {
   useEffect(() => {
     if (route.params?.fullList) {
@@ -504,8 +505,6 @@ const Filter = ({ navigation, route }) => {
         size={"45%"}
         clearAll={() => {
           clear(true);
-          setSortState1("Default");
-          setSortState2("Default");
           setTimeout(() => {
             clear(false);
             setList(fullList);
