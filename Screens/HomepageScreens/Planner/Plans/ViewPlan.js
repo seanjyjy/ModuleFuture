@@ -141,10 +141,14 @@ const ViewPlan = ({ route }) => {
             const newTotalSum = SumMcArr[0] + arr[i].MCs * arr[i].Cap;
             tempArr.push({
               SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
-              OverallCap: parseFloat((newTotalSum / newTotalMcs).toFixed(2)),
-              PlannedOverallCap: parseFloat(
-                (newTotalSum / newTotalMcs).toFixed(2)
-              ),
+              OverallCap:
+                newTotalMcs !== 0
+                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                  : 0,
+              PlannedOverallCap:
+                newTotalMcs !== 0
+                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                  : 0,
               PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
               MCs: arr[i].MCs,
               LastUpdated: arr[i].LastUpdated,

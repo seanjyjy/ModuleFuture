@@ -223,16 +223,19 @@ const ContentPage = (props) => {
                     const selected = val.selected;
                     let infoForNextPage = [];
                     for (let i = 0; i < arr.length; i++) {
-                      const newTotalMcs = totalMCs + arr[i].MCs;
-                      const newTotalSum = totalSum + arr[i].MCs * arr[i].Cap;
+                      const newTotalMcs = totalMCs + arr[i].MCsCountedToCap;
+                      const newTotalSum =
+                        totalSum + arr[i].MCsCountedToCap * arr[i].Cap;
                       infoForNextPage.push({
                         SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
-                        OverallCap: parseFloat(
-                          (newTotalSum / newTotalMcs).toFixed(2)
-                        ),
-                        PlannedOverallCap: parseFloat(
-                          (newTotalSum / newTotalMcs).toFixed(2)
-                        ),
+                        OverallCap:
+                          newTotalMcs !== 0
+                            ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                            : 0,
+                        PlannedOverallCap:
+                          newTotalMcs !== 0
+                            ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                            : 0,
                         PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
                         MCs: arr[i].MCs,
                         LastUpdated: arr[i].LastUpdated,

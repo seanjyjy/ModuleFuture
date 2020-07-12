@@ -466,7 +466,9 @@ const AddPlan = ({ route }) => {
             if (bool) {
               semMc += NumMcs;
             }
-            semTotalMc += NumMcs;
+            if (FinalGrade !== "CU") {
+              semTotalMc += NumMcs;
+            }
           }
           // End of for loop for data array
           // Remove any codes / levels if needed??
@@ -598,8 +600,10 @@ const AddPlan = ({ route }) => {
                     totalMcUsedInCap += mc;
                     thisSemMcUsedInCap += mc;
                   }
-                  thisSemMc += mc;
-                  totalMc += mc;
+                  if (arr[i].ModulesDetailsArray[j].FinalGrade !== "CU") {
+                    thisSemMc += mc;
+                    totalMc += mc;
+                  }
                 }
               }
               tempArr.push({
@@ -608,9 +612,10 @@ const AddPlan = ({ route }) => {
                 SemestralCap: parseFloat(
                   (thisSemSum / thisSemMcUsedInCap).toFixed(2)
                 ),
-                OverallCap: parseFloat(
-                  (totalSum / totalMcUsedInCap).toFixed(2)
-                ),
+                OverallCap:
+                  totalMcUsedInCap !== 0
+                    ? parseFloat((totalSum / totalMcUsedInCap).toFixed(2))
+                    : 0,
 
                 SemestralMc: thisSemMc,
                 OverallMc: totalMc,
@@ -630,9 +635,10 @@ const AddPlan = ({ route }) => {
                 Semester: fromWhere,
 
                 SemestralCap: semCap,
-                OverallCap: parseFloat(
-                  (totalSum / totalMcUsedInCap).toFixed(2)
-                ),
+                OverallCap:
+                  totalMcUsedInCap !== 0
+                    ? parseFloat((totalSum / totalMcUsedInCap).toFixed(2))
+                    : 0,
 
                 SemestralMc: semTotalMc, // semester total MC
                 OverallMc: totalMc, // overall total MC
@@ -651,7 +657,8 @@ const AddPlan = ({ route }) => {
                     Semester: fromWhere,
 
                     SemestralCap: semCap,
-                    OverallCap: parseFloat((semSum / semMc).toFixed(2)),
+                    OverallCap:
+                      semMC !== 0 ? parseFloat((semSum / semMc).toFixed(2)) : 0,
 
                     SemestralMc: semTotalMc,
                     OverallMc: semTotalMc,
@@ -706,7 +713,7 @@ const AddPlan = ({ route }) => {
       let thisPlanMcUsedInCap1 = 0;
 
       let Plannedcap = 0; // the users planned cap for the semester
-
+      let longdpcap = 0;
       for (let i = 0; i < data.length; i++) {
         thisPlanSum1 += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
         if (lettersChecker(data[i].FinalGrade)) {
@@ -720,8 +727,12 @@ const AddPlan = ({ route }) => {
         .collection("plansArray")
         .doc(docLoc);
 
-      Plannedcap = parseFloat((thisPlanSum1 / thisPlanMcUsedInCap1).toFixed(2));
-
+      Plannedcap =
+        thisPlanMcUsedInCap1 !== 0
+          ? parseFloat((thisPlanSum1 / thisPlanMcUsedInCap1).toFixed(2))
+          : 0;
+      longdpcap =
+        thisPlanMcUsedInCap1 !== 0 ? thisPlanSum1 / thisPlanMcUsedInCap1 : 0;
       const userRef = FirebaseDB.firestore()
         .collection("users")
         .doc(userIDextractor(docLoc));
@@ -790,6 +801,7 @@ const AddPlan = ({ route }) => {
                   MCs: thisPlanMc1,
                   MCsCountedToCap: thisPlanMcUsedInCap1,
                   LastUpdated: 0,
+                  LONGDPCAP: longdpcap,
                 });
                 pushed = true;
               } else {
@@ -805,6 +817,7 @@ const AddPlan = ({ route }) => {
                 MCs: thisPlanMc1,
                 MCsCountedToCap: thisPlanMcUsedInCap1,
                 LastUpdated: 0,
+                LONGDPCAP: longdpcap,
               });
             }
             plansArrayRef.set({
@@ -823,6 +836,7 @@ const AddPlan = ({ route }) => {
                   MCs: thisPlanMc1,
                   MCsCountedToCap: thisPlanMcUsedInCap1,
                   LastUpdated: 0,
+                  LONGDPCAP: longdpcap,
                 },
               ],
               selected: "1",
@@ -839,17 +853,23 @@ const AddPlan = ({ route }) => {
       let thisPlanMcUsedInCap = 0;
 
       let Plannedcap = 0;
-
+      let longdpcap = 0;
       for (let i = 0; i < data.length; i++) {
         thisPlanSum += data[i].NumMcs * GradeToPoint(data[i].TargetGrade);
         if (lettersChecker(data[i].TargetGrade)) {
           thisPlanMcUsedInCap += data[i].NumMcs;
         }
-        thisPlanMc += data[i].NumMcs;
+        if (data[i].TargetGrade !== "CU") {
+          thisPlanMc += data[i].NumMcs;
+        }
       }
 
-      Plannedcap = parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2));
-
+      Plannedcap =
+        thisPlanMcUsedInCap !== 0
+          ? parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2))
+          : 0;
+      longdpcap =
+        thisPlanMcUsedInCao !== 0 ? thisPlanSum / thisPlanMcUsedInCap : 0;
       const userRef = FirebaseDB.firestore()
         .collection("users")
         .doc(userIDextractor(docLoc));
@@ -930,6 +950,7 @@ const AddPlan = ({ route }) => {
                   MCs: thisPlanMc,
                   MCsCountedToCap: thisPlanMcUsedInCap,
                   LastUpdated: 0,
+                  LONGDPCAP: longdpcap,
                 });
                 pushed = true;
               } else {
@@ -945,6 +966,7 @@ const AddPlan = ({ route }) => {
                 MCs: thisPlanMc,
                 MCsCountedToCap: thisPlanMcUsedInCap,
                 LastUpdated: 0,
+                LONGDPCAP: longdpcap,
               });
             }
             plansArrayRef.set({
@@ -963,6 +985,7 @@ const AddPlan = ({ route }) => {
                   MCs: thisPlanMc,
                   MCsCountedToCap: thisPlanMcUsedInCap,
                   LastUpdated: 0,
+                  LONGDPCAP: longdpcap,
                 },
               ],
               selected: "1",
