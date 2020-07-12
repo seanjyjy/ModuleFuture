@@ -164,12 +164,12 @@ const Plans = (props) => {
             //deletion occurs
             setCurrentArr(arr);
             setArrForRect(arr2);
-            setCurrentID(val.selected);
+            setCurrentID(selected);
             setSelected(new Map().set(selected, true));
           } else {
             //addition occurs
             setArrForRect(props.data[3]);
-            setSelected(new Map().set(props.data[2], true));
+            setSelected(new Map().set(selected, true));
             setCurrentArr(props.data[1]);
             setCurrentID(props.data[2]);
             setShowDustBin(true);
@@ -416,20 +416,10 @@ const Plans = (props) => {
                     // updates in UserRef plansSelected info
                     let newSelectedPlansInfo = [];
                     let isThereApreviousFinalGrade = false;
-                    //let thepreviousObjFinalGrade;
                     let previousObjNoFinalGrade;
                     for (let i = 0; i < tempArr.length; i++) {
                       if (tempArr[i].useInCap) {
                         isThereApreviousFinalGrade = true;
-                        //   thepreviousObjFinalGrade = {
-                        //     Cap: tempArr[i].Cap,
-                        //     McUsedInCap: tempArr[i].MCsCountedToCap,
-                        //     Semester: props.headerTitle,
-                        //     useInCap: true,
-                        //     nameOfPlan: tempArr[i].nameOfPlan,
-                        //   };
-                        //   whatPos = tempArr[i].key;
-                        //   break;
                       }
                       if (tempArr[i].key === whatPos) {
                         previousObjNoFinalGrade = {
@@ -447,15 +437,8 @@ const Plans = (props) => {
                         selectedplansinfo[i].nameOfPlan === planName &&
                         !isThereApreviousFinalGrade
                       ) {
-                        // if there is a previous final grade inputted, then we go to that
-                        // if (isThereApreviousFinalGrade)
-                        //   newSelectedPlansInfo.push(thepreviousObjFinalGrade);
-                        // else {
-                        // else we will just go to the closest plan if exist.
                         if (whatPos !== "0")
                           newSelectedPlansInfo.push(previousObjNoFinalGrade);
-
-                        //}
                       } else newSelectedPlansInfo.push(selectedplansinfo[i]);
                     }
                     const userRef = FirebaseDB.firestore()
@@ -687,16 +670,62 @@ const Plans = (props) => {
               style={{ color: "#3E3E3E", left: 30, bottom: 15 }}
               onPress={() => {
                 // yearSem update here
+                const userRef = FirebaseDB.firestore()
+                  .collection("users")
+                  .doc(userID);
+
                 if (currentArr.length > 0) {
                   plansArrayRef.update({
                     selected: currentID,
                   });
+
+                  userRef
+                    .get()
+                    .then((document) => {
+                      const val = document.data();
+                      const arr = val.SelectedPlansInfo;
+                      let doIChange = true;
+                      const currentPlanName =
+                        currentArr[parseInt(currentID) - 1].nameOfPlan;
+                      for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].Semester === props.headerTitle) {
+                          if (
+                            arr[i].useInCap ||
+                            arr[i].nameOfPlan === currentPlanName
+                          ) {
+                            doIChange = false;
+                          }
+                          break;
+                        }
+                      }
+                      if (doIChange) {
+                        let tempArr = [];
+                        for (let i = 0; i < arr.length; i++) {
+                          if (arr[i].Semester === props.headerTitle) {
+                            tempArr.push({
+                              Cap: currentArr[parseInt(currentID) - 1].Cap,
+                              McUsedInCap:
+                                currentArr[parseInt(currentID) - 1]
+                                  .MCsCountedToCap,
+                              Semester: props.headerTitle,
+                              nameOfPlan: currentPlanName,
+                              useInCap: false,
+                            });
+                          } else {
+                            tempArr.push(arr[i]);
+                          }
+                        }
+                        userRef.update({
+                          SelectedPlansInfo: tempArr,
+                        });
+                      }
+                    })
+                    .catch((error) => {});
                 } else {
                   plansArrayRef.update({
                     selected: "-1",
                   });
                 }
-
                 navigation.dispatch(CommonActions.goBack());
               }}
             />
@@ -782,34 +811,93 @@ const Plans = (props) => {
             style={styles.enterButton}
             onPress={() => {
               // come here later to solve the problem!
+              const currentPlanName =
+                currentArr[parseInt(currentID) - 1].nameOfPlan;
+              const userRef = FirebaseDB.firestore()
+                .collection("users")
+                .doc(userID);
+
+              if (currentArr.length > 0) {
+                plansArrayRef.update({
+                  selected: currentID,
+                });
+
+                userRef
+                  .get()
+                  .then((document) => {
+                    const val = document.data();
+                    const arr = val.SelectedPlansInfo;
+                    let doIChange = true;
+
+                    for (let i = 0; i < arr.length; i++) {
+                      if (arr[i].Semester === props.headerTitle) {
+                        if (
+                          arr[i].useInCap ||
+                          arr[i].nameOfPlan === currentPlanName
+                        ) {
+                          doIChange = false;
+                        }
+                        break;
+                      }
+                    }
+                    if (doIChange) {
+                      let tempArr = [];
+                      for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].Semester === props.headerTitle) {
+                          tempArr.push({
+                            Cap: currentArr[parseInt(currentID) - 1].Cap,
+                            McUsedInCap:
+                              currentArr[parseInt(currentID) - 1]
+                                .MCsCountedToCap,
+                            Semester: props.headerTitle,
+                            nameOfPlan: currentPlanName,
+                            useInCap: false,
+                          });
+                        } else {
+                          tempArr.push(arr[i]);
+                        }
+                      }
+                      userRef.update({
+                        SelectedPlansInfo: tempArr,
+                      });
+                    }
+                  })
+                  .catch((error) => {});
+              } else {
+                plansArrayRef.update({
+                  selected: "-1",
+                });
+              }
+
               if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
                 alert("Please select or create a plan");
               } else {
-                const currentPlanName =
-                  currentArr[parseInt(currentID) - 1].nameOfPlan;
                 const plansItselfRef = FirebaseDB.firestore()
                   .collection("plansItself")
                   .doc(
                     userID.concat("_", props.headerTitle, "_", currentPlanName)
                   );
-                const val = plansItselfRef.get().then((document) => {
-                  const info = document.data();
-                  if (info !== undefined) {
-                    const moduleInformations = info.planInfo;
-                    const thisPlanName = info.nameOfPlan;
-                    const amIfavourite = info.amIfavourite;
-                    navigation.navigate("ViewPlan", {
-                      item: [
-                        thisPlanName,
-                        docLoc,
-                        size,
-                        fromWhere,
-                        moduleInformations,
-                        amIfavourite,
-                      ],
-                    });
-                  }
-                });
+                const val = plansItselfRef
+                  .get()
+                  .then((document) => {
+                    const info = document.data();
+                    if (info !== undefined) {
+                      const moduleInformations = info.planInfo;
+                      const thisPlanName = info.nameOfPlan;
+                      const amIfavourite = info.amIfavourite;
+                      navigation.navigate("ViewPlan", {
+                        item: [
+                          thisPlanName,
+                          docLoc,
+                          size,
+                          fromWhere,
+                          moduleInformations,
+                          amIfavourite,
+                        ],
+                      });
+                    }
+                  })
+                  .catch((error) => {});
               }
             }}
           >

@@ -709,44 +709,16 @@ const AddPlan = ({ route }) => {
 
       for (let i = 0; i < data.length; i++) {
         thisPlanSum1 += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
-        if (lettersChecker(data[i].TargetGrade)) {
+        if (lettersChecker(data[i].FinalGrade)) {
           thisPlanMcUsedInCap1 += data[i].NumMcs;
         }
-        thisPlanMc1 += data[i].NumMcs;
+        if (data[i].FinalGrade !== "CU") {
+          thisPlanMc1 += data[i].NumMcs;
+        }
       }
       const plansArrayRef = FirebaseDB.firestore()
         .collection("plansArray")
         .doc(docLoc);
-
-      // let didLastYearPlanWithFinalGradesExist = false;
-      // if (thisYear !== "Y1S1") {
-      //   const semToSearch = searchSem(thisYear);
-      //   const userRef = FirebaseDB.firestore()
-      //     .collection("users")
-      //     .doc(userIDextractor(docLoc));
-      //   userRef
-      //     .get()
-      //     .then((document) => {
-      //       const val = document.data();
-      //       const arr = val.CapArray;
-      //       for (let i = 0; i < arr.length; i++) {
-      //         if (arr[i].Semester === semToSearch) {
-      //           totalPreviousMcCounted += arr[i].MCcountedToCap;
-      //           totalPreviousSum += arr[i].MCcountedToCap * arr[i].OverallCap;
-      //           didLastYearPlanWithFinalGradesExist = true;
-      //           break;
-      //         }
-      //       }
-      //       theOverallCap = parseFloat(
-      //         (
-      //           (thisPlanSum1 + totalPreviousSum) /
-      //           (thisPlanMcUsedInCap1 + totalPreviousMcCounted)
-      //         ).toFixed(2)
-      //       );
-      //     })
-
-      //     .catch((error) => {});
-      // }
 
       Plannedcap = parseFloat((thisPlanSum1 / thisPlanMcUsedInCap1).toFixed(2));
 
@@ -875,30 +847,6 @@ const AddPlan = ({ route }) => {
         }
         thisPlanMc += data[i].NumMcs;
       }
-
-      // if (thisYear !== "Y1S1") {
-      //   const semToSearch = searchSem(thisYear);
-      //   const userRef = FirebaseDB.firestore()
-      //     .collection("users")
-      //     .doc(userIDextractor(docLoc));
-      //   userRef.get().then((document) => {
-      //     const val = document.data();
-      //     const arr = val.CapArray;
-      //     for (let i = 0; i < arr.length; i++) {
-      //       if (arr[i].Semester === semToSearch) {
-      //         totalPreviousMcCounted = arr[i].MCcountedToCap;
-      //         totalPreviousSum = arr[i].MCcountedToCap * arr[i].OverallCap;
-      //         break;
-      //       }
-      //     }
-      //     theOverallCap = parseFloat(
-      //       (
-      //         (thisPlanSum + totalPreviousSum) /
-      //         (thisPlanMcUsedInCap + totalPreviousMcCounted)
-      //       ).toFixed(2)
-      //     );
-      //   });
-      // }
 
       Plannedcap = parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2));
 

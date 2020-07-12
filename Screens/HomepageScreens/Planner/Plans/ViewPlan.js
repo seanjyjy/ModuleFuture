@@ -33,10 +33,9 @@ const ViewPlan = ({ route }) => {
   const [fromWhere, setFromWhere] = useState("");
   const [size, setSize] = useState("");
   const [favourite, setfavourite] = useState(false);
-
+  const [semList, setSemList] = useState([]);
   const [userID, setUserID] = useState("");
   const [userRef, setUserRef] = useState("");
-  const [semList, setSemList] = useState([]);
   const [usersDetails, setUsersDetails] = useState([]);
   const [arrToUse, setArrToUse] = useState([]);
   const [selectedplansinfo, setselectedplansinfo] = useState([]);
@@ -278,7 +277,6 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(fromWhere, {
-              //item: [userIDextractor(docLoc), arr1, selectPos1, infoArray1],
               item: arrToPass,
             }),
           400
@@ -333,7 +331,6 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[0]], {
-              //item: [userIDextractor(docLoc), arr2, selectPos2, infoArray2],
               item: arrToPass,
             }),
           400
@@ -361,7 +358,6 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[1]], {
-              //item: [userIDextractor(docLoc), arr3, selectPos3, infoArray3],
               item: arrToPass,
             }),
           400
@@ -390,7 +386,6 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[2]], {
-              //item: [userIDextractor(docLoc), arr4, selectPos4, infoArray4],
               item: arrToPass,
             }),
 
@@ -593,6 +588,7 @@ const ViewPlan = ({ route }) => {
                 bottom: 12,
                 ...globalFontStyles.NB_14,
                 color: "#007AFF",
+                left: 15,
               }}
             >
               Edit
