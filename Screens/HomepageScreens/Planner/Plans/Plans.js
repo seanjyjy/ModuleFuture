@@ -10,7 +10,7 @@ import {
   ImageBackground,
   Keyboard,
 } from "react-native";
-
+import { useIsFocused } from "@react-navigation/native";
 import Header from "../../../../Component/Header";
 import Icons from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -121,31 +121,23 @@ function RectInfoSelected({
 
 const Plans = (props) => {
   const navigation = useNavigation();
-  //const thisPageInfo = props.nextPageInfo;
-  //const userID = thisPageInfo[0];
   const info = props.data;
   const userID = info[0];
+  const fromWhere = props.headerTitle;
+  const docLoc = userID.concat("_", fromWhere);
   const plansArrayRef = FirebaseDB.firestore()
     .collection("plansArray")
-    .doc(userID.concat("_", props.headerTitle));
+    .doc(docLoc);
   const [currentArr, setCurrentArr] = useState(info[1]);
-  //const [size, setSize] = useState(thisPageInfo[1].length);
+  const [selected, setSelected] = React.useState(new Map().set("1", true));
+  const [planName, setPlanName] = useState("");
+  const [currentID, setCurrentID] = useState("1");
+  const [modalVisible, setModalVisible] = useState(false);
   const [size, setSize] = useState(0);
+  const [showDustBin, setShowDustBin] = useState(true);
+  const [alertText, setAlertText] = useState(false);
+  const [alertText1, setAlertText1] = useState(false);
   useEffect(() => {
-    // plansArrayRef
-    //   .get()
-    //   .then((document) => {
-    //     const val = document.data();
-    //     if (val !== undefined) {
-    //       const arr = val.yearSem;
-    //       setSize(arr.length);
-    //       setCurrentArr(arr);
-    //     } else {
-    //       plansArrayRef.set({ yearSem: [] });
-    //       setCurrentArr([]);
-    //     }
-    //   })
-    //   .catch((error) => alert(error));
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
         const val = document.data();
@@ -153,9 +145,13 @@ const Plans = (props) => {
           const arr = val.yearSem;
           setSize(arr.length);
           setCurrentArr(arr);
+          if (arr.length === 0) {
+            setShowDustBin(false);
+          }
         } else {
           plansArrayRef.set({ yearSem: [] });
           setCurrentArr([]);
+          setShowDustBin(false);
         }
       },
       (error) => alert(error)
@@ -163,17 +159,20 @@ const Plans = (props) => {
     return () => unsub();
   }, [userID]);
 
-  const [selected, setSelected] = React.useState(new Map().set("1", true));
-  const [planName, setPlanName] = useState("Plan 1");
   const onSelect = React.useCallback(
     (key) => {
+      if (!selected.get(key)) {
+        setShowDustBin(true);
+      } else {
+        setShowDustBin(false);
+      }
       const newSelected = new Map();
       newSelected.set(key, !selected.get(key));
       setSelected(newSelected);
     },
     [selected]
   );
-  const [currentID, setCurrentID] = useState("1");
+
   const setCurrentlyPressID = (val) => {
     if (val === currentID) {
       setCurrentID("-1");
@@ -181,15 +180,16 @@ const Plans = (props) => {
       setCurrentID(val);
     }
   };
-  const data = [
-    { key: "1", value: true },
-    { key: "2", value: false },
-    { key: "3", value: false },
-    { key: "4", value: false },
-  ]; // demo
 
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const existBefore = (val, arr) => {
+    let truth = false;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].nameOfPlan === val) {
+        truth = true;
+      }
+    }
+    return truth;
+  };
   // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
     return (
@@ -212,6 +212,7 @@ const Plans = (props) => {
               height: 0.04 * height,
               borderWidth: 1,
               borderColor: "#D0CECE",
+              bottom: 5,
             }}
           >
             <TextInput
@@ -220,10 +221,35 @@ const Plans = (props) => {
                 height: 0.04 * height,
                 left: 5,
               }}
-              placeholder="e.g. EZ CAP 5.0"
+              placeholder="e.g. Main Plan"
               onChangeText={(val) => setPlanName(val)}
             />
           </View>
+          {alertText || alertText1 ? (
+            alertText ? (
+              <Text
+                style={{
+                  ...globalFontStyles.OSR_12,
+                  bottom: 4,
+                  color: "#cc0000",
+                }}
+              >
+                Please enter a plan name
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  ...globalFontStyles.OSR_12,
+                  bottom: 4,
+                  color: "#cc0000",
+                }}
+              >
+                This plan name exists already!
+              </Text>
+            )
+          ) : (
+            <View />
+          )}
         </View>
         <View
           style={{
@@ -236,6 +262,8 @@ const Plans = (props) => {
           <TouchableOpacity
             onPress={() => {
               Keyboard.dismiss();
+              setAlertText(false);
+              setAlertText1(false);
               setModalVisible(false);
             }}
             activeOpacity={0.9}
@@ -253,16 +281,24 @@ const Plans = (props) => {
             style={styles.flexOneCenter}
             activeOpacity={0.9}
             onPress={() => {
-              Keyboard.dismiss();
-              setModalVisible(false);
-              navigation.navigate("AddPlan", {
-                item: [
-                  planName,
-                  userID.concat("_", props.headerTitle),
-                  size,
-                  props.headerTitle,
-                ],
-              });
+              if (existBefore(planName, currentArr) || planName.length <= 0) {
+                if (planName.length <= 0) setAlertText(true);
+                if (existBefore(planName, currentArr)) setAlertText1(true);
+              } else {
+                Keyboard.dismiss();
+                setAlertText(false);
+                setAlertText1(false);
+                setModalVisible(false);
+                navigation.navigate("AddPlan", {
+                  item: [
+                    planName,
+                    userID.concat("_", props.headerTitle),
+                    size,
+                    props.headerTitle,
+                  ],
+                  from: "Plans",
+                });
+              }
             }}
           >
             <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
@@ -273,6 +309,71 @@ const Plans = (props) => {
       </Modal>
     );
   };
+
+  const emptySpace = (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+      }}
+    />
+  );
+  const dustBin = (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+      }}
+    >
+      <Icon
+        style={{ bottom: 20 }}
+        name="trash-2-outline"
+        width={30}
+        height={20}
+        fill="#232323"
+        onPress={() => {
+          if (currentArr.length > 0) {
+            plansArrayRef
+              .get()
+              .then((document) => {
+                const val = document.data();
+                if (val !== undefined) {
+                  const arr = val.yearSem;
+                  const newArr = [];
+                  let keyValue = 0;
+                  for (let i = 0; i < arr.length; i++) {
+                    if (arr[i].key !== currentID) {
+                      newArr.push({
+                        key: (keyValue + 1).toString(),
+                        nameOfPlan: arr[i].nameOfPlan,
+                      });
+                      keyValue++;
+                    } else {
+                      const currentPlanName = arr[i].nameOfPlan;
+                      FirebaseDB.firestore()
+                        .collection("plansItself")
+                        .doc(
+                          userID.concat(
+                            "_",
+                            props.headerTitle,
+                            "_",
+                            currentPlanName
+                          )
+                        )
+                        .delete();
+                    }
+                  }
+                  plansArrayRef.set({ yearSem: newArr });
+                }
+              })
+              .catch((error) => alert(error));
+          }
+        }}
+      />
+    </View>
+  );
   return (
     <View style={{ flex: 1, minHeight: hp("100%") }}>
       <View style={styles.header}>
@@ -311,23 +412,8 @@ const Plans = (props) => {
               {props.headerTitle}
             </Text>
           </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                bottom: 18,
-                ...globalFontStyles.NB_14,
-                color: "#007AFF",
-              }}
-            >
-              Edit
-            </Text>
-          </View>
+
+          {showDustBin ? dustBin : emptySpace}
         </ImageBackground>
       </View>
       <View style={{ flex: 6, backgroundColor: "#f9f9f9" }}>
@@ -358,7 +444,8 @@ const Plans = (props) => {
             activeOpacity={0.9}
             style={styles.enterButton}
             onPress={() => {
-              if (parseInt(currentID) - 1 < 0) {
+              // come here later to solve the problem!
+              if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
                 alert("Please select or create a plan");
               } else {
                 const currentPlanName =
@@ -376,8 +463,10 @@ const Plans = (props) => {
                     navigation.navigate("ViewPlan", {
                       item: [
                         thisPlanName,
+                        docLoc,
+                        size,
+                        fromWhere,
                         moduleInformations,
-                        props.headerTitle,
                       ],
                     });
                   }
@@ -487,7 +576,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-start",
     alignItems: "center",
-    top: 30,
+    top: 15,
   },
   input: {
     borderWidth: 1,

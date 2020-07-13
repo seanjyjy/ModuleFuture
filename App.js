@@ -14,14 +14,15 @@ import { ApplicationProvider } from "@ui-kitten/components";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
 import FirebaseDB from "./FirebaseDB";
+import ModuleListWithKey from "./Data/ModuleListMoreInfo";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
-
 import Login from "./Screens/Login/Login";
 import DetailsCollection from "./Screens/Login/DetailsCollection";
 import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
 import AddModule from "./Screens/HomepageScreens/AddModule/AddModule";
 import Filter from "./Screens/HomepageScreens/AddModule/Filter";
+import SeeModules from "./Screens/HomepageScreens/AddModule/SeeModules";
 import {
   Y1S1,
   Y1S2,
@@ -37,6 +38,9 @@ import {
 import AddPlan from "./Screens/HomepageScreens/Planner/Plans/AddPlan";
 import ViewPlan from "./Screens/HomepageScreens/Planner/Plans/ViewPlan";
 import ChoosingOptions from "./Component/MakingClock";
+import Course from "./Screens/HomepageScreens/Profile/Course";
+import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
+import Year from "./Screens/HomepageScreens/Profile/Year";
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
@@ -73,6 +77,8 @@ export default function App() {
     user: null,
   });
 
+  const [modLoading, setModLoading] = useState(false);
+
   const loadAssetAsync = async () => {
     const imageAssets = cacheImages([
       require("./assets/loginbackgroundtest2.png"),
@@ -92,6 +98,7 @@ export default function App() {
       require("./assets/plan2.png"),
       require("./assets/plan3.png"),
       require("./assets/plan4.png"),
+      require("./assets/JumpingMan.png"),
     ]);
 
     const fontAssets = getFonts();
@@ -113,6 +120,21 @@ export default function App() {
         setData({ loading: true });
       }
     });
+    // const moduleArr = FirebaseDB.firestore().collection("ModuleList");
+    // FirebaseDB.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     usersRef
+    //       .doc(user.uid)
+    //       .get()
+    //       .then((document) => {
+    //         const userData = document.data();
+    //         setData({ user: userData, loading: true });
+    //       })
+    //       .catch((error) => error);
+    //   } else {
+    //     setData({ loading: true });
+    //   }
+    // });
   }, []);
 
   return (
@@ -138,7 +160,11 @@ export default function App() {
                 >
                   {data.user ? (
                     <>
-                      <AuthStack.Screen name="Homepage" component={Homepage} />
+                      <AuthStack.Screen name="Homepage">
+                        {(props) => (
+                          <Homepage {...props} extraData={data.user} />
+                        )}
+                      </AuthStack.Screen>
                       <AuthStack.Screen
                         name="ProgressPageSettings"
                         component={ProgressPageSettings}
@@ -154,12 +180,26 @@ export default function App() {
                       <AuthStack.Screen name="Y5S1" component={Y5S1} />
                       <AuthStack.Screen name="Y5S2" component={Y5S2} />
                       <AuthStack.Screen name="AddPlan" component={AddPlan} />
+                      <AuthStack.Screen name="AddModule">
+                        {(props) => (
+                          <AddModule
+                            {...props}
+                            moduleList={ModuleListWithKey()}
+                          />
+                        )}
+                      </AuthStack.Screen>
                       <AuthStack.Screen
-                        name="AddModule"
-                        component={AddModule}
+                        name="SeeModules"
+                        component={SeeModules}
                       />
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
                       <AuthStack.Screen name="Filter" component={Filter} />
+                      <AuthStack.Screen name="Course" component={Course} />
+                      <AuthStack.Screen
+                        name="Graduation"
+                        component={Graduation}
+                      />
+                      <AuthStack.Screen name="Year" component={Year} />
                     </>
                   ) : (
                     <>

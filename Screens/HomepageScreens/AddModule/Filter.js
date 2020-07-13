@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,18 +15,52 @@ import FilterItem from "../../../Component/FilterItem";
 import FilterSection from "./FilterSection";
 import { useSafeArea } from "react-native-safe-area-context";
 
+export const TodosDispatch = React.createContext(null);
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const Filter = ({ navigation }) => {
-  const [numMods, update] = useState("400+");
+const Filter = ({ navigation, route }) => {
+  useEffect(() => {
+    if (route.params?.moduleList) {
+      const array = route.params?.moduleList;
+      setList(array);
+      update(numConversion(array.length));
+    }
+    const currentFilters = route.params?.currentFilters;
+    if (currentFilters !== 0) {
+      setFilterArr(currentFilters);
+      const newSet = new Set();
+      currentFilters.forEach((x) => newSet.add(x.name));
+      setFilterSet(newSet);
+      setTimeout(() => {
+        setFilterSet(new Set());
+      }, 20);
+    }
+  }, [route.params?.moduleList]);
+
+  const numConversion = (num) => {
+    if (num < 100) {
+      return num;
+    } else {
+      return Math.floor(num / 100) * 100 + "+";
+    }
+  };
+
+  const fullList = route.params.origList;
+  const [numMods, update] = useState(0);
+  const [filterSet, setFilterSet] = useState(new Set());
   const [sortState1, setSortState1] = useState("Default");
   const [sortState2, setSortState2] = useState("Default");
+  const [list, setList] = useState([]);
+  const [filterArr, setFilterArr] = useState([]);
+  const [clearFilters, clear] = useState(false);
+
+  let tempList = list;
 
   const header = (
     <View style={styles.header}>
       <Cross
-        top={14 + useSafeArea().top > 24 ? 10 : 0}
+        top={19 + useSafeArea().top > 24 ? 10 : 0}
         left={20}
         transition={() => navigation.goBack()}
         text={"Filter"}
@@ -89,47 +123,212 @@ const Filter = ({ navigation }) => {
   );
 
   const levels = [
-    { name: "1000", key: 1 },
-    { name: "2000", key: 2 },
-    { name: "3000", key: 3 },
-    { name: "4000", key: 4 },
-    { name: "5000", key: 5 },
-    { name: "6000", key: 6 },
-    { name: "8000", key: 7 },
-  ];
-
-  const codes = [
-    { name: "CS", key: 1 },
-    { name: "MA", key: 2 },
-    { name: "ST", key: 3 },
-    { name: "ES", key: 4 },
-    { name: "IS", key: 5 },
-    { name: "CM", key: 6 },
-    { name: "BIZ", key: 7 },
-    { name: "CEG", key: 8 },
-    { name: "CP", key: 9 },
-    { name: "BA", key: 10 },
-    { name: "GER", key: 11 },
+    { name: "1000" },
+    { name: "2000" },
+    { name: "3000" },
+    { name: "4000" },
+    { name: "5000" },
+    { name: "6000" },
+    { name: "8000" },
   ];
 
   const MCs = [
-    { name: "0 - 3", key: 1 },
-    { name: "4", key: 2 },
-    { name: "5 - 8", key: 3 },
-    { name: "More than 8", key: 4 },
+    { name: "0 - 3" },
+    { name: "4" },
+    { name: "5 - 8" },
+    { name: "More than 8" },
   ];
 
-  const other = [
-    { name: "S/U Option", key: 1 },
-    { name: "No Exam", key: 2 },
+  const semesters = [
+    { name: "Semester 1" },
+    { name: "Semester 2" },
+    { name: "Special Term I" },
+    { name: "Special Term II" },
   ];
+
+  const other = [{ name: "S/U Option" }, { name: "No Exam" }];
+
+  const departments = [
+    { name: "Computer Science" },
+    { name: "Information Systems and Analytics" },
+    { name: "Mathematics" },
+    { name: "Analytics and Operations" },
+    { name: "Economics" },
+    { name: "Statistics and Applied Probability" },
+    { name: "Center for Engl Lang Comms" },
+    { name: "Management and Organisation" },
+    { name: "Finance" },
+    { name: "Accounting" },
+    { name: "Marketing" },
+    { name: "Computing and Engineering Programme" },
+    { name: "Electrical and Computer Engineering" },
+    { name: "Alice Lee Center for Nursing Studies" },
+    { name: "Anatomy" },
+    { name: "Architecture" },
+    { name: "BIZ Dean's Office" },
+    { name: "Biochemistry" },
+    { name: "Biological Sciences" },
+    { name: "Biomedical Engineering" },
+    { name: "Building" },
+    { name: "Center for Quantum Technologies" },
+    { name: "Centre for Language Studies" },
+    { name: "Chemical and Biomolecular Engineering" },
+    { name: "Chemistry" },
+    { name: "Chinese Studies" },
+    { name: "Chua Thian Poh Comm Leader Center" },
+    { name: "Civil and Environmental Engineering" },
+    { name: "College of Alice and Peter Tan" },
+    { name: "Communications and New Media" },
+    { name: "Division of Graduate Dental Studies" },
+    { name: "Division of Graduate Medical Studies" },
+    { name: "Duke-NUS Dean's Office" },
+    { name: "Engineering Science Programme" },
+    { name: "English Language and Literature" },
+    { name: "FASS Dean's Office/Office of Programmes" },
+    { name: "FoD Dean's Office" },
+    { name: "FoE Dean's Office" },
+    { name: "FoL Dean's Office" },
+    { name: "FoS Dean's Office" },
+    { name: "Food Science and Technology" },
+    { name: "Geography" },
+    { name: "History" },
+    { name: "Industrial Design" },
+    { name: "Industrial Systems Engineering and Management" },
+    { name: "Institute of Systems Science" },
+    { name: "Japanese Studies" },
+    { name: "LKYSPP Dean's Office" },
+    { name: "Logistics Inst - Asia Pac" },
+    { name: "Malay Studies" },
+    { name: "Materials Science and Engineering" },
+    { name: "Mechanical Engineering" },
+    { name: "Mechanobiology Institute (MBI)" },
+    { name: "Microbiology and Immunology" },
+    { name: "NGS Dean's Office" },
+    { name: "NUS Entrepreneurship Centre" },
+    { name: "NUS Medicine Dean's Office" },
+    { name: "Office of Sr Dy Pres and Provost" },
+    { name: "Pathology" },
+    { name: "Pharmacology" },
+    { name: "Pharmacy" },
+    { name: "Philosophy" },
+    { name: "Physics" },
+    { name: "Physiology" },
+    { name: "Political Science" },
+    { name: "Psychology" },
+    { name: "Real Estate" },
+    { name: "Residential College 4" },
+    { name: "Ridge View Residential College" },
+    { name: "Risk Management Institute" },
+    { name: "SCALE Dean's Office" },
+    { name: "SDE Dean's Office" },
+    { name: "SSH School of Public Health Dean's Office" },
+    { name: "SoC Dean's Office" },
+    { name: "Social Work" },
+    { name: "Sociology" },
+    { name: "South Asian Studies" },
+    { name: "Southeast Asian Studies" },
+    { name: "Strategy and Policy" },
+    { name: "Temasek Defence Systems Inst" },
+    { name: "Tembusu College" },
+    { name: "University Scholars Programme" },
+    { name: "YSTCM Dean's Office" },
+    { name: "Yale-NUS College" },
+  ];
+
+  const addFilter = (name, cat) => {
+    try {
+      if (cat === "S/U Option") {
+        tempList = tempList.filter((x) => x.suOption);
+        setList(tempList);
+      } else if (cat === "No Exam") {
+        tempList = tempList.filter((x) => x.noExam);
+        setList(tempList);
+      } else if (cat === "Semester") {
+        const num =
+          name === "Semester 1"
+            ? 1
+            : name === "Semester 2"
+            ? 2
+            : name === "Special Term I"
+            ? 3
+            : 4;
+        tempList = tempList.filter((x) => x.Semester.has(num));
+        setList(tempList);
+      } else if (cat === "Level") {
+        tempList = tempList.filter((x) => x.Level === parseInt(name));
+        setList(tempList);
+      } else if (cat === "MC") {
+        if (name === "0 - 3") {
+          tempList = tempList.filter((x) => x.MC <= 3);
+          setList(tempList);
+        } else if (name === "4") {
+          tempList = tempList.filter((x) => x.MC === 4);
+          setList(tempList);
+        } else if (name === "5 - 8") {
+          tempList = tempList.filter((x) => x.MC >= 5 && x.MC <= 8);
+          setList(tempList);
+        } else {
+          tempList = tempList.filter((x) => x.MC > 8);
+          setList(tempList);
+        }
+      } else if (cat === "Department") {
+        tempList = tempList.filter((x) => x.Department === name);
+        setList(tempList);
+      } else {
+        throw "Category does not exist!";
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const filterAll = (filters) => {
+    tempList = fullList;
+    setList(fullList);
+    for (let i = 0; i < filters.length; i++) {
+      addFilter(filters[i].name, filters[i].cat);
+    }
+  };
+
+  const handleClick = (name, bool, category) => {
+    if (bool) {
+      filterArr.push({ name: name, cat: category });
+      setFilterArr(filterArr);
+      addFilter(name, category);
+    } else {
+      const newArr = filterArr.filter((x) => x.name !== name);
+      setFilterArr(newArr);
+      filterAll(newArr);
+    }
+    update(numConversion(tempList.length));
+  };
+
+  const reducer = (state, action) => {
+    handleClick(action.name, action.state, action.cat);
+  };
+  const [state, dispatch] = useReducer(reducer);
 
   const textWithIcon2 = (name) => (
-    <FilterItem text={name} box={false} reset={clearFilters} />
+    <TodosDispatch.Provider value={dispatch}>
+      <FilterItem
+        text={name}
+        category={name}
+        box={false}
+        reset={clearFilters}
+        filterSet={filterSet}
+      />
+    </TodosDispatch.Provider>
   );
 
-  const filterSection = (array, name) => (
-    <FilterSection array={array} name={name} reset={clearFilters} />
+  const filterSection = (array, category) => (
+    <TodosDispatch.Provider value={dispatch}>
+      <FilterSection
+        array={array}
+        name={category}
+        reset={clearFilters}
+        filterSet={filterSet}
+      />
+    </TodosDispatch.Provider>
   );
 
   const otherSection = (
@@ -145,19 +344,18 @@ const Filter = ({ navigation }) => {
       </Text>
       <FlatList
         data={other}
-        keyExtractor={(item) => item.key.toString()}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => textWithIcon2(item.name)}
       />
     </View>
   );
 
   const section = [
-    { key: 1, array: levels, string: "Level" },
-    { key: 2, array: codes, string: "Code" },
-    { key: 3, array: MCs, string: "MCs" },
+    { array: semesters, category: "Semester" },
+    { array: levels, category: "Level" },
+    { array: departments, category: "Department" },
+    { array: MCs, category: "MC" },
   ];
-
-  const [clearFilters, clear] = useState(false);
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -167,14 +365,19 @@ const Filter = ({ navigation }) => {
           ListHeaderComponent={sort}
           ListFooterComponent={otherSection}
           data={section}
-          keyExtractor={(item) => item.key.toString()}
-          renderItem={({ item }) => filterSection(item.array, item.string)}
+          keyExtractor={(item) => item.category}
+          renderItem={({ item }) => filterSection(item.array, item.category)}
           showsVerticalScrollIndicator={false}
         />
       </View>
       <BottomBar
         leftText={"Clear all"}
-        transition={() => navigation.navigate("AddModule")}
+        transition={() =>
+          navigation.navigate("AddModule", {
+            afterFilter: list,
+            currentFilters: filterArr,
+          })
+        }
         rightText={`Show ${numMods} modules`}
         size={"45%"}
         clearAll={() => {
@@ -183,6 +386,9 @@ const Filter = ({ navigation }) => {
           setSortState2("Default");
           setTimeout(() => {
             clear(false);
+            setList(fullList);
+            update(numConversion(fullList.length));
+            setFilterArr([]);
           }, 1);
         }}
       />

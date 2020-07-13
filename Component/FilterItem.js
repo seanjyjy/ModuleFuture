@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,23 +9,36 @@ import {
 import { globalFontStyles } from "./GlobalFont";
 import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
 import { Icon } from "react-native-eva-icons";
+import { TodosDispatch } from "../Screens/HomepageScreens/AddModule/Filter";
 
 const FilterItem = (props) => {
   const [toggled, setToggle] = useState(false);
+  const dispatch = useContext(TodosDispatch);
 
   if (toggled && props.reset) {
     setToggle(false);
+  }
+  if (!toggled && props.filterSet.has(props.text)) {
+    setToggle(true);
   }
 
   return (
     <TouchableOpacity
       style={styles.main}
       activeOpacity={0.65}
-      onPress={() => setToggle(!toggled)}
+      onPress={() => {
+        setToggle(!toggled);
+        dispatch({ name: props.text, cat: props.category, state: !toggled });
+      }}
     >
-      <Text style={{ ...globalFontStyles.NR_14, color: "black" }}>
-        {props.text}
-      </Text>
+      <View style={{ width: "88%" }}>
+        <Text
+          numberOfLines={1}
+          style={{ ...globalFontStyles.NR_14, color: "black" }}
+        >
+          {props.text}
+        </Text>
+      </View>
       <View>
         {props.box ? (
           <Icon

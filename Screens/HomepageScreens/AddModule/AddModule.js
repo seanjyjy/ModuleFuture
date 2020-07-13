@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,25 +15,25 @@ import BottomBar from "../../../Component/BottomBar";
 import Modal from "react-native-modal";
 import Cross from "../../../Component/Cross";
 import Container from "../../../Component/Container";
-import moduleList from "../../../Data/ModuleList";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const AddModule = ({ navigation, route }) => {
+const AddModule = (props) => {
+  const current = React.createRef();
+
   const header = (
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
         <Cross
           top={12}
-          left={0}
-          transition={() => navigation.goBack()}
+          transition={() => props.navigation.goBack()}
           text={"Add a module"}
         />
         <View style={styles.second}>
           <View style={styles.item2}>
             <Icon
-              style={{ marginLeft: 10 }}
+              style={{ marginLeft: 10, marginRight: 12 }}
               fill="#76768080"
               width={20}
               height={20}
@@ -43,8 +43,16 @@ const AddModule = ({ navigation, route }) => {
               <View style={{ flex: 1 }}>
                 <TextInput
                   placeholder="Module code, name"
-                  style={{ ...globalFontStyles.OSSB_15, marginLeft: 10 }}
                   placeholderTextColor="#76768080"
+                  autoCapitalize="words"
+                  onChangeText={(text) => {
+                    setSearch(text);
+                    let newList = fullList.filter((item) =>
+                      item.name.toLowerCase().includes(search.toLowerCase())
+                    );
+                    setModuleList(newList);
+                  }}
+                  ref={current}
                 ></TextInput>
               </View>
             </TouchableWithoutFeedback>
@@ -55,48 +63,97 @@ const AddModule = ({ navigation, route }) => {
             width={28}
             height={28}
             name="options-2-outline"
-            onPress={() => navigation.navigate("Filter")}
+            onPress={() => {
+              props.navigation.navigate("Filter", {
+                moduleList: fullList,
+                currentFilters: filterArr,
+                origList: origList,
+              });
+              current.current.clear();
+            }}
           />
         </View>
       </View>
     </View>
   );
 
+  useEffect(() => {
+    if (props.route.params?.currentFilters && props.route.params?.afterFilter) {
+      const newList = props.route.params?.afterFilter;
+      setFullList(newList);
+      setModuleList(newList);
+      setFilterArr(props.route.params?.currentFilters);
+    } else if (
+      props.route.params?.newModules &&
+      props.route.params?.value !== MCcount
+    ) {
+      const arr = props.route.params?.reAddedModules;
+      const newList = fullList;
+      for (let i = 0; i < arr.length; i++) {
+        fullList.push(arr[i]);
+        origList.push(arr[i]);
+      }
+      setFullList(newList);
+      setModuleList(newList);
+      add(props.route.params?.newModules);
+      addVal(props.route.params?.value);
+    }
+  }, [props.route.params?.newModules, props.route.params?.currentFilters]);
+
+  const [filterArr, setFilterArr] = useState([]);
+  const locationFrom = props.route.params?.item;
+  const [origList, setOrigList] = useState(props.moduleList);
+  const [fullList, setFullList] = useState(props.moduleList);
+  const [moduleList, setModuleList] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [current, setItem] = useState(moduleList[0]);
-  const [split, setSplit] = useState(0);
-  const [modules, add] = useState(new Set()); // modules are stored here
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [current, setItem] = useState(moduleList[0]);
+  // const [split, setSplit] = useState(0);
+  const [modules, add] = useState([]); // modules are stored here
+  const [search, setSearch] = useState("");
 
   const compute = (taken, notTaken) => {
     const len = taken.length + notTaken.length;
     return (taken.length / len) * 100;
   };
 
+  const valAdded = (item) => (locationFrom === "AddPlan" ? item.MC : 1);
+
+  /*
+Filter: 
+When entering from planner: Filter all modules planned
+Entering from records: Filter all modules mapped (to course) + planned
+Prereq: matched with whatever is planned / take
+
+*/
+
   const holders = (item) => (
     <Container
       name={item.name}
-      prereq={item.prereqFulfilled}
+      prereq={true}
       button1Press={() => {
         setItem(item);
-        setSplit(compute(item.taken, item.notTaken));
+        // setSplit(compute(item.taken, item.notTaken));
         setModalVisible(true);
       }}
-      button2Press={() => null}
-      incr={() => {
-        addVal(MCcount + 1);
-        const newSet = modules.add(item.name.substring(0, 7));
-        add(newSet);
+      button2Press={() => {
+        // console.log(item.semesters);
+        return null;
       }}
-      decr={() => {
-        addVal(MCcount - 1);
-        modules.delete(item.name.substring(0, 7));
-        let newSet = modules;
-        add(newSet);
+      incr={() => {
+        addVal(MCcount + valAdded(item));
+        modules.push(item);
+        add(modules);
+        let nextList = moduleList.filter((x) => x.code !== item.code);
+        let fl = fullList.filter((x) => x.code !== item.code);
+        setFullList(fl);
+        setModuleList(nextList);
+        setOrigList(origList.filter((x) => x.code !== x.code));
       }}
     />
   );
 
+  /*
   const textWithIcon = (name) => (
     <View
       style={{
@@ -126,7 +183,7 @@ const AddModule = ({ navigation, route }) => {
       </View>
     </View>
   );
-
+  
   const modal = (portion1, portion2) => {
     return (
       <Modal
@@ -173,6 +230,9 @@ const AddModule = ({ navigation, route }) => {
       </Modal>
     );
   };
+  */
+
+  const moduleOrMC = locationFrom === "AddPlan" ? "MC count" : "Modules Added";
 
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
@@ -181,23 +241,23 @@ const AddModule = ({ navigation, route }) => {
         <FlatList
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
           data={moduleList}
-          keyExtractor={(item) => item.key.toString()}
+          keyExtractor={(item) => item.code}
           renderItem={({ item }) => holders(item)}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<View style={{ height: height * 0.06 - 20 }} />}
         />
       </View>
-      {modal(split, 100 - split)}
+      {/* {modal(split, 100 - split)} */}
       <BottomBar
-        leftText={`Modules added: ${MCcount}`}
+        leftText={`${moduleOrMC}: ${MCcount}`}
+        clearAll={() => null}
         transition={() => {
-          const val = route.params?.item;
-          const iterator1 = modules.values();
-          const mods = [];
-          for (var i = 0; i < MCcount; i++) {
-            mods.push(iterator1.next().value);
-          }
-          navigation.navigate(val, { modDetails: [mods, MCcount] });
+          props.navigation.navigate("SeeModules", {
+            modDetails: modules,
+            location: locationFrom,
+            MC: MCcount,
+          });
+          current.current.clear();
         }}
         rightText={"Add modules"}
         size={"33%"}

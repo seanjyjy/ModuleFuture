@@ -13,7 +13,6 @@ const Records = ({ navigation }) => {
   const [currentType, changeType] = useState("Type");
   const [type, setTypeVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
-
   {
     /* --------------------------------------------Ellipsis------------------------------------------------ */
   }
@@ -172,7 +171,7 @@ const Records = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
-        leftChildren={<View />}
+        leftChildren={null}
         rightChildren={renderOverflowMenuAction()}
       />
       {selector()}
@@ -193,6 +192,7 @@ const Records = ({ navigation }) => {
         leftChildren={<View />}
         rightChildren={renderOverflowMenuAction()}
       />
+      {selector()}
     </View>
   );
 };

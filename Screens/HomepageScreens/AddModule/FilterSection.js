@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,13 +8,31 @@ import {
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FilterItem from "../../../Component/FilterItem";
+import { TodosDispatch } from "./Filter";
 
 const FilterSection = (props) => {
+  const dispatch = useContext(TodosDispatch);
+
   const textWithIcon1 = (name) => (
-    <FilterItem text={name} box={true} reset={props.reset} />
+    <TodosDispatch.Provider value={dispatch}>
+      <FilterItem
+        text={name}
+        category={props.name}
+        box={true}
+        reset={props.reset}
+        click={dispatch}
+        filterSet={props.filterSet}
+      />
+    </TodosDispatch.Provider>
   );
   const convert = (text) =>
-    text === "Level" ? "levels" : text === "Code" ? "codes" : text;
+    text === "Level"
+      ? "levels"
+      : text === "Department"
+      ? "departments"
+      : text === "Semester"
+      ? "semesters"
+      : text;
 
   const [noOfItems, setNum] = useState(3);
   const array = props.array;
@@ -41,7 +59,7 @@ const FilterSection = (props) => {
       </Text>
       <FlatList
         data={array.slice(0, noOfItems)}
-        keyExtractor={(item) => item.key.toString()}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => textWithIcon1(item.name)}
       />
       <View

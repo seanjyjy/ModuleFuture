@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -23,16 +24,17 @@ const height = Dimensions.get("window").height;
 
 const ModuleTemplate = (props) => {
   const clash = props.dataObj.clash;
-  const moduleName = props.dataObj.moduleName;
+  const moduleCode = props.dataObj.moduleCode;
   const TargetGrade = props.dataObj.TargetGrade;
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState("");
   const [text1, setText1] = useState("");
   const [clashValue, setClash] = useState(clash);
   const [TargetGradeValue, setTargetGrade] = useState(TargetGrade);
-  const [FinalGrade, setFinalGrade] = useState("");
+  const [FinalGrade, setFinalGrade] = useState(props.dataObj.FinalGrade);
   const [menuVisible, setMenuVisible] = useState(false);
   const [TargetOrFinal, setTargetOrFinal] = useState(0);
+  const [alertText, setAlertText] = useState(false);
   const MenuIcon = () => (
     <Icon
       fill="#232323"
@@ -58,7 +60,7 @@ const ModuleTemplate = (props) => {
           title={"Delete"}
           onPress={() => {
             const deleteMethod = props.deleteMethod;
-            deleteMethod(moduleName);
+            deleteMethod(moduleCode);
             toggleMenu();
           }}
           activeOpacity={0.9}
@@ -73,6 +75,32 @@ const ModuleTemplate = (props) => {
         />
       </OverflowMenu>
     );
+  };
+
+  const validText = (val) => {
+    if (val.length === 0) {
+      return false;
+    } else {
+      if (
+        val === "A+" ||
+        val === "A" ||
+        val === "A-" ||
+        val === "B+" ||
+        val === "B" ||
+        val === "B-" ||
+        val === "C+" ||
+        val === "C" ||
+        val === "D+" ||
+        val === "D" ||
+        val === "F" ||
+        val === "S" ||
+        val === "CSCU"
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   };
   const PopOutBox = (whatType) => {
     return (
@@ -97,6 +125,7 @@ const ModuleTemplate = (props) => {
               height: 0.04 * height,
               borderWidth: 1,
               borderColor: "#D0CECE",
+              bottom: 5,
             }}
           >
             <TextInput
@@ -105,18 +134,29 @@ const ModuleTemplate = (props) => {
                 height: 0.04 * height,
                 left: 5,
               }}
-              placeholder="S - A+ only"
+              placeholder="S - A+ or CSCU only"
               onChangeText={(val) => {
                 if (whatType === 0) {
                   setText(val);
-                  props.dataObj.TargetGrade = val;
                 } else {
                   setText1(val);
-                  props.dataObj.FinalGrade = val;
                 }
               }}
             />
           </View>
+          {alertText ? (
+            <Text
+              style={{
+                ...globalFontStyles.OSR_12,
+                bottom: 5,
+                color: "#cc0000",
+              }}
+            >
+              Please enter a valid grade, S - A+ or CSCU
+            </Text>
+          ) : (
+            <View />
+          )}
         </View>
         <View
           style={{
@@ -143,13 +183,31 @@ const ModuleTemplate = (props) => {
             style={styles.flexOneCenter}
             activeOpacity={0.9}
             onPress={() => {
-              Keyboard.dismiss();
               if (whatType === 0) {
-                setTargetGrade(text.toString().toUpperCase());
+                if (validText(text.toString().toUpperCase())) {
+                  setTargetGrade(text.toString().toUpperCase());
+                  props.dataObj.TargetGrade = text.toString().toUpperCase();
+                  setAlertText(false);
+                  Keyboard.dismiss();
+                  setModalVisible(false);
+                  setText("");
+                  setText1("");
+                } else {
+                  setAlertText(true);
+                }
               } else {
-                setFinalGrade(text1.toString().toUpperCase());
+                if (validText(text1.toString().toUpperCase())) {
+                  setFinalGrade(text1.toString().toUpperCase());
+                  props.dataObj.FinalGrade = text1.toString().toUpperCase();
+                  setAlertText(false);
+                  Keyboard.dismiss();
+                  setModalVisible(false);
+                  setText("");
+                  setText1("");
+                } else {
+                  setAlertText(true);
+                }
               }
-              setModalVisible(false);
             }}
           >
             <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
@@ -176,7 +234,7 @@ const ModuleTemplate = (props) => {
           <View style={styles.recHeader}>
             <View />
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              {moduleName}
+              {moduleCode}
             </Text>
             {Ellipsis()}
           </View>
@@ -312,7 +370,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-start",
     alignItems: "center",
-    top: 30,
+    top: 15,
   },
   input: {
     borderWidth: 1,

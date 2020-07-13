@@ -9,8 +9,8 @@ const height = Dimensions.get("window").height;
 
 const ChoosingOptions = ({ route }) => {
   const [isLoading, setIsLoading] = useState("");
-  const [index1, setIndex1] = useState("");
-  const [index2, setIndex2] = useState("");
+  const [index1, setIndex1] = useState(4);
+  const [index2, setIndex2] = useState(4);
   const yearValue = (val) => {
     return val === 1
       ? "2016"
@@ -163,7 +163,9 @@ const ChoosingOptions = ({ route }) => {
                   course: route.params?.item[1],
                   yearOfMatri: yearValue(parseInt(index1)),
                   expectedSemGrad: semValue(parseInt(index2)),
-                  focusArea: [],
+                  TargetCAP: 5,
+                  totalMCs: 160,
+                  CapArray: [],
                 };
                 const userRef = FirebaseDB.firestore().collection("users");
                 userRef

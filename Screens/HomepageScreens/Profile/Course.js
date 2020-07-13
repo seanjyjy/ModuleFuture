@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import Header from "../../../Component/Header";
-import { Icon } from "react-native-eva-icons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
+import { Pressed, NotPressed } from "./Buttons";
 
 const Course = ({ navigation, route }) => {
   useEffect(() => {
@@ -14,32 +13,11 @@ const Course = ({ navigation, route }) => {
   const userInfo = FirebaseDB.firestore().collection("users");
   const user = FirebaseDB.auth().currentUser.uid;
 
-  const NotPressed = (props) => (
-    <TouchableOpacity
-      style={styles.unpressed}
-      activeOpacity={0.85}
-      onPress={() => change(props)}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_14, color: "#00000080" }}>
-        {props}
-      </Text>
-      <Icon name="checkmark-outline" width={25} height={25} fill="white" />
-    </TouchableOpacity>
+  const notPressed = (str) => (
+    <NotPressed text={`${str}`} transition={() => change(`${str}`)} />
   );
-  const Pressed = (props) => (
-    <TouchableOpacity
-      style={{
-        ...styles.unpressed,
-        borderBottomWidth: StyleSheet.hairlineWidth * 2,
-      }}
-      activeOpacity={0.65}
-      onPress={() => change(props)}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
-        {props}
-      </Text>
-      <Icon name="checkmark-outline" width={25} height={25} fill="#232323" />
-    </TouchableOpacity>
+  const pressed = (str) => (
+    <Pressed text={`${str}`} transition={() => change(`${str}`)} />
   );
 
   let current = -1;
@@ -51,50 +29,50 @@ const Course = ({ navigation, route }) => {
     "Computer Engineering",
   ];
 
-  const [CS, setCS] = useState(NotPressed("Computer Science"));
-  const [BA, setBA] = useState(NotPressed("Business Analytics"));
-  const [IS, setIS] = useState(NotPressed("Information Systems"));
-  const [InfoSec, setInfoSec] = useState(NotPressed("Information Security"));
-  const [CEG, setCEG] = useState(NotPressed("Computer Engineering"));
+  const [CS, setCS] = useState(notPressed("Computer Science"));
+  const [BA, setBA] = useState(notPressed("Business Analytics"));
+  const [IS, setIS] = useState(notPressed("Information Systems"));
+  const [InfoSec, setInfoSec] = useState(notPressed("Information Security"));
+  const [CEG, setCEG] = useState(notPressed("Computer Engineering"));
   const [currentCourse, setCourse] = useState(3);
 
   const deSelect = (current) => {
     if (current === 0) {
-      setCS(NotPressed("Computer Science"));
+      setCS(notPressed("Computer Science"));
     } else if (current === 1) {
-      setBA(NotPressed("Business Analytics"));
+      setBA(notPressed("Business Analytics"));
     } else if (current === 2) {
-      setIS(NotPressed("Information Systems"));
+      setIS(notPressed("Information Systems"));
     } else if (current === 3) {
-      setInfoSec(NotPressed("Information Security"));
+      setInfoSec(notPressed("Information Security"));
     } else if (current === 4) {
-      setCEG(NotPressed("Computer Engineering"));
+      setCEG(notPressed("Computer Engineering"));
     }
   };
 
   const change = (props) => {
     if (props === "Computer Science" && current !== 0) {
-      setCS(Pressed("Computer Science"));
+      setCS(pressed("Computer Science"));
       deSelect(current);
       current = 0;
       setCourse(current);
     } else if (props === "Business Analytics" && current !== 1) {
-      setBA(Pressed("Business Analytics"));
+      setBA(pressed("Business Analytics"));
       deSelect(current);
       current = 1;
       setCourse(current);
     } else if (props === "Information Systems" && current !== 2) {
-      setIS(Pressed("Information Systems"));
+      setIS(pressed("Information Systems"));
       deSelect(current);
       current = 2;
       setCourse(current);
     } else if (props === "Information Security" && current !== 3) {
-      setInfoSec(Pressed("Information Security"));
+      setInfoSec(pressed("Information Security"));
       deSelect(current);
       current = 3;
       setCourse(current);
     } else if (props === "Computer Engineering" && current !== 4) {
-      setCEG(Pressed("Computer Engineering"));
+      setCEG(pressed("Computer Engineering"));
       deSelect(current);
       current = 4;
       setCourse(current);
@@ -135,17 +113,3 @@ const Course = ({ navigation, route }) => {
 };
 
 export default Course;
-
-const styles = StyleSheet.create({
-  unpressed: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    paddingBottom: 12,
-    borderBottomColor: "black",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomEndRadius: 13,
-    borderBottomStartRadius: 16,
-  },
-});

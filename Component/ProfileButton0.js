@@ -21,9 +21,7 @@ const ProfileButton0 = (props) => {
         </Text>
       </View>
       <View style={{ flexDirection: "row" }}>
-        {/* TODO: Truncate text */}
         <Text
-          numberOfLines={1}
           style={{
             ...globalFontStyles.OSR_14,
             color: "#2D405699",

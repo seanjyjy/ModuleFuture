@@ -12,21 +12,27 @@ const height = Dimensions.get("window").height;
 const Foundation = ({ navigation, route }) => {
   const [editMode, setEdit] = useState(false);
 
-  /*
-  React.useEffect(() => {
-    if (route.params?.mods) {
-      console.log("ANY");
-      const array = Array.from(route.params?.mods);
-      let i = data.length;
-      let newArr = array.map((module) => {
-        const code = module.name.substring(0, 7);
-        i++;
-        return { key: i, clash: false, moduleName: code, TargetGrade: "" };
-      });
-      setData([...data, newArr]);
+  useEffect(() => {
+    if (route.params?.modDetails) {
+      const tempArr = [];
+      for (let i = 0; i < data.length; i++) {
+        tempArr.push(data[i]);
+      }
+      let keyTobe = data.length + 1;
+      const receivedArr = route.params?.modDetails;
+      for (let i = 0; i < receivedArr.length; i++) {
+        tempArr.push({
+          key: keyTobe.toString(),
+          name: receivedArr[i].name,
+          grade: "",
+          sem: "",
+          taken: false,
+        });
+        keyTobe++;
+      }
+      setData(tempArr);
     }
-  });
-  */
+  }, [route.params?.modDetails]);
 
   const [data, setData] = useState([
     {
@@ -148,7 +154,9 @@ const Foundation = ({ navigation, route }) => {
         }
       />
       {editMode ? (
-        <AddModuleButton func={() => navigation.navigate("AddModule")} />
+        <AddModuleButton
+          func={() => navigation.navigate("AddModule", { item: "Foundation" })}
+        />
       ) : (
         <EditButton func={() => setEdit(!editMode)} />
       )}

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import Header from "../../../Component/Header";
-import { Icon } from "react-native-eva-icons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
+import { Pressed, NotPressed } from "./Buttons";
 
 const Graduation = ({ navigation, route }) => {
   const arr = ["Y3S1", "Y3S2", "Y4S1", "Y4S2", "Y5S1", "Y5S2"];
@@ -13,32 +12,11 @@ const Graduation = ({ navigation, route }) => {
     change(route.params?.sem);
   }, [currentYear]);
 
-  const notPressed = (props) => (
-    <TouchableOpacity
-      style={styles.unpressed}
-      activeOpacity={0.85}
-      onPress={() => change(props)}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_14, color: "#00000080" }}>
-        {props}
-      </Text>
-      <Icon name="checkmark-outline" width={25} height={25} fill="white" />
-    </TouchableOpacity>
+  const notPressed = (str) => (
+    <NotPressed text={`${str}`} transition={() => change(`${str}`)} />
   );
-  const pressed = (props) => (
-    <TouchableOpacity
-      style={{
-        ...styles.unpressed,
-        borderBottomWidth: StyleSheet.hairlineWidth * 2,
-      }}
-      activeOpacity={0.65}
-      onPress={() => change(props)}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_14, color: "#232323" }}>
-        {props}
-      </Text>
-      <Icon name="checkmark-outline" width={25} height={25} fill="#232323" />
-    </TouchableOpacity>
+  const pressed = (str) => (
+    <Pressed text={`${str}`} transition={() => change(`${str}`)} />
   );
 
   let current = -1;
@@ -120,7 +98,7 @@ const Graduation = ({ navigation, route }) => {
                   expectedSemGrad: arr[currentYear],
                 })
                 .catch((error) => alert(error));
-              navigation.navigate("Profile", { semester: arr[currentYear] });
+              navigation.navigate("Profile", { grad: arr[currentYear] });
             }}
           />
         }
@@ -139,17 +117,3 @@ const Graduation = ({ navigation, route }) => {
 };
 
 export default Graduation;
-
-const styles = StyleSheet.create({
-  unpressed: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    paddingBottom: 12,
-    borderBottomColor: "black",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomEndRadius: 13,
-    borderBottomStartRadius: 16,
-  },
-});

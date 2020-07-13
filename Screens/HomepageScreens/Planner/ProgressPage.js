@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -13,37 +13,136 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
 import Modal from "react-native-modal";
+import FirebaseDB from "../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const ProgressPage = ({ navigation, route }) => {
-  React.useEffect(() => {
-    if (route.params?.items) {
-      setMCprogressTotal(route.params?.items[0]);
-      setcapGoalDenominator(route.params?.items[1]);
-      setProgress((Math.min(MCs, MCprogressTotal) / MCprogressTotal) * 100);
-      setProgress2(
-        (Math.min(cap, capGoalDenominator) / capGoalDenominator) * 100
+  const [lineData, setLineData] = useState([]);
+  const [showGraph, setShowGraph] = useState(false);
+  const [OverallData, setOverallData] = useState([]);
+  useEffect(() => {
+    if (route.params?.items && route.params?.from === "ProgressPageSettings") {
+      const first = route.params?.items[0];
+      const second = route.params?.items[1];
+
+      setMCprogressTotal(first);
+      setcapGoalDenominator(second);
+      setProgress((Math.min(MCs, first) / second) * 100);
+      setProgress2((Math.min(cap, second) / second) * 100);
+      setCircleLeft(
+        whatCircle((Math.min(MCs, first) / first) * 100, MCs, first, "#169A7F")
       );
+      setCircleRight(
+        whatCircle(
+          (Math.min(cap, second) / second) * 100,
+          cap,
+          second,
+          "#B25DE4"
+        )
+      );
+      setTextToShow(whatText((Math.min(cap, second) / second) * 100));
     }
-  });
+    if (
+      (route.params?.usersDetails &&
+        route.params?.usersDetails.CapArray.length > 0,
+      route.params?.userID &&
+        (route.params?.from === "ContentPage" ||
+          route.params?.from === "ViewPlan"))
+    ) {
+      const arr = route.params?.usersDetails.CapArray;
+      setUserID(route.params?.userID);
+      if (arr.length > 0) {
+        let usersCurrentCap = arr[arr.length - 1].OverallCap;
+        let usersOverallMc = arr[arr.length - 1].OverallMc;
+        let usersTARGETCAP = route.params?.usersDetails.TargetCAP;
+        let usersTARGETMC = route.params?.usersDetails.totalMCs;
+        let tempLabels = [];
+        let tempData = [];
+        for (let i = 0; i < arr.length; i++) {
+          tempLabels.push(arr[i].Semester);
+          tempData.push(arr[i].OverallCap);
+        }
+        setLineData({
+          labels: tempLabels,
+          datasets: [{ data: tempData, strokeWidth: 2 }],
+        });
+        setOverallData(route.params?.usersDetails);
+        setCap(usersCurrentCap);
+        setMCs(usersOverallMc);
+        setShowGraph(true);
+        setProgress(
+          (Math.min(usersOverallMc, MCprogressTotal) / MCprogressTotal) * 100
+        );
+        setProgress2(
+          (Math.min(usersCurrentCap, capGoalDenominator) / capGoalDenominator) *
+            100
+        );
+        setCircleLeft(
+          whatCircle(
+            (Math.min(usersOverallMc, MCprogressTotal) / MCprogressTotal) * 100,
+            usersOverallMc,
+            usersTARGETMC,
+            "#169A7F"
+          )
+        );
+        setCircleRight(
+          whatCircle(
+            (Math.min(usersCurrentCap, capGoalDenominator) /
+              capGoalDenominator) *
+              100,
+            usersCurrentCap,
+            usersTARGETCAP,
+            "#B25DE4"
+          )
+        );
+        setTextToShow(
+          whatText(
+            (Math.min(usersCurrentCap, capGoalDenominator) /
+              capGoalDenominator) *
+              100
+          )
+        );
+      } else {
+        setLineData({
+          labels: [
+            "Y1S1",
+            "Y1S2",
+            "Y2S1",
+            "Y2S2",
+            "Y3S1",
+            "Y3S2",
+            "Y4S1",
+            "Y4S2",
+          ],
+          datasets: [
+            {
+              data: [0],
+              strokeWidth: 2,
+            },
+          ],
+        });
+        setShowGraph(true);
+        setProgress(0);
+        setProgress2(0);
+        setCircleLeft(whatCircle(0, 0, 160, "#169A7F"));
+        setCircleRight(whatCircle(0, 0, 5, "#B25DE4"));
+        setTextToShow(whatText(0));
+      }
+    }
+  }, [route.params?.items, route.params?.usersDetails]);
 
   // ***********************************************this data is going to get from the back end data*****************************************************
-  const linedata = {
-    labels: ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"],
-    datasets: [
-      {
-        data: [3.9, 4.58, 4.15, 4.32, 4.75, 4.8],
-        strokeWidth: 2,
-      },
-    ],
-  };
-  const [cap, setCap] = useState(4.8); // ********************************** 8this data is calculated from user's current standing *************************************
-  const [MCs, setMCs] = useState(120); //**********************************/ this data is calculated from user's current standing ************************************
-  const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0);
-  const [SemesterCap, setSemesterCap] = useState(0);
-  const [OverallCap, setOverallCap] = useState(0);
+
+  const [userID, setUserID] = useState("");
+  const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
+  const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
+
+  const [OverallMCsTakenForThatSem, setOverallMCsTakenForThatSem] = useState(0);
+  const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0); // to be used in the graph?
+  const [SemesterCap, setSemesterCap] = useState(0); // to be used in the graph?
+  const [OverallCap, setOverallCap] = useState(0); // to be used in the graph?
 
   const [MCprogressTotal, setMCprogressTotal] = useState(160); // this data is to get from the User (160 as the default value)
   const [capGoalDenominator, setcapGoalDenominator] = useState(5); // this data is to get from the User (5 as the default value)
@@ -51,6 +150,44 @@ const ProgressPage = ({ navigation, route }) => {
   const [progress, setProgress] = useState((MCs / MCprogressTotal) * 100); // this is to track and display the amount in the circle progress
   const [progress2, setProgress2] = useState((cap / capGoalDenominator) * 100); // this is to track and display the amount in the circle progress
 
+  const [circleLeft, setCircleLeft] = useState(
+    <CircularBarProgress
+      progress={progress}
+      size={0.4 * width}
+      strokeWidth={7}
+      circleOuterStroke="#169A7F"
+      circleInnerStroke="#E5E5E5"
+      numerator={MCs}
+      denominator={MCprogressTotal}
+    />
+  );
+
+  const [circleRight, setCircleRight] = useState(
+    <CircularBarProgress
+      progress={progress2}
+      size={0.4 * width}
+      strokeWidth={7}
+      circleOuterStroke="#B25DE4"
+      circleInnerStroke="#E5E5E5"
+      numerator={cap}
+      denominator={capGoalDenominator}
+    />
+  );
+
+  const whatCircle = (progress, numerator, denominator, color) => {
+    return (
+      <CircularBarProgress
+        progress={progress}
+        size={0.4 * width}
+        strokeWidth={7}
+        circleOuterStroke={color}
+        circleInnerStroke="#E5E5E5"
+        numerator={numerator}
+        denominator={denominator}
+      />
+    );
+  };
+  const [textToShow, setTextToShow] = useState("");
   const chartConfig = {
     backgroundGradientFrom: "white",
     backgroundGradientTo: "white",
@@ -72,6 +209,30 @@ const ProgressPage = ({ navigation, route }) => {
       strokeDasharray: "",
       opacity: "1",
     },
+    propsForLabels: {
+      fontSize: "10",
+    },
+  };
+
+  const ModalData = (index, func1, func2, func3, func4) => {
+    func1(OverallData[index].OverallCap);
+    func2(OverallData[index].OverallMc);
+    func3(OverallData[index].SemestralCap);
+    func4(OverallData[index].SemestralMc);
+  };
+
+  const whatText = (progress2) => {
+    return progress2 >= 100
+      ? "You have did it!"
+      : progress2 >= 90
+      ? "You are almost there keep it up!"
+      : progress2 >= 80
+      ? "Keep up the good work!"
+      : progress2 >= 70
+      ? "You can do it!"
+      : progress2 >= 60
+      ? "Dont give up!"
+      : "Perserve on!";
   };
 
   const TextonPopup = (props) => (
@@ -114,6 +275,7 @@ const ProgressPage = ({ navigation, route }) => {
           }}
         >
           <TextonPopup name="Overall CAP" cap={OverallCap} />
+          <TextonPopup name="Overall Mc" cap={OverallMCsTakenForThatSem} />
           <TextonPopup name="Semester CAP" cap={SemesterCap} />
           <TextonPopup name="MCs taken" cap={MCsTakenForThatSem} />
         </View>
@@ -152,7 +314,9 @@ const ProgressPage = ({ navigation, route }) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("ProgressPageSettings")}
+          onPress={() =>
+            navigation.navigate("ProgressPageSettings", { userID: userID })
+          }
           activeOpacity={0.9}
           style={{
             flex: 1,
@@ -177,45 +341,36 @@ const ProgressPage = ({ navigation, route }) => {
         }}
       >
         <View style={styles.largerRec}>
-          <View style={{ ...styles.largerRec, overflow: "hidden" }}>
-            <LineChart
-              onDataPointClick={({ value }) => {
-                setOverallCap(value);
-                if (value === 3.9) {
-                  setSemesterCap(3.9);
-                  setMCsTakenForThatSem(20);
-                } else if (value === 4.58) {
-                  setSemesterCap(5.0);
-                  setMCsTakenForThatSem(40);
-                } else if (value === 4.15) {
-                  setSemesterCap(4.0);
-                  setMCsTakenForThatSem(60);
-                } else if (value === 4.32) {
-                  setSemesterCap(4.75);
-                  setMCsTakenForThatSem(80);
-                } else if (value === 4.75) {
-                  setSemesterCap(5.0);
-                  setMCsTakenForThatSem(100);
-                } else {
-                  setSemesterCap(5.0);
-                  setMCsTakenForThatSem(120);
-                }
-                setModalVisible(true);
-              }}
-              data={linedata}
-              width={width * 0.95}
-              height={height * 0.36}
-              yAxisInterval={1}
-              yLabelsOffset={10}
-              segments={4}
-              chartConfig={chartConfig}
-              bezier
-              style={{
-                marginRight: 30,
-                marginVertical: 8,
-                borderRadius: 20,
-              }}
-            />
+          <View style={{ ...styles.largerRec, overflow: "hidden", right: 5 }}>
+            {showGraph ? (
+              <LineChart
+                onDataPointClick={({ index }) => {
+                  ModalData(
+                    index,
+                    (val) => setOverallCap(val),
+                    (val) => setOverallMCsTakenForThatSem(val),
+                    (val) => setSemesterCap(val),
+                    (val) => setMCsTakenForThatSem(val)
+                  );
+                  setModalVisible(true);
+                }}
+                data={lineData}
+                width={width * 0.95}
+                height={height * 0.36}
+                yAxisInterval={1}
+                yLabelsOffset={10}
+                segments={4}
+                chartConfig={chartConfig}
+                bezier
+                style={{
+                  marginRight: 5,
+                  marginVertical: 8,
+                  borderRadius: 20,
+                }}
+              />
+            ) : (
+              <View />
+            )}
             {popoutBox(OverallCap, SemesterCap, MCsTakenForThatSem)}
           </View>
         </View>
@@ -247,15 +402,7 @@ const ProgressPage = ({ navigation, route }) => {
                 ...styles.centerMax,
               }}
             >
-              <CircularBarProgress
-                progress={progress}
-                size={0.4 * width}
-                strokeWidth={7}
-                circleOuterStroke="#169A7F"
-                circleInnerStroke="#E5E5E5"
-                numerator={MCs}
-                denominator={MCprogressTotal}
-              />
+              {circleLeft}
             </View>
 
             <View
@@ -404,15 +551,7 @@ const ProgressPage = ({ navigation, route }) => {
                 ...styles.centerMax,
               }}
             >
-              <CircularBarProgress
-                progress={progress2}
-                size={0.4 * width}
-                strokeWidth={7}
-                circleOuterStroke="#B25DE4"
-                circleInnerStroke="#E5E5E5"
-                numerator={cap}
-                denominator={capGoalDenominator}
-              />
+              {circleRight}
             </View>
 
             <View
@@ -457,17 +596,7 @@ const ProgressPage = ({ navigation, route }) => {
                 }}
               >
                 <Text style={{ ...globalFontStyles.OSB_15, color: "#686868" }}>
-                  {progress2 >= 100
-                    ? "You have did it!"
-                    : progress2 >= 90
-                    ? "You are almost there keep it up!"
-                    : progress2 >= 80
-                    ? "Keep up the good work!"
-                    : progress2 >= 70
-                    ? "You can do it!"
-                    : progress2 >= 60
-                    ? "Dont give up!"
-                    : "Perserve on!"}
+                  {textToShow}
                 </Text>
               </View>
               {/* ------------end------------------------- */}
@@ -521,6 +650,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
+
   safeAreaStyle: {
     flex: 2,
     backgroundColor: "#A4A1FB",
