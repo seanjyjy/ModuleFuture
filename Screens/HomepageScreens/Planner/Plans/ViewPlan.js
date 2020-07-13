@@ -33,15 +33,12 @@ const ViewPlan = ({ route }) => {
   const [fromWhere, setFromWhere] = useState("");
   const [size, setSize] = useState("");
   const [favourite, setfavourite] = useState(false);
-  const [arr1, setarr1] = useState([]);
-  const [arr2, setarr2] = useState([]);
-  const [arr3, setarr3] = useState([]);
-  const [arr4, setarr4] = useState([]);
+  const [semList, setSemList] = useState([]);
   const [userID, setUserID] = useState("");
   const [userRef, setUserRef] = useState("");
-  const [semList, setSemList] = useState([]);
-  const [userDetails, setUserDetails] = useState([]);
+  const [usersDetails, setUsersDetails] = useState([]);
   const [arrToUse, setArrToUse] = useState([]);
+  const [selectedplansinfo, setselectedplansinfo] = useState([]);
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
@@ -61,50 +58,29 @@ const ViewPlan = ({ route }) => {
         const userRef = FirebaseDB.firestore()
           .collection("users")
           .doc(userIDextractor(route.params?.item[1]));
-        userRef
-          .get()
-          .then((document) => {
-            const val = document.data();
-            setUserDetails(val);
-            const sem = val.expectedSemGrad;
-            let arrLength = 0;
-            if (calculatorOfSem(sem) <= 5) {
-              setSemList(semListY3S2);
-              arrLength = 6;
-            } else if (calculatorOfSem(sem) <= 7) {
-              setSemList(semListY4S2);
-              arrLength = 8;
-            } else {
-              setSemList(semListY5S2);
-              arrLength = 10;
-            }
-            const arrToUse = whatArrayOfInfoToDisplay(
-              route.params?.item[3],
-              arrLength
-            );
-            setArrToUse(arrToUse);
-            infoExtractor(
-              route.params?.item[1],
-              semList[calculatorOfSem(route.params?.item[3]) % 9],
-              (val) => setarr1(val)
-            );
-            infoExtractor(
-              route.params?.item[1],
-              semListY5S2[arrToUse[0]],
-              (val) => setarr2(val)
-            );
-            infoExtractor(
-              route.params?.item[1],
-              semListY5S2[arrToUse[1]],
-              (val) => setarr3(val)
-            );
-            infoExtractor(
-              route.params?.item[1],
-              semListY5S2[arrToUse[2]],
-              (val) => setarr4(val)
-            );
-          })
-          .catch((error) => alert(error));
+        userRef.onSnapshot((document) => {
+          const val = document.data();
+          setUsersDetails(val);
+          const sem = val.expectedSemGrad;
+          let arrLength = 0;
+          if (calculatorOfSem(sem) <= 5) {
+            setSemList(semListY3S2);
+            arrLength = 6;
+          } else if (calculatorOfSem(sem) <= 7) {
+            setSemList(semListY4S2);
+            arrLength = 8;
+          } else {
+            setSemList(semListY5S2);
+            arrLength = 10;
+          }
+          setselectedplansinfo(val.SelectedPlansInfo);
+
+          const arrToUse = whatArrayOfInfoToDisplay(
+            route.params?.item[3],
+            arrLength
+          );
+          setArrToUse(arrToUse);
+        });
       }
     }
   }, [route.params?.item]);
@@ -123,24 +99,72 @@ const ViewPlan = ({ route }) => {
     return userID;
   };
 
-  const infoExtractor = (docLoc, whatSem, func) => {
+  const totalSumTotalMc = (val, sem) => {
+    let totalMCs = 0;
+    let totalSum = 0;
+    for (let i = 0; i < val.length; i++) {
+      if (val[i].Semester === sem) {
+        break;
+      }
+      totalMCs += val[i].McUsedInCap;
+      totalSum += val[i].McUsedInCap * val[i].Cap;
+    }
+    return [totalSum, totalMCs];
+  };
+
+  const infoExtractor = async (
+    docLoc,
+    whatSem,
+    SumMcArr,
+    selectedplansinfo
+  ) => {
     const docLocCurr = userIDextractor(docLoc).concat("_", whatSem);
     const plansArrayRef = FirebaseDB.firestore()
       .collection("plansArray")
       .doc(docLocCurr);
-    plansArrayRef
+
+    let arrToPass = [];
+    arrToPass[0] = userIDextractor(docLoc);
+    arrToPass[4] = selectedplansinfo;
+    await plansArrayRef
       .get()
       .then((document) => {
         const val = document.data();
-        if (val !== undefined) {
+        if (val !== undefined && SumMcArr !== undefined) {
           const arr = val.yearSem;
-          func(arr);
+          const arrLength = arr.length;
+          arrToPass[1] = arr;
+          arrToPass[2] = arrLength.toString();
+          let tempArr = [];
+          for (let i = 0; i < arr.length; i++) {
+            const newTotalMcs = SumMcArr[1] + arr[i].MCs;
+            const newTotalSum = SumMcArr[0] + arr[i].MCs * arr[i].Cap;
+            tempArr.push({
+              SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
+              OverallCap:
+                newTotalMcs !== 0
+                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                  : 0,
+              PlannedOverallCap:
+                newTotalMcs !== 0
+                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                  : 0,
+              PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
+              MCs: arr[i].MCs,
+              LastUpdated: arr[i].LastUpdated,
+              useInCap: arr[i].useInCap,
+            });
+          }
+          arrToPass[3] = tempArr;
         } else {
-          plansArrayRef.set({ yearSem: [] });
-          func([]);
+          plansArrayRef.set({ yearSem: [], selected: "-1", ArrForRect: [] });
+          arrToPass[1] = [];
+          arrToPass[2] = "1";
+          arrToPass[3] = [];
         }
       })
       .then((error) => {});
+    return arrToPass;
   };
 
   const whatArrayOfInfoToDisplay = (val, arrLength) => {
@@ -246,12 +270,18 @@ const ViewPlan = ({ route }) => {
         borderColor: "#E2E2E2",
         borderBottomWidth: 1,
       }}
-      func={() => {
+      func={async () => {
+        const arrToPass = await infoExtractor(
+          docLoc,
+          fromWhere,
+          totalSumTotalMc(selectedplansinfo, fromWhere),
+          selectedplansinfo
+        );
         setModalVisible(false);
         setTimeout(
           () =>
             navigation.navigate(fromWhere, {
-              item: [userIDextractor(docLoc), arr1],
+              item: arrToPass,
             }),
           400
         );
@@ -274,7 +304,7 @@ const ViewPlan = ({ route }) => {
         setTimeout(
           () =>
             navigation.navigate("ProgressPage", {
-              usersDetails: userDetails,
+              usersDetails: usersDetails,
               from: "ViewPlan",
               userID: userID,
             }),
@@ -294,12 +324,18 @@ const ViewPlan = ({ route }) => {
         borderTopWidth: 1,
         borderColor: "#E2E2E2",
       }}
-      func={() => {
+      func={async () => {
+        const arrToPass = await infoExtractor(
+          docLoc,
+          semListY5S2[arrToUse[0]],
+          totalSumTotalMc(selectedplansinfo, semListY5S2[arrToUse[0]]),
+          selectedplansinfo
+        );
         setModalVisible(false);
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[0]], {
-              item: [userIDextractor(docLoc), arr2],
+              item: arrToPass,
             }),
           400
         );
@@ -315,12 +351,18 @@ const ViewPlan = ({ route }) => {
       icon={<MaterialIcon size={24} name="book-outline" color="#726F6F" />}
       text={semListY5S2[arrToUse[1]]}
       iconStyle={{ right: 3 }}
-      func={() => {
+      func={async () => {
+        const arrToPass = await infoExtractor(
+          docLoc,
+          semListY5S2[arrToUse[1]],
+          totalSumTotalMc(selectedplansinfo, semListY5S2[arrToUse[1]]),
+          selectedplansinfo
+        );
         setModalVisible(false);
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[1]], {
-              item: [userIDextractor(docLoc), arr3],
+              item: arrToPass,
             }),
           400
         );
@@ -337,12 +379,18 @@ const ViewPlan = ({ route }) => {
         borderBottomWidth: 1,
         borderColor: "#E2E2E2",
       }}
-      func={() => {
+      func={async () => {
+        const arrToPass = await infoExtractor(
+          docLoc,
+          semListY5S2[arrToUse[2]],
+          totalSumTotalMc(selectedplansinfo, semListY5S2[arrToUse[2]]),
+          selectedplansinfo
+        );
         setModalVisible(false);
         setTimeout(
           () =>
             navigation.navigate(semListY5S2[arrToUse[2]], {
-              item: [userIDextractor(docLoc), arr4],
+              item: arrToPass,
             }),
 
           400
@@ -440,6 +488,26 @@ const ViewPlan = ({ route }) => {
     );
   };
   const loadData = async () => {
+    userRef.get().then((document) => {
+      const val = document.data();
+      const favPlanInfo = val.favPlanInfo;
+      if (favPlanInfo.length > 0) {
+        const plansItselfRef2 = FirebaseDB.firestore()
+          .collection("plansItself")
+          .doc(favPlanInfo[1].concat("_", favPlanInfo[0]));
+        plansItselfRef2.update({
+          amIfavourite: false,
+        });
+      }
+    });
+
+    const plansItselfRef = FirebaseDB.firestore()
+      .collection("plansItself")
+      .doc(docLoc.concat("_", title));
+    plansItselfRef.update({
+      amIfavourite: true,
+    });
+
     userRef.set(
       {
         favPlanInfo: [title, docLoc, size, fromWhere],
@@ -449,6 +517,13 @@ const ViewPlan = ({ route }) => {
     );
   };
   const unLoadData = async () => {
+    const plansItselfRef = FirebaseDB.firestore()
+      .collection("plansItself")
+      .doc(docLoc.concat("_", title));
+    plansItselfRef.update({
+      amIfavourite: false,
+    }),
+      { merge: true };
     userRef.set(
       {
         favPlanInfo: [],
@@ -517,6 +592,7 @@ const ViewPlan = ({ route }) => {
                 bottom: 12,
                 ...globalFontStyles.NB_14,
                 color: "#007AFF",
+                left: 15,
               }}
             >
               Edit

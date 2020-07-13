@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Ionicon from "react-native-vector-icons/Ionicons";
@@ -14,6 +15,7 @@ import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
 import Modal from "react-native-modal";
 import FirebaseDB from "../../../FirebaseDB";
+import { set } from "react-native-reanimated";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -22,6 +24,8 @@ const ProgressPage = ({ navigation, route }) => {
   const [lineData, setLineData] = useState([]);
   const [showGraph, setShowGraph] = useState(false);
   const [OverallData, setOverallData] = useState([]);
+  const [previousCap, setPreviousCap] = useState(0);
+  const [allowClicks, setAllowClicks] = useState(false);
   useEffect(() => {
     if (route.params?.items && route.params?.from === "ProgressPageSettings") {
       const first = route.params?.items[0];
@@ -44,12 +48,13 @@ const ProgressPage = ({ navigation, route }) => {
       );
       setTextToShow(whatText((Math.min(cap, second) / second) * 100));
     }
+
     if (
-      (route.params?.usersDetails &&
-        route.params?.usersDetails.CapArray.length > 0,
+      route.params?.usersDetails &&
+      route.params?.usersDetails.CapArray.length > 0 &&
       route.params?.userID &&
-        (route.params?.from === "ContentPage" ||
-          route.params?.from === "ViewPlan"))
+      (route.params?.from === "ContentPage" ||
+        route.params?.from === "ViewPlan")
     ) {
       const arr = route.params?.usersDetails.CapArray;
       setUserID(route.params?.userID);
@@ -68,7 +73,7 @@ const ProgressPage = ({ navigation, route }) => {
           labels: tempLabels,
           datasets: [{ data: tempData, strokeWidth: 2 }],
         });
-        setOverallData(route.params?.usersDetails);
+        setOverallData(route.params?.usersDetails.CapArray);
         setCap(usersCurrentCap);
         setMCs(usersOverallMc);
         setShowGraph(true);
@@ -104,32 +109,37 @@ const ProgressPage = ({ navigation, route }) => {
               100
           )
         );
-      } else {
-        setLineData({
-          labels: [
-            "Y1S1",
-            "Y1S2",
-            "Y2S1",
-            "Y2S2",
-            "Y3S1",
-            "Y3S2",
-            "Y4S1",
-            "Y4S2",
-          ],
-          datasets: [
-            {
-              data: [0],
-              strokeWidth: 2,
-            },
-          ],
-        });
-        setShowGraph(true);
-        setProgress(0);
-        setProgress2(0);
-        setCircleLeft(whatCircle(0, 0, 160, "#169A7F"));
-        setCircleRight(whatCircle(0, 0, 5, "#B25DE4"));
-        setTextToShow(whatText(0));
       }
+      setAllowClicks(true);
+    } else {
+      setAllowClicks(false);
+      //GET THE DATA FROM THE USERS
+      setLineData({
+        labels: [
+          "Y1S1",
+          "Y1S2",
+          "Y2S1",
+          "Y2S2",
+          "Y3S1",
+          "Y3S2",
+          "Y4S1",
+          "Y4S2",
+          "Y5S1",
+          "Y5S2",
+        ],
+        datasets: [
+          {
+            data: [0],
+            strokeWidth: 2,
+          },
+        ],
+      });
+      setShowGraph(true);
+      setProgress(0);
+      setProgress2(0);
+      setCircleLeft(whatCircle(0, 0, 160, "#169A7F"));
+      setCircleRight(whatCircle(0, 0, 5, "#B25DE4"));
+      setTextToShow(whatText(0));
     }
   }, [route.params?.items, route.params?.usersDetails]);
 
@@ -139,6 +149,11 @@ const ProgressPage = ({ navigation, route }) => {
   const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
   const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
 
+  const [
+    OverallMCsTakenForThatSemUsedInCap,
+    setOverallMCsTakenForThatSemUsedInCap,
+  ] = useState(0);
+  const [OverAllMcsUsedInCap, setOverallMcsUsedInCap] = useState(0);
   const [OverallMCsTakenForThatSem, setOverallMCsTakenForThatSem] = useState(0);
   const [MCsTakenForThatSem, setMCsTakenForThatSem] = useState(0); // to be used in the graph?
   const [SemesterCap, setSemesterCap] = useState(0); // to be used in the graph?
@@ -214,11 +229,27 @@ const ProgressPage = ({ navigation, route }) => {
     },
   };
 
-  const ModalData = (index, func1, func2, func3, func4) => {
+  const ModalData = (
+    index,
+    func1,
+    func2,
+    func3,
+    func4,
+    func5,
+    func6,
+    func7
+  ) => {
     func1(OverallData[index].OverallCap);
     func2(OverallData[index].OverallMc);
     func3(OverallData[index].SemestralCap);
     func4(OverallData[index].SemestralMc);
+    func6(OverallData[index].MCcountedToCap);
+    func7(OverallData[index].TotalMcUsedInCap);
+    if (index === 0) {
+      func5(OverallData[index].OverallCap);
+    } else {
+      func5(OverallData[index - 1].OverallCap);
+    }
   };
 
   const whatText = (progress2) => {
@@ -235,22 +266,100 @@ const ProgressPage = ({ navigation, route }) => {
       : "Perserve on!";
   };
 
-  const TextonPopup = (props) => (
-    <View style={styles.popouttext}>
-      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
-        {props.name}
-      </Text>
-      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
-        {props.cap}
-      </Text>
-    </View>
-  );
+  const TextonPopup = (props) => {
+    return (
+      <View
+        style={{
+          ...styles.TextonPopupStyle,
+          bottom: props.bottom,
+          ...props.extraProps,
+        }}
+      >
+        <View style={styles.progressTextStyle}>
+          <Text style={{ ...globalFontStyles.NB_13, color: "#2D4056" }}>
+            {props.name}
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 4,
+            ...styles.centerMax,
+            bottom: 0.005 * height,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                ...globalFontStyles.NB_28,
+                color: "#2D4056",
+              }}
+            >
+              {props.cap}
+            </Text>
+            <View style={{ left: 5, bottom: 0.003 * height }}>
+              {props.needChangeColor ? (
+                props.previousCap === props.cap ? (
+                  <View />
+                ) : props.previousCap < props.cap ? (
+                  <Icon name="long-arrow-up" size={27} color="#28E586" />
+                ) : (
+                  <Icon name="long-arrow-down" size={27} color="#FD5D5D" />
+                )
+              ) : (
+                <View />
+              )}
+            </View>
+          </View>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Text
+              style={{
+                ...globalFontStyles.OSR_12,
+                color: props.needChangeColor
+                  ? props.previousCap === props.cap
+                    ? "black"
+                    : props.previousCap < props.cap
+                    ? "#28E586"
+                    : "#FD5D5D"
+                  : "black",
+              }}
+            >
+              {props.needChangeColor
+                ? props.previousCap === props.cap
+                  ? ""
+                  : props.previousCap < props.cap
+                  ? "+" +
+                    (
+                      ((props.cap - props.previousCap) / props.previousCap) *
+                      100
+                    ).toFixed(2) +
+                    "%"
+                  : "-" +
+                    (
+                      (Math.abs(props.cap - props.previousCap) /
+                        props.previousCap) *
+                      100
+                    ).toFixed(2) +
+                    "%"
+                : ""}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   const [modalVisible, setModalVisible] = useState(false);
   const popoutBox = (OverallCap, SemesterCap, MCsTakenForThatSem) => {
     return (
       <Modal
         style={styles.modalBox}
+        backdropOpacity={0.3}
         animationIn="fadeIn"
         animationOut="fadeOut"
         backdropTransitionOutTiming={0}
@@ -262,22 +371,67 @@ const ProgressPage = ({ navigation, route }) => {
           setModalVisible(false);
         }}
       >
-        <View
-          style={{ flex: 1, width: "100%", justifyContent: "center", top: 5 }}
-        >
-          <Text style={styles.popoutheader}>Performance</Text>
+        <View style={styles.oneCenter}>
+          <Text style={{ ...styles.popoutheader, top: 5 }}>Performance</Text>
         </View>
+        <View style={styles.LineForPressingDots} />
         <View
           style={{
-            flex: 3,
+            flex: 6,
             flexDirection: "column",
             justifyContent: "space-evenly",
           }}
         >
-          <TextonPopup name="Overall CAP" cap={OverallCap} />
-          <TextonPopup name="Overall Mc" cap={OverallMCsTakenForThatSem} />
-          <TextonPopup name="Semester CAP" cap={SemesterCap} />
-          <TextonPopup name="MCs taken" cap={MCsTakenForThatSem} />
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TextonPopup
+              name="Overall CAP"
+              cap={OverallCap}
+              previousCap={previousCap}
+              needChangeColor={true}
+              bottom={0}
+              extraProps={{ left: 4 }}
+            />
+            <TextonPopup
+              name="Semester CAP"
+              cap={SemesterCap}
+              previousCap={previousCap}
+              needChangeColor={true}
+              bottom={0}
+              extraProps={{ right: 4 }}
+            />
+          </View>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TextonPopup
+              name="Overall Mc"
+              cap={OverallMCsTakenForThatSem}
+              needChangeColor={false}
+              bottom={5}
+              extraProps={{ left: 4 }}
+            />
+            <TextonPopup
+              name="Semestral Mc"
+              cap={MCsTakenForThatSem}
+              needChangeColor={false}
+              bottom={5}
+              extraProps={{ right: 4 }}
+            />
+          </View>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TextonPopup
+              name={"    Overall Mc \ncounted to CAP"}
+              cap={OverAllMcsUsedInCap}
+              needChangeColor={false}
+              bottom={5}
+              extraProps={{ left: 4 }}
+            />
+            <TextonPopup
+              name={"  Semestral Mc \ncounted to CAP"}
+              cap={OverallMCsTakenForThatSemUsedInCap}
+              needChangeColor={false}
+              bottom={5}
+              extraProps={{ right: 4 }}
+            />
+          </View>
         </View>
       </Modal>
     );
@@ -331,28 +485,25 @@ const ProgressPage = ({ navigation, route }) => {
         </TouchableOpacity>
       </SafeAreaView>
 
-      <View
-        style={{
-          flex: 11,
-          width: "100%",
-          height: "100%",
-          flexDirection: "column",
-          bottom: 0.03 * height,
-        }}
-      >
+      <View style={styles.holdingGraph}>
         <View style={styles.largerRec}>
-          <View style={{ ...styles.largerRec, overflow: "hidden", right: 5 }}>
+          <View style={{ ...styles.largerRec, overflow: "hidden" }}>
             {showGraph ? (
               <LineChart
                 onDataPointClick={({ index }) => {
-                  ModalData(
-                    index,
-                    (val) => setOverallCap(val),
-                    (val) => setOverallMCsTakenForThatSem(val),
-                    (val) => setSemesterCap(val),
-                    (val) => setMCsTakenForThatSem(val)
-                  );
-                  setModalVisible(true);
+                  if (allowClicks) {
+                    ModalData(
+                      index,
+                      (val) => setOverallCap(val),
+                      (val) => setOverallMCsTakenForThatSem(val),
+                      (val) => setSemesterCap(val),
+                      (val) => setMCsTakenForThatSem(val),
+                      (val) => setPreviousCap(val),
+                      (val) => setOverallMCsTakenForThatSemUsedInCap(val),
+                      (val) => setOverallMcsUsedInCap(val)
+                    );
+                    setModalVisible(true);
+                  }
                 }}
                 data={lineData}
                 width={width * 0.95}
@@ -362,11 +513,7 @@ const ProgressPage = ({ navigation, route }) => {
                 segments={4}
                 chartConfig={chartConfig}
                 bezier
-                style={{
-                  marginRight: 5,
-                  marginVertical: 8,
-                  borderRadius: 20,
-                }}
+                style={styles.lineChartStyle}
               />
             ) : (
               <View />
@@ -438,12 +585,7 @@ const ProgressPage = ({ navigation, route }) => {
                   }}
                 >
                   <View
-                    style={{
-                      backgroundColor: "#169A7F",
-                      width: 0.035 * width,
-                      height: 0.035 * width,
-                      borderRadius: (0.035 * width) / 2,
-                    }}
+                    style={{ backgroundColor: "#169A7F", ...styles.dotDesign }}
                   />
                 </View>
 
@@ -491,12 +633,7 @@ const ProgressPage = ({ navigation, route }) => {
                   }}
                 >
                   <View
-                    style={{
-                      backgroundColor: "#169A7F",
-                      width: 0.035 * width,
-                      height: 0.035 * width,
-                      borderRadius: (0.035 * width) / 2,
-                    }}
+                    style={{ backgroundColor: "#169A7F", ...styles.dotDesign }}
                   />
                 </View>
 
@@ -574,16 +711,10 @@ const ProgressPage = ({ navigation, route }) => {
                   top: 0.0175 * height,
                   justifyContent: "flex-start",
                   alignItems: "center",
-                  // backgroundColor: "green",
                 }}
               >
                 <View
-                  style={{
-                    backgroundColor: "#B25DE4",
-                    width: 0.035 * width,
-                    height: 0.035 * width,
-                    borderRadius: (0.035 * width) / 2,
-                  }}
+                  style={{ backgroundColor: "#B25DE4", ...styles.dotDesign }}
                 />
               </View>
               {/* -------------------------------------------Right Section ----------------------------------------------------- */}
@@ -649,6 +780,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     backgroundColor: "white",
     alignItems: "center",
+    justifyContent: "flex-end",
   },
 
   safeAreaStyle: {
@@ -671,20 +803,68 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalBox: {
-    backgroundColor: "white",
+    backgroundColor: Platform.OS === "android" ? "#F6F6F6" : "#F8F8FD",
     alignSelf: "center",
-    marginVertical: height * 0.4,
-    width: width * 0.6,
-    paddingLeft: 30,
-    paddingRight: 50,
+    marginVertical: height * 0.2,
+    width: width * 0.9,
     borderRadius: 25,
   },
-  popouttext: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  oneCenter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   popoutheader: {
-    ...globalFontStyles.OSB_15,
-    color: "#232323",
+    ...globalFontStyles.NB_20,
+    color: "#333333",
+  },
+  progressTextStyle: {
+    flex: 2,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: Platform.OS === "android" ? "#DDDEDE" : "#E2E6E4",
+  },
+  TextonPopupStyle: {
+    flex: 1,
+    marginHorizontal: 0.03 * width,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 0.01 * height,
+    borderRadius: 20,
+    backgroundColor: Platform.OS === "android" ? "#EFF0F8" : "white",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+  },
+  holdingGraph: {
+    flex: 11,
+    width: "100%",
+    height: "100%",
+    flexDirection: "column",
+    bottom: 0.03 * height,
+  },
+  dotDesign: {
+    width: 0.035 * width,
+    height: 0.035 * width,
+    borderRadius: (0.035 * width) / 2,
+  },
+  LineForPressingDots: {
+    borderBottomWidth: 1,
+    borderColor: "#DDDDDD",
+    width: "90%",
+    height: 10,
+    left: 0.05 * width,
+  },
+  lineChartStyle: {
+    borderRadius: 20,
+    top: 0.03 * height,
+    right: 0.04 * width,
   },
 });

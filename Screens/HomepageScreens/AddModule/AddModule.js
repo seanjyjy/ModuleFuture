@@ -110,8 +110,10 @@ const AddModule = (props) => {
     }
   }, [props.route.params?.newModules, props.route.params?.currentFilters]);
 
-  const [filterArr, setFilterArr] = useState([]);
+  // TODO: Tag modules that are already planned in the current plan
+  const modulesPlanned = props.route.params?.modulesPlanned;
   const locationFrom = props.route.params?.item;
+  const [filterArr, setFilterArr] = useState([]);
   const [origList, setOrigList] = useState(new Set(props.moduleList));
   const [fullList, setFullList] = useState(new Set(props.moduleList));
   const [moduleList, setModuleList] = useState(props.moduleList);
@@ -242,7 +244,7 @@ Prereq: matched with whatever is planned / take
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
-      <View style={{ marginBottom: 200 }}>
+      <View style={{ marginBottom: 0.25 * height }}>
         <FlatList
           keyboardShouldPersistTaps="always"
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}

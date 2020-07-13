@@ -76,7 +76,7 @@ export default function App() {
   const [data, setData] = useState({
     loading: false,
     user: null,
-    recordsData: null,
+    // recordsData: null,
   });
   const [modLoading, setModLoading] = useState(false);
 
@@ -108,33 +108,45 @@ export default function App() {
   useEffect(() => {
     const fb = FirebaseDB.firestore();
     const usersRef = fb.collection("users");
-    const typeRef = fb.collection("typeArray");
-    const levelRef = fb.collection("levelArray");
-    const codeRef = fb.collection("codeArray");
+    // const typeRef = fb.collection("typeArray");
+    // const levelRef = fb.collection("levelArray");
+    // const codeRef = fb.collection("codeArray");
+    // const recordsRef = fb.collection("modules");
+    // const modulesMappingRef = fb.collection("modulesMapping");
+
     FirebaseDB.auth().onAuthStateChanged((user) => {
       if (user) {
-        const recordsData = [];
-        typeRef
-          .doc(user.uid)
-          .get()
-          .then((document) => {
-            recordsData.push(document.data());
-          })
-          .catch((error) => error);
-        levelRef
-          .doc(user.uid)
-          .get()
-          .then((document) => {
-            recordsData.push(document.data());
-          })
-          .catch((error) => error);
-        codeRef
-          .doc(user.uid)
-          .get()
-          .then((document) => {
-            recordsData.push(document.data());
-          })
-          .catch((error) => error);
+        // const recordsData = [];
+        // typeRef
+        //   .doc(user.uid)
+        //   .get()
+        //   .then((document) => {
+        //     recordsData.push(document.data());
+        //   });
+        // levelRef
+        //   .doc(user.uid)
+        //   .get()
+        //   .then((document) => {
+        //     recordsData.push(document.data());
+        //   });
+        // codeRef
+        //   .doc(user.uid)
+        //   .get()
+        //   .then((document) => {
+        //     recordsData.push(document.data());
+        //   });
+        // recordsRef
+        //   .doc(user.uid)
+        //   .get()
+        //   .then((document) => {
+        //     recordsData.push(document.data());
+        //   });
+        // modulesMappingRef
+        //   .doc(user.uid)
+        //   .get()
+        //   .then((document) => {
+        //     recordsData.push(document.data());
+        //   });
         usersRef
           .doc(user.uid)
           .get()
@@ -142,7 +154,6 @@ export default function App() {
             const userData = document.data();
             setData({
               user: userData,
-              recordsData: recordsData,
               loading: true,
             });
           })
@@ -181,7 +192,7 @@ export default function App() {
                           <Homepage
                             {...props}
                             extraData={data.user}
-                            recordsData={data.recordsData}
+                            // recordsData={data.recordsData}
                           />
                         )}
                       </AuthStack.Screen>

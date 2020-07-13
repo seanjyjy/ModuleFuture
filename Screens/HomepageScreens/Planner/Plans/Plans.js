@@ -9,6 +9,7 @@ import {
   TextInput,
   ImageBackground,
   Keyboard,
+  Alert,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import Header from "../../../../Component/Header";
@@ -40,6 +41,13 @@ function RectInfoSelected({
   imageLink,
   idChange,
   nameOfPlan,
+  SemestralCap,
+  OverallCap,
+  MCs,
+  LastUpdated,
+  PlannedCap,
+  useInCap,
+  PlannedOverallCap,
 }) {
   return (
     <TouchableOpacity
@@ -59,7 +67,7 @@ function RectInfoSelected({
               {selected ? "Current" : ""}
             </Text>
           </View>
-          <View style={{ flex: 7 }}>
+          <View style={{ flex: 10 }}>
             <View style={{ flex: 1 }}>
               <Text
                 style={{
@@ -79,7 +87,9 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                Semester Cap:
+                {useInCap
+                  ? `Semestral Cap: ${SemestralCap}`
+                  : `Planned Cap: ${PlannedCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -89,7 +99,9 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                Overall Cap:
+                {useInCap
+                  ? `Overall Cap: ${OverallCap}`
+                  : `Planned Overall Cap: ${PlannedOverallCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -99,7 +111,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                MCs:
+                {`MCs: ${MCs}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -109,7 +121,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                Last Updated:
+                {`Last Updated: ${LastUpdated}`}
               </Text>
             </View>
           </View>
@@ -129,35 +141,64 @@ const Plans = (props) => {
     .collection("plansArray")
     .doc(docLoc);
   const [currentArr, setCurrentArr] = useState(info[1]);
-  const [selected, setSelected] = React.useState(new Map().set("1", true));
+  const [selected, setSelected] = React.useState(new Map().set(info[2], true));
   const [planName, setPlanName] = useState("");
-  const [currentID, setCurrentID] = useState("1");
+  const [currentID, setCurrentID] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [size, setSize] = useState(0);
   const [showDustBin, setShowDustBin] = useState(true);
   const [alertText, setAlertText] = useState(false);
   const [alertText1, setAlertText1] = useState(false);
+  const [arrForRect, setArrForRect] = useState(info[3]);
+  const [selectedplansinfo, setselectedplansinfo] = useState(info[4]);
+
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
         const val = document.data();
         if (val !== undefined) {
           const arr = val.yearSem;
+          const arr2 = val.ArrForRect;
+          const selected = val.selected;
+          if (size > arr.length) {
+            //deletion occurs
+            setCurrentArr(arr);
+            setArrForRect(arr2);
+            setCurrentID(selected);
+            setSelected(new Map().set(selected, true));
+          } else {
+            //addition occurs
+            setArrForRect(props.data[3]);
+            setSelected(new Map().set(selected, true));
+            setCurrentArr(props.data[1]);
+            setCurrentID(props.data[2]);
+            setShowDustBin(true);
+            setselectedplansinfo(props.data[4]);
+          }
           setSize(arr.length);
-          setCurrentArr(arr);
+
+          if (val.selected === "-1") {
+            setShowDustBin(false);
+          } else {
+            setShowDustBin(true);
+          }
           if (arr.length === 0) {
             setShowDustBin(false);
+          } else {
+            setShowDustBin(true);
           }
         } else {
-          plansArrayRef.set({ yearSem: [] });
+          plansArrayRef.set({ yearSem: [], selected: "-1", ArrForRect: [] });
           setCurrentArr([]);
           setShowDustBin(false);
+          setCurrentID("-1");
         }
       },
       (error) => alert(error)
     );
+
     return () => unsub();
-  }, [userID]);
+  }, [userID, props.data]);
 
   const onSelect = React.useCallback(
     (key) => {
@@ -190,6 +231,36 @@ const Plans = (props) => {
     }
     return truth;
   };
+
+  const lettersChecker = (val) => {
+    if (val !== "S" && val !== "CS" && val !== "CU") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const GradeToPoint = (val) => {
+    return val === "A+" || val === "A"
+      ? 5.0
+      : val === "A-"
+      ? 4.5
+      : val === "B+"
+      ? 4.0
+      : val === "B"
+      ? 3.5
+      : val === "B-"
+      ? 3.0
+      : val === "C+"
+      ? 2.5
+      : val === "C"
+      ? 2.0
+      : val === "D+"
+      ? 1.5
+      : val === "D"
+      ? 1.0
+      : 0;
+  };
   // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
     return (
@@ -206,44 +277,20 @@ const Plans = (props) => {
           <Text style={styles.popoutheader}>Name of Plan</Text>
         </View>
         <View style={{ ...styles.flexOneCenter }}>
-          <View
-            style={{
-              width: 0.4 * width,
-              height: 0.04 * height,
-              borderWidth: 1,
-              borderColor: "#D0CECE",
-              bottom: 5,
-            }}
-          >
+          <View style={styles.textIntputContainerStyle}>
             <TextInput
-              style={{
-                width: 0.4 * width,
-                height: 0.04 * height,
-                left: 5,
-              }}
+              style={styles.textInputStyle}
               placeholder="e.g. Main Plan"
               onChangeText={(val) => setPlanName(val)}
             />
           </View>
           {alertText || alertText1 ? (
             alertText ? (
-              <Text
-                style={{
-                  ...globalFontStyles.OSR_12,
-                  bottom: 4,
-                  color: "#cc0000",
-                }}
-              >
+              <Text style={styles.alertTextStyle}>
                 Please enter a plan name
               </Text>
             ) : (
-              <Text
-                style={{
-                  ...globalFontStyles.OSR_12,
-                  bottom: 4,
-                  color: "#cc0000",
-                }}
-              >
+              <Text style={styles.alertTextStyle}>
                 This plan name exists already!
               </Text>
             )
@@ -251,14 +298,7 @@ const Plans = (props) => {
             <View />
           )}
         </View>
-        <View
-          style={{
-            flex: 1,
-            borderTopWidth: 1,
-            borderColor: "#D0CECE",
-            flexDirection: "row",
-          }}
-        >
+        <View style={styles.holdingCancelAndConfirm}>
           <TouchableOpacity
             onPress={() => {
               Keyboard.dismiss();
@@ -310,29 +350,12 @@ const Plans = (props) => {
     );
   };
 
-  const emptySpace = (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "flex-end",
-        alignItems: "center",
-      }}
-    />
-  );
+  const emptySpace = <View style={styles.dustBinStyle} />;
   const dustBin = (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "flex-end",
-        alignItems: "center",
-      }}
-    >
-      <Icon
-        style={{ bottom: 20 }}
-        name="trash-2-outline"
-        width={30}
-        height={20}
-        fill="#232323"
+    <View style={styles.dustBinStyle}>
+      <TouchableOpacity
+        style={styles.tempDustBinHolder}
+        activeOpacity={0.9}
         onPress={() => {
           if (currentArr.length > 0) {
             plansArrayRef
@@ -341,37 +364,290 @@ const Plans = (props) => {
                 const val = document.data();
                 if (val !== undefined) {
                   const arr = val.yearSem;
-                  const newArr = [];
-                  let keyValue = 0;
+
+                  let justDelete = false;
+                  let pos = 0;
+                  let planName = "";
                   for (let i = 0; i < arr.length; i++) {
-                    if (arr[i].key !== currentID) {
-                      newArr.push({
-                        key: (keyValue + 1).toString(),
-                        nameOfPlan: arr[i].nameOfPlan,
-                      });
-                      keyValue++;
-                    } else {
-                      const currentPlanName = arr[i].nameOfPlan;
-                      FirebaseDB.firestore()
-                        .collection("plansItself")
-                        .doc(
-                          userID.concat(
-                            "_",
-                            props.headerTitle,
-                            "_",
-                            currentPlanName
-                          )
-                        )
-                        .delete();
+                    if (arr[i].key === currentID) {
+                      pos = i;
+                      planName = arr[i].nameOfPlan;
+                      if (!arr[i].useInCap) {
+                        justDelete = true;
+                      }
+                      break;
                     }
                   }
-                  plansArrayRef.set({ yearSem: newArr });
+                  if (justDelete) {
+                    // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAN
+                    let tempArr = [];
+                    let tempIndex = 0;
+                    let newarrForRect = [];
+                    for (let i = 0; i < arr.length; i++) {
+                      if (arr[i].key !== currentID) {
+                        tempArr.push({
+                          LastUpdated: arr[i].LastUpdated,
+                          MCs: arr[i].MCs,
+                          Cap: arr[i].Cap,
+                          key: (tempIndex + 1).toString(),
+                          nameOfPlan: arr[i].nameOfPlan,
+                          useInCap: arr[i].useInCap,
+                          MCsCountedToCap: arr[i].MCsCountedToCap,
+                        });
+                        tempIndex++;
+                        newarrForRect.push(arrForRect[i]);
+                      }
+                    }
+                    let whatPos = (parseInt(currentID) - 1).toString();
+                    //deletion in plansItself
+                    const currentPlanName = arr[pos].nameOfPlan;
+                    FirebaseDB.firestore()
+                      .collection("plansItself")
+                      .doc(
+                        userID.concat(
+                          "_",
+                          props.headerTitle,
+                          "_",
+                          currentPlanName
+                        )
+                      )
+                      .delete();
+
+                    // updates in UserRef plansSelected info
+                    let newSelectedPlansInfo = [];
+                    let isThereApreviousFinalGrade = false;
+                    let previousObjNoFinalGrade;
+                    for (let i = 0; i < tempArr.length; i++) {
+                      if (tempArr[i].useInCap) {
+                        isThereApreviousFinalGrade = true;
+                      }
+                      if (tempArr[i].key === whatPos) {
+                        previousObjNoFinalGrade = {
+                          Cap: tempArr[i].Cap,
+                          McUsedInCap: tempArr[i].MCsCountedToCap,
+                          Semester: props.headerTitle,
+                          useInCap: false,
+                          nameOfPlan: tempArr[i].nameOfPlan,
+                        };
+                      }
+                    }
+                    for (let i = 0; i < selectedplansinfo.length; i++) {
+                      // checking if the plan to be deleted exist in selectedPlansInfo
+                      if (
+                        selectedplansinfo[i].nameOfPlan === planName &&
+                        !isThereApreviousFinalGrade
+                      ) {
+                        if (whatPos !== "0")
+                          newSelectedPlansInfo.push(previousObjNoFinalGrade);
+                      } else newSelectedPlansInfo.push(selectedplansinfo[i]);
+                    }
+                    const userRef = FirebaseDB.firestore()
+                      .collection("users")
+                      .doc(userID);
+                    userRef.update({
+                      SelectedPlansInfo: newSelectedPlansInfo,
+                    });
+
+                    setselectedplansinfo(newSelectedPlansInfo);
+
+                    plansArrayRef.set({
+                      yearSem: tempArr,
+                      selected: whatPos,
+                      ArrForRect: newarrForRect,
+                    });
+                  } else {
+                    Alert.alert(
+                      "Warning",
+                      "This plan contains the data for your CAP calculation! \n If you're sure you want to remove, press Continue to advance",
+                      [
+                        { text: "Cancel", onPress: () => {} },
+                        {
+                          text: "Continue",
+                          onPress: () => {
+                            let tempArr = [];
+                            let tempIndex = 0;
+                            let newarrForRect = [];
+                            for (let i = 0; i < arr.length; i++) {
+                              if (arr[i].key !== currentID) {
+                                tempArr.push({
+                                  LastUpdated: arr[i].LastUpdated,
+                                  MCs: arr[i].MCs,
+                                  Cap: arr[i].Cap,
+                                  key: (tempIndex + 1).toString(),
+                                  nameOfPlan: arr[i].nameOfPlan,
+                                  useInCap: arr[i].useInCap,
+                                  MCsCountedToCap: arr[i].MCsCountedToCap,
+                                });
+                                tempIndex++;
+                                newarrForRect.push(arrForRect[i]);
+                              }
+                            }
+                            let whatPos = (parseInt(currentID) - 1).toString();
+
+                            let newSelectedPlansInfo = [];
+                            let isThereApreviousFinalGrade = false;
+                            let thepreviousObjFinalGrade;
+                            let previousObjNoFinalGrade;
+                            for (let i = 0; i < tempArr.length; i++) {
+                              if (tempArr[i].useInCap) {
+                                isThereApreviousFinalGrade = true;
+                                thepreviousObjFinalGrade = {
+                                  Cap: tempArr[i].Cap,
+                                  McUsedInCap: tempArr[i].MCsCountedToCap,
+                                  Semester: props.headerTitle,
+                                  useInCap: true,
+                                  nameOfPlan: tempArr[i].nameOfPlan,
+                                };
+                                whatPos = tempArr[i].key;
+                              } else {
+                                if (tempArr[i].key === whatPos) {
+                                  previousObjNoFinalGrade = {
+                                    Cap: tempArr[i].Cap,
+                                    McUsedInCap: tempArr[i].MCsCountedToCap,
+                                    Semester: props.headerTitle,
+                                    useInCap: false,
+                                    nameOfPlan: tempArr[i].nameOfPlan,
+                                  };
+                                }
+                              }
+                            }
+
+                            for (let i = 0; i < selectedplansinfo.length; i++) {
+                              // checking if the plan to be deleted exist in selectedPlansInfo
+                              if (
+                                selectedplansinfo[i].nameOfPlan === planName
+                              ) {
+                                // if there is a previous final grade inputted, then we go to that
+                                if (isThereApreviousFinalGrade)
+                                  newSelectedPlansInfo.push(
+                                    thepreviousObjFinalGrade
+                                  );
+                                else {
+                                  // else we will just go to the closest plan if exist.
+                                  if (whatPos !== "0") {
+                                    newSelectedPlansInfo.push(
+                                      previousObjNoFinalGrade
+                                    );
+                                  }
+                                }
+                              } else
+                                newSelectedPlansInfo.push(selectedplansinfo[i]);
+                            }
+                            const userRef = FirebaseDB.firestore()
+                              .collection("users")
+                              .doc(userID);
+                            userRef.update({
+                              SelectedPlansInfo: newSelectedPlansInfo,
+                            });
+
+                            setselectedplansinfo(newSelectedPlansInfo);
+
+                            plansArrayRef.set({
+                              yearSem: tempArr,
+                              selected: whatPos,
+                              ArrForRect: newarrForRect,
+                            });
+
+                            // deletion in plansArray
+                            const currentPlanName = arr[pos].nameOfPlan;
+
+                            const usersModulesDetailsRef = FirebaseDB.firestore()
+                              .collection("usersModulesDetails")
+                              .doc(userID);
+
+                            usersModulesDetailsRef
+                              .get()
+                              .then((document) => {
+                                const val = document.data();
+                                const arr1 = val.usersModulesArray;
+                                const nextArr = [];
+                                const tempArr2 = [];
+                                let totalSum = 0;
+                                let totalMc = 0;
+                                let totalMcUsedInCap = 0;
+                                for (let k = 0; k < arr1.length; k++) {
+                                  let semSum = 0;
+                                  let semMc = 0;
+                                  let semTotalMcUsedInCap = 0;
+                                  if (arr1[k].Semester !== props.headerTitle) {
+                                    nextArr.push(arr1[k]);
+                                    const refPoint =
+                                      arr1[k].ModulesDetailsArray;
+                                    for (let j = 0; j < refPoint.length; j++) {
+                                      const mc = refPoint[j].NumMcs;
+                                      const points = GradeToPoint(
+                                        refPoint[j].FinalGrade
+                                      );
+                                      if (
+                                        lettersChecker(refPoint[j].FinalGrade)
+                                      ) {
+                                        semTotalMcUsedInCap += mc;
+                                        totalMcUsedInCap += mc;
+                                        semSum += mc * points;
+                                        totalSum += mc * points;
+                                      }
+                                      totalMc += mc;
+                                      semMc += mc;
+                                    }
+                                    tempArr2.push({
+                                      SemestralCap: parseFloat(
+                                        (semSum / semTotalMcUsedInCap).toFixed(
+                                          2
+                                        )
+                                      ),
+                                      OverallCap: parseFloat(
+                                        (totalSum / totalMcUsedInCap).toFixed(2)
+                                      ),
+                                      Semester: arr1[k].Semester,
+                                      SemestralMc: semMc,
+                                      OverallMc: totalMc,
+                                      MCcountedToCap: semTotalMcUsedInCap,
+                                      TotalMcUsedInCap: totalMcUsedInCap,
+                                    });
+                                  }
+                                  semMc = 0;
+                                  semSum = 0;
+                                }
+
+                                // deletion in usersRef
+                                const usersRef = FirebaseDB.firestore()
+                                  .collection("users")
+                                  .doc(userID);
+                                usersRef.update({
+                                  CapArray: tempArr2,
+                                });
+
+                                //deletion in usersModulesDetailsRef
+                                FirebaseDB.firestore()
+                                  .collection("plansItself")
+                                  .doc(
+                                    userID.concat(
+                                      "_",
+                                      props.headerTitle,
+                                      "_",
+                                      currentPlanName
+                                    )
+                                  )
+                                  .delete();
+                                usersModulesDetailsRef.set({
+                                  usersModulesArray: nextArr,
+                                });
+                              })
+                              .catch((error) => {});
+                          },
+                        },
+                      ],
+                      { cancelable: false }
+                    );
+                  }
                 }
               })
               .catch((error) => alert(error));
           }
         }}
-      />
+      >
+        <Icon name="trash-2-outline" width={30} height={20} fill="#232323" />
+      </TouchableOpacity>
     </View>
   );
   return (
@@ -392,7 +668,66 @@ const Plans = (props) => {
               name="md-arrow-round-back"
               size={25}
               style={{ color: "#3E3E3E", left: 30, bottom: 15 }}
-              onPress={() => navigation.dispatch(CommonActions.goBack())}
+              onPress={() => {
+                // yearSem update here
+                const userRef = FirebaseDB.firestore()
+                  .collection("users")
+                  .doc(userID);
+
+                if (currentArr.length > 0) {
+                  plansArrayRef.update({
+                    selected: currentID,
+                  });
+
+                  userRef
+                    .get()
+                    .then((document) => {
+                      const val = document.data();
+                      const arr = val.SelectedPlansInfo;
+                      let doIChange = true;
+                      const currentPlanName =
+                        currentArr[parseInt(currentID) - 1].nameOfPlan;
+                      for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].Semester === props.headerTitle) {
+                          if (
+                            arr[i].useInCap ||
+                            arr[i].nameOfPlan === currentPlanName
+                          ) {
+                            doIChange = false;
+                          }
+                          break;
+                        }
+                      }
+                      if (doIChange) {
+                        let tempArr = [];
+                        for (let i = 0; i < arr.length; i++) {
+                          if (arr[i].Semester === props.headerTitle) {
+                            tempArr.push({
+                              Cap: currentArr[parseInt(currentID) - 1].Cap,
+                              McUsedInCap:
+                                currentArr[parseInt(currentID) - 1]
+                                  .MCsCountedToCap,
+                              Semester: props.headerTitle,
+                              nameOfPlan: currentPlanName,
+                              useInCap: false,
+                            });
+                          } else {
+                            tempArr.push(arr[i]);
+                          }
+                        }
+                        userRef.update({
+                          SelectedPlansInfo: tempArr,
+                        });
+                      }
+                    })
+                    .catch((error) => {});
+                } else {
+                  plansArrayRef.update({
+                    selected: "-1",
+                  });
+                }
+                navigation.dispatch(CommonActions.goBack());
+              }}
             />
           </View>
           <View
@@ -433,6 +768,37 @@ const Plans = (props) => {
               imageLink={(parseInt(item.key) - 1) % 4}
               idChange={(val) => setCurrentlyPressID(val)}
               nameOfPlan={item.nameOfPlan}
+              SemestralCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].SemestralCap
+                  : 0
+              }
+              OverallCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].OverallCap
+                  : 0
+              }
+              MCs={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].MCs
+                  : 0
+              }
+              PlannedCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].PlannedCap
+                  : 0
+              }
+              PlannedOverallCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].PlannedOverallCap
+                  : 0
+              }
+              useInCap={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].useInCap
+                  : 0
+              }
+              LastUpdated={"24/04/20 DEMO"}
             />
           )}
         />
@@ -445,34 +811,93 @@ const Plans = (props) => {
             style={styles.enterButton}
             onPress={() => {
               // come here later to solve the problem!
+              const currentPlanName =
+                currentArr[parseInt(currentID) - 1].nameOfPlan;
+              const userRef = FirebaseDB.firestore()
+                .collection("users")
+                .doc(userID);
+
+              if (currentArr.length > 0) {
+                plansArrayRef.update({
+                  selected: currentID,
+                });
+
+                userRef
+                  .get()
+                  .then((document) => {
+                    const val = document.data();
+                    const arr = val.SelectedPlansInfo;
+                    let doIChange = true;
+
+                    for (let i = 0; i < arr.length; i++) {
+                      if (arr[i].Semester === props.headerTitle) {
+                        if (
+                          arr[i].useInCap ||
+                          arr[i].nameOfPlan === currentPlanName
+                        ) {
+                          doIChange = false;
+                        }
+                        break;
+                      }
+                    }
+                    if (doIChange) {
+                      let tempArr = [];
+                      for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].Semester === props.headerTitle) {
+                          tempArr.push({
+                            Cap: currentArr[parseInt(currentID) - 1].Cap,
+                            McUsedInCap:
+                              currentArr[parseInt(currentID) - 1]
+                                .MCsCountedToCap,
+                            Semester: props.headerTitle,
+                            nameOfPlan: currentPlanName,
+                            useInCap: false,
+                          });
+                        } else {
+                          tempArr.push(arr[i]);
+                        }
+                      }
+                      userRef.update({
+                        SelectedPlansInfo: tempArr,
+                      });
+                    }
+                  })
+                  .catch((error) => {});
+              } else {
+                plansArrayRef.update({
+                  selected: "-1",
+                });
+              }
+
               if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
                 alert("Please select or create a plan");
               } else {
-                const currentPlanName =
-                  currentArr[parseInt(currentID) - 1].nameOfPlan;
                 const plansItselfRef = FirebaseDB.firestore()
                   .collection("plansItself")
                   .doc(
                     userID.concat("_", props.headerTitle, "_", currentPlanName)
                   );
-                const val = plansItselfRef.get().then((document) => {
-                  const info = document.data();
-                  if (info !== undefined) {
-                    const moduleInformations = info.planInfo;
-                    const thisPlanName = info.nameOfPlan;
-                    const amIfavourite = info.amIfavourite;
-                    navigation.navigate("ViewPlan", {
-                      item: [
-                        thisPlanName,
-                        docLoc,
-                        size,
-                        fromWhere,
-                        moduleInformations,
-                        amIfavourite,
-                      ],
-                    });
-                  }
-                });
+                const val = plansItselfRef
+                  .get()
+                  .then((document) => {
+                    const info = document.data();
+                    if (info !== undefined) {
+                      const moduleInformations = info.planInfo;
+                      const thisPlanName = info.nameOfPlan;
+                      const amIfavourite = info.amIfavourite;
+                      navigation.navigate("ViewPlan", {
+                        item: [
+                          thisPlanName,
+                          docLoc,
+                          size,
+                          fromWhere,
+                          moduleInformations,
+                          amIfavourite,
+                        ],
+                      });
+                    }
+                  })
+                  .catch((error) => {});
               }
             }}
           >
@@ -635,5 +1060,40 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 1.0,
     elevation: 2,
+  },
+  textIntputContainerStyle: {
+    width: 0.4 * width,
+    height: 0.04 * height,
+    borderWidth: 1,
+    borderColor: "#D0CECE",
+    bottom: 5,
+  },
+  textInputStyle: {
+    width: 0.4 * width,
+    height: 0.04 * height,
+    left: 5,
+  },
+  alertTextStyle: {
+    ...globalFontStyles.OSR_12,
+    bottom: 4,
+    color: "#cc0000",
+  },
+  holdingCancelAndConfirm: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderColor: "#D0CECE",
+    flexDirection: "row",
+  },
+  dustBinStyle: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  tempDustBinHolder: {
+    width: 35,
+    height: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 10,
   },
 });

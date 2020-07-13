@@ -5,7 +5,13 @@ import { globalFontStyles } from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
 import BackgroundFaded from "../Screens/Backgrounds/BackgroundFaded";
 import FirebaseDB from "../FirebaseDB";
-import { CS2019Types, CS2019Codes, CS2019Levels } from "../Data/Types";
+import {
+  CS2019Modules,
+  CS2019Mapping,
+  CS2019Levels,
+  CS2019Codes,
+  CS2019Types,
+} from "../Data/Types";
 
 const height = Dimensions.get("window").height;
 
@@ -170,12 +176,20 @@ const ChoosingOptions = ({ route }) => {
                   CapArray: [],
                   favPlanArray: [],
                   favPlanInfo: [],
+                  SelectedPlansInfo: [],
                 };
 
-                // records
                 const FB = FirebaseDB.firestore();
                 const batch = FB.batch();
                 const courseAndYear = data.course + " " + data.yearOfMatri;
+
+                // CS2019 modules
+                const modulesRef = FB.collection("records").doc(uid);
+                batch.set(modulesRef, CS2019Modules);
+
+                // CS2019 Mapping
+                const modulesMapping = FB.collection("modulesMapping").doc(uid);
+                batch.set(modulesMapping, CS2019Mapping);
 
                 // typeArray
                 const array = CS2019Types;
@@ -196,6 +210,7 @@ const ChoosingOptions = ({ route }) => {
                 batch.set(userRef, data);
 
                 batch.commit();
+                setIsLoading(false);
               })
               .catch((error) => {
                 setIsLoading(false);

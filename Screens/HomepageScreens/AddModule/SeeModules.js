@@ -13,6 +13,8 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+console.disableYellowBox = true;
+
 const SeeModules = ({ navigation, route }) => {
   const [modArr, setModArr] = useState([]);
   const [MCcount, setMCcount] = useState(0);

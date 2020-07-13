@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Animated,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -24,7 +25,7 @@ const ContentPage = (props) => {
   const isFocused = useIsFocused();
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
-  const [userDetails, setUserDetails] = useState([]);
+  const [usersDetails, setUsersDetails] = useState([]);
 
   const [title, setTitle] = useState("");
   const [docLoc, setDocLoc] = useState("");
@@ -48,60 +49,51 @@ const ContentPage = (props) => {
       : 9;
   };
 
-  const theArray = (val) => {
-    const arr = [];
-    for (let i = 0; i <= num(val); i++) {
-      arr.push(Menu[i]);
-    }
-    arr.push(Menu[10]);
-    return arr;
-  };
-
   const [y, setY] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    if (props.route?.params !== undefined) {
-      const unsub = userInfo.doc(userID).onSnapshot((document) => {
-        const data = document.data();
-        const val = data.expectedSemGrad;
-        setUserDetails(data);
-        if (data.favPlanArray.length > 0 && data.favPlanInfo.length > 0) {
-          setFavPlanArray(data.favPlanArray);
-          setFavPlanInfo(data.favPlanInfo);
-          setTitle(data.favPlanInfo[0]);
-          setDocLoc(data.favPlanInfo[1]);
-          setSize(data.favPlanInfo[2]);
-          setFromWhere(data.favPlanInfo[3]);
-          setDataArray(data.favPlanArray);
-        } else {
-          setFavPlanArray([]);
-          setFavPlanInfo([]);
-        }
-        let tempArr = [];
-        for (let i = 0; i <= num(val); i++) {
-          tempArr.push(Menu[i]);
-        }
-        tempArr.push(Menu[10]);
-        setCardArray(tempArr);
-      });
-      return () => unsub();
-    } else {
-      if (
-        props.extraData.favPlanArray.length > 0 &&
-        props.extraData.favPlanInfo.length > 0
-      ) {
-        setFavPlanArray(props.extraData.favPlanArray);
-        setFavPlanInfo(props.extraData.favPlanInfo);
-        setTitle(props.extraData.favPlanInfo[0]);
-        setDocLoc(props.extraData.favPlanInfo[1]);
-        setSize(props.extraData.favPlanInfo[2]);
-        setFromWhere(props.extraData.favPlanInfo[3]);
-        setDataArray(props.extraData.favPlanArray);
+    //if (props.route?.params !== undefined) {
+    const unsub = userInfo.doc(userID).onSnapshot((document) => {
+      const data = document.data();
+      const val = data.expectedSemGrad;
+      setUsersDetails(data);
+      if (data.favPlanArray.length > 0 && data.favPlanInfo.length > 0) {
+        setFavPlanArray(data.favPlanArray);
+        setFavPlanInfo(data.favPlanInfo);
+        setTitle(data.favPlanInfo[0]);
+        setDocLoc(data.favPlanInfo[1]);
+        setSize(data.favPlanInfo[2]);
+        setFromWhere(data.favPlanInfo[3]);
+        setDataArray(data.favPlanArray);
+      } else {
+        setFavPlanArray([]);
+        setFavPlanInfo([]);
       }
-      setUserDetails(props.extraData);
-      setCardArray(theArray(props.extraData.expectedSemGrad));
-    }
-  }, [isFocused, props.extraData]);
+      let tempArr = [];
+      for (let i = 0; i <= num(val); i++) {
+        tempArr.push(Menu[i]);
+      }
+      tempArr.push(Menu[10]);
+      setCardArray(tempArr);
+    });
+    return () => unsub();
+    // } else {
+    //   if (
+    //     props.extraData.favPlanArray.length > 0 &&
+    //     props.extraData.favPlanInfo.length > 0
+    //   ) {
+    //     setFavPlanArray(props.extraData.favPlanArray);
+    //     setFavPlanInfo(props.extraData.favPlanInfo);
+    //     setTitle(props.extraData.favPlanInfo[0]);
+    //     setDocLoc(props.extraData.favPlanInfo[1]);
+    //     setSize(props.extraData.favPlanInfo[2]);
+    //     setFromWhere(props.extraData.favPlanInfo[3]);
+    //     setDataArray(props.extraData.favPlanArray);
+    //   }
+    //   setUsersDetails(props.extraData);
+    //   setCardArray(theArray(props.extraData.expectedSemGrad));
+    // }
+  }, []);
 
   const onScroll = Animated.event(
     [
@@ -136,7 +128,12 @@ const ContentPage = (props) => {
                     item: [title, docLoc, size, fromWhere, dataArray, true],
                   });
                 } else {
-                  alert("You have not selected a favourite plan yet!");
+                  Alert.alert(
+                    "Oops",
+                    "You have not selected a favourite plan yet!",
+                    [{ text: "Cancel", onPress: () => {} }],
+                    { cancelable: false }
+                  );
                 }
               }}
             />
@@ -170,7 +167,7 @@ const ContentPage = (props) => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("ProgressPage", {
-                  usersDetails: userDetails,
+                  usersDetails: usersDetails,
                   from: "ContentPage",
                   userID: userID,
                 });
@@ -204,6 +201,16 @@ const ContentPage = (props) => {
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) => {
             return CardWallet(y, item.key.toString(), item.card, () => {
+              const arr = usersDetails.SelectedPlansInfo;
+              let totalMCs = 0;
+              let totalSum = 0;
+              for (let i = 0; i < arr.length; i++) {
+                if (arr[i].Semester === item.PageName) {
+                  break;
+                }
+                totalMCs += arr[i].McUsedInCap;
+                totalSum += arr[i].McUsedInCap * arr[i].Cap;
+              }
               const plansArrayRef = FirebaseDB.firestore()
                 .collection("plansArray")
                 .doc(userID.concat("_", item.PageName));
@@ -213,10 +220,49 @@ const ContentPage = (props) => {
                   const val = document.data();
                   if (val !== undefined) {
                     const arr = val.yearSem;
-                    navigation.navigate(item.PageName, { item: [userID, arr] });
+                    const selected = val.selected;
+                    let infoForNextPage = [];
+                    for (let i = 0; i < arr.length; i++) {
+                      const newTotalMcs = totalMCs + arr[i].MCsCountedToCap;
+                      const newTotalSum =
+                        totalSum + arr[i].MCsCountedToCap * arr[i].Cap;
+                      infoForNextPage.push({
+                        SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
+                        OverallCap:
+                          newTotalMcs !== 0
+                            ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                            : 0,
+                        PlannedOverallCap:
+                          newTotalMcs !== 0
+                            ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                            : 0,
+                        PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
+                        MCs: arr[i].MCs,
+                        LastUpdated: arr[i].LastUpdated,
+                        useInCap: arr[i].useInCap,
+                      });
+                    }
+                    plansArrayRef.update({
+                      ArrForRect: infoForNextPage,
+                    });
+                    return navigation.navigate(item.PageName, {
+                      item: [
+                        userID,
+                        arr,
+                        selected,
+                        infoForNextPage,
+                        usersDetails.SelectedPlansInfo,
+                      ],
+                    });
                   } else {
-                    plansArrayRef.set({ yearSem: [] });
-                    navigation.navigate(item.PageName, { item: [userID, []] });
+                    plansArrayRef.set({
+                      yearSem: [],
+                      selected: "-1",
+                      ArrForRect: [],
+                    });
+                    return navigation.navigate(item.PageName, {
+                      item: [userID, [], "-1", []],
+                    });
                   }
                 })
                 .catch((error) => alert(error));

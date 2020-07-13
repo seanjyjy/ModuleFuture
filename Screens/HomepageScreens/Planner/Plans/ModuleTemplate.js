@@ -81,29 +81,26 @@ const ModuleTemplate = (props) => {
   };
 
   const validText = (val) => {
-    if (val.length === 0) {
-      return false;
+    if (
+      val === "A+" ||
+      val === "A" ||
+      val === "A-" ||
+      val === "B+" ||
+      val === "B" ||
+      val === "B-" ||
+      val === "C+" ||
+      val === "C" ||
+      val === "D+" ||
+      val === "D" ||
+      val === "F" ||
+      val === "S" ||
+      val === "CS" ||
+      val === "CU" ||
+      val === ""
+    ) {
+      return true;
     } else {
-      if (
-        val === "A+" ||
-        val === "A" ||
-        val === "A-" ||
-        val === "B+" ||
-        val === "B" ||
-        val === "B-" ||
-        val === "C+" ||
-        val === "C" ||
-        val === "D+" ||
-        val === "D" ||
-        val === "F" ||
-        val === "S" ||
-        val === "CS" ||
-        val === "CU"
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+      return false;
     }
   };
 
