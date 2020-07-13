@@ -5,23 +5,21 @@ import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../../FirebaseDB";
-import { CS2019Mapping } from "../../../Data/Types";
 
 const Profile = (props) => {
   const navigation = useNavigation();
-  const course = () => navigation.navigate("Course", { course1: course1 });
   const yearTransition = () => navigation.navigate("Year", { year: year });
   const graduation = () => navigation.navigate("Graduation", { sem: gradSem });
   const EmailVerification = () => navigation.navigate("EmailVerification");
-  const [course1, setCourse] = useState(props.extraData.course);
+
   const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
   const [year, setYear] = useState(props.extraData.yearOfMatri);
+  const course1 = props.extraData.course;
   const email = props.extraData.email;
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (props.route.params?.course) setCourse(props.route.params?.course);
     if (props.route.params?.grad) setGradSem(props.route.params?.grad);
     if (props.route.params?.year) setYear(props.route.params?.year);
   }, [isFocused]);
@@ -34,14 +32,6 @@ const Profile = (props) => {
     }
   };
 
-  const arr = [];
-  const mapping = [
-    "Foundation",
-    "IT Professionalism",
-    "Mathematics and Sciences",
-    "Breadth and Depth",
-  ];
-
   return (
     <View style={{ flex: 1 }}>
       <Header str={"Profile"} />
@@ -53,19 +43,7 @@ const Profile = (props) => {
       >
         <ProfileButton0
           left={"Course"}
-          transition={() => {
-            // for (let i = 0; i < CS2019Map  ping.length; i++) {
-            //   for (let j = 0; j < CS2019Mapping[i].length; j++) {
-            //     let k = 0;
-            //     const type = mapping[i];
-            //     for (; CS2019Mapping[i][j][k] !== " "; k++) {}
-            //     const str = CS2019Mapping[i][j].substring(0, k);
-            //     const news = "`" + str + "`" + ": " + "`" + type + "`,";
-            //     console.log(news);
-            //   }
-            // }
-            course();
-          }}
+          transition={() => null}
           right={course1}
         />
         <ProfileButton0

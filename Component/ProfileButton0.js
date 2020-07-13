@@ -14,11 +14,12 @@ const width = Dimensions.get("window").width;
 
 const ProfileButton0 = (props) => {
   const user = FirebaseDB.auth().currentUser;
+
   return (
     <TouchableOpacity
       style={styles.main}
       onPress={() => props.transition()}
-      activeOpacity={props.left === "Email" ? 1 : 0.7}
+      activeOpacity={props.left === "Course" ? 1 : 0.7}
     >
       <View style={{ flexDirection: "row" }}>
         <Text
@@ -57,13 +58,15 @@ const ProfileButton0 = (props) => {
           {props.right}
         </Text>
         <View>
-          <Icon
-            name="arrow-ios-forward-outline"
-            width={15}
-            height={15}
-            fill="#2D405699"
-            style={styles.icon}
-          />
+          {props.left === "Course" ? null : (
+            <Icon
+              name="arrow-ios-forward-outline"
+              width={15}
+              height={15}
+              fill="#2D405699"
+              style={styles.icon}
+            />
+          )}
         </View>
       </View>
     </TouchableOpacity>

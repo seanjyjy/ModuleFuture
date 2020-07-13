@@ -39,7 +39,6 @@ import {
 import AddPlan from "./Screens/HomepageScreens/Planner/Plans/AddPlan";
 import ViewPlan from "./Screens/HomepageScreens/Planner/Plans/ViewPlan";
 import ChoosingOptions from "./Component/MakingClock";
-import Course from "./Screens/HomepageScreens/Profile/Course";
 import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
 import Year from "./Screens/HomepageScreens/Profile/Year";
 import EmailVerification from "./Screens/HomepageScreens/Profile/EmailVerification";
@@ -227,7 +226,6 @@ export default function App() {
                         component={Foundation}
                       />
                       <AuthStack.Screen name="Filter" component={Filter} />
-                      <AuthStack.Screen name="Course" component={Course} />
                       <AuthStack.Screen
                         name="Graduation"
                         component={Graduation}
