@@ -209,8 +209,7 @@ const ChoosingOptions = ({ route }) => {
                 const userRef = FB.collection("users").doc(uid);
                 batch.set(userRef, data);
 
-                batch.commit();
-                setIsLoading(false);
+                batch.commit().then(setIsLoading(false));
               })
               .catch((error) => {
                 setIsLoading(false);

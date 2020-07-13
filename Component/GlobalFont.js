@@ -32,6 +32,10 @@ export const globalFontStyles = StyleSheet.create({
     fontSize: 28,
   },
   // ------------------------------------------OPENSANS-SEMIBOLD-----------------------------------------------------
+  OSSB_11: {
+    fontFamily: "OpenSans-SemiBold",
+    fontSize: 11,
+  },
   OSSB_12: {
     fontFamily: "OpenSans-SemiBold",
     fontSize: 12,

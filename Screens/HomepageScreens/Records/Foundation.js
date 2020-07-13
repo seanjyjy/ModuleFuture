@@ -8,6 +8,7 @@ import AddModuleButton from "../../../Component/AddModuleButton";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+const hairlineWidth = StyleSheet.hairlineWidth;
 
 const Foundation = ({ navigation, route }) => {
   const [editMode, setEdit] = useState(false);
@@ -20,7 +21,7 @@ const Foundation = ({ navigation, route }) => {
       }
       const receivedArr = route.params?.modDetails;
       for (let i = 0; i < receivedArr.length; i++) {
-        tempArr.push(receivedArr[i].name);
+        tempArr.push(receivedArr[i]);
       }
       setNotTaken(tempArr);
     }
@@ -32,18 +33,8 @@ const Foundation = ({ navigation, route }) => {
 
       const takenAll = route.params?.taken;
       const notTakenAll = route.params?.notTaken;
-      const tempArr1 = [];
-      const tempArr2 = [];
-      for (let i = 0; i < takenAll.length; i++) {
-        if (takenAll[i][category] === toMatch) {
-          tempArr1.push(takenAll[i]);
-        }
-      }
-      for (let i = 0; i < notTakenAll.length; i++) {
-        if (notTakenAll[i][category] === toMatch) {
-          tempArr2.push(notTakenAll[i]);
-        }
-      }
+      const tempArr1 = takenAll.filter((x) => x[category] === toMatch);
+      const tempArr2 = notTakenAll.filter((x) => x[category] === toMatch);
       setTaken(tempArr1);
       setNotTaken(tempArr2);
     }
@@ -99,7 +90,7 @@ const Foundation = ({ navigation, route }) => {
           height={17}
           fill="#232323"
           onPress={() => {
-            const newList = notTaken.filter((x) => x.name !== item.name);
+            const newList = notTaken.filter((x) => x.code !== item.code);
             setNotTaken(newList);
           }}
         />
@@ -135,7 +126,7 @@ const Foundation = ({ navigation, route }) => {
       </View>
       <FlatList
         data={taken.concat(notTaken)}
-        keyExtractor={(item) => item.name.toString()}
+        keyExtractor={(item) => item.code.toString()}
         renderItem={({ item }) =>
           item.taken !== undefined ? holders(item) : holders2(item)
         }
@@ -160,7 +151,8 @@ const Foundation = ({ navigation, route }) => {
       alignSelf: "center",
       marginTop: 20,
       borderRadius: 14,
-      borderColor: "#C6C6C6",
+      borderColor: "#A0A0A0",
+      borderWidth: hairlineWidth,
       justifyContent: "space-between",
       alignContent: "stretch",
       shadowColor: "#000",
@@ -182,7 +174,7 @@ const Foundation = ({ navigation, route }) => {
       padding: 10,
       marginBottom: 8,
       borderBottomColor: "#A0A0A0",
-      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomWidth: hairlineWidth,
     },
     headerText: {
       flexDirection: "row",

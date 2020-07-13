@@ -76,7 +76,6 @@ export default function App() {
   const [data, setData] = useState({
     loading: false,
     user: null,
-    // recordsData: null,
   });
   const [modLoading, setModLoading] = useState(false);
 
@@ -189,11 +188,7 @@ export default function App() {
                     <>
                       <AuthStack.Screen name="Homepage">
                         {(props) => (
-                          <Homepage
-                            {...props}
-                            extraData={data.user}
-                            // recordsData={data.recordsData}
-                          />
+                          <Homepage {...props} extraData={data.user} />
                         )}
                       </AuthStack.Screen>
                       <AuthStack.Screen

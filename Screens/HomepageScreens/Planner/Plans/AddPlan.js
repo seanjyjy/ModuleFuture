@@ -404,6 +404,8 @@ const AddPlan = ({ route }) => {
                 numTaken: 0,
                 mcsUsedInCap: 0,
                 points: 0,
+                taken: [],
+                notTaken: [],
               });
             }
 
@@ -418,6 +420,8 @@ const AddPlan = ({ route }) => {
                 numTaken: 0,
                 mcsUsedInCap: 0,
                 points: 0,
+                taken: [],
+                notTaken: [],
               });
             }
             const indexType = typeObj[moduleType];
@@ -482,6 +486,8 @@ const AddPlan = ({ route }) => {
                 numTaken: codeObj.cat[i].numTaken,
                 mcsUsedInCap: codeObj.cat[i].mcsUsedInCap,
                 points: codeObj.cat[i].points,
+                taken: [],
+                notTaken: [],
               });
             } else {
               delete codeObj[codeObj.cat[i].name];
@@ -503,49 +509,35 @@ const AddPlan = ({ route }) => {
 
           codeObj.cat = codeObj.cat.slice(0, codeObj.fixed).concat(newCodes);
 
-          // level w/o sorting
-          // const newLevels = [];
-          // let keyId = levelObj.fixed;
-          // for (let i = 0; i < levelObj.cat.length; i++) {
-          //   if (i < levelObj.fixed) {
-          //     newLevels.push(levelObj.cat[i]);
-          //   } else {
-          //     if (levelObj.cat[i].mcsTaken !== 0) {
-          //       keyId++;
-          //       levelObj.cat[i].key = keyId;
-          //       newLevels.push(levelObj.cat[i]);
-          //     } else {
-          //       delete levelObj[levelObj.cat[i].context.toString()];
-          //     }
-          //   }
-          // }
-          // levelObj.cat = newLevels;
+          newNotTaken.sort((a, b) => {
+            if (a.code <= b.code) {
+              return -1;
+            } else {
+              return 1;
+            }
+          });
+
+          newTaken.sort((a, b) => {
+            if (a.sem < b.sem) {
+              return -1;
+            } else if (a.sem === b.sem) {
+              if (a.code < b.code) {
+                return -1;
+              } else {
+                return 1;
+              }
+            } else {
+              return 1;
+            }
+          });
 
           const batch = fb.batch();
           batch.set(typeRef, typeObj);
           batch.set(codeRef, codeObj);
           batch.set(levelRef, levelObj);
           batch.update(recordsRef, {
-            notTaken: newNotTaken.sort((a, b) => {
-              if (a.code <= b.code) {
-                return -1;
-              } else {
-                return 1;
-              }
-            }),
-            taken: newTaken.sort((a, b) => {
-              if (a.sem < b.sem) {
-                return -1;
-              } else if (a.sem === b.sem) {
-                if (a.code < b.code) {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              } else {
-                return 1;
-              }
-            }),
+            notTaken: newNotTaken,
+            taken: newTaken,
           });
 
           batch.commit();
