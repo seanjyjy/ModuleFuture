@@ -53,9 +53,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fAfAfA",
     width: width,
     height: 0.113 * height,
-    elevation: 5,
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: "black",
-    shadowOpacity: 0.1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
 });

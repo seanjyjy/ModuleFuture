@@ -39,6 +39,7 @@ const ViewPlan = ({ route }) => {
   const [usersDetails, setUsersDetails] = useState([]);
   const [arrToUse, setArrToUse] = useState([]);
   const [selectedplansinfo, setselectedplansinfo] = useState([]);
+  const [gradSem, setGradSem] = useState("");
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
@@ -62,6 +63,7 @@ const ViewPlan = ({ route }) => {
           const val = document.data();
           setUsersDetails(val);
           const sem = val.expectedSemGrad;
+          setGradSem(sem);
           let arrLength = 0;
           if (calculatorOfSem(sem) <= 5) {
             setSemList(semListY3S2);
@@ -307,6 +309,7 @@ const ViewPlan = ({ route }) => {
               usersDetails: usersDetails,
               from: "ViewPlan",
               userID: userID,
+              gradSem: gradSem,
             }),
           400
         );

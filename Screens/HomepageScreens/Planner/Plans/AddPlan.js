@@ -861,7 +861,7 @@ const AddPlan = ({ route }) => {
           ? parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2))
           : 0;
       longdpcap =
-        thisPlanMcUsedInCao !== 0 ? thisPlanSum / thisPlanMcUsedInCap : 0;
+        thisPlanMcUsedInCap !== 0 ? thisPlanSum / thisPlanMcUsedInCap : 0;
       const userRef = FirebaseDB.firestore()
         .collection("users")
         .doc(userIDextractor(docLoc));

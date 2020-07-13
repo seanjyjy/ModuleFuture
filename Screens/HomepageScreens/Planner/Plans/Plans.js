@@ -88,8 +88,8 @@ function RectInfoSelected({
                 }}
               >
                 {useInCap
-                  ? `Semestral Cap: ${SemestralCap}`
-                  : `Planned Cap: ${PlannedCap}`}
+                  ? `Semestral Cap: ${SemestralCap === 0 ? "-" : SemestralCap}`
+                  : `Planned Cap: ${PlannedCap === 0 ? "-" : PlannedCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -100,8 +100,10 @@ function RectInfoSelected({
                 }}
               >
                 {useInCap
-                  ? `Overall Cap: ${OverallCap}`
-                  : `Planned Overall Cap: ${PlannedOverallCap}`}
+                  ? `Overall Cap: ${OverallCap === 0 ? "-" : OverallCap}`
+                  : `Planned Overall Cap: ${
+                      PlannedOverallCap === 0 ? "-" : PlannedOverallCap
+                    }`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -111,7 +113,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                {`MCs: ${MCs}`}
+                {`MCs: ${MCs === 0 ? "-" : MCs}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -166,6 +168,8 @@ const Plans = (props) => {
             setArrForRect(arr2);
             setCurrentID(selected);
             setSelected(new Map().set(selected, true));
+            setselectedplansinfo(val.SelectedPlansInfo);
+            setShowDustBin(true);
           } else {
             //addition occurs
             setArrForRect(props.data[3]);
@@ -431,6 +435,7 @@ const Plans = (props) => {
                         };
                       }
                     }
+
                     for (let i = 0; i < selectedplansinfo.length; i++) {
                       // checking if the plan to be deleted exist in selectedPlansInfo
                       if (
@@ -441,19 +446,20 @@ const Plans = (props) => {
                           newSelectedPlansInfo.push(previousObjNoFinalGrade);
                       } else newSelectedPlansInfo.push(selectedplansinfo[i]);
                     }
+
+                    setselectedplansinfo(newSelectedPlansInfo);
+
                     const userRef = FirebaseDB.firestore()
                       .collection("users")
                       .doc(userID);
-                    userRef.update({
-                      SelectedPlansInfo: newSelectedPlansInfo,
-                    });
-
-                    setselectedplansinfo(newSelectedPlansInfo);
 
                     plansArrayRef.set({
                       yearSem: tempArr,
                       selected: whatPos,
                       ArrForRect: newarrForRect,
+                    });
+                    userRef.update({
+                      SelectedPlansInfo: newSelectedPlansInfo,
                     });
                   } else {
                     Alert.alert(
@@ -536,17 +542,6 @@ const Plans = (props) => {
                             const userRef = FirebaseDB.firestore()
                               .collection("users")
                               .doc(userID);
-                            userRef.update({
-                              SelectedPlansInfo: newSelectedPlansInfo,
-                            });
-
-                            setselectedplansinfo(newSelectedPlansInfo);
-
-                            plansArrayRef.set({
-                              yearSem: tempArr,
-                              selected: whatPos,
-                              ArrForRect: newarrForRect,
-                            });
 
                             // deletion in plansArray
                             const currentPlanName = arr[pos].nameOfPlan;
@@ -609,6 +604,17 @@ const Plans = (props) => {
                                   semSum = 0;
                                 }
 
+                                userRef.update({
+                                  SelectedPlansInfo: newSelectedPlansInfo,
+                                });
+
+                                setselectedplansinfo(newSelectedPlansInfo);
+
+                                plansArrayRef.set({
+                                  yearSem: tempArr,
+                                  selected: whatPos,
+                                  ArrForRect: newarrForRect,
+                                });
                                 // deletion in usersRef
                                 const usersRef = FirebaseDB.firestore()
                                   .collection("users")

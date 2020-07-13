@@ -12,7 +12,7 @@ const Profile = (props) => {
   const course = () => navigation.navigate("Course", { course1: course1 });
   const yearTransition = () => navigation.navigate("Year", { year: year });
   const graduation = () => navigation.navigate("Graduation", { sem: gradSem });
-
+  const EmailVerification = () => navigation.navigate("EmailVerification");
   const [course1, setCourse] = useState(props.extraData.course);
   const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
   const [year, setYear] = useState(props.extraData.yearOfMatri);
@@ -54,7 +54,7 @@ const Profile = (props) => {
         <ProfileButton0
           left={"Course"}
           transition={() => {
-            // for (let i = 0; i < CS2019Mapping.length; i++) {
+            // for (let i = 0; i < CS2019Map  ping.length; i++) {
             //   for (let j = 0; j < CS2019Mapping[i].length; j++) {
             //     let k = 0;
             //     const type = mapping[i];
@@ -78,7 +78,11 @@ const Profile = (props) => {
           transition={() => graduation()}
           right={gradSem}
         />
-        <ProfileButton0 left={"Email"} transition={() => null} right={email} />
+        <ProfileButton0
+          left={"Email"}
+          transition={() => EmailVerification()}
+          right={email}
+        />
         <View style={{ alignItems: "center" }}>
           <LogoutButton func={() => signOutUser()} />
         </View>

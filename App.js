@@ -18,6 +18,7 @@ import ModuleListWithKey from "./Data/ModuleListMoreInfo";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
 import Login from "./Screens/Login/Login";
+import ForgetPW from "./Screens/Login/ForgetPW";
 import DetailsCollection from "./Screens/Login/DetailsCollection";
 import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPageSettings";
 import AddModule from "./Screens/HomepageScreens/AddModule/AddModule";
@@ -41,7 +42,9 @@ import ChoosingOptions from "./Component/MakingClock";
 import Course from "./Screens/HomepageScreens/Profile/Course";
 import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
 import Year from "./Screens/HomepageScreens/Profile/Year";
+import EmailVerification from "./Screens/HomepageScreens/Profile/EmailVerification";
 import Foundation from "./Screens/HomepageScreens/Records/Foundation";
+
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
@@ -230,10 +233,18 @@ export default function App() {
                         component={Graduation}
                       />
                       <AuthStack.Screen name="Year" component={Year} />
+                      <AuthStack.Screen
+                        name="EmailVerification"
+                        component={EmailVerification}
+                      />
                     </>
                   ) : (
                     <>
                       <AuthStack.Screen name="Login" component={Login} />
+                      <AuthStack.Screen
+                        name="ForgetPassword"
+                        component={ForgetPW}
+                      />
                       <AuthStack.Screen
                         name="DetailsCollection"
                         component={DetailsCollection}

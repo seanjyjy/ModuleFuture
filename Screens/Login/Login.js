@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, Platform } from "react-native";
 import Background from "../Backgrounds/Background";
 import { globalFontStyles } from "../../Component/GlobalFont";
-import YesNoButton from "../../Component/YesNoButton";
-import YesPage from "./YesPage";
 import NoPage from "./NoPage";
 import LoginAuth from "./LoginAuth";
 
@@ -38,54 +36,9 @@ const Login = () => {
 
   const [originalMiddle, setNewMiddle] = useState(middle);
 
-  const pressingYesOrNo = (ans) => {
-    if (ans === "Yes") {
-      setNewMiddle({ key: 3, frame: <YesPage /> });
-    } else {
-      setNewMiddle({ key: 3, frame: <NoPage /> });
-    }
-  };
-
   const nextMiddle = {
     key: 2,
-    frame: (
-      <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: "column", flex: 2, bottom: 60 }}>
-          <View
-            style={{
-              flex: 3,
-              justifyContent: "center",
-              alignItems: "center",
-              bottom: 30,
-            }}
-          >
-            <Text style={{ ...globalFontStyles.NB_28, color: "#7F8E9E" }}>
-              Login via NUSnet ID ?
-            </Text>
-          </View>
-          <View style={{ flex: 6, top: Platform.OS === "android" ? 40 : 0 }}>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-              }}
-            >
-              <YesNoButton func={() => pressingYesOrNo("No")}>
-                <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                  No
-                </Text>
-              </YesNoButton>
-              <YesNoButton func={() => pressingYesOrNo("Yes")}>
-                <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                  Yes
-                </Text>
-              </YesNoButton>
-            </View>
-          </View>
-        </View>
-      </View>
-    ),
+    frame: <NoPage />,
   };
 
   const pressingSignUp = (value) => {

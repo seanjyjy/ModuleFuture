@@ -60,7 +60,7 @@ const NoPage = () => {
             <View style={globalStyles.header}>
               <MaterialCommunityIcons
                 name="email"
-                size={30}
+                size={27}
                 style={{ ...globalStyles.iconDesign, right: 13 }}
               />
               <TextInput
@@ -83,10 +83,10 @@ const NoPage = () => {
               </Text>
             </View>
 
-            <View style={{ ...globalStyles.header, top: 10 }}>
+            <View style={{ ...globalStyles.header, bottom: 1 }}>
               <Ionicons
                 name="ios-lock"
-                size={34}
+                size={30}
                 style={{ ...globalStyles.iconDesign, right: 10 }}
               />
               <TextInput
@@ -104,13 +104,13 @@ const NoPage = () => {
               />
             </View>
 
-            <View style={{ left: 30, top: 10 }}>
+            <View style={{ left: 30 }}>
               <Text style={{ ...globalFontStyles.OSR_14, color: "#cc0000" }}>
                 {props.touched.password && props.errors.password}
               </Text>
             </View>
 
-            <View style={{ ...globalStyles.header, top: 25 }}>
+            <View style={{ ...globalStyles.header, top: 2 }}>
               <MaterialCommunityIcons
                 name="account"
                 size={30}
@@ -130,7 +130,7 @@ const NoPage = () => {
               />
             </View>
 
-            <View style={{ left: 30, top: 30 }}>
+            <View style={{ left: 30, top: 3 }}>
               <Text style={{ ...globalFontStyles.OSR_14, color: "#cc0000" }}>
                 {props.touched.name && props.errors.name}
               </Text>

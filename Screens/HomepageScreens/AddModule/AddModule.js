@@ -26,7 +26,7 @@ const AddModule = (props) => {
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
         <Cross
-          top={12}
+          top={22}
           transition={() => props.navigation.goBack()}
           text={"Add a module"}
         />
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   second: {
-    top: height * 0.04,
+    top: height * 0.04 + 5,
     height: "50%",
     width: "100%",
     flexDirection: "row",

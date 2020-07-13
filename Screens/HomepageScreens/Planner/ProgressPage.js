@@ -113,27 +113,20 @@ const ProgressPage = ({ navigation, route }) => {
       setAllowClicks(true);
     } else {
       setAllowClicks(false);
-      //GET THE DATA FROM THE USERS
-      setLineData({
-        labels: [
-          "Y1S1",
-          "Y1S2",
-          "Y2S1",
-          "Y2S2",
-          "Y3S1",
-          "Y3S2",
-          "Y4S1",
-          "Y4S2",
-          "Y5S1",
-          "Y5S2",
-        ],
-        datasets: [
-          {
-            data: [0],
-            strokeWidth: 2,
-          },
-        ],
-      });
+      //GET THE DATA FROM THE USERS TO SEE TO SHOW TILL Y4S2 OR Y5S2
+      if (route.params?.gradSem === "Y3S1") {
+        setLineData({ labels: arrayY3S1, datasets: datasetsForAll });
+      } else if (route.params?.gradSem === "Y3S2") {
+        setLineData({ labels: arrayY3S2, datasets: datasetsForAll });
+      } else if (route.params?.gradSem === "Y4S1") {
+        setLineData({ labels: arrayY4S1, datasets: datasetsForAll });
+      } else if (route.params?.gradSem === "Y4S2") {
+        setLineData({ labels: arrayY4S2, datasets: datasetsForAll });
+      } else if (route.params?.gradSem === "Y5S1") {
+        setLineData({ labels: arrayY5S1, datasets: datasetsForAll });
+      } else {
+        setLineData({ labels: arrayY5S2, datasets: datasetsForAll });
+      }
       setShowGraph(true);
       setProgress(0);
       setProgress2(0);
@@ -142,6 +135,19 @@ const ProgressPage = ({ navigation, route }) => {
       setTextToShow(whatText(0));
     }
   }, [route.params?.items, route.params?.usersDetails]);
+
+  const arrayY3S1 = ["Y1S1", "Y1S2", "Y2S1", "Y2S1", "Y3S1"];
+  const arrayY3S2 = [...arrayY3S1, "Y3S2"];
+  const arrayY4S1 = [...arrayY3S2, "Y4S1"];
+  const arrayY4S2 = [...arrayY4S1, "Y4S2"];
+  const arrayY5S1 = [...arrayY4S2, "Y5S1"];
+  const arrayY5S2 = [...arrayY5S1, "Y5S2"];
+  const datasetsForAll = [
+    {
+      data: [0],
+      strokeWidth: 2,
+    },
+  ];
 
   // ***********************************************this data is going to get from the back end data*****************************************************
 

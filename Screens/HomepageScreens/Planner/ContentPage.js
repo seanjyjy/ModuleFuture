@@ -35,6 +35,7 @@ const ContentPage = (props) => {
   const [favPlanArray, setFavPlanArray] = useState([]);
   const [favPlanInfo, setFavPlanInfo] = useState([]);
   const [cardArray, setCardArray] = useState([]);
+  const [gradSem, setGradSem] = useState("");
   const num = (val) => {
     return val === "Y3S1"
       ? 4
@@ -56,6 +57,7 @@ const ContentPage = (props) => {
     const unsub = userInfo.doc(userID).onSnapshot((document) => {
       const data = document.data();
       const val = data.expectedSemGrad;
+      setGradSem(val);
       setUsersDetails(data);
       if (data.favPlanArray.length > 0 && data.favPlanInfo.length > 0) {
         setFavPlanArray(data.favPlanArray);
@@ -170,6 +172,7 @@ const ContentPage = (props) => {
                   usersDetails: usersDetails,
                   from: "ContentPage",
                   userID: userID,
+                  gradSem: gradSem,
                 });
               }}
               style={{ width: 50, height: 50 }}

@@ -44,11 +44,43 @@ const TabDesign = (props) => {
         alignItems: "center",
       }}
     >
-      <Icon
-        name={props.iconName}
-        size={19}
-        style={{ color: props.isCurrent ? "#FB5581" : "#979797" }}
-      />
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <Icon
+          name={props.iconName}
+          size={19}
+          style={{
+            color: props.isCurrent ? "#FB5581" : "#979797",
+            position:
+              !FirebaseDB.auth().currentUser.emailVerified &&
+              props.iconName === "user-circle"
+                ? "absolute"
+                : null,
+          }}
+        />
+        {!FirebaseDB.auth().currentUser.emailVerified &&
+        props.iconName === "user-circle" ? (
+          <View
+            style={{
+              backgroundColor: "red",
+              height: 15,
+              width: 15,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 20,
+              bottom: 5,
+              left: 0.05 * totalWidth,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 12, left: 0.5 }}>!</Text>
+          </View>
+        ) : (
+          <View />
+        )}
+      </View>
       <Text
         style={
           props.isCurrent
