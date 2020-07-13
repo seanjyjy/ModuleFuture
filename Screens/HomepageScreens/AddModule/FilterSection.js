@@ -28,8 +28,8 @@ const FilterSection = (props) => {
   const convert = (text) =>
     text === "Level"
       ? "levels"
-      : text === "Department"
-      ? "departments"
+      : text === "Code"
+      ? "codes"
       : text === "Semester"
       ? "semesters"
       : text;
@@ -37,8 +37,8 @@ const FilterSection = (props) => {
   const [noOfItems, setNum] = useState(3);
   const array = props.array;
   const maxSize = array.length;
-  const incrSize = () => setNum(noOfItems + 6);
-  const decrSize = () => setNum(noOfItems - 6);
+  const incrSize = () => setNum(noOfItems + 19);
+  const decrSize = () => setNum(3);
 
   return (
     <View
@@ -58,6 +58,7 @@ const FilterSection = (props) => {
         {props.name}
       </Text>
       <FlatList
+        initialNumToRender={20}
         data={array.slice(0, noOfItems)}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => textWithIcon1(item.name)}

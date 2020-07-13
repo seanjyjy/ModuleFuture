@@ -1,20 +1,33 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Dimensions,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
 import { Icon } from "react-native-eva-icons";
+import { Easing } from "react-native-reanimated";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const Container = (props) => {
+  const xVal = useRef(new Animated.Value(0)).current;
+
+  const move = () => {
+    Animated.timing(xVal, {
+      toValue: -width,
+      duration: 300,
+      easing: Easing.linear,
+    }).start(() => props.incr());
+  };
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={{ ...styles.container, left: xVal }}>
+      {/* <View style={styles.container}> */}
       <View style={{ flexDirection: "column", flex: 1 }}>
         <View
           style={{
@@ -82,9 +95,12 @@ const Container = (props) => {
         width={43}
         height={43}
         fill={"#3FE2D3"}
-        onPress={() => props.incr()}
+        onPress={() => {
+          move();
+        }}
       />
-    </View>
+      {/* </View> */}
+    </Animated.View>
   );
 };
 

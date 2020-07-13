@@ -15,13 +15,13 @@ const height = Dimensions.get("window").height;
 const ColouredList = (props) => {
   const colors = props.colors;
   const bool = props.text3 === "4.1";
+  const mcsOrNum = props.mcsOrNum;
 
-  // TODO:
-  const content = (key) => {
+  const content = (key, noTaken, mcsTaken, noRequired, mcsTotal, CAP) => {
     const circle = (
       <View
         style={{
-          backgroundColor: colors[key - 1],
+          backgroundColor: colors[(key - 1) % 8],
           width: 0.03 * width,
           height: 0.03 * width,
           borderRadius: (0.03 * width) / 2,
@@ -40,6 +40,22 @@ const ColouredList = (props) => {
         {input}
       </Text>
     );
+
+    const text1 = () => {
+      if (mcsOrNum === "MCs taken") {
+        if (mcsTotal === 0) {
+          return "-";
+        } else {
+          return (mcsTaken === 0 ? "-" : mcsTaken) + " / " + mcsTotal;
+        }
+      } else {
+        if (noRequired === 0) {
+          return "-";
+        } else {
+          return (noTaken === 0 ? "-" : noTaken) + " / " + noRequired;
+        }
+      }
+    };
 
     const line = (text1, text2) => (
       <View style={styles.innerText}>
@@ -67,36 +83,51 @@ const ColouredList = (props) => {
 
     return (
       <View style={styles.whitelayer}>
-        {line(props.text1, props.text2)}
-        {line("CAP", props.text3)}
+        {line(mcsOrNum, text1())}
+        {line("CAP", CAP)}
       </View>
     );
   };
 
-  const holders = (key, name) => (
-    <TouchableOpacity
-      style={styles.container}
-      activeOpacity={0.9}
-      onPress={() => {
-        props.transition();
-      }}
-    >
-      <View style={{ ...styles.colorTop, backgroundColor: colors[key - 1] }}>
-        <View style={{ width: "90%" }}>
-          <Text
-            style={{
-              ...(bool ? globalFontStyles.NBEB_15 : globalFontStyles.NBEB_17),
-              color: "#F4F4F4",
-              textAlign: "center",
-            }}
-          >
-            {name}
-          </Text>
+  const holders = (item) => {
+    const key = item.key;
+    const name = item.name;
+    const noTaken = item.noTaken;
+    const mcsTaken = item.mcsTaken;
+    const mcsTotal = item.mcsTotal;
+    let noRequired = 0;
+    const CAP = item.CAP === 0 ? "-" : item.CAP;
+    if (mcsTotal !== 0) {
+      noRequired = item.noRequired;
+    }
+
+    return (
+      <TouchableOpacity
+        style={styles.container}
+        activeOpacity={0.9}
+        onPress={() => {
+          props.transition();
+        }}
+      >
+        <View
+          style={{ ...styles.colorTop, backgroundColor: colors[(key - 1) % 8] }}
+        >
+          <View style={{ width: "90%" }}>
+            <Text
+              style={{
+                ...(bool ? globalFontStyles.NBEB_15 : globalFontStyles.NBEB_17),
+                color: "#F4F4F4",
+                textAlign: "center",
+              }}
+            >
+              {name}
+            </Text>
+          </View>
         </View>
-      </View>
-      {content(key)}
-    </TouchableOpacity>
-  );
+        {content(key, noTaken, mcsTaken, noRequired, mcsTotal, CAP)}
+      </TouchableOpacity>
+    );
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -137,14 +168,16 @@ const ColouredList = (props) => {
     },
   });
 
+  const array = props.array;
+
   return (
     <View style={{ flex: 1, position: "relative" }}>
       <FlatList
         showsVerticalScrollIndicator={false}
         numColumns={2}
+        data={array}
+        renderItem={({ item }) => holders(item)}
         keyExtractor={(item) => item.key.toString()}
-        data={props.array}
-        renderItem={({ item }) => holders(item.key, item.name)}
         ListFooterComponent={<View style={{ height: 70 }} />}
       />
     </View>

@@ -8,6 +8,7 @@ import {
   TextInput,
   Keyboard,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -26,6 +27,7 @@ const ModuleTemplate = (props) => {
   const clash = props.dataObj.clash;
   const moduleCode = props.dataObj.moduleCode;
   const TargetGrade = props.dataObj.TargetGrade;
+  const suAble = props.dataObj.suOption;
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState("");
   const [text1, setText1] = useState("");
@@ -35,6 +37,7 @@ const ModuleTemplate = (props) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [TargetOrFinal, setTargetOrFinal] = useState(0);
   const [alertText, setAlertText] = useState(false);
+  const [alertText2, setAlertText2] = useState(false);
   const MenuIcon = () => (
     <Icon
       fill="#232323"
@@ -94,13 +97,52 @@ const ModuleTemplate = (props) => {
         val === "D" ||
         val === "F" ||
         val === "S" ||
-        val === "CSCU"
+        val === "CS" ||
+        val === "CU"
       ) {
         return true;
       } else {
         return false;
       }
     }
+  };
+
+  const closeModal = () => {
+    setAlertText(false);
+    Keyboard.dismiss();
+    setModalVisible(false);
+    setText("");
+    setText1("");
+  };
+
+  const whatToDoEncounteringS = (val) => {
+    Alert.alert(
+      "Warning",
+      "This module doesn't have an SU option. \n If you're sure, press Continue to advance",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+        },
+        {
+          text: "Continue",
+          onPress: () => {
+            Keyboard.dismiss();
+            if (val === 0) {
+              setTargetGrade("S");
+              props.dataObj.TargetGrade = "S";
+            } else {
+              setFinalGrade("S");
+              props.dataObj.FinalGrade = "S";
+            }
+            setText("");
+            setText1("");
+            setModalVisible(false);
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
   const PopOutBox = (whatType) => {
     return (
@@ -121,7 +163,7 @@ const ModuleTemplate = (props) => {
         <View style={styles.flexOneCenter}>
           <View
             style={{
-              width: 0.4 * width,
+              width: 0.5 * width,
               height: 0.04 * height,
               borderWidth: 1,
               borderColor: "#D0CECE",
@@ -130,11 +172,11 @@ const ModuleTemplate = (props) => {
           >
             <TextInput
               style={{
-                width: 0.4 * width,
+                width: 0.5 * width,
                 height: 0.04 * height,
                 left: 5,
               }}
-              placeholder="S - A+ or CSCU only"
+              placeholder="S - A+ / CS / CU only"
               onChangeText={(val) => {
                 if (whatType === 0) {
                   setText(val);
@@ -152,7 +194,7 @@ const ModuleTemplate = (props) => {
                 color: "#cc0000",
               }}
             >
-              Please enter a valid grade, S - A+ or CSCU
+              Please enter a valid grade, S - A+ or CS or CU
             </Text>
           ) : (
             <View />
@@ -185,25 +227,31 @@ const ModuleTemplate = (props) => {
             onPress={() => {
               if (whatType === 0) {
                 if (validText(text.toString().toUpperCase())) {
-                  setTargetGrade(text.toString().toUpperCase());
-                  props.dataObj.TargetGrade = text.toString().toUpperCase();
-                  setAlertText(false);
-                  Keyboard.dismiss();
-                  setModalVisible(false);
-                  setText("");
-                  setText1("");
+                  if (
+                    text.toString().toUpperCase() !== "S" ||
+                    (text.toString().toUpperCase() === "S" && suAble)
+                  ) {
+                    setTargetGrade(text.toString().toUpperCase());
+                    props.dataObj.TargetGrade = text.toString().toUpperCase();
+                    closeModal();
+                  } else {
+                    whatToDoEncounteringS(0);
+                  }
                 } else {
                   setAlertText(true);
                 }
               } else {
                 if (validText(text1.toString().toUpperCase())) {
-                  setFinalGrade(text1.toString().toUpperCase());
-                  props.dataObj.FinalGrade = text1.toString().toUpperCase();
-                  setAlertText(false);
-                  Keyboard.dismiss();
-                  setModalVisible(false);
-                  setText("");
-                  setText1("");
+                  if (
+                    text1.toString().toUpperCase() !== "S" ||
+                    (text1.toString().toUpperCase() === "S" && suAble)
+                  ) {
+                    setFinalGrade(text1.toString().toUpperCase());
+                    props.dataObj.FinalGrade = text1.toString().toUpperCase();
+                    closeModal();
+                  } else {
+                    whatToDoEncounteringS(1);
+                  }
                 } else {
                   setAlertText(true);
                 }

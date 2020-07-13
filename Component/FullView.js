@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
 import { Icon } from "react-native-eva-icons";
-import { globalFontStyles } from ".Component/GlobalFont";
-import EditButton from ".Component/EditButton";
+import { globalFontStyles } from "./GlobalFont";
+import EditButton from "./EditButton";
 import AddModuleButton from "./AddModuleButton";
 
 const FullView = (props) => {

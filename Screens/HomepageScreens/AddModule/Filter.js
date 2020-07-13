@@ -10,7 +10,6 @@ import {
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import BottomBar from "../../../Component/BottomBar";
 import Cross from "../../../Component/Cross";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FilterItem from "../../../Component/FilterItem";
 import FilterSection from "./FilterSection";
 import { useSafeArea } from "react-native-safe-area-context";
@@ -21,13 +20,13 @@ const width = Dimensions.get("window").width;
 
 const Filter = ({ navigation, route }) => {
   useEffect(() => {
-    if (route.params?.moduleList) {
-      const array = route.params?.moduleList;
+    if (route.params?.fullList) {
+      const array = route.params?.fullList;
       setList(array);
       update(numConversion(array.length));
     }
     const currentFilters = route.params?.currentFilters;
-    if (currentFilters !== 0) {
+    if (currentFilters.length !== 0) {
       setFilterArr(currentFilters);
       const newSet = new Set();
       currentFilters.forEach((x) => newSet.add(x.name));
@@ -36,7 +35,7 @@ const Filter = ({ navigation, route }) => {
         setFilterSet(new Set());
       }, 20);
     }
-  }, [route.params?.moduleList]);
+  }, [route.params?.fullList]);
 
   const numConversion = (num) => {
     if (num < 100) {
@@ -46,11 +45,9 @@ const Filter = ({ navigation, route }) => {
     }
   };
 
-  const fullList = route.params.origList;
+  const [fullList, setFL] = useState(route.params.origList);
   const [numMods, update] = useState(0);
   const [filterSet, setFilterSet] = useState(new Set());
-  const [sortState1, setSortState1] = useState("Default");
-  const [sortState2, setSortState2] = useState("Default");
   const [list, setList] = useState([]);
   const [filterArr, setFilterArr] = useState([]);
   const [clearFilters, clear] = useState(false);
@@ -65,60 +62,6 @@ const Filter = ({ navigation, route }) => {
         transition={() => navigation.goBack()}
         text={"Filter"}
       />
-    </View>
-  );
-
-  const sortButton = (boolean, setter, name) => {
-    const setSort = () =>
-      boolean === "Default"
-        ? "Ascending"
-        : boolean === "Ascending"
-        ? "Descending"
-        : "Default";
-
-    return (
-      <TouchableOpacity
-        style={{
-          ...styles.sortButton,
-          backgroundColor: boolean === "Default" ? "white" : "#232323",
-          borderRightWidth: name === "Level" ? 0.1 : 0.6,
-          marginLeft: name === "Level" ? 1 : 0,
-        }}
-        activeOpacity={0.95}
-        onPress={() => setter(setSort())}
-      >
-        <Text
-          style={{
-            ...globalFontStyles.NSB_17,
-            color: boolean === "Default" ? "#232323" : "white",
-          }}
-        >
-          {name}
-        </Text>
-        <View>
-          {boolean === "Default" ? null : (
-            <MaterialCommunityIcons
-              name={
-                boolean === "Descending" ? "arrow-down-bold" : "arrow-up-bold"
-              }
-              size={19}
-              color="white"
-            />
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const sort = (
-    <View style={styles.sortComponent}>
-      <Text style={{ ...globalFontStyles.NSB_17, color: "#232323" }}>
-        Sort by
-      </Text>
-      <View style={{ flexDirection: "row", marginTop: 14, marginBottom: 30 }}>
-        {sortButton(sortState1, setSortState1, "Level")}
-        {sortButton(sortState2, setSortState2, "Code")}
-      </View>
     </View>
   );
 
@@ -148,91 +91,273 @@ const Filter = ({ navigation, route }) => {
 
   const other = [{ name: "S/U Option" }, { name: "No Exam" }];
 
-  const departments = [
-    { name: "Computer Science" },
-    { name: "Information Systems and Analytics" },
-    { name: "Mathematics" },
-    { name: "Analytics and Operations" },
-    { name: "Economics" },
-    { name: "Statistics and Applied Probability" },
-    { name: "Center for Engl Lang Comms" },
-    { name: "Management and Organisation" },
-    { name: "Finance" },
-    { name: "Accounting" },
-    { name: "Marketing" },
-    { name: "Computing and Engineering Programme" },
-    { name: "Electrical and Computer Engineering" },
-    { name: "Alice Lee Center for Nursing Studies" },
-    { name: "Anatomy" },
-    { name: "Architecture" },
-    { name: "BIZ Dean's Office" },
-    { name: "Biochemistry" },
-    { name: "Biological Sciences" },
-    { name: "Biomedical Engineering" },
-    { name: "Building" },
-    { name: "Center for Quantum Technologies" },
-    { name: "Centre for Language Studies" },
-    { name: "Chemical and Biomolecular Engineering" },
-    { name: "Chemistry" },
-    { name: "Chinese Studies" },
-    { name: "Chua Thian Poh Comm Leader Center" },
-    { name: "Civil and Environmental Engineering" },
-    { name: "College of Alice and Peter Tan" },
-    { name: "Communications and New Media" },
-    { name: "Division of Graduate Dental Studies" },
-    { name: "Division of Graduate Medical Studies" },
-    { name: "Duke-NUS Dean's Office" },
-    { name: "Engineering Science Programme" },
-    { name: "English Language and Literature" },
-    { name: "FASS Dean's Office/Office of Programmes" },
-    { name: "FoD Dean's Office" },
-    { name: "FoE Dean's Office" },
-    { name: "FoL Dean's Office" },
-    { name: "FoS Dean's Office" },
-    { name: "Food Science and Technology" },
-    { name: "Geography" },
-    { name: "History" },
-    { name: "Industrial Design" },
-    { name: "Industrial Systems Engineering and Management" },
-    { name: "Institute of Systems Science" },
-    { name: "Japanese Studies" },
-    { name: "LKYSPP Dean's Office" },
-    { name: "Logistics Inst - Asia Pac" },
-    { name: "Malay Studies" },
-    { name: "Materials Science and Engineering" },
-    { name: "Mechanical Engineering" },
-    { name: "Mechanobiology Institute (MBI)" },
-    { name: "Microbiology and Immunology" },
-    { name: "NGS Dean's Office" },
-    { name: "NUS Entrepreneurship Centre" },
-    { name: "NUS Medicine Dean's Office" },
-    { name: "Office of Sr Dy Pres and Provost" },
-    { name: "Pathology" },
-    { name: "Pharmacology" },
-    { name: "Pharmacy" },
-    { name: "Philosophy" },
-    { name: "Physics" },
-    { name: "Physiology" },
-    { name: "Political Science" },
-    { name: "Psychology" },
-    { name: "Real Estate" },
-    { name: "Residential College 4" },
-    { name: "Ridge View Residential College" },
-    { name: "Risk Management Institute" },
-    { name: "SCALE Dean's Office" },
-    { name: "SDE Dean's Office" },
-    { name: "SSH School of Public Health Dean's Office" },
-    { name: "SoC Dean's Office" },
-    { name: "Social Work" },
-    { name: "Sociology" },
-    { name: "South Asian Studies" },
-    { name: "Southeast Asian Studies" },
-    { name: "Strategy and Policy" },
-    { name: "Temasek Defence Systems Inst" },
-    { name: "Tembusu College" },
-    { name: "University Scholars Programme" },
-    { name: "YSTCM Dean's Office" },
-    { name: "Yale-NUS College" },
+  const codes = [
+    /*------------------ Commonly picked modules---------------*/
+    { name: "CS" },
+    { name: "IS" },
+    { name: "BT" },
+    { name: "IFS" },
+    { name: "MA" },
+    { name: "ST" },
+    { name: "CG" },
+    { name: "EG" },
+    { name: "GEH" },
+    { name: "GES" },
+    { name: "GET" },
+    { name: "EC" },
+    { name: "MKT" },
+    { name: "EE" },
+    { name: "IE" },
+    { name: "DBA" },
+    { name: "ACC" },
+    { name: "DAO" },
+    { name: "MNO" },
+    { name: "FIN" },
+    { name: "CP" },
+    { name: "ES" },
+    { name: "GEQ" },
+    { name: "GER" },
+    { name: "CFG" },
+    /*------------------ Other modules---------------*/
+    { name: "AH" },
+    { name: "ALS" },
+    { name: "AR" },
+    { name: "AS" },
+    { name: "ASP" },
+    { name: "AUD" },
+    { name: "AY" },
+    { name: "BAA" },
+    { name: "BBP" },
+    { name: "BDC" },
+    { name: "BHD" },
+    { name: "BI" },
+    { name: "BIS" },
+    { name: "BL" },
+    { name: "BLD" },
+    { name: "BMA" },
+    { name: "BMC" },
+    { name: "BME" },
+    { name: "BMF" },
+    { name: "BMK" },
+    { name: "BMM" },
+    { name: "BMO" },
+    { name: "BMS" },
+    { name: "BMU" },
+    { name: "BN" },
+    { name: "BPM" },
+    { name: "BPS" },
+    { name: "BRP" },
+    { name: "BS" },
+    { name: "BSE" },
+    { name: "BSN" },
+    { name: "BSP" },
+    { name: "BSS" },
+    { name: "BX" },
+    { name: "BZD" },
+    { name: "CAS" },
+    { name: "CDM" },
+    { name: "CE" },
+    { name: "CH" },
+    { name: "CHC" },
+    { name: "CL" },
+    { name: "CLC" },
+    { name: "CM" },
+    { name: "CN" },
+    { name: "COS" },
+    { name: "CSA" },
+    { name: "DE" },
+    { name: "DEP" },
+    { name: "DI" },
+    { name: "DL" },
+    { name: "DMA" },
+    { name: "DMB" },
+    { name: "DMC" },
+    { name: "DMR" },
+    { name: "DMS" },
+    { name: "DMX" },
+    { name: "DMY" },
+    { name: "DOS" },
+    { name: "DSA" },
+    { name: "DSC" },
+    { name: "DTS" },
+    { name: "DY" },
+    { name: "EB" },
+    { name: "EBA" },
+    { name: "ECA" },
+    { name: "EL" },
+    { name: "EM" },
+    { name: "EN" },
+    { name: "ENV" },
+    { name: "ESE" },
+    { name: "ESP" },
+    { name: "EU" },
+    { name: "FAS" },
+    { name: "FDP" },
+    { name: "FE" },
+    { name: "FMA" },
+    { name: "FMS" },
+    { name: "FSC" },
+    { name: "FSP" },
+    { name: "FST" },
+    { name: "GE" },
+    { name: "GEK" },
+    { name: "GEM" },
+    { name: "GL" },
+    { name: "GMS" },
+    { name: "GS" },
+    { name: "GSN" },
+    { name: "GSS" },
+    { name: "HM" },
+    { name: "HY" },
+    { name: "ID" },
+    { name: "IGL" },
+    { name: "IL" },
+    { name: "IND" },
+    { name: "IPS" },
+    { name: "ISD" },
+    { name: "ISE" },
+    { name: "ISY" },
+    { name: "IT" },
+    { name: "JS" },
+    { name: "KE" },
+    { name: "LA" },
+    { name: "LAB" },
+    { name: "LAC" },
+    { name: "LAF" },
+    { name: "LAG" },
+    { name: "LAH" },
+    { name: "LAJ" },
+    { name: "LAK" },
+    { name: "LAL" },
+    { name: "LAM" },
+    { name: "LAR" },
+    { name: "LAS" },
+    { name: "LAT" },
+    { name: "LAV" },
+    { name: "LC" },
+    { name: "LCC" },
+    { name: "LCD" },
+    { name: "LI" },
+    { name: "LL" },
+    { name: "LLD" },
+    { name: "LSE" },
+    { name: "LSM" },
+    { name: "LX" },
+    { name: "MB" },
+    { name: "MCI" },
+    { name: "MDG" },
+    { name: "ME" },
+    { name: "MIC" },
+    { name: "MLE" },
+    { name: "MS" },
+    { name: "MST" },
+    { name: "MT" },
+    { name: "MUA" },
+    { name: "MUH" },
+    { name: "MUL" },
+    { name: "MUT" },
+    { name: "MW" },
+    { name: "NM" },
+    { name: "NUR" },
+    { name: "OT" },
+    { name: "PA" },
+    { name: "PC" },
+    { name: "PE" },
+    { name: "PF" },
+    { name: "PH" },
+    { name: "PHS" },
+    { name: "PL" },
+    { name: "PLB" },
+    { name: "PLC" },
+    { name: "PLS" },
+    { name: "PM" },
+    { name: "PP" },
+    { name: "PR" },
+    { name: "PS" },
+    { name: "PX" },
+    { name: "PY" },
+    { name: "QF" },
+    { name: "QT" },
+    { name: "RE" },
+    { name: "SA" },
+    { name: "SC" },
+    { name: "SDM" },
+    { name: "SE" },
+    { name: "SG" },
+    { name: "SH" },
+    { name: "SLP" },
+    { name: "SN" },
+    { name: "SP" },
+    { name: "SPH" },
+    { name: "SSA" },
+    { name: "SSB" },
+    { name: "SSD" },
+    { name: "SSE" },
+    { name: "SSS" },
+    { name: "SSY" },
+    { name: "STR" },
+    { name: "SW" },
+    { name: "SWD" },
+    { name: "SWE" },
+    { name: "TBA" },
+    { name: "TC" },
+    { name: "TCE" },
+    { name: "TCN" },
+    { name: "TE" },
+    { name: "TEE" },
+    { name: "TG" },
+    { name: "TIC" },
+    { name: "TIE" },
+    { name: "TM" },
+    { name: "TMA" },
+    { name: "TME" },
+    { name: "TP" },
+    { name: "TR" },
+    { name: "TS" },
+    { name: "TSC" },
+    { name: "TTG" },
+    { name: "UAR" },
+    { name: "UBM" },
+    { name: "UCV" },
+    { name: "UD" },
+    { name: "UHB" },
+    { name: "UIS" },
+    { name: "UIT" },
+    { name: "ULS" },
+    { name: "UNL" },
+    { name: "UPC" },
+    { name: "UPI" },
+    { name: "UQF" },
+    { name: "UQR" },
+    { name: "USE" },
+    { name: "USP" },
+    { name: "USR" },
+    { name: "USS" },
+    { name: "UTC" },
+    { name: "UTS" },
+    { name: "UTW" },
+    { name: "UWC" },
+    { name: "VM" },
+    { name: "WR" },
+    { name: "XD" },
+    { name: "XFA" },
+    { name: "XFB" },
+    { name: "XFC" },
+    { name: "XFE" },
+    { name: "XFS" },
+    { name: "YCC" },
+    { name: "YHU" },
+    { name: "YID" },
+    { name: "YIL" },
+    { name: "YIR" },
+    { name: "YLC" },
+    { name: "YLG" },
+    { name: "YLL" },
+    { name: "YLN" },
+    { name: "YLS" },
+    { name: "YSC" },
+    { name: "YSS" },
+    { name: "ZB" },
   ];
 
   const addFilter = (name, cat) => {
@@ -271,8 +396,8 @@ const Filter = ({ navigation, route }) => {
           tempList = tempList.filter((x) => x.MC > 8);
           setList(tempList);
         }
-      } else if (cat === "Department") {
-        tempList = tempList.filter((x) => x.Department === name);
+      } else if (cat === "Code") {
+        tempList = tempList.filter((x) => x.codePrefix === name);
         setList(tempList);
       } else {
         throw "Category does not exist!";
@@ -332,7 +457,7 @@ const Filter = ({ navigation, route }) => {
   );
 
   const otherSection = (
-    <View style={{ marginTop: 35, marginBottom: 15 }}>
+    <View style={{ marginTop: 35, paddingBottom: 15 }}>
       <Text
         style={{
           ...globalFontStyles.NSB_17,
@@ -353,16 +478,24 @@ const Filter = ({ navigation, route }) => {
   const section = [
     { array: semesters, category: "Semester" },
     { array: levels, category: "Level" },
-    { array: departments, category: "Department" },
+    { array: codes, category: "Code" },
     { array: MCs, category: "MC" },
   ];
+
+  const FilterHeader = (
+    <View style={styles.headerComponent}>
+      <Text style={{ ...globalFontStyles.NB_17, color: "#232323" }}>
+        Filter by
+      </Text>
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       {header}
       <View style={{ marginBottom: 155, width: "83.6%" }}>
         <FlatList
-          ListHeaderComponent={sort}
+          ListHeaderComponent={FilterHeader}
           ListFooterComponent={otherSection}
           data={section}
           keyExtractor={(item) => item.category}
@@ -376,6 +509,7 @@ const Filter = ({ navigation, route }) => {
           navigation.navigate("AddModule", {
             afterFilter: list,
             currentFilters: filterArr,
+            locationFrom: "Filter",
           })
         }
         rightText={`Show ${numMods} modules`}
@@ -414,19 +548,9 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 3,
   },
-  sortButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    height: 30,
-    width: 90,
-    borderWidth: 0.6,
-  },
-  sortComponent: {
-    borderBottomWidth: StyleSheet.hairlineWidth * 3,
-    borderBottomColor: "#7070704D",
-    alignSelf: "stretch",
+  headerComponent: {
     paddingTop: 20,
     alignItems: "center",
+    marginBottom: -5,
   },
 });

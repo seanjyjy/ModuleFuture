@@ -53,11 +53,13 @@ const AddPlan = ({ route }) => {
           key: keyTobe.toString(),
           clash: false,
           moduleCode: receivedArr[i].code,
-          title: receivedArr[i].title,
-          TargetGrade: "",
-          NumMcs: receivedArr[i].MC,
-          FinalGrade: "",
+          name: receivedArr[i].name,
+          codePrefix: receivedArr[i].codePrefix,
+          Level: receivedArr[i].Level,
           suOption: receivedArr[i].suOption,
+          NumMcs: receivedArr[i].MC,
+          TargetGrade: "",
+          FinalGrade: "",
         });
         keyTobe++;
       }
@@ -123,10 +125,47 @@ const AddPlan = ({ route }) => {
       ? 1.0
       : 0;
   };
+  const calculatorOfSem = (val) => {
+    if (val === "Y1S1") {
+      return 0;
+    } else if (val === "Y1S2") {
+      return 1;
+    } else if (val === "Y2S1") {
+      return 2;
+    } else if (val === "Y2S2") {
+      return 3;
+    } else if (val === "Y3S1") {
+      return 4;
+    } else if (val === "Y3S2") {
+      return 5;
+    } else if (val === "Y4S1") {
+      return 6;
+    } else if (val === "Y4S2") {
+      return 7;
+    } else if (val === "Y5S1") {
+      return 8;
+    } else {
+      return 9;
+    }
+  };
+
+  const insertionSort = (arr) => {
+    for (let i = 1; i < arr.length; i++) {
+      let j = i - 1;
+      let tmp = arr[i];
+      let tmpValue = calculatorOfSem(tmp.Semester);
+      while (j >= 0 && calculatorOfSem(arr[j].Semester) > tmpValue) {
+        arr[j + 1] = arr[j];
+        j--;
+      }
+      arr[j + 1] = tmp;
+    }
+    return arr;
+  };
+
   const nextPage = () => {
     if (FinalGradesEntered(data)) {
       let semCap = 0;
-      let newOverallCap = 0;
       const usersModulesDetailsRef = FirebaseDB.firestore()
         .collection("usersModulesDetails")
         .doc(userIDextractor(docLoc));
@@ -143,100 +182,96 @@ const AddPlan = ({ route }) => {
           for (let i = 0; i < data.length; i++) {
             modulesDetailsArray.push({
               moduleCode: data[i].moduleCode,
-              moduleName: data[i].title,
+              moduleName: data[i].name,
               FinalGrade: data[i].FinalGrade,
               NumMcs: data[i].NumMcs,
+              Level: data[i].Level,
+              codePrefix: data[i].codePrefix,
             });
             semSum += data[i].NumMcs * GradeToPoint(data[i].FinalGrade);
-            semMc += data[i].NumMcs;
+            if (data[i].FinalGrade !== "S") {
+              semMc += data[i].NumMcs;
+            }
           }
           semCap = parseFloat((semSum / semMc).toFixed(2));
           let totalSum = 0;
           let totalMc = 0;
-          if (val !== undefined) {
-            const arr = val.usersModulesArray;
-            for (let i = 0; i < arr.length; i++) {
-              for (let j = 0; j < arr[i].ModulesDetailsArray.length; j++) {
-                const mc = arr[i].ModulesDetailsArray[j].NumMcs;
-                const points = GradeToPoint(
-                  arr[i].ModulesDetailsArray[j].FinalGrade
-                );
-                totalSum += mc * points;
-                totalMc += mc;
-              }
-            }
-          }
-          totalSum += semSum;
-          totalMc += semMc;
-          newOverallCap =
-            totalMc === semMc
-              ? semCap
-              : parseFloat((totalSum / totalMc).toFixed(2));
-
+          let pushed = false;
+          let tempArr = [];
           const usersRef = FirebaseDB.firestore()
             .collection("users")
             .doc(userIDextractor(docLoc));
-          usersRef.get().then((document) => {
-            const tempVal = document.data();
-            if (tempVal.CapArray !== undefined) {
-              const tempArr = [];
-              let pushed = false;
-              let index = 0;
-
-              for (let i = 0; i < tempVal.CapArray.length; i++) {
-                if (tempVal.CapArray[index].Semester !== fromWhere) {
-                  tempArr.push(tempVal.CapArray[index]);
-                  index++;
-                } else {
-                  tempArr.push({
-                    SemestralCap: semCap,
-                    OverallCap: newOverallCap,
-                    Semester: fromWhere,
-                    SemestralMc: semMc,
-                    OverallMc: totalMc,
-                  });
-                  pushed = true;
+          let thisSemSum = 0;
+          let thisSemMC = 0;
+          if (val !== undefined) {
+            let arr = val.usersModulesArray;
+            arr = insertionSort(arr);
+            for (let i = 0; i < arr.length; i++) {
+              if (arr[i].Semester === fromWhere) {
+                pushed = true;
+                totalSum += semSum;
+                totalMc += semMc;
+                thisSemMC += semMc;
+                thisSemSum += semSum;
+              } else {
+                for (let j = 0; j < arr[i].ModulesDetailsArray.length; j++) {
+                  const mc = arr[i].ModulesDetailsArray[j].NumMcs;
+                  const points = GradeToPoint(
+                    arr[i].ModulesDetailsArray[j].FinalGrade
+                  );
+                  thisSemMC += mc;
+                  thisSemSum += mc * points;
+                  totalSum += mc * points;
+                  totalMc += mc;
                 }
               }
-              if (pushed) {
-                tempArr.push(tempVal.CapArray[tempVal.CapArray.length - 1]);
-              } else {
-                tempArr.push({
-                  SemestralCap: semCap,
-                  OverallCap: newOverallCap,
-                  Semester: fromWhere,
-                  SemestralMc: semMc,
-                  OverallMc: totalMc,
-                });
-              }
-              usersRef.update({
-                CapArray: tempArr,
+              tempArr.push({
+                SemestralCap: parseFloat((thisSemSum / thisSemMC).toFixed(2)),
+                OverallCap: parseFloat((totalSum / totalMc).toFixed(2)),
+                Semester: arr[i].Semester,
+                SemestralMc: semMc,
+                OverallMc: totalMc,
               });
-            } else {
-              usersRef.set(
-                {
-                  CapArray: [
-                    {
-                      SemestralCap: semCap,
-                      OverallCap: newOverallCap,
-                      Semester: fromWhere,
-                      SemestralMc: semMc,
-                      OverallMc: totalMc,
-                    },
-                  ],
-                },
-                { merge: true }
-              );
+              thisSemMC = 0;
+              thisSemSum = 0;
             }
-          });
+            if (!pushed) {
+              totalSum += semSum;
+              totalMc += semMc;
+              tempArr.push({
+                SemestralCap: semCap,
+                OverallCap: parseFloat((totalSum / totalMc).toFixed(2)),
+                Semester: fromWhere,
+                SemestralMc: semMc,
+                OverallMc: totalMc,
+              });
+            }
+            usersRef.update({
+              CapArray: tempArr,
+            });
+          } else {
+            usersRef.set(
+              {
+                CapArray: [
+                  {
+                    SemestralCap: semCap,
+                    OverallCap: parseFloat((semSum / semMc).toFixed(2)),
+                    Semester: fromWhere,
+                    SemestralMc: semMc,
+                    OverallMc: semMc,
+                  },
+                ],
+              },
+              { merge: true }
+            );
+          }
+
           if (val !== undefined) {
             const tempArr2 = [];
             let pushed = false;
-            let index = 0;
             for (let i = 0; i < val.usersModulesArray.length; i++) {
-              if (val.usersModulesArray[index].Semester !== fromWhere) {
-                tempArr2.push(val.usersModulesArray[index]);
-                index++;
+              if (val.usersModulesArray[i].Semester !== fromWhere) {
+                tempArr2.push(val.usersModulesArray[i]);
               } else {
                 tempArr2.push({
                   Semester: fromWhere,
@@ -245,11 +280,7 @@ const AddPlan = ({ route }) => {
                 pushed = true;
               }
             }
-            if (pushed) {
-              tempArr2.push(
-                val.usersModulesArray[val.usersModulesArray.length - 1]
-              );
-            } else {
+            if (!pushed) {
               tempArr2.push({
                 Semester: fromWhere,
                 ModulesDetailsArray: modulesDetailsArray,
@@ -289,13 +320,14 @@ const AddPlan = ({ route }) => {
       nameOfPlan: planNameValue,
       planInfo: data,
       fromWhere: fromWhere,
+      amIfavourite: false,
     });
 
     // ----------------figure out how to reset the data!--------------------------------------------------------------------------------
     const newArr = data.map((x) => x);
     setData([]);
     return navigation.navigate("ViewPlan", {
-      item: [planNameValue, docLoc, size, fromWhere, newArr],
+      item: [planNameValue, docLoc, size, fromWhere, newArr, false],
     });
   };
 
@@ -328,7 +360,7 @@ const AddPlan = ({ route }) => {
           } else if (checkMcs(data) && block) {
             Alert.alert(
               "Warning",
-              "You need a minimum of 18 MCs per semester! If you're sure, press Continue to advance",
+              "You need a minimum of 18 MCs per semester! \n If you're sure, press Continue to advance",
               [
                 { text: "Cancel", onPress: () => {} },
                 {

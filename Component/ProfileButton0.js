@@ -14,7 +14,11 @@ const width = Dimensions.get("window").width;
 
 const ProfileButton0 = (props) => {
   return (
-    <TouchableOpacity style={styles.main} onPress={() => props.transition()}>
+    <TouchableOpacity
+      style={styles.main}
+      onPress={() => props.transition()}
+      activeOpacity={props.left === "Email" ? 1 : 0.7}
+    >
       <View style={{ flexDirection: "row" }}>
         <Text style={{ ...globalFontStyles.OSSB_15, color: "#232323" }}>
           {props.left}
@@ -30,13 +34,17 @@ const ProfileButton0 = (props) => {
         >
           {props.right}
         </Text>
-        <Icon
-          name="arrow-ios-forward-outline"
-          width={15}
-          height={15}
-          fill="#2D405699"
-          style={styles.icon}
-        />
+        <View>
+          {props.left === "Email" ? null : (
+            <Icon
+              name="arrow-ios-forward-outline"
+              width={15}
+              height={15}
+              fill="#2D405699"
+              style={styles.icon}
+            />
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );

@@ -41,6 +41,7 @@ import ChoosingOptions from "./Component/MakingClock";
 import Course from "./Screens/HomepageScreens/Profile/Course";
 import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
 import Year from "./Screens/HomepageScreens/Profile/Year";
+import Foundation from "./Screens/HomepageScreens/Records/Foundation";
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
@@ -75,8 +76,8 @@ export default function App() {
   const [data, setData] = useState({
     loading: false,
     user: null,
+    recordsData: null,
   });
-
   const [modLoading, setModLoading] = useState(false);
 
   const loadAssetAsync = async () => {
@@ -105,36 +106,51 @@ export default function App() {
     await Promise.all([fontAssets, ...imageAssets]);
   };
   useEffect(() => {
-    const usersRef = FirebaseDB.firestore().collection("users");
+    const fb = FirebaseDB.firestore();
+    const usersRef = fb.collection("users");
+    const typeRef = fb.collection("typeArray");
+    const levelRef = fb.collection("levelArray");
+    const codeRef = fb.collection("codeArray");
     FirebaseDB.auth().onAuthStateChanged((user) => {
       if (user) {
+        const recordsData = [];
+        typeRef
+          .doc(user.uid)
+          .get()
+          .then((document) => {
+            recordsData.push(document.data());
+          })
+          .catch((error) => error);
+        levelRef
+          .doc(user.uid)
+          .get()
+          .then((document) => {
+            recordsData.push(document.data());
+          })
+          .catch((error) => error);
+        codeRef
+          .doc(user.uid)
+          .get()
+          .then((document) => {
+            recordsData.push(document.data());
+          })
+          .catch((error) => error);
         usersRef
           .doc(user.uid)
           .get()
           .then((document) => {
             const userData = document.data();
-            setData({ user: userData, loading: true });
+            setData({
+              user: userData,
+              recordsData: recordsData,
+              loading: true,
+            });
           })
           .catch((error) => error);
       } else {
         setData({ loading: true });
       }
     });
-    // const moduleArr = FirebaseDB.firestore().collection("ModuleList");
-    // FirebaseDB.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     usersRef
-    //       .doc(user.uid)
-    //       .get()
-    //       .then((document) => {
-    //         const userData = document.data();
-    //         setData({ user: userData, loading: true });
-    //       })
-    //       .catch((error) => error);
-    //   } else {
-    //     setData({ loading: true });
-    //   }
-    // });
   }, []);
 
   return (
@@ -162,7 +178,11 @@ export default function App() {
                     <>
                       <AuthStack.Screen name="Homepage">
                         {(props) => (
-                          <Homepage {...props} extraData={data.user} />
+                          <Homepage
+                            {...props}
+                            extraData={data.user}
+                            recordsData={data.recordsData}
+                          />
                         )}
                       </AuthStack.Screen>
                       <AuthStack.Screen
@@ -193,6 +213,10 @@ export default function App() {
                         component={SeeModules}
                       />
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
+                      <AuthStack.Screen
+                        name="Foundation"
+                        component={Foundation}
+                      />
                       <AuthStack.Screen name="Filter" component={Filter} />
                       <AuthStack.Screen name="Course" component={Course} />
                       <AuthStack.Screen

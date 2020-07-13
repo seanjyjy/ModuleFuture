@@ -65,6 +65,7 @@ const SeeModules = ({ navigation, route }) => {
             newModules: modArr,
             value: MCcount,
             reAddedModules: arr,
+            locationFrom: "SeeModules",
           })
         }
         style={styles.flexOneCenterFlexEnd}
