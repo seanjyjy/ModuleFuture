@@ -103,6 +103,7 @@ export default function App() {
       require("./assets/plan3.png"),
       require("./assets/plan4.png"),
       require("./assets/JumpingMan.png"),
+      require("./assets/bargraph.png"),
     ]);
 
     const fontAssets = getFonts();

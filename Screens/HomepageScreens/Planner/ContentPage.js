@@ -10,6 +10,7 @@ import {
   Animated,
   ImageBackground,
   Alert,
+  Image,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -20,6 +21,7 @@ import FirebaseDB from "../../../FirebaseDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 const ContentPage = (props) => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -105,7 +107,7 @@ const ContentPage = (props) => {
             <FontisoIcon
               name="favorite"
               size={22}
-              color="#A5A0A0"
+              color="#E59090"
               style={{ right: 0.05 * width, bottom: 0.018 * height }}
               onPress={() => {
                 if (favPlanArray.length > 0 && favPlanInfo.length > 0) {
@@ -158,13 +160,23 @@ const ContentPage = (props) => {
                   gradSem: gradSem,
                 });
               }}
-              style={{ width: 50, height: 50 }}
+              style={{
+                width: 50,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+              }}
             >
-              <Entypo
+              {/* <Entypo
                 name="bar-graph"
                 color="#A5A0A0"
                 size={25}
                 style={{ left: 25, top: 0.015 * height }}
+              /> */}
+              <Image
+                source={require("../../../assets/bargraph.png")}
+                style={{ left: 10, resizeMode: "contain", flex: 1, bottom: 3 }}
               />
             </TouchableOpacity>
           </View>
