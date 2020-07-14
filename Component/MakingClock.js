@@ -1,6 +1,16 @@
 import { IndexPath, Layout, Select, SelectItem } from "@ui-kitten/components";
-import React, { useState } from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableWithoutFeedback,
+  TextInput,
+  Keyboard,
+  Platform,
+  Alert,
+} from "react-native";
 import { globalFontStyles } from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
 import BackgroundFaded from "../Screens/Backgrounds/BackgroundFaded";
@@ -12,13 +22,110 @@ import {
   CS2019Codes,
   CS2019Types,
 } from "../Data/Types";
-
+import { Icon } from "react-native-eva-icons";
+import { CheckBox } from "@ui-kitten/components";
+import { Autocomplete, AutocompleteItem } from "@ui-kitten/components";
+import { useNavigation } from "@react-navigation/native";
 const height = Dimensions.get("window").height;
 
+let courseList = [
+  { title: "Business Analytics" },
+  { title: "Computer Science" },
+  { title: "Information Security" },
+  { title: "Information Systems" },
+  { title: "Computer Engineering" },
+  { title: "Chinese Language" },
+  { title: "Chinese Studies" },
+  { title: "Japanese Studies" },
+  { title: "Malay Studies" },
+  { title: "South Asian Studies" },
+  { title: "Southeast Asian Studies" },
+  { title: "English Language" },
+  { title: "English Literature" },
+  { title: "History" },
+  { title: "Philosophy" },
+  { title: "Theatre Studies" },
+  { title: "Communications & New Media" },
+  { title: "Economics" },
+  { title: "Geography" },
+  { title: "Political Science" },
+  { title: "Psychology" },
+  { title: "Social Work" },
+  { title: "Sociology" },
+  { title: "Environmental Studies in Geography" },
+  { title: "Global Studies" },
+  { title: "Business Administration (Accountancy)" },
+  { title: "Business Administration" },
+  { title: "Dentistry" },
+  { title: "Architecture" },
+  { title: "Industrial Design" },
+
+  { title: "Landscape Architecture" },
+  { title: "Project & Facilities Management" },
+  { title: "Real Estate" },
+  { title: "Biomedical Engineering" },
+  { title: "Chemical Engineering" },
+  { title: "Civil Engineering" },
+  { title: "Engineering Science" },
+  { title: "Environmental Engineering" },
+  { title: "Electrical Engineering" },
+  { title: "Industrial and Systems Engineering" },
+  { title: "Material Science & Engineering" },
+  { title: "Mechanical Engineering" },
+  { title: "Undergraduate Law Programme" },
+  { title: "Graduate LL.B. Programme" },
+  { title: "Medicine" },
+  { title: "Nursing" },
+  { title: "Music" },
+  { title: "Applied Mathematics" },
+  {
+    title:
+      "Applied Mathematics, specialisation in Mathematical Modelling and Data Analytics",
+  },
+  {
+    title:
+      "Applied Mathematics, specialisation in Operations Research and Financial Mathematics",
+  },
+  { title: "Chemistry" },
+  { title: "Chemistry, specialisation in Materials Chemistry" },
+  { title: "Chemistry, specialisation in Medicinal Chemistry" },
+  { title: "Chemistry, specialisation in Environment and Energy" },
+  { title: "Computational Biology" },
+  { title: "Data Science and Analytics" },
+  { title: "Environmental Studies in Biology" },
+  { title: "Food Science and Technology" },
+  { title: "Life Sciences" },
+  { title: "Life Sciences, specialisation in Biomedical Science" },
+  { title: "Life Sciences, specialisation in Environmental Biology" },
+  { title: "Life Sciences, specialisation in Molecular & Cell Biology" },
+  { title: "Mathematics" },
+  { title: "Pharmacy" },
+  { title: "Pharmaceutical Science" },
+  { title: "Physics" },
+  { title: "Physics, specialisation in Astrophysics" },
+  { title: "Physics, specialisation in Nanophysics)" },
+  { title: "Physics, specialisation in Quantum Technologies" },
+  { title: "Quantitative Finance" },
+  { title: "Statistics" },
+  { title: "Statistics, specialisation in Data Science" },
+  { title: "Statistics, specialisation in Finance and Business Statistics" },
+];
+
+const filter = (item, query) =>
+  item.title.toLowerCase().includes(query.toLowerCase());
+
 const ChoosingOptions = ({ route }) => {
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState("");
   const [index1, setIndex1] = useState("4");
   const [index2, setIndex2] = useState("4");
+
+  useEffect(() => {
+    if (route.params?.TnCSTATUS) {
+      setChecked(route.params?.TnCSTATUS);
+    }
+  }, [route.params]);
+
   const yearValue = (val) => {
     return val === 1
       ? "2016"
@@ -43,6 +150,8 @@ const ChoosingOptions = ({ route }) => {
       ? "Y5S1"
       : "Y5S2";
   };
+
+  const courseValue = () => {};
   const yearList = [
     { key: 2016, value: "2016" },
     { key: 2017, value: "2017" },
@@ -60,50 +169,105 @@ const ChoosingOptions = ({ route }) => {
     { key: "Y5S2", value: "Y5S2" },
   ];
 
+  const [value, setValue] = React.useState("");
+  const [data, setData] = React.useState(courseList);
+
+  const onSelectSearch = (index) => {
+    if (value !== "") {
+      setData(courseList);
+      setValue(data[index].title);
+    } else {
+      setValue(courseList[index].title);
+    }
+  };
+
+  const onChangeTextSearch = (query) => {
+    setValue(query);
+    setData(courseList.filter((item) => filter(item, query)));
+  };
+
+  const renderOptionSearch = (item, index) => (
+    <AutocompleteItem key={index} title={item.title} />
+  );
+
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(3));
   const [selectedIndex2, setSelectedIndex2] = useState(new IndexPath(3));
+
   const YearDisplayValue = yearList[selectedIndex.row].value;
   const SemDisplayValue = semList[selectedIndex2.row].value;
+
   const renderOption = (title) => (
     <SelectItem title={title.value} key={title.key} />
   );
   const textYear = (
-    <Text style={{ ...globalFontStyles.OSR_17, color: "#575757" }}>
+    <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
       Year of matriculation
     </Text>
   );
   const textSem = (
-    <Text style={{ ...globalFontStyles.OSR_17, color: "#575757" }}>
+    <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
       Expected graduation semester
     </Text>
   );
 
+  const textCourse = (
+    <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323", bottom: 3 }}>
+      Course*
+    </Text>
+  );
+
   const stringText = "Additional\nDetails";
+  const [checked, setChecked] = React.useState(false);
   return (
     <BackgroundFaded>
-      <View
-        style={{
-          flex: 2,
-          justifyContent: "center",
-        }}
-      >
-        <Text
-          style={{
-            ...globalFontStyles.OSEB_34,
-            color: "#686868",
-            left: 30,
-            top: 30,
-          }}
-        >
-          {stringText}
-        </Text>
+      <View style={{ flex: 2, justifyContent: "center" }}>
+        <Text style={styles.TitleOfPage}>{stringText}</Text>
       </View>
       <View style={{ flex: 5 }}>
         <View style={{ flex: 1 }}>
-          <View
-            style={{ width: "100%", height: "100%", flexDirection: "column" }}
-          >
-            <View style={{ flex: 1, right: 30, top: 60 }}>
+          <View style={styles.AllOptionsContainer}>
+            <View style={{ flex: 1 }} />
+            <View
+              style={{
+                flex: 2,
+                marginHorizontal: 64,
+                right: 30,
+                top: 10,
+              }}
+            >
+              {textCourse}
+              <Autocomplete
+                size={"large"}
+                placeholder="Enter your course"
+                placeholderTextColor="#2D4056"
+                value={value}
+                onSelect={onSelectSearch}
+                onChangeText={onChangeTextSearch}
+              >
+                {data.map(renderOptionSearch)}
+              </Autocomplete>
+            </View>
+            <View style={{ flex: 2, right: 30 }}>
+              <Layout style={styles.container} level="1">
+                <Select
+                  size={"large"}
+                  label={textSem}
+                  style={styles.select}
+                  placeholder="Default"
+                  value={SemDisplayValue}
+                  selectedIndex={selectedIndex2}
+                  onSelect={(index) => {
+                    setSelectedIndex2(index);
+                    const value = index.toString();
+                    setIndex2(value);
+                  }}
+                >
+                  {semList.map(renderOption)}
+                </Select>
+              </Layout>
+            </View>
+
+            <View style={{ flex: 2, right: 30 }}>
               <Layout style={styles.container} level="1">
                 <Select
                   size={"large"}
@@ -123,98 +287,96 @@ const ChoosingOptions = ({ route }) => {
               </Layout>
             </View>
 
-            <View style={{ flex: 1, right: 30, bottom: 20 }}>
-              <Layout style={styles.container} level="1">
-                <Select
-                  size={"large"}
-                  label={textSem}
-                  style={styles.select}
-                  placeholder="Default"
-                  value={SemDisplayValue}
-                  selectedIndex={selectedIndex2}
-                  onSelect={(index) => {
-                    setSelectedIndex2(index);
-                    const value = index.toString();
-                    setIndex2(value);
-                  }}
-                >
-                  {semList.map(renderOption)}
-                </Select>
-              </Layout>
+            <View style={styles.checkBoxDesign}>
+              <CheckBox
+                checked={checked}
+                onChange={(nextChecked) => setChecked(nextChecked)}
+              />
+              <Text style={styles.ihveStyle}>I've agreed to the </Text>
+              <Text
+                style={styles.tncStyle}
+                onPress={() => navigation.navigate("TnC")}
+              >
+                Terms & Conditions.
+              </Text>
             </View>
           </View>
         </View>
       </View>
-      <View
-        style={{
-          flex: 2,
-          justifyContent: "center",
-          alignItems: "center",
-          bottom: 0.2 * height,
-        }}
-      >
+      <View style={styles.spaceForButton}>
         <SignInButton
           func={() => {
-            setIsLoading(true);
-            FirebaseDB.auth()
-              .createUserWithEmailAndPassword(
-                route.params?.item[0].email,
-                route.params?.item[0].password
-              )
-              .then((response) => {
-                const uid = response.user.uid;
-                const data = {
-                  id: uid,
-                  name: route.params?.item[0].name,
-                  password: route.params?.item[0].password,
-                  email: route.params?.item[0].email,
-                  course: route.params?.item[1], // required
-                  yearOfMatri: yearValue(parseInt(index1)), // required
-                  expectedSemGrad: semValue(parseInt(index2)),
-                  TargetCAP: 5,
-                  totalMCs: 160,
-                  CapArray: [],
-                  favPlanArray: [],
-                  favPlanInfo: [],
-                  SelectedPlansInfo: [],
-                };
+            if (checked) {
+              setIsLoading(true);
+              FirebaseDB.auth()
+                .createUserWithEmailAndPassword(
+                  route.params?.item.email,
+                  route.params?.item.password
+                )
+                .then((response) => {
+                  const uid = response.user.uid;
+                  const data = {
+                    id: uid,
+                    name: route.params?.item.name,
+                    password: route.params?.item.password,
+                    email: route.params?.item.email,
+                    course: value, // required
+                    yearOfMatri: yearValue(parseInt(index1)), // required
+                    expectedSemGrad: semValue(parseInt(index2)),
+                    TargetCAP: 5,
+                    totalMCs: 160,
+                    CapArray: [],
+                    favPlanArray: [],
+                    favPlanInfo: [],
+                    SelectedPlansInfo: [],
+                  };
 
-                const FB = FirebaseDB.firestore();
-                const batch = FB.batch();
-                const courseAndYear = data.course + " " + data.yearOfMatri;
+                  const FB = FirebaseDB.firestore();
+                  const batch = FB.batch();
+                  const courseAndYear = data.course + " " + data.yearOfMatri;
 
-                // CS2019 modules
-                const modulesRef = FB.collection("records").doc(uid);
-                batch.set(modulesRef, CS2019Modules);
+                  // CS2019 modules
+                  const modulesRef = FB.collection("records").doc(uid);
+                  batch.set(modulesRef, CS2019Modules);
 
-                // CS2019 Mapping
-                const modulesMapping = FB.collection("modulesMapping").doc(uid);
-                batch.set(modulesMapping, CS2019Mapping);
+                  // CS2019 Mapping
+                  const modulesMapping = FB.collection("modulesMapping").doc(
+                    uid
+                  );
+                  batch.set(modulesMapping, CS2019Mapping);
 
-                // typeArray
-                const array = CS2019Types;
-                const typeRef = FB.collection("typeArray").doc(uid);
-                batch.set(typeRef, array);
+                  // typeArray
+                  const array = CS2019Types;
+                  const typeRef = FB.collection("typeArray").doc(uid);
+                  batch.set(typeRef, array);
 
-                // codeArray
-                const array2 = CS2019Codes;
-                const codeRef = FB.collection("codeArray").doc(uid);
-                batch.set(codeRef, array2);
+                  // codeArray
+                  const array2 = CS2019Codes;
+                  const codeRef = FB.collection("codeArray").doc(uid);
+                  batch.set(codeRef, array2);
 
-                // levelArray
-                const array3 = CS2019Levels;
-                const levelRef = FB.collection("levelArray").doc(uid);
-                batch.set(levelRef, array3);
+                  // levelArray
+                  const array3 = CS2019Levels;
+                  const levelRef = FB.collection("levelArray").doc(uid);
+                  batch.set(levelRef, array3);
 
-                const userRef = FB.collection("users").doc(uid);
-                batch.set(userRef, data);
+                  const userRef = FB.collection("users").doc(uid);
+                  batch.set(userRef, data);
 
-                batch.commit().then(setIsLoading(false));
-              })
-              .catch((error) => {
-                setIsLoading(false);
-                alert(error);
-              });
+                  batch.commit().then(setIsLoading(false));
+                })
+                .catch((error) => {
+                  setIsLoading(false);
+                  alert(error);
+                });
+            } else {
+              Alert.alert(
+                "Notice",
+                "Please accept the Terms and Condition before continuing.",
+                [{ text: "Cancel", onPress: () => {} }],
+                { cancelable: false }
+              );
+            }
           }}
           isLoading={isLoading}
         >
@@ -232,10 +394,49 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginHorizontal: 60,
     minHeight: 120,
+    backgroundColor: "transparent",
   },
   select: {
     flex: 1,
     margin: 2,
+  },
+  AllOptionsContainer: {
+    width: "100%",
+    height: "100%",
+    flexDirection: "column",
+  },
+  spaceForButton: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 0.05 * height,
+  },
+  TitleOfPage: {
+    ...globalFontStyles.OSEB_34,
+    color: "#686868",
+    left: 30,
+    top: 30,
+  },
+  checkBoxDesign: {
+    flex: 1,
+    left: 33,
+    bottom: 0.02 * height,
+    flexDirection: "row",
+  },
+  tncStyle: {
+    textDecorationLine: "underline",
+    alignSelf: "center",
+    left: 5,
+    ...globalFontStyles.NB_13,
+    color: "#51739B",
+    top: 1,
+  },
+  ihveStyle: {
+    alignSelf: "center",
+    left: 5,
+    ...globalFontStyles.NB_13,
+    color: "#2D4056",
+    top: 1,
   },
 });
 

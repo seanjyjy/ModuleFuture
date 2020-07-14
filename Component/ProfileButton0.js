@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
-    left: 0.09 * width,
+    left: 0.11 * width,
+    top: 2,
   },
 });

@@ -53,7 +53,6 @@ const ContentPage = (props) => {
   const [y, setY] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    //if (props.route?.params !== undefined) {
     const unsub = userInfo.doc(userID).onSnapshot((document) => {
       const data = document.data();
       const val = data.expectedSemGrad;
@@ -79,22 +78,6 @@ const ContentPage = (props) => {
       setCardArray(tempArr);
     });
     return () => unsub();
-    // } else {
-    //   if (
-    //     props.extraData.favPlanArray.length > 0 &&
-    //     props.extraData.favPlanInfo.length > 0
-    //   ) {
-    //     setFavPlanArray(props.extraData.favPlanArray);
-    //     setFavPlanInfo(props.extraData.favPlanInfo);
-    //     setTitle(props.extraData.favPlanInfo[0]);
-    //     setDocLoc(props.extraData.favPlanInfo[1]);
-    //     setSize(props.extraData.favPlanInfo[2]);
-    //     setFromWhere(props.extraData.favPlanInfo[3]);
-    //     setDataArray(props.extraData.favPlanArray);
-    //   }
-    //   setUsersDetails(props.extraData);
-    //   setCardArray(theArray(props.extraData.expectedSemGrad));
-    // }
   }, []);
 
   const onScroll = Animated.event(

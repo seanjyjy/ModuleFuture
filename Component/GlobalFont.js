@@ -99,6 +99,14 @@ export const globalFontStyles = StyleSheet.create({
     fontSize: 34,
   },
   //-------------------------------------------------NUNITO-SEMIBOLD------------------------------------------------
+  NSB_11: {
+    fontFamily: "Nunito-SemiBold",
+    fontSize: 11,
+  },
+  NSB_13: {
+    fontFamily: "Nunito-SemiBold",
+    fontSize: 13,
+  },
   NSB_14: {
     fontFamily: "Nunito-SemiBold",
     fontSize: 14,

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import Header from "../../../Component/Header";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
@@ -138,24 +145,29 @@ const EmailVerification = () => {
       <Header
         str={"Email"}
         leftChildren={
-          <Ionicons
-            name="md-arrow-round-back"
-            size={25}
-            style={{ color: "#232323" }}
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("Profile", {
                 EmailVerification: didIVerified,
               });
             }}
-          />
+            activeOpacity={0.9}
+            style={styles.backArrowEasyClicking}
+          >
+            <Ionicons
+              name="md-arrow-round-back"
+              size={25}
+              style={{ color: "#232323" }}
+            />
+          </TouchableOpacity>
         }
         rightChildren={<View />}
       />
-      <View style={{ flex: 1 }}>
+      <View style={styles.containercontainer}>
         <View
           style={{
             ...styles.containerDesign,
-            height: didIVerified ? "30%" : "80%",
+            height: didIVerified ? "54%" : "80%",
           }}
         >
           {didIVerified ? verified() : notVerified()}
@@ -189,6 +201,9 @@ const styles = StyleSheet.create({
     top: 0.03 * height,
     borderRadius: 10,
     backgroundColor: "white",
+    overflow: "hidden",
+  },
+  containercontainer: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -214,5 +229,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     ...globalFontStyles.NSB_14,
     color: "#333333",
+  },
+  backArrowEasyClicking: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

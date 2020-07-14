@@ -17,6 +17,7 @@ import FirebaseDB from "./FirebaseDB";
 import ModuleListWithKey from "./Data/ModuleListMoreInfo";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
+import TnC from "./TnC";
 import Login from "./Screens/Login/Login";
 import ForgetPW from "./Screens/Login/ForgetPW";
 import DetailsCollection from "./Screens/Login/DetailsCollection";
@@ -42,6 +43,7 @@ import ChoosingOptions from "./Component/MakingClock";
 import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
 import Year from "./Screens/HomepageScreens/Profile/Year";
 import EmailVerification from "./Screens/HomepageScreens/Profile/EmailVerification";
+import Credit from "./Screens/HomepageScreens/Profile/Credit";
 import Foundation from "./Screens/HomepageScreens/Records/Foundation";
 
 // -------------------------------------------------------------------------------------------------------------
@@ -235,6 +237,7 @@ export default function App() {
                         name="EmailVerification"
                         component={EmailVerification}
                       />
+                      <AuthStack.Screen name="Credit" component={Credit} />
                     </>
                   ) : (
                     <>
@@ -251,6 +254,7 @@ export default function App() {
                         name="ChoosingOptions"
                         component={ChoosingOptions}
                       />
+                      <AuthStack.Screen name="TnC" component={TnC} />
                     </>
                   )}
                 </AuthStack.Navigator>

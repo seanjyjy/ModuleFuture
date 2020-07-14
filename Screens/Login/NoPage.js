@@ -51,7 +51,7 @@ const NoPage = () => {
         initialValues={{ email: "", password: "", name: "" }}
         validationSchema={reviewSchema}
         onSubmit={(values, actions) => {
-          navigation.navigate("DetailsCollection", { item: values });
+          navigation.navigate("ChoosingOptions", { item: values });
           actions.resetForm();
         }}
       >
@@ -136,7 +136,13 @@ const NoPage = () => {
               </Text>
             </View>
 
-            <View style={{ top: 50, left: 25 }}>
+            <View
+              style={{
+                top: 20,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <SignInButton func={props.handleSubmit} isLoading={isLoading}>
                 <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
                   Continue
