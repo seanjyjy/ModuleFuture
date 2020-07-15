@@ -8,13 +8,12 @@ import FirebaseDB from "../../../FirebaseDB";
 
 const Profile = (props) => {
   const navigation = useNavigation();
-  const yearTransition = () => navigation.navigate("Year", { year: year });
   const graduation = () => navigation.navigate("Graduation", { sem: gradSem });
   const EmailVerification = () => navigation.navigate("EmailVerification");
 
   const CreditPage = () => navigation.navigate("Credit");
   const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
-  const [year, setYear] = useState(props.extraData.yearOfMatri);
+  const year = props.extraData.yearOfMatri;
   const course1 = props.extraData.course;
   const email = props.extraData.email;
 
@@ -22,7 +21,6 @@ const Profile = (props) => {
 
   useEffect(() => {
     if (props.route.params?.grad) setGradSem(props.route.params?.grad);
-    if (props.route.params?.year) setYear(props.route.params?.year);
   }, [isFocused]);
 
   const signOutUser = async () => {
@@ -49,7 +47,7 @@ const Profile = (props) => {
         />
         <ProfileButton0
           left={"Year of Matriculation"}
-          transition={() => yearTransition()}
+          transition={() => null}
           right={year}
         />
         <ProfileButton0
