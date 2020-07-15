@@ -47,19 +47,27 @@ const temp = [
 ];
 
 function hasLowerCase(str) {
-  return str.toUpperCase() != str;
+  if (str !== undefined) {
+    return str.toUpperCase() != str;
+  }
 }
 
 function hasUpperCase(str) {
-  return str.toLowerCase() != str;
+  if (str !== undefined) {
+    return str.toLowerCase() != str;
+  }
 }
 
 function hasNumber(myString) {
-  return /\d/.test(myString);
+  if (myString !== undefined) {
+    return /\d/.test(myString);
+  }
 }
 
 function hasSpecialChar(str) {
-  return /[\s~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?()\._]/g.test(str);
+  if (str !== undefined) {
+    return /[\s~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?()\._]/g.test(str);
+  }
 }
 
 //checks according to OWASP password policy
