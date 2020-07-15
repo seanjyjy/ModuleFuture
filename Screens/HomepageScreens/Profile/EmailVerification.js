@@ -89,52 +89,54 @@ const EmailVerification = () => {
 
   const notVerified = () => {
     return (
-      <View style={{ flex: 1 }}>
-        <View
-          style={{
-            ...styles.centerAroundOne,
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-            backgroundColor: "white",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 1,
-            },
-            shadowOpacity: 0.18,
-            shadowRadius: 1.0,
-            elevation: 1,
-          }}
-        >
-          <View />
-          <FeatherIcon
-            name="x-circle"
-            size={100}
-            style={{ color: "red", top: 10 }}
-          />
-          <Text style={{ ...styles.topTextDesign }}>Email Not Verified</Text>
-        </View>
+      <View
+        style={{
+          width: 0.9 * width,
+          height: 0.6 * height,
+          backgroundColor: "white",
+          alignSelf: "center",
+          top: 20,
+          borderRadius: 20,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.23,
+          shadowRadius: 2.62,
+          elevation: 4,
+        }}
+      >
+        <FeatherIcon
+          name="x-circle"
+          size={100}
+          style={{ color: "red", top: 10, alignSelf: "center" }}
+        />
+        <Text style={{ ...styles.topTextDesign }}>Email Not Verified</Text>
+
         <View style={{ flex: 2 }}>
-          <View style={styles.centerOne}>
-            <Text style={{ ...globalFontStyles.NBEB_24, color: "#232323" }}>
+          <View style={styles.textholder}>
+            <Text
+              style={{
+                ...globalFontStyles.NBEB_24,
+                color: "#232323",
+                top: 10,
+              }}
+            >
               Verify your email address
             </Text>
+            <Text style={{ ...styles.textStyling, bottom: 0.04 * height }}>
+              {
+                "Please click the button below to confirm \n          and verify your email address"
+              }
+            </Text>
           </View>
-          <View style={{ flex: 3 }}>
-            <View style={styles.textholder}>
-              <Text style={{ ...styles.textStyling, bottom: 0.04 * height }}>
-                {
-                  "Please click the button below to confirm \n          and verify your email address"
-                }
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <SignInButton func={() => verifyEmail()}>
+              <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+                CONFIRM EMAIL
               </Text>
-            </View>
-            <View style={{ flex: 4, alignItems: "center" }}>
-              <SignInButton func={() => verifyEmail()}>
-                <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                  CONFIRM EMAIL
-                </Text>
-              </SignInButton>
-            </View>
+            </SignInButton>
           </View>
         </View>
       </View>
@@ -163,15 +165,8 @@ const EmailVerification = () => {
         }
         rightChildren={<View />}
       />
-      <View style={styles.containercontainer}>
-        <View
-          style={{
-            ...styles.containerDesign,
-            height: didIVerified ? "54%" : "80%",
-          }}
-        >
-          {didIVerified ? verified() : notVerified()}
-        </View>
+      <View style={{ flex: 1 }}>
+        {didIVerified ? verified() : notVerified()}
       </View>
     </View>
   );
@@ -184,26 +179,16 @@ const styles = StyleSheet.create({
     ...globalFontStyles.NBEB_24,
     color: "#232323",
     alignSelf: "center",
+    top: 10,
   },
   centerAroundOne: {
-    flex: 1,
     justifyContent: "space-around",
     alignItems: "center",
-  },
-  ThanksDesign: {
-    ...globalFontStyles.NB_13,
-    color: "#333333",
+    width: 0.9 * width,
+    height: 0.35 * height,
     alignSelf: "center",
-  },
-  containerDesign: {
-    width: " 90%",
-    alignSelf: "center",
-    top: 0.03 * height,
-    borderRadius: 10,
     backgroundColor: "white",
-    overflow: "hidden",
-  },
-  containercontainer: {
+    borderRadius: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -212,7 +197,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,
+    top: 20,
   },
+  ThanksDesign: {
+    ...globalFontStyles.NB_13,
+    color: "#333333",
+    alignSelf: "center",
+  },
+  containerDesign: {
+    width: "90%",
+    alignSelf: "center",
+    top: 0.03 * height,
+    borderRadius: 10,
+    backgroundColor: "white",
+    overflow: "hidden",
+  },
+
   centerOne: {
     flex: 1,
     justifyContent: "center",
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
     alignItems: "center",
-    width: "80%",
+    width: "100%",
     alignSelf: "center",
   },
   textStyling: {

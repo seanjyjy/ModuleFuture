@@ -59,6 +59,7 @@ const ContentPage = (props) => {
       const data = document.data();
       const val = data.expectedSemGrad;
       setGradSem(val);
+
       setUsersDetails(data);
       if (data.favPlanArray.length > 0 && data.favPlanInfo.length > 0) {
         setFavPlanArray(data.favPlanArray);

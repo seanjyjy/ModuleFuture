@@ -10,6 +10,7 @@ import {
   Keyboard,
   Platform,
   Alert,
+  StatusBar,
 } from "react-native";
 import { globalFontStyles } from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
@@ -212,180 +213,197 @@ const ChoosingOptions = ({ route }) => {
 
   const textCourse = (
     <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323", bottom: 3 }}>
-      Course*
+      Course
     </Text>
   );
 
   const stringText = "Additional\nDetails";
   const [checked, setChecked] = React.useState(false);
   return (
-    <BackgroundFaded>
-      <View style={{ flex: 2, justifyContent: "center" }}>
-        <Text style={styles.TitleOfPage}>{stringText}</Text>
-      </View>
-      <View style={{ flex: 5 }}>
-        <View style={{ flex: 1 }}>
-          <View style={styles.AllOptionsContainer}>
-            <View style={{ flex: 1 }} />
-            <View
-              style={{
-                flex: 2,
-                marginHorizontal: 64,
-                right: 30,
-                top: 10,
-              }}
-            >
-              {textCourse}
-              <Autocomplete
-                size={"large"}
-                placeholder="Enter your course"
-                placeholderTextColor="#2D4056"
-                value={value}
-                onSelect={onSelectSearch}
-                onChangeText={onChangeTextSearch}
+    <>
+      <StatusBar translucent={false} />
+      <BackgroundFaded>
+        <View style={{ flex: 2, justifyContent: "center" }}>
+          <Text style={styles.TitleOfPage}>{stringText}</Text>
+        </View>
+        <View style={{ flex: 5 }}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.AllOptionsContainer}>
+              <View style={{ flex: 1 }} />
+              <View
+                style={{
+                  flex: 2,
+                  marginHorizontal: 64,
+                  right: 30,
+                  top: 10,
+                }}
               >
-                {data.map(renderOptionSearch)}
-              </Autocomplete>
-            </View>
-            <View style={{ flex: 2, right: 30 }}>
-              <Layout style={styles.container} level="1">
-                <Select
+                {textCourse}
+                <Autocomplete
                   size={"large"}
-                  label={textSem}
-                  style={styles.select}
-                  placeholder="Default"
-                  value={SemDisplayValue}
-                  selectedIndex={selectedIndex2}
-                  onSelect={(index) => {
-                    setSelectedIndex2(index);
-                    const value = index.toString();
-                    setIndex2(value);
-                  }}
+                  placement="bottom"
+                  placeholder="Enter your course"
+                  placeholderTextColor="#2D4056"
+                  value={value}
+                  onSelect={onSelectSearch}
+                  onChangeText={onChangeTextSearch}
+                  //style={{ marginBottom: StatusBar.currentHeight }}
                 >
-                  {semList.map(renderOption)}
-                </Select>
-              </Layout>
-            </View>
+                  {data.map(renderOptionSearch)}
+                </Autocomplete>
+              </View>
+              <View style={{ flex: 2, right: 30 }}>
+                <Layout style={styles.container} level="1">
+                  <Select
+                    size={"large"}
+                    label={textSem}
+                    style={{
+                      ...styles.select,
+                      //paddingBottom: StatusBar.currentHeight,
+                    }}
+                    placeholder="Default"
+                    value={SemDisplayValue}
+                    selectedIndex={selectedIndex2}
+                    onSelect={(index) => {
+                      setSelectedIndex2(index);
+                      const value = index.toString();
+                      setIndex2(value);
+                    }}
+                  >
+                    {semList.map(renderOption)}
+                  </Select>
+                </Layout>
+              </View>
 
-            <View style={{ flex: 2, right: 30 }}>
-              <Layout style={styles.container} level="1">
-                <Select
-                  size={"large"}
-                  label={textYear}
-                  style={styles.select}
-                  placeholder="Default"
-                  value={YearDisplayValue}
-                  selectedIndex={selectedIndex}
-                  onSelect={(index) => {
-                    setSelectedIndex(index);
-                    const value = index.toString();
-                    setIndex1(value);
-                  }}
+              <View style={{ flex: 2, right: 30 }}>
+                <Layout style={styles.container} level="1">
+                  <Select
+                    size={"large"}
+                    label={textYear}
+                    style={styles.select}
+                    placeholder="Default"
+                    value={YearDisplayValue}
+                    selectedIndex={selectedIndex}
+                    onSelect={(index) => {
+                      setSelectedIndex(index);
+                      const value = index.toString();
+                      setIndex1(value);
+                    }}
+                  >
+                    {yearList.map(renderOption)}
+                  </Select>
+                </Layout>
+              </View>
+
+              <View style={styles.checkBoxDesign}>
+                <CheckBox
+                  checked={checked}
+                  onChange={(nextChecked) => setChecked(nextChecked)}
+                />
+                <Text style={styles.ihveStyle}>I've agreed to the </Text>
+                <Text
+                  style={styles.tncStyle}
+                  onPress={() => navigation.navigate("TnC")}
                 >
-                  {yearList.map(renderOption)}
-                </Select>
-              </Layout>
-            </View>
-
-            <View style={styles.checkBoxDesign}>
-              <CheckBox
-                checked={checked}
-                onChange={(nextChecked) => setChecked(nextChecked)}
-              />
-              <Text style={styles.ihveStyle}>I've agreed to the </Text>
-              <Text
-                style={styles.tncStyle}
-                onPress={() => navigation.navigate("TnC")}
-              >
-                Terms & Conditions.
-              </Text>
+                  Terms & Conditions.
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View style={styles.spaceForButton}>
-        <SignInButton
-          func={() => {
-            if (checked) {
-              setIsLoading(true);
-              FirebaseDB.auth()
-                .createUserWithEmailAndPassword(
-                  route.params?.item.email,
-                  route.params?.item.password
-                )
-                .then((response) => {
-                  const uid = response.user.uid;
-                  const data = {
-                    id: uid,
-                    name: route.params?.item.name,
-                    password: route.params?.item.password,
-                    email: route.params?.item.email,
-                    course: value, // required
-                    yearOfMatri: yearValue(parseInt(index1)), // required
-                    expectedSemGrad: semValue(parseInt(index2)),
-                    TargetCAP: 5,
-                    totalMCs: 160,
-                    CapArray: [],
-                    favPlanArray: [],
-                    favPlanInfo: [],
-                    SelectedPlansInfo: [],
-                  };
+        <View style={styles.spaceForButton}>
+          <SignInButton
+            func={() => {
+              if (checked && value !== "") {
+                setIsLoading(true);
+                FirebaseDB.auth()
+                  .createUserWithEmailAndPassword(
+                    route.params?.item.email,
+                    route.params?.item.password
+                  )
+                  .then((response) => {
+                    const uid = response.user.uid;
+                    const data = {
+                      id: uid,
+                      name: route.params?.item.name,
+                      password: route.params?.item.password,
+                      email: route.params?.item.email,
+                      course: value, // required
+                      yearOfMatri: yearValue(parseInt(index1)), // required
+                      expectedSemGrad: semValue(parseInt(index2)),
+                      TargetCAP: 5,
+                      totalMCs: 160,
+                      CapArray: [],
+                      favPlanArray: [],
+                      favPlanInfo: [],
+                      SelectedPlansInfo: [],
+                    };
 
-                  const FB = FirebaseDB.firestore();
-                  const batch = FB.batch();
-                  const courseAndYear = data.course + " " + data.yearOfMatri;
+                    const FB = FirebaseDB.firestore();
+                    const batch = FB.batch();
+                    const courseAndYear = data.course + " " + data.yearOfMatri;
 
-                  // CS2019 modules
-                  const modulesRef = FB.collection("records").doc(uid);
-                  batch.set(modulesRef, CS2019Modules);
+                    // CS2019 modules
+                    const modulesRef = FB.collection("records").doc(uid);
+                    batch.set(modulesRef, CS2019Modules);
 
-                  // CS2019 Mapping
-                  const modulesMapping = FB.collection("modulesMapping").doc(
-                    uid
+                    // CS2019 Mapping
+                    const modulesMapping = FB.collection("modulesMapping").doc(
+                      uid
+                    );
+                    batch.set(modulesMapping, CS2019Mapping);
+
+                    // typeArray
+                    const array = CS2019Types;
+                    const typeRef = FB.collection("typeArray").doc(uid);
+                    batch.set(typeRef, array);
+
+                    // codeArray
+                    const array2 = CS2019Codes;
+                    const codeRef = FB.collection("codeArray").doc(uid);
+                    batch.set(codeRef, array2);
+
+                    // levelArray
+                    const array3 = CS2019Levels;
+                    const levelRef = FB.collection("levelArray").doc(uid);
+                    batch.set(levelRef, array3);
+
+                    const userRef = FB.collection("users").doc(uid);
+                    batch.set(userRef, data);
+
+                    batch.commit().then(setIsLoading(false));
+                  })
+                  .catch((error) => {
+                    setIsLoading(false);
+                    alert(error);
+                  });
+              } else {
+                if (!checked) {
+                  Alert.alert(
+                    "Notice",
+                    "Please accept the Terms and Condition before continuing.",
+                    [{ text: "Cancel", onPress: () => {} }],
+                    { cancelable: false }
                   );
-                  batch.set(modulesMapping, CS2019Mapping);
-
-                  // typeArray
-                  const array = CS2019Types;
-                  const typeRef = FB.collection("typeArray").doc(uid);
-                  batch.set(typeRef, array);
-
-                  // codeArray
-                  const array2 = CS2019Codes;
-                  const codeRef = FB.collection("codeArray").doc(uid);
-                  batch.set(codeRef, array2);
-
-                  // levelArray
-                  const array3 = CS2019Levels;
-                  const levelRef = FB.collection("levelArray").doc(uid);
-                  batch.set(levelRef, array3);
-
-                  const userRef = FB.collection("users").doc(uid);
-                  batch.set(userRef, data);
-
-                  batch.commit().then(setIsLoading(false));
-                })
-                .catch((error) => {
-                  setIsLoading(false);
-                  alert(error);
-                });
-            } else {
-              Alert.alert(
-                "Notice",
-                "Please accept the Terms and Condition before continuing.",
-                [{ text: "Cancel", onPress: () => {} }],
-                { cancelable: false }
-              );
-            }
-          }}
-          isLoading={isLoading}
-        >
-          <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-            Done
-          </Text>
-        </SignInButton>
-      </View>
-    </BackgroundFaded>
+                } else {
+                  Alert.alert(
+                    "Notice",
+                    "Please fill in the course!",
+                    [{ text: "Cancel", onPress: () => {} }],
+                    { cancelable: false }
+                  );
+                }
+              }
+            }}
+            isLoading={isLoading}
+          >
+            <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+              Done
+            </Text>
+          </SignInButton>
+        </View>
+      </BackgroundFaded>
+    </>
   );
 };
 
