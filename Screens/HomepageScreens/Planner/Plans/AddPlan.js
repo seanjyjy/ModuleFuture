@@ -36,6 +36,7 @@ const AddPlan = ({ route }) => {
   const [taken, setTaken] = useState({});
 
   const fb = FirebaseDB.firestore();
+  const batch = fb.batch();
   const userID = FirebaseDB.auth().currentUser.uid;
   const typeRef = fb.collection("typeArray").doc(userID);
   const codeRef = fb.collection("codeArray").doc(userID);
@@ -354,9 +355,9 @@ const AddPlan = ({ route }) => {
         .get()
         .then((document) => {
           const val = document.data();
-          if (val === undefined) {
-            usersModulesDetailsRef.set({ usersModulesArray: [] });
-          }
+          // if (val === undefined) {
+          //   batch.set(batchusersModulesDetailsRef, { usersModulesArray: [] });
+          // }
           const modulesDetailsArray = [];
           let semSum = 0;
           let semMc = 0;
@@ -540,7 +541,6 @@ const AddPlan = ({ route }) => {
             }
           });
 
-          const batch = fb.batch();
           batch.set(typeRef, typeObj);
           batch.set(codeRef, codeObj);
           batch.set(levelRef, levelObj);
@@ -549,8 +549,6 @@ const AddPlan = ({ route }) => {
             notTaken: newNotTaken,
             taken: newTaken,
           });
-
-          batch.commit();
 
           semCap = parseFloat((semSum / semMc).toFixed(2));
           let totalSum = 0; // total CAP SUM
@@ -648,9 +646,8 @@ const AddPlan = ({ route }) => {
                 MCcountedToCap: semMc, // mc that is counted in cap
               });
             }
-            usersRef.update({
-              CapArray: tempArr,
-            });
+            batch.update(usersRef, { CapArray: tempArr });
+            batch.commit();
           } else {
             usersRef.set(
               {
@@ -672,7 +669,6 @@ const AddPlan = ({ route }) => {
               { merge: true }
             );
           }
-
           if (val !== undefined) {
             const tempArr2 = [];
             let pushed = false;
@@ -1007,7 +1003,6 @@ const AddPlan = ({ route }) => {
       fromWhere: fromWhere,
       amIfavourite: false,
     });
-
     // ----------------figure out how to reset the data!--------------------------------------------------------------------------------
     const newArr = data.map((x) => x);
     setData([]);

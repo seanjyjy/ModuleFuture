@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Dimensions, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import Header from "../../../Component/Header";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
@@ -7,6 +14,7 @@ import EditButton from "../../../Component/EditButton";
 import AddModuleButton from "../../../Component/AddModuleButton";
 import FullViewHeader from "../../../Component/FullViewHeader";
 import { Icon } from "react-native-eva-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -158,6 +166,8 @@ const EachFocusArea = ({ navigation, route }) => {
 
     return (
       <FlatList
+        // initialScrollIndex={}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.fullBox}
         ListFooterComponent={<View style={{ height: 35 }}></View>}
         data={arr}
@@ -172,11 +182,10 @@ const EachFocusArea = ({ navigation, route }) => {
       <Header
         str={route.params?.name}
         leftChildren={
-          <Icon
-            name={editMode ? "close-outline" : "chevron-left-outline"}
-            width={100}
-            height={30}
-            fill="#232323"
+          <Ionicons
+            name={editMode ? "md-close" : "md-arrow-round-back"}
+            size={25}
+            style={{ color: "#232323" }}
             onPress={() =>
               editMode ? setEdit(!editMode) : navigation.goBack()
             }

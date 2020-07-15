@@ -199,20 +199,20 @@ const FocusArea = ({ navigation }) => {
         <View style={styles.innerText}>
           <View
             style={{
-              flex: 1,
+              flex: 0.5,
               justifyContent: "center",
               top: 1,
-              marginRight: 5,
+              marginRight: 12,
             }}
           >
             {circle}
           </View>
-          <View style={{ flex: 6, justifyContent: "center" }}>
+          <View style={{ flex: 7, justifyContent: "center" }}>
             {text(text1)}
           </View>
           <View
             style={{
-              flex: 2.5,
+              flex: 2.3,
               flexDirection: "row",
               justifyContent: "center",
             }}

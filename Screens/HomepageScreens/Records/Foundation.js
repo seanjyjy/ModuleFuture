@@ -5,6 +5,7 @@ import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import EditButton from "../../../Component/EditButton";
 import AddModuleButton from "../../../Component/AddModuleButton";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -128,6 +129,8 @@ const Foundation = ({ navigation, route }) => {
         </Text>
       </View>
       <FlatList
+        initialScrollIndex={0}
+        showsVerticalScrollIndicator={false}
         data={taken.concat(notTaken)}
         keyExtractor={(item) => item.code}
         renderItem={({ item }) =>
@@ -192,11 +195,10 @@ const Foundation = ({ navigation, route }) => {
       <Header
         str={route.params?.title}
         leftChildren={
-          <Icon
-            name={editMode ? "close-outline" : "chevron-left-outline"}
-            width={100}
-            height={30}
-            fill="#232323"
+          <Ionicons
+            name={editMode ? "md-close" : "md-arrow-round-back"}
+            size={25}
+            style={{ color: "#232323" }}
             onPress={() =>
               editMode ? setEdit(!editMode) : navigation.goBack()
             }
