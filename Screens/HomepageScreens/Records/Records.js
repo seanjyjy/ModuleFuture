@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: width * 0.02,
   },
-  // For full view
+  // For full
   moduleText: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   fullBox: {
-    width: width * 0.9,
+    width: width * 0.95,
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "center",

@@ -168,6 +168,7 @@ export const specialisations = {
 
       {
         name: "Computer Graphics and Games",
+        shortName: "Computer Graphics",
         key: 3,
         Prereq: {
           modules: [
@@ -373,6 +374,7 @@ export const specialisations = {
       },
       {
         name: "Multimedia Information Retrieval",
+        shortName: "Multimedia",
         key: 6,
         Prereq: {
           modules: [
@@ -414,6 +416,7 @@ export const specialisations = {
 
       {
         name: "Networking and Distributed Systems",
+        shortName: "Networking",
         key: 7,
         Prereq: {
           modules: [

@@ -284,7 +284,10 @@ const FocusArea = ({ navigation }) => {
             arr[1] = current.Primaries;
             arr[2] = current.Electives;
             navigation.navigate("EachFocusArea", {
-              name: current.name,
+              name:
+                current.shortName === undefined
+                  ? current.name
+                  : current.shortName,
               arr: arr,
             });
           }}

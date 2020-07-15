@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  FlatList,
-} from "react-native";
+import { View, StyleSheet, Text, Dimensions, FlatList } from "react-native";
 import Header from "../../../Component/Header";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
@@ -89,6 +82,17 @@ const EachFocusArea = ({ navigation, route }) => {
               {item.name}
             </Text>
           </View>
+          {current.name === "Prereq" && editMode ? (
+            <Icon
+              name="trash-2-outline"
+              width={30}
+              height={15}
+              fill="#232323"
+              onPress={() => {
+                return null;
+              }}
+            />
+          ) : null}
         </View>
       );
 
@@ -97,6 +101,7 @@ const EachFocusArea = ({ navigation, route }) => {
           if (editMode) {
             return (
               <AddModuleButton
+                size={35}
                 func={() =>
                   navigation.navigate("AddModule", { item: "EachFocusArea" })
                 }
@@ -129,7 +134,7 @@ const EachFocusArea = ({ navigation, route }) => {
               textBreakStrategy="simple"
               numberOfLines={2}
               style={{
-                ...globalFontStyles.OSSB_11,
+                ...globalFontStyles.OSSB_13,
                 color: "#232323",
                 textAlign: "center",
               }}

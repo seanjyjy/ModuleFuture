@@ -22,12 +22,10 @@ const EditButton = (props) => {
   );
 };
 
-const width = Dimensions.get("window").width;
-
 export default EditButton;
 const styles = StyleSheet.create({
   buttonDesign: {
-    height: 28,
+    height: 35,
     width: 28,
     // backgroundColor: "pink",
     alignItems: "center",

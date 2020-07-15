@@ -16,13 +16,7 @@ import { globalFontStyles } from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
 import BackgroundFaded from "../Screens/Backgrounds/BackgroundFaded";
 import FirebaseDB from "../FirebaseDB";
-import {
-  CS2019Modules,
-  CS2019Mapping,
-  CS2019Levels,
-  CS2019Codes,
-  CS2019Types,
-} from "../Data/Types";
+import { Modules, Mapping, Levels, Codes, Types } from "../Data/Types";
 import { Icon } from "react-native-eva-icons";
 import { CheckBox } from "@ui-kitten/components";
 import { Autocomplete, AutocompleteItem } from "@ui-kitten/components";
@@ -82,12 +76,10 @@ let courseList = [
   { title: "Music" },
   { title: "Applied Mathematics" },
   {
-    title:
-      "Applied Mathematics, specialisation in Mathematical Modelling and Data Analytics",
+    title: "Applied Mathematics, specialisation in MMDA",
   },
   {
-    title:
-      "Applied Mathematics, specialisation in Operations Research and Financial Mathematics",
+    title: "Applied Mathematics, specialisation in ORFM",
   },
   { title: "Chemistry" },
   { title: "Chemistry, specialisation in Materials Chemistry" },
@@ -347,28 +339,25 @@ const ChoosingOptions = ({ route }) => {
 
                     // CS2019 modules
                     const modulesRef = FB.collection("records").doc(uid);
-                    batch.set(modulesRef, CS2019Modules);
+                    batch.set(modulesRef, Modules[courseAndYear]);
 
                     // CS2019 Mapping
                     const modulesMapping = FB.collection("modulesMapping").doc(
                       uid
                     );
-                    batch.set(modulesMapping, CS2019Mapping);
+                    batch.set(modulesMapping, Mapping[courseAndYear]);
 
                     // typeArray
-                    const array = CS2019Types;
                     const typeRef = FB.collection("typeArray").doc(uid);
-                    batch.set(typeRef, array);
+                    batch.set(typeRef, Types[courseAndYear]);
 
                     // codeArray
-                    const array2 = CS2019Codes;
                     const codeRef = FB.collection("codeArray").doc(uid);
-                    batch.set(codeRef, array2);
+                    batch.set(codeRef, Codes[courseAndYear]);
 
                     // levelArray
-                    const array3 = CS2019Levels;
                     const levelRef = FB.collection("levelArray").doc(uid);
-                    batch.set(levelRef, array3);
+                    batch.set(levelRef, Levels[data.course]);
 
                     // For focus area
                     const focusAreaRef = FB.collection("focusArea").doc(uid);

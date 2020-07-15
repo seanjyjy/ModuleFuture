@@ -37,6 +37,7 @@ const FullViewHeader = () => (
           style={{
             ...globalFontStyles.OSB_13,
             color: "#232323",
+            left: 5,
           }}
         >
           Grade
@@ -52,7 +53,7 @@ export default FullViewHeader;
 const styles = StyleSheet.create({
   header: {
     marginTop: 18,
-    width: width * 0.9,
+    width: width * 0.95,
     alignSelf: "center",
     flexDirection: "row",
     justifyContent: "space-between",

@@ -45,7 +45,7 @@ const Foundation = ({ navigation, route }) => {
 
   const holders = (item) => (
     <View style={styles.headerText}>
-      <View style={{ width: width * (editMode ? 0.47 : 0.52) }}>
+      <View style={{ width: width * 0.52 }}>
         <Text
           numberOfLines={1}
           style={{
@@ -72,7 +72,7 @@ const Foundation = ({ navigation, route }) => {
 
   const holders2 = (item) => (
     <View style={styles.headerText}>
-      <View style={{ width: width * (editMode ? 0.47 : 0.52) }}>
+      <View style={{ width: width * 0.52 }}>
         <Text
           numberOfLines={1}
           style={{
@@ -109,7 +109,8 @@ const Foundation = ({ navigation, route }) => {
           }}
         >
           <Text style={{ ...globalFontStyles.OSB_16, color: "#232323" }}>
-            {editMode ? "" : "Module"}
+            {/* {editMode ? "" : "Module"} */}
+            Module
           </Text>
           <Text
             style={{
@@ -117,11 +118,13 @@ const Foundation = ({ navigation, route }) => {
               color: "#232323",
             }}
           >
-            {editMode ? "" : "Grade"}
+            {/* {editMode ? "" : "Grade"} */}
+            Grade
           </Text>
         </View>
         <Text style={{ ...globalFontStyles.OSB_16, color: "#232323" }}>
-          {editMode ? "" : "Sem"}
+          {/* {editMode ? "" : "Sem"} */}
+          Sem
         </Text>
       </View>
       <FlatList
@@ -133,6 +136,7 @@ const Foundation = ({ navigation, route }) => {
       />
       {editMode ? (
         <AddModuleButton
+          size={47}
           func={() => navigation.navigate("AddModule", { item: "Foundation" })}
         />
       ) : (
@@ -143,7 +147,7 @@ const Foundation = ({ navigation, route }) => {
 
   const styles = StyleSheet.create({
     container: {
-      width: width * 0.9,
+      width: width * 0.95,
       height: Math.min(
         height * 0.88,
         (taken.length + notTaken.length) * 37 + 125

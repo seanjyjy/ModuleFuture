@@ -43,7 +43,7 @@ const Profile = (props) => {
         <ProfileButton0
           left={"Course"}
           transition={() => null}
-          right={course1}
+          right={"Applied Mathematics, specialisation in MMDA"}
         />
         <ProfileButton0
           left={"Year of Matriculation"}
