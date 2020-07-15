@@ -147,7 +147,7 @@ const Foundation = ({ navigation, route }) => {
 
   const styles = StyleSheet.create({
     container: {
-      width: width * 0.95,
+      width: width * 0.9,
       height: Math.min(
         height * 0.88,
         (taken.length + notTaken.length) * 37 + 125

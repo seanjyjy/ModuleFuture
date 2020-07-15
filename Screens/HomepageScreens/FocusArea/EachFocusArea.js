@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     borderColor: "lightgrey",
   },
   fullBox: {
-    width: width * 0.9,
+    width: width * 0.95,
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "center",
