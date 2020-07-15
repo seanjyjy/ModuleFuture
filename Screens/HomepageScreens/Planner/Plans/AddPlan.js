@@ -33,6 +33,7 @@ const AddPlan = ({ route }) => {
   const [Codes, setCodes] = useState({});
   const [Levels, setLevels] = useState({});
   const [records, setRecords] = useState({});
+  const [taken, setTaken] = useState({});
 
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
@@ -41,6 +42,7 @@ const AddPlan = ({ route }) => {
   const levelRef = fb.collection("levelArray").doc(userID);
   const recordsRef = fb.collection("records").doc(userID);
   const moduleMappingRef = fb.collection("modulesMapping").doc(userID);
+  const takenModulesRef = fb.collection("takenModules").doc(userID);
 
   const deleteItem = (moduleCode) => {
     setData((newData) => {
@@ -94,6 +96,9 @@ const AddPlan = ({ route }) => {
     });
     levelRef.onSnapshot((document) => {
       setLevels(document.data());
+    });
+    takenModulesRef.onSnapshot((document) => {
+      setTaken(document.data());
     });
   }, [route.params.item[4], route.params?.modDetails, route.params?.from]);
 
@@ -279,7 +284,10 @@ const AddPlan = ({ route }) => {
       const newNotTaken = [];
 
       const newSet = new Set();
-      data.forEach((x) => newSet.add(x.moduleCode));
+      data.forEach((x) => {
+        delete taken[x.moduleCode];
+        newSet.add(x.moduleCode);
+      });
 
       // Remove from taken
       for (let i = 0; i < origTaken.length; i++) {
@@ -404,8 +412,6 @@ const AddPlan = ({ route }) => {
                 numTaken: 0,
                 mcsUsedInCap: 0,
                 points: 0,
-                taken: [],
-                notTaken: [],
               });
             }
 
@@ -420,8 +426,6 @@ const AddPlan = ({ route }) => {
                 numTaken: 0,
                 mcsUsedInCap: 0,
                 points: 0,
-                taken: [],
-                notTaken: [],
               });
             }
             const indexType = typeObj[moduleType];
@@ -452,10 +456,17 @@ const AddPlan = ({ route }) => {
               grade: FinalGrade,
               level: Level,
               codePrefix: codePrefix,
-              taken: true,
               numMcs: NumMcs,
               sem: fromWhere,
             });
+
+            taken[moduleCode] = {
+              name: moduleName,
+              code: moduleCode,
+              grade: FinalGrade,
+              numMcs: NumMcs,
+              sem: fromWhere,
+            };
 
             modulesDetailsArray.push({
               moduleCode: moduleCode,
@@ -486,8 +497,6 @@ const AddPlan = ({ route }) => {
                 numTaken: codeObj.cat[i].numTaken,
                 mcsUsedInCap: codeObj.cat[i].mcsUsedInCap,
                 points: codeObj.cat[i].points,
-                taken: [],
-                notTaken: [],
               });
             } else {
               delete codeObj[codeObj.cat[i].name];
@@ -535,6 +544,7 @@ const AddPlan = ({ route }) => {
           batch.set(typeRef, typeObj);
           batch.set(codeRef, codeObj);
           batch.set(levelRef, levelObj);
+          batch.set(takenModulesRef, taken);
           batch.update(recordsRef, {
             notTaken: newNotTaken,
             taken: newTaken,

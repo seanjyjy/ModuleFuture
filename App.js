@@ -41,10 +41,10 @@ import AddPlan from "./Screens/HomepageScreens/Planner/Plans/AddPlan";
 import ViewPlan from "./Screens/HomepageScreens/Planner/Plans/ViewPlan";
 import ChoosingOptions from "./Component/MakingClock";
 import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
-import Year from "./Screens/HomepageScreens/Profile/Year";
 import EmailVerification from "./Screens/HomepageScreens/Profile/EmailVerification";
 import Credit from "./Screens/HomepageScreens/Profile/Credit";
 import Foundation from "./Screens/HomepageScreens/Records/Foundation";
+import EachFocusArea from "./Screens/HomepageScreens/FocusArea/EachFocusArea";
 
 // -------------------------------------------------------------------------------------------------------------
 
@@ -225,6 +225,10 @@ export default function App() {
                       />
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
                       <AuthStack.Screen
+                        name="EachFocusArea"
+                        component={EachFocusArea}
+                      />
+                      <AuthStack.Screen
                         name="Foundation"
                         component={Foundation}
                       />
@@ -233,7 +237,6 @@ export default function App() {
                         name="Graduation"
                         component={Graduation}
                       />
-                      <AuthStack.Screen name="Year" component={Year} />
                       <AuthStack.Screen
                         name="EmailVerification"
                         component={EmailVerification}

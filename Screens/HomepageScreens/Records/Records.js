@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -11,9 +11,8 @@ import {
 import Header from "../../../Component/Header";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
+import FullViewHeader from "../../../Component/FullViewHeader";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-// import ColouredList from "../../../Component/ColouredList";
-import FullView from "../../../Component/FullView";
 import FirebaseDB from "../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
@@ -54,6 +53,7 @@ const Records = () => {
   const [currentType, changeType] = useState("Type");
   const [typeSelection, setTypeVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [showAll, setShow] = useState(true);
   const [type, setType] = useState({});
   const [level, setLevel] = useState({});
   const [code, setCode] = useState({});
@@ -98,6 +98,8 @@ const Records = () => {
 
   const overallView = () => (catView ? "Full view" : "Categorical view");
 
+  const show = () => (showAll ? "Show taken only" : "Show all");
+
   const item1 = () =>
     currentType === "Type" || currentType === "Level" ? "Code" : "Type";
 
@@ -120,13 +122,24 @@ const Records = () => {
       />
     );
 
+    const option2 = (menu1) => (
+      <MenuItem
+        title={text(menu1())}
+        onPress={() => {
+          setShow(!showAll);
+          toggleMenu();
+        }}
+        activeOpacity={0.9}
+      />
+    );
+
     return (
       <OverflowMenu
         visible={menuVisible}
         anchor={MenuIcon}
         onBackdropPress={toggleMenu}
       >
-        {!catView ? null : option(numTaken, MCstaken)}
+        {!catView ? option2(show) : option(numTaken, MCstaken)}
         {option(overallView, catView)}
       </OverflowMenu>
     );
@@ -208,7 +221,6 @@ const Records = () => {
 
   const ColouredList = (props) => {
     const colors = props.colors;
-    const bool = false;
     const mcsOrNum = props.mcsOrNum;
     const array = props.array;
 
@@ -243,7 +255,7 @@ const Records = () => {
         <Text
           numberOfLines={2}
           style={{
-            ...(bool ? globalFontStyles.NBEB_13 : globalFontStyles.NBEB_14),
+            ...globalFontStyles.NBEB_14,
             color: "#686868",
           }}
         >
@@ -283,7 +295,7 @@ const Records = () => {
           </View>
           <View
             style={{
-              flex: bool ? 1.3 : 2.5,
+              flex: 2.5,
               flexDirection: "row",
               justifyContent: "center",
             }}
@@ -327,9 +339,7 @@ const Records = () => {
             <View style={{ width: "90%" }}>
               <Text
                 style={{
-                  ...(bool
-                    ? globalFontStyles.NBEB_15
-                    : globalFontStyles.NBEB_17),
+                  ...globalFontStyles.NBEB_17,
                   color: "#F4F4F4",
                   textAlign: "center",
                 }}
@@ -357,6 +367,8 @@ const Records = () => {
     );
   };
 
+  /* --------------------------------------------Full view---------------------------------------- */
+
   const FullView = () => {
     const currentArr = menu().cat;
     const lastKey = currentArr.length;
@@ -366,51 +378,6 @@ const Records = () => {
         : currentType === "Code"
         ? "codePrefix"
         : "level";
-
-    const header = () => (
-      <View style={styles.header}>
-        <View
-          style={{
-            width: "23%",
-            borderRightColor: "#C6C6C6",
-            borderRightWidth: hairlineWidth,
-          }}
-        ></View>
-        <View
-          style={{
-            width: "77%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingRight: 10,
-            paddingLeft: 8,
-          }}
-        >
-          <View
-            style={{
-              width: "79%",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>
-              Module
-            </Text>
-            <Text
-              style={{
-                ...globalFontStyles.OSB_13,
-                color: "#232323",
-              }}
-            >
-              Grade
-            </Text>
-          </View>
-          <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>
-            Sem
-          </Text>
-        </View>
-      </View>
-    );
 
     const IndividualBox = (current) => {
       const toMatch =
@@ -473,8 +440,8 @@ const Records = () => {
           <View
             style={{
               width: "23%",
-              borderRightColor: "#C6C6C6",
-              borderRightWidth: hairlineWidth,
+              borderRightColor: "lightgrey",
+              borderRightWidth: 0.7,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -493,10 +460,10 @@ const Records = () => {
           </View>
           <View style={{ flexDirection: "column", width: "77%" }}>
             <FlatList
-              data={currTaken().concat(currNotTaken())}
+              data={showAll ? currTaken().concat(currNotTaken()) : currTaken()}
               keyExtractor={(item) => item.name.toString()}
               renderItem={({ item }) =>
-                item.taken !== undefined ? holders(item) : holders2(item)
+                item.grade !== undefined ? holders(item) : holders2(item)
               }
             />
           </View>
@@ -507,7 +474,6 @@ const Records = () => {
     return (
       <FlatList
         contentContainerStyle={styles.fullBox}
-        ListHeaderComponent={header()}
         ListFooterComponent={<View style={{ height: height * 0.11 }}></View>}
         data={currentArr}
         keyExtractor={(item) => item.key.toString()}
@@ -527,7 +493,6 @@ const Records = () => {
       <ColouredList colors={colors} mcsOrNum={text1} array={menu().cat} />
     </View>
   ) : (
-    // To be updated for Full View
     <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
@@ -535,6 +500,7 @@ const Records = () => {
         rightChildren={renderOverflowMenuAction()}
       />
       {selector()}
+      <FullViewHeader />
       <FullView />
     </View>
   );
@@ -590,15 +556,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: width * 0.02,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    height: 36,
-    borderColor: "#979797",
-    borderWidth: hairlineWidth,
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
-  },
+  // For full view
   moduleText: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -610,12 +568,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
     minHeight: 40,
-    borderWidth: hairlineWidth,
+    borderWidth: 0.7,
+    borderColor: "lightgrey",
     borderTopWidth: 0,
-    borderColor: "#979797",
   },
   fullBox: {
-    marginTop: 12,
     width: width * 0.9,
     flexDirection: "column",
     alignItems: "center",

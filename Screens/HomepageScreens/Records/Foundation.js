@@ -126,9 +126,9 @@ const Foundation = ({ navigation, route }) => {
       </View>
       <FlatList
         data={taken.concat(notTaken)}
-        keyExtractor={(item) => item.code.toString()}
+        keyExtractor={(item) => item.code}
         renderItem={({ item }) =>
-          item.taken !== undefined ? holders(item) : holders2(item)
+          item.grade !== undefined ? holders(item) : holders2(item)
         }
       />
       {editMode ? (
@@ -186,7 +186,7 @@ const Foundation = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        str={editMode ? "" : route.params?.title}
+        str={route.params?.title}
         leftChildren={
           <Icon
             name={editMode ? "close-outline" : "chevron-left-outline"}

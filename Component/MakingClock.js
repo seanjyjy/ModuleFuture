@@ -26,6 +26,8 @@ import { Icon } from "react-native-eva-icons";
 import { CheckBox } from "@ui-kitten/components";
 import { Autocomplete, AutocompleteItem } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
+import { specialisations } from "../Data/Specialisations";
+
 const height = Dimensions.get("window").height;
 
 let courseList = [
@@ -112,7 +114,7 @@ let courseList = [
 ];
 
 const filter = (item, query) =>
-  item.title.toLowerCase().includes(query.toLowerCase());
+  item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
 
 const ChoosingOptions = ({ route }) => {
   const navigation = useNavigation();
@@ -359,6 +361,15 @@ const ChoosingOptions = ({ route }) => {
                   const array3 = CS2019Levels;
                   const levelRef = FB.collection("levelArray").doc(uid);
                   batch.set(levelRef, array3);
+
+                  // For focus area
+                  const focusAreaRef = FB.collection("focusArea").doc(uid);
+                  batch.set(focusAreaRef, specialisations[courseAndYear]);
+                  // Testing out modules taken object
+                  const modulesTakenRef = FB.collection("takenModules").doc(
+                    uid
+                  );
+                  batch.set(modulesTakenRef, {});
 
                   const userRef = FB.collection("users").doc(uid);
                   batch.set(userRef, data);

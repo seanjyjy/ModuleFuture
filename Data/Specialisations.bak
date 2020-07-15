@@ -1,3 +1,16 @@
+// export const specialisations = [
+//   { key: 1, name: "Algorithms & Theory" },
+//   { key: 2, name: "Artificial Intelligence" },
+//   { key: 3, name: "Computer Graphics and Games" },
+//   { key: 4, name: "Computer Security" },
+//   { key: 5, name: "Database Systems" },
+//   { key: 6, name: "Multimedia Information Retrieval" },
+//   { key: 7, name: "Networking and Distributed Systems" },
+//   { key: 8, name: "Parallel Computing" },
+//   { key: 9, name: "Programming Languages" },
+//   { key: 10, name: "Software Engineering" },
+// ];
+
 export const specialisations = {
   "Computer Science 2019": {
     cat: [
@@ -5,6 +18,9 @@ export const specialisations = {
         name: "Algorithms & Theory",
         key: 1,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               code: "CS1231S",
@@ -21,7 +37,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
+          points: 0,
           modules: [
             {
               code: "CS3230",
@@ -40,6 +59,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             { code: "CS3233", name: "CS3233 Competitive Programming" },
             {
@@ -78,6 +100,10 @@ export const specialisations = {
         name: "Artificial Intellgence",
         key: 2,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          numRequired: 3,
+          points: 0,
           modules: [
             {
               code: "CS1231S",
@@ -102,8 +128,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             {
               code: "CS3243",
@@ -126,6 +154,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               code: "CS4220",
@@ -170,6 +201,9 @@ export const specialisations = {
         name: "Computer Graphics and Games",
         key: 3,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -194,8 +228,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             { code: "CS3241", name: "CS3241 Computer Graphics" },
             { code: "CS3242", name: "CS3242 3D Modelling and Animation" },
@@ -208,6 +244,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               code: "CS3218",
@@ -246,6 +285,9 @@ export const specialisations = {
         name: "Computer Security",
         key: 4,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               name: "CS1101S Programming Methodology",
@@ -274,8 +316,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             {
               code: "CS2107",
@@ -291,6 +335,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               code: "CS3221",
@@ -324,6 +371,9 @@ export const specialisations = {
         name: "Database Systems",
         key: 5,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               name: "CS1231S Discrete Structures",
@@ -340,8 +390,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             { code: "CS2102", name: "CS2102 Database Systems" },
             {
@@ -357,6 +409,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               code: "CS4220",
@@ -375,6 +430,9 @@ export const specialisations = {
         name: "Multimedia Information Retrieval",
         key: 6,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -391,8 +449,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             {
               code: "CS2108",
@@ -405,6 +465,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             { code: "CS5246", name: "CS5246 Text Mining" },
             { code: "CS5241", name: "CS5241 Speech Processing" },
@@ -416,6 +479,9 @@ export const specialisations = {
         name: "Networking and Distributed Systems",
         key: 7,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               name: "CS2040S Data Structures and Algorithms",
@@ -432,8 +498,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             {
               code: "CS2105",
@@ -449,6 +517,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               code: "CS3237",
@@ -471,6 +542,9 @@ export const specialisations = {
         name: "Parallel Computing",
         key: 8,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               name: "CS2100 Computer Organisation",
@@ -487,8 +561,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             { code: "CS3210", name: "CS3210 Parallel Computing" },
             {
@@ -503,6 +579,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               code: "CS5222",
@@ -523,6 +602,9 @@ export const specialisations = {
         name: "Programming Languages",
         key: 9,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -539,8 +621,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             { code: "CS2104", name: "CS2104 Programming Language Concepts" },
             {
@@ -555,6 +639,9 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          points: 0,
           modules: [
             { code: "CS3234", name: "CS3234 Logic for Proofs and Programs" },
             { code: "CS4216", name: "CS4216 Constraint Logic Programming" },
@@ -579,6 +666,10 @@ export const specialisations = {
         name: "Software Engineering",
         key: 10,
         Prereq: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          numRequired: 3,
+          points: 0,
           modules: [
             {
               code: "CS2030",
@@ -591,8 +682,10 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
           numRequired: 3,
-
+          points: 0,
           modules: [
             { code: "CS2103T", name: "CS2103T Software Engineering" },
             {
@@ -608,6 +701,10 @@ export const specialisations = {
           ],
         },
         Electives: {
+          mcsUsedInCap: 0,
+          numTaken: 0,
+          numRequired: 3,
+          points: 0,
           modules: [
             {
               code: "CS3216",
@@ -639,5 +736,15 @@ export const specialisations = {
         },
       },
     ],
+    "Algorithms and Theory": 0,
+    "Artificial Intellgence: ": 1,
+    "Computer Graphics and Games": 2,
+    "Computer Security": 3,
+    "Database Systems": 4,
+    "Multimedia Information Retrieval": 5,
+    "Networking and Distributed Systems": 6,
+    "Parallel Computing": 7,
+    "Programming Languages": 8,
+    "Software Engineering": 9,
   },
 };

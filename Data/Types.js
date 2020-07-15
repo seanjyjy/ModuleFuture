@@ -228,14 +228,6 @@ export const CS2019Modules = {
       numMcs: 4,
     },
     {
-      name: "MA1521 Calculus for Computing",
-      code: "MA1521",
-      type: "Maths and Sciences",
-      level: 1000,
-      codePrefix: "MA",
-      numMcs: 4,
-    },
-    {
       name: "MA1101R Linear Algebra I",
       code: "MA1101R",
       type: "Maths and Sciences",
@@ -243,6 +235,15 @@ export const CS2019Modules = {
       codePrefix: "MA",
       numMcs: 4,
     },
+    {
+      name: "MA1521 Calculus for Computing",
+      code: "MA1521",
+      type: "Maths and Sciences",
+      level: 1000,
+      codePrefix: "MA",
+      numMcs: 4,
+    },
+
     {
       name: "ST2334 Probability and Statistics",
       code: "ST2334",
@@ -292,8 +293,6 @@ export const CS2019Types = {
       numRequired: 9,
       mcsRequired: 36,
       points: 0,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "Breadth and Depth",
@@ -303,8 +302,6 @@ export const CS2019Types = {
       numTaken: 0,
       mcsRequired: 44,
       points: 0,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "Maths and Sciences",
@@ -315,8 +312,6 @@ export const CS2019Types = {
       numRequired: 4,
       mcsRequired: 16,
       points: 0,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "IT Profressionalism",
@@ -327,8 +322,6 @@ export const CS2019Types = {
       numRequired: 3,
       mcsRequired: 12,
       points: 0,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "UE",
@@ -338,8 +331,6 @@ export const CS2019Types = {
       numTaken: 0,
       mcsRequired: 32,
       points: 0,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "ULR",
@@ -350,8 +341,6 @@ export const CS2019Types = {
       numRequired: 5,
       mcsRequired: 20,
       points: 0,
-      taken: [],
-      notTaken: [],
     },
   ],
   // Indexes
@@ -373,8 +362,6 @@ export const CS2019Codes = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "MA",
@@ -384,8 +371,6 @@ export const CS2019Codes = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "ST",
@@ -395,8 +380,6 @@ export const CS2019Codes = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "IS",
@@ -406,8 +389,6 @@ export const CS2019Codes = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "ES",
@@ -417,8 +398,6 @@ export const CS2019Codes = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
   ],
   CS: 0,
@@ -440,8 +419,6 @@ export const CS2019Levels = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "2000s",
@@ -452,8 +429,6 @@ export const CS2019Levels = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
     {
       name: "3000s",
@@ -464,8 +439,6 @@ export const CS2019Levels = {
       mcsUsedInCap: 0,
       points: 0,
       fixed: true,
-      taken: [],
-      notTaken: [],
     },
   ],
   "1000": 0,
