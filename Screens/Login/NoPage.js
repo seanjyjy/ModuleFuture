@@ -1,4 +1,4 @@
-import { Text, TextInput, View } from "react-native";
+import { Text, TextInput, View, Dimensions } from "react-native";
 import { globalFontStyles } from "../../Component/GlobalFont";
 import { globalStyles } from "../../Component/GlobalStyle";
 import React, { useState } from "react";
@@ -9,20 +9,95 @@ import { Formik, isString } from "formik";
 import * as yup from "yup";
 import SignInButton from "../../Component/SignInButton";
 import FirebaseDB from "../../FirebaseDB";
+import { BarPasswordStrengthDisplay } from "react-native-password-strength-meter";
+
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+const temp = [
+  {
+    label: "Very Weak",
+    labelColor: "grey",
+    activeBarColor: "grey",
+  },
+  {
+    label: "Weak",
+    labelColor: "#ff2900",
+    activeBarColor: "#ff2900",
+  },
+  {
+    label: "Fair",
+    labelColor: "#ff6900",
+    activeBarColor: "#ff6900",
+  },
+  {
+    label: "Good",
+    labelColor: "#f2cf1f",
+    activeBarColor: "#f2cf1f",
+  },
+  {
+    label: "Strong",
+    labelColor: "#00CC56",
+    activeBarColor: "#00CC56",
+  },
+  {
+    label: "Perfect",
+    labelColor: "#FB5581",
+    activeBarColor: "#FB5581",
+  },
+];
+
+function hasLowerCase(str) {
+  return str.toUpperCase() != str;
+}
+
+function hasUpperCase(str) {
+  return str.toLowerCase() != str;
+}
+
+function hasNumber(myString) {
+  return /\d/.test(myString);
+}
+
+function hasSpecialChar(str) {
+  return /[\s~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?()\._]/g.test(str);
+}
+
+//checks according to OWASP password policy
 const reviewSchema = yup.object({
   name: yup.string().required(),
   password: yup
     .string()
     .required()
     .test(
-      "testing password",
-      "Password should be within 6 - 16 characters",
+      "testing password0",
+      "Password should be more than 8 characters",
       (val) => {
         if (isString(val)) {
-          return val.length >= 6 && val.length <= 16;
+          return val.length >= 8;
         }
       }
-    ),
+    )
+    .test(
+      "testing password1",
+      "Password should contain at least 1 Uppercase",
+      (val) => hasUpperCase(val)
+    )
+    .test(
+      "testing password2",
+      "Password should contain at least 1 Lowercase",
+      (val) => hasLowerCase(val)
+    )
+    .test(
+      "testing password3",
+      "Password should contain at least 1 number",
+      (val) => hasNumber(val)
+    )
+    .test(
+      "testing password4",
+      "Password should contain at least 1 special character",
+      (val) => hasSpecialChar(val)
+    )
+    .typeError(() => {}),
   email: yup
     .string()
     .required()
@@ -41,6 +116,7 @@ const reviewSchema = yup.object({
 });
 
 const NoPage = () => {
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
@@ -57,6 +133,31 @@ const NoPage = () => {
       >
         {(props) => (
           <View>
+            <View style={{ ...globalStyles.header }}>
+              <MaterialCommunityIcons
+                name="account"
+                size={30}
+                style={{ ...globalStyles.iconDesign, right: 13 }}
+              />
+              <TextInput
+                placeholder="Name"
+                placeholderTextColor="#7F8E9E"
+                onChangeText={props.handleChange("name")}
+                value={props.values.username}
+                style={{
+                  ...globalFontStyles.OSR_17,
+                  right: 10,
+                  flex: 1,
+                  top: 7,
+                }}
+              />
+            </View>
+
+            <View style={{ left: 30, top: 2 }}>
+              <Text style={{ ...globalFontStyles.OSR_14, color: "#cc0000" }}>
+                {props.touched.name && props.errors.name}
+              </Text>
+            </View>
             <View style={globalStyles.header}>
               <MaterialCommunityIcons
                 name="email"
@@ -77,7 +178,7 @@ const NoPage = () => {
               />
             </View>
 
-            <View style={{ left: 30 }}>
+            <View style={{ left: 30, top: 3 }}>
               <Text style={{ ...globalFontStyles.OSR_14, color: "#cc0000" }}>
                 {props.touched.email && props.errors.email}
               </Text>
@@ -109,32 +210,15 @@ const NoPage = () => {
                 {props.touched.password && props.errors.password}
               </Text>
             </View>
-
-            <View style={{ ...globalStyles.header, top: 2 }}>
-              <MaterialCommunityIcons
-                name="account"
-                size={30}
-                style={{ ...globalStyles.iconDesign, right: 13 }}
-              />
-              <TextInput
-                placeholder="Name"
-                placeholderTextColor="#7F8E9E"
-                onChangeText={props.handleChange("name")}
-                value={props.values.username}
-                style={{
-                  ...globalFontStyles.OSR_17,
-                  right: 10,
-                  flex: 1,
-                  top: 7,
-                }}
-              />
-            </View>
-
-            <View style={{ left: 30, top: 3 }}>
-              <Text style={{ ...globalFontStyles.OSR_14, color: "#cc0000" }}>
-                {props.touched.name && props.errors.name}
-              </Text>
-            </View>
+            <BarPasswordStrengthDisplay
+              password={props.values.password}
+              width={width - 80}
+              wrapperStyle={{ left: 30 }}
+              labelStyle={{ right: 50, top: 10, ...globalFontStyles.NBEB_14 }}
+              barColor="#E9F2F7"
+              levels={temp}
+              minLength={8}
+            />
 
             <View
               style={{

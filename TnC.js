@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   ScrollView,
 } from "react-native";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -28,7 +27,8 @@ const TnC = () => {
       </View>
       <View
         style={{
-          flex: 7,
+          alignSelf: "center",
+          flex: 8,
           shadowColor: "#000",
           shadowOffset: {
             width: 0,
@@ -37,11 +37,15 @@ const TnC = () => {
           shadowOpacity: 0.23,
           shadowRadius: 2.62,
           elevation: 4,
+          backgroundColor: "white",
+          borderRadius: 20,
+          bottom: 20,
+          marginVertical: 20,
         }}
       >
         <View
           style={{
-            height: "95%",
+            height: "100%",
             width: "95%",
             backgroundColor: "white",
             alignSelf: "center",
@@ -49,7 +53,13 @@ const TnC = () => {
             overflow: "hidden",
           }}
         >
-          <View style={styles.centerOneWithShadow}>
+          <View
+            style={{
+              ...styles.centerOneWithShadow,
+              borderBottomWidth: 1,
+              borderColor: "#DDDEDE",
+            }}
+          >
             <Text style={{ ...globalFontStyles.OSSB_19, color: "#333333" }}>
               Terms and Conditions
             </Text>
@@ -145,9 +155,9 @@ const styles = StyleSheet.create({
       width: 2,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.3,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 3,
     backgroundColor: "white",
   },
   centerPortion: {

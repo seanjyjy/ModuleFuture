@@ -40,7 +40,7 @@ const Credit = () => {
           <Text style={styles.biggestWords}>About</Text>
           <Text style={styles.biggerWords}>
             This app is mainly customized for SoC students, however, some of its
-            functionality extends too all other courses as well! If there are
+            functionality extends to all other courses as well! If there are
             somethings you wish to be included in the app, do suggest to the
             developers!
           </Text>

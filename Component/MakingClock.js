@@ -106,7 +106,7 @@ let courseList = [
   { title: "Pharmaceutical Science" },
   { title: "Physics" },
   { title: "Physics, specialisation in Astrophysics" },
-  { title: "Physics, specialisation in Nanophysics)" },
+  { title: "Physics, specialisation in Nanophysics" },
   { title: "Physics, specialisation in Quantum Technologies" },
   { title: "Quantitative Finance" },
   { title: "Statistics" },
