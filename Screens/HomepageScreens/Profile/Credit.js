@@ -37,6 +37,13 @@ const Credit = () => {
             marginHorizontal: 15,
           }}
         >
+          <Text style={styles.biggestWords}>About</Text>
+          <Text style={styles.biggerWords}>
+            This app is mainly customized for SoC students, however, some of its
+            functionality extends too all other courses as well! If there are
+            somethings you wish to be included in the app, do suggest to the
+            developers!
+          </Text>
           <Text style={styles.biggestWords}>Developers</Text>
           <Text style={styles.biggerWords}>Keane Chan Jun Yu</Text>
           <Text style={styles.biggerWords}>Lum Jian Yang Sean</Text>

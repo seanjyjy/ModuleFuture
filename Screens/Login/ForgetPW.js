@@ -6,6 +6,8 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  SafeAreaView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../FirebaseDB";
@@ -16,6 +18,7 @@ import { globalFontStyles } from "../../Component/GlobalFont";
 import { globalStyles } from "../../Component/GlobalStyle";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SignInButton from "../../Component/SignInButton";
+
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
@@ -60,8 +63,22 @@ const ForgetPW = () => {
 
   return (
     <Background>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1, justifyContent: "flex-end" }}>
+      <SafeAreaView
+        style={{
+          height: 0.113 * height,
+          width: "100%",
+          flexDirection: "row",
+          top: Platform.OS === "android" ? 40 : 0,
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <Ionicons
             name="md-arrow-round-back"
             size={25}
@@ -70,8 +87,8 @@ const ForgetPW = () => {
           />
         </View>
         <View style={{ flex: 3 }} />
-      </View>
-      <View style={{ flex: 9 }}>
+      </SafeAreaView>
+      <View style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
           <View style={styles.centerOne}>
             <Fontisto name="locked" size={80} style={{ color: "#232323" }} />

@@ -49,16 +49,22 @@ const TabDesign = (props) => {
           flexDirection: "row",
         }}
       >
+        <View />
         <Icon
           name={props.iconName}
           size={19}
           style={{
             color: props.isCurrent ? "#FB5581" : "#979797",
-            position:
+            left:
               !FirebaseDB.auth().currentUser.emailVerified &&
               props.iconName === "user-circle"
-                ? "absolute"
-                : null,
+                ? 8
+                : 0,
+            top:
+              !FirebaseDB.auth().currentUser.emailVerified &&
+              props.iconName === "user-circle"
+                ? 2
+                : 0,
           }}
         />
         {!FirebaseDB.auth().currentUser.emailVerified &&
@@ -71,8 +77,8 @@ const TabDesign = (props) => {
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 20,
-              bottom: 5,
-              left: 0.05 * totalWidth,
+              bottom: 2,
+              left: 0.03 * totalWidth,
             }}
           >
             <Text style={{ color: "white", fontSize: 12, left: 0.5 }}>!</Text>
@@ -84,8 +90,16 @@ const TabDesign = (props) => {
       <Text
         style={
           props.isCurrent
-            ? { ...globalFontStyles.OSB_13, color: "#FB5581", top: 5 }
-            : { ...globalFontStyles.OSSB_13, color: "#8E8E8E", top: 5 }
+            ? {
+                ...globalFontStyles.OSB_13,
+                color: "#FB5581",
+                top: 5,
+              }
+            : {
+                ...globalFontStyles.OSSB_13,
+                color: "#8E8E8E",
+                top: 5,
+              }
         }
       >
         {props.name}

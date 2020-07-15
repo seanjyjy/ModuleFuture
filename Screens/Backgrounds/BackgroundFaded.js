@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, ImageBackground, Platform } from "react-native";
-
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 const BackgroundFaded = (props) => {
   return (
     <View style={styles.container}>
@@ -17,6 +17,7 @@ const BackgroundFaded = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    minHeight: hp("100%"),
   },
   image: {
     flex: 1,
