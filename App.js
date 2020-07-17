@@ -43,7 +43,8 @@ import ChoosingOptions from "./Component/MakingClock";
 import Graduation from "./Screens/HomepageScreens/Profile/Graduation";
 import EmailVerification from "./Screens/HomepageScreens/Profile/EmailVerification";
 import Credit from "./Screens/HomepageScreens/Profile/Credit";
-import Foundation from "./Screens/HomepageScreens/Records/Foundation";
+import TypePage from "./Screens/HomepageScreens/Records/TypePage";
+import CodeOrLevel from "./Screens/HomepageScreens/Records/CodeOrLevel";
 import EachFocusArea from "./Screens/HomepageScreens/FocusArea/EachFocusArea";
 
 // -------------------------------------------------------------------------------------------------------------
@@ -112,45 +113,9 @@ export default function App() {
   useEffect(() => {
     const fb = FirebaseDB.firestore();
     const usersRef = fb.collection("users");
-    // const typeRef = fb.collection("typeArray");
-    // const levelRef = fb.collection("levelArray");
-    // const codeRef = fb.collection("codeArray");
-    // const recordsRef = fb.collection("modules");
-    // const modulesMappingRef = fb.collection("modulesMapping");
 
     FirebaseDB.auth().onAuthStateChanged((user) => {
       if (user) {
-        // const recordsData = [];
-        // typeRef
-        //   .doc(user.uid)
-        //   .get()
-        //   .then((document) => {
-        //     recordsData.push(document.data());
-        //   });
-        // levelRef
-        //   .doc(user.uid)
-        //   .get()
-        //   .then((document) => {
-        //     recordsData.push(document.data());
-        //   });
-        // codeRef
-        //   .doc(user.uid)
-        //   .get()
-        //   .then((document) => {
-        //     recordsData.push(document.data());
-        //   });
-        // recordsRef
-        //   .doc(user.uid)
-        //   .get()
-        //   .then((document) => {
-        //     recordsData.push(document.data());
-        //   });
-        // modulesMappingRef
-        //   .doc(user.uid)
-        //   .get()
-        //   .then((document) => {
-        //     recordsData.push(document.data());
-        //   });
         usersRef
           .doc(user.uid)
           .get()
@@ -228,9 +193,10 @@ export default function App() {
                         name="EachFocusArea"
                         component={EachFocusArea}
                       />
+                      <AuthStack.Screen name="TypePage" component={TypePage} />
                       <AuthStack.Screen
-                        name="Foundation"
-                        component={Foundation}
+                        name="CodeOrLevel"
+                        component={CodeOrLevel}
                       />
                       <AuthStack.Screen name="Filter" component={Filter} />
                       <AuthStack.Screen

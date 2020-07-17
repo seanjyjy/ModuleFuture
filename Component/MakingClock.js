@@ -23,6 +23,7 @@ import { CheckBox } from "@ui-kitten/components";
 import { Autocomplete, AutocompleteItem } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
 import { specialisations } from "../Data/Specialisations";
+import { database } from "firebase";
 
 const height = Dimensions.get("window").height;
 
@@ -338,36 +339,60 @@ const ChoosingOptions = ({ route }) => {
                     const batch = FB.batch();
                     const courseAndYear = data.course + " " + data.yearOfMatri;
 
-                    // CS2019 modules
-                    const modulesRef = FB.collection("records").doc(uid);
-                    batch.set(modulesRef, Modules[courseAndYear]);
+                    if (Modules[courseAndYear] !== undefined) {
+                      // For records
+                      const modulesRef = FB.collection("records").doc(uid);
+                      const modules = Modules[courseAndYear];
+                      modules.notTaken.sort((a, b) => {
+                        if (a.code < b.code) {
+                          return -1;
+                        } else {
+                          return 1;
+                        }
+                      });
+                      batch.set(modulesRef, modules);
 
-                    // CS2019 Mapping
-                    const modulesMapping = FB.collection("modulesMapping").doc(
-                      uid
-                    );
-                    batch.set(modulesMapping, Mapping[courseAndYear]);
+                      // For records modules mapping
+                      const modulesMapping = FB.collection(
+                        "modulesMapping"
+                      ).doc(uid);
+                      batch.set(modulesMapping, Mapping[courseAndYear]);
+                      // typeArray
+                      const typeRef = FB.collection("typeArray").doc(uid);
+                      batch.set(typeRef, Types[courseAndYear]);
 
-                    // typeArray
-                    const typeRef = FB.collection("typeArray").doc(uid);
-                    batch.set(typeRef, Types[courseAndYear]);
+                      // codeArray
+                      const codeRef = FB.collection("codeArray").doc(uid);
+                      batch.set(codeRef, Codes[data.course]);
 
-                    // codeArray
-                    const codeRef = FB.collection("codeArray").doc(uid);
-                    batch.set(codeRef, Codes[courseAndYear]);
+                      if (data.course !== "Information Security") {
+                        // For focus area
+                        const focusAreaRef = FB.collection("focusArea").doc(
+                          uid
+                        );
+                        batch.set(focusAreaRef, specialisations[courseAndYear]);
+                        // Modules for focusArea
+                        const modulesTakenRef = FB.collection(
+                          "takenModules"
+                        ).doc(uid);
+                        batch.set(modulesTakenRef, {});
+                      }
+                    } else {
+                      const codeRef = FB.collection("codeArray").doc(uid);
+                      batch.set(codeRef, Codes["Others"]);
+                    }
 
                     // levelArray
                     const levelRef = FB.collection("levelArray").doc(uid);
-                    batch.set(levelRef, Levels[data.course]);
+                    batch.set(levelRef, Levels);
 
-                    // For focus area
-                    const focusAreaRef = FB.collection("focusArea").doc(uid);
-                    batch.set(focusAreaRef, specialisations[courseAndYear]);
-                    // Testing out modules taken object
-                    const modulesTakenRef = FB.collection("takenModules").doc(
-                      uid
-                    );
-                    batch.set(modulesTakenRef, {});
+                    const usersModulesDetailsRef = FirebaseDB.firestore()
+                      .collection("usersModulesDetails")
+                      .doc(uid);
+
+                    batch.set(usersModulesDetailsRef, {
+                      usersModulesArray: [],
+                    });
 
                     const userRef = FB.collection("users").doc(uid);
                     batch.set(userRef, data);
