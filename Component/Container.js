@@ -27,7 +27,6 @@ const Container = (props) => {
 
   return (
     <Animated.View style={{ ...styles.container, left: xVal }}>
-      {/* <View style={styles.container}> */}
       <View style={{ flexDirection: "column", flex: 1 }}>
         <View
           style={{
@@ -99,7 +98,6 @@ const Container = (props) => {
           move();
         }}
       />
-      {/* </View> */}
     </Animated.View>
   );
 };

@@ -22,15 +22,30 @@ const height = Dimensions.get("window").height;
 const EachFocusArea = ({ navigation, route }) => {
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
+  const focusAreaRef = fb.collection("focusArea").doc(userID);
+
   const [arr, setArr] = useState([]);
   const [editMode, setEdit] = useState(false);
+  const [index, setIndex] = useState();
 
   useEffect(() => {
     if (route.params?.name) {
       setArr(route.params?.arr);
-    } else {
+      setIndex(route.params?.index);
     }
-  }, []);
+    if (route.params?.modDetails) {
+      console.log(route.params?.modDetails);
+      const newArr = route.params?.modDetails;
+      const temp = arr;
+      for (let i = 0; i < newArr.length; i++) {
+        temp[0].notTaken.push({
+          code: newArr[i].code,
+          name: newArr[i].name,
+        });
+      }
+      setArr(temp);
+    }
+  }, [route.params?.name, route.params?.modDetails]);
 
   const FullView = () => {
     const IndividualBox = (current) => {
@@ -52,11 +67,11 @@ const EachFocusArea = ({ navigation, route }) => {
 
       const holders = (item) => (
         <View style={styles.moduleText}>
-          <View style={{ width: "57%" }}>
+          <View style={{ width: "59%" }}>
             <Text
               numberOfLines={1}
               style={{
-                ...globalFontStyles.OSSB_12,
+                ...globalFontStyles.OSSB_13,
                 color: "#232323",
               }}
             >
@@ -65,13 +80,13 @@ const EachFocusArea = ({ navigation, route }) => {
           </View>
           <Text
             style={{
-              ...globalFontStyles.OSSB_12,
+              ...globalFontStyles.OSSB_13,
               color: "#232323",
             }}
           >
             {item.grade}
           </Text>
-          <Text style={{ ...globalFontStyles.OSSB_12, color: "#232323" }}>
+          <Text style={{ ...globalFontStyles.OSSB_13, color: "#232323" }}>
             {item.sem}
           </Text>
         </View>
@@ -79,11 +94,11 @@ const EachFocusArea = ({ navigation, route }) => {
 
       const holders2 = (item) => (
         <View style={styles.moduleText}>
-          <View style={{ width: "57%" }}>
+          <View style={{ width: "59%" }}>
             <Text
               numberOfLines={1}
               style={{
-                ...globalFontStyles.OSSB_12,
+                ...globalFontStyles.OSSB_13,
                 color: "#68686880",
               }}
             >
@@ -97,7 +112,10 @@ const EachFocusArea = ({ navigation, route }) => {
               height={15}
               fill="#232323"
               onPress={() => {
-                return null;
+                arr[0].notTaken = arr[0].notTaken.filter(
+                  (x) => x.code !== item.code
+                );
+                setArr(arr);
               }}
             />
           ) : null}
@@ -131,7 +149,7 @@ const EachFocusArea = ({ navigation, route }) => {
         >
           <View
             style={{
-              width: "23%",
+              width: "20%",
               borderRightColor: "lightgrey",
               borderRightWidth: 0.7,
               justifyContent: "center",
@@ -139,8 +157,6 @@ const EachFocusArea = ({ navigation, route }) => {
             }}
           >
             <Text
-              textBreakStrategy="simple"
-              numberOfLines={2}
               style={{
                 ...globalFontStyles.OSSB_13,
                 color: "#232323",
@@ -150,15 +166,17 @@ const EachFocusArea = ({ navigation, route }) => {
               {current.name}
             </Text>
           </View>
-          <View style={{ flexDirection: "column", width: "77%" }}>
+          <View style={{ flexDirection: "column", width: "80%" }}>
             <FlatList
               data={taken.concat(current.notTaken)}
               keyExtractor={(item) => item.code}
               renderItem={({ item }) =>
-                item.grade !== undefined ? holders(item) : holders2(item)
+                item !== undefined && item.grade !== undefined
+                  ? holders(item)
+                  : holders2(item)
               }
             />
-            {edit()}
+            <View style={{ marginTop: 8 }}>{edit()}</View>
           </View>
         </View>
       );
@@ -166,7 +184,6 @@ const EachFocusArea = ({ navigation, route }) => {
 
     return (
       <FlatList
-        // initialScrollIndex={}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.fullBox}
         ListFooterComponent={<View style={{ height: 35 }}></View>}
@@ -186,14 +203,23 @@ const EachFocusArea = ({ navigation, route }) => {
             name={editMode ? "md-close" : "md-arrow-round-back"}
             size={25}
             style={{ color: "#232323" }}
-            onPress={() =>
-              editMode ? setEdit(!editMode) : navigation.goBack()
-            }
+            onPress={() => {
+              if (editMode) {
+                focusAreaRef.get().then((document) => {
+                  const current = document.data();
+                  current.cat[index].Prereq.modules = arr[0].taken.concat(
+                    arr[0].notTaken
+                  );
+                  focusAreaRef.set(current);
+                });
+              }
+              editMode ? setEdit(!editMode) : navigation.goBack();
+            }}
           />
         }
         rightChildren={<Text>Tree?</Text>}
       />
-      <FullViewHeader />
+      <FullViewHeader fa={true} />
       <FullView />
     </View>
   );

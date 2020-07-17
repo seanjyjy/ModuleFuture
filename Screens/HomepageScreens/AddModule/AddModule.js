@@ -108,7 +108,7 @@ const AddModule = (props) => {
       add(props.route.params?.newModules);
       addVal(props.route.params?.value);
     }
-  }, [props.route.params?.newModules, props.route.params?.currentFilters]);
+  }, [props.route.params?.newModules || props.route.params?.currentFilters]);
 
   // TODO: Tag modules that are already planned in the current plan
   const modulesPlanned = props.route.params?.modulesPlanned;

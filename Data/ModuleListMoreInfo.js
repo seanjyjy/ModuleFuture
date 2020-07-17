@@ -54,7 +54,7 @@ const ModuleListWithKey = () => {
         Level: codeArr[1] * 1000,
         MC: parseInt(current.moduleCredit), // number
         suOption: hasSu(current), // boolean
-        Semester: new Set(moduleList[k].semesters), // array
+        Semester: moduleList[k].semesters, // array
         noExam: noExam(current.semesterData), // boolean
       };
       k++;

@@ -321,13 +321,21 @@ const Records = () => {
           style={styles.container}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.navigate("Foundation", {
-              taken: taken,
-              notTaken: notTaken,
-              title: item.name,
-              context: item.context !== undefined ? item.context : item.name,
-              type: currentType,
-            });
+            if (item.fixed !== undefined) {
+              navigation.navigate("CodeOrLevel", {
+                taken: taken,
+                notTaken: notTaken,
+                title: item.name,
+                context: item.context !== undefined ? item.context : item.name,
+                type: currentType,
+              });
+            } else {
+              navigation.navigate("TypePage", {
+                taken: taken,
+                notTaken: notTaken,
+                title: item.name,
+              });
+            }
           }}
         >
           <View

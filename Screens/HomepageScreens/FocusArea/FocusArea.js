@@ -289,6 +289,7 @@ const FocusArea = ({ navigation }) => {
                   ? current.name
                   : current.shortName,
               arr: arr,
+              index: current.key - 1,
             });
           }}
         >

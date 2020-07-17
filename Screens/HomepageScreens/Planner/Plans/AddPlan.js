@@ -664,7 +664,7 @@ const AddPlan = ({ route }) => {
 
                     SemestralCap: semCap,
                     OverallCap:
-                      semMC !== 0 ? parseFloat((semSum / semMc).toFixed(2)) : 0,
+                      semMc !== 0 ? parseFloat((semSum / semMc).toFixed(2)) : 0,
 
                     SemestralMc: semTotalMc,
                     OverallMc: semTotalMc,
@@ -710,7 +710,9 @@ const AddPlan = ({ route }) => {
             });
           }
         })
-        .catch((error) => {});
+        .catch((error) => {
+          console.log(error);
+        });
       // -----------------UPDATING PLANS ARRAY WITH FINAL GRADE-------------------------------------------------
 
       let thisPlanSum1 = 0;

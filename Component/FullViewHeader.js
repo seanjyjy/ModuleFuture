@@ -4,49 +4,53 @@ import { globalFontStyles } from "./GlobalFont";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const FullViewHeader = () => (
-  <View style={styles.header}>
-    <View
+const FullViewHeader = (props) => {
+  const Text1 = (word, num) => (
+    <Text
       style={{
-        width: "23%",
-        borderRightColor: "lightgrey",
-        borderRightWidth: 0.7,
-      }}
-    ></View>
-    <View
-      style={{
-        width: "77%",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingRight: 10,
-        paddingLeft: 8,
+        ...(props.fa ? globalFontStyles.OSB_14 : globalFontStyles.OSB_13),
+        color: "#232323",
+        left: num,
       }}
     >
+      {word}
+    </Text>
+  );
+
+  return (
+    <View style={styles.header}>
       <View
         style={{
-          width: "79%",
+          width: props.fa ? "20%" : "23%",
+          borderRightColor: "lightgrey",
+          borderRightWidth: 0.7,
+        }}
+      ></View>
+      <View
+        style={{
+          width: props.fa ? "80%" : "77%",
           flexDirection: "row",
           justifyContent: "space-between",
+          alignItems: "center",
+          paddingRight: 10,
+          paddingLeft: 8,
         }}
       >
-        <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>
-          Module
-        </Text>
-        <Text
+        <View
           style={{
-            ...globalFontStyles.OSB_13,
-            color: "#232323",
-            left: 5,
+            width: "79%",
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          Grade
-        </Text>
+          {Text1("Module")}
+          {Text1("Grade", 5)}
+        </View>
+        {Text1("Sem")}
       </View>
-      <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>Sem</Text>
     </View>
-  </View>
-);
+  );
+};
 
 export default FullViewHeader;
 

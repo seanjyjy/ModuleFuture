@@ -10,7 +10,6 @@ import { useSafeArea } from "react-native-safe-area-context";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-console.disableYellowBox = true;
 const Filter = ({ navigation, route }) => {
   useEffect(() => {
     if (route.params?.fullList) {
@@ -391,7 +390,7 @@ const Filter = ({ navigation, route }) => {
             : name === "Special Term I"
             ? 3
             : 4;
-        tempList = tempList.filter((x) => x.Semester.has(num));
+        tempList = tempList.filter((x) => x.Semester.includes(num));
         setList(tempList);
       } else if (cat === "Level") {
         tempList = tempList.filter((x) => x.Level === parseInt(name));
