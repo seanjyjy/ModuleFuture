@@ -32,10 +32,11 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: "#FB5581",
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "center",
     marginTop: 25,
     borderRadius: 10,
-    width: screenwidth * 0.86,
+    width: "95%",
     elevation: 6,
     shadowOffset: {
       width: 0,

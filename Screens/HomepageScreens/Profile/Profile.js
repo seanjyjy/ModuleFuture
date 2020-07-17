@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../../FirebaseDB";
+import { globalFontStyles } from "../../../Component/GlobalFont";
 
 const Profile = (props) => {
   const navigation = useNavigation();
@@ -31,25 +32,86 @@ const Profile = (props) => {
     }
   };
 
+  const CourseOf = (props) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingVertical: 20,
+          width: "100%",
+        }}
+      >
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_15,
+            color: "#232323",
+            width: "25%",
+          }}
+        >
+          {props.left}
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={{
+            ...globalFontStyles.OSR_14,
+            color: "#2D405699",
+            width: "75%",
+            textAlign: "right",
+          }}
+        >
+          {props.right}
+        </Text>
+      </View>
+    );
+  };
+
+  const YearOf = (props) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingVertical: 20,
+          width: "100%",
+        }}
+      >
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_15,
+            color: "#232323",
+          }}
+        >
+          {props.left}
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={{
+            ...globalFontStyles.OSR_14,
+            color: "#2D405699",
+          }}
+        >
+          {props.right}
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <Header str={"Profile"} />
       <View
         style={{
-          paddingLeft: 20,
-          paddingRight: 20,
+          width: "89%",
+          alignSelf: "center",
+          flexDirection: "column",
+          flex: 1,
         }}
       >
-        <ProfileButton0
-          left={"Course"}
-          transition={() => null}
-          right={course1}
-        />
-        <ProfileButton0
-          left={"Year of Matriculation"}
-          transition={() => null}
-          right={year}
-        />
+        <CourseOf left={"Course"} right={course1} />
+        <YearOf left={"Year of Matriculation"} right={year} />
         <ProfileButton0
           left={"Expected Graduation Sem"}
           transition={() => graduation()}
@@ -65,9 +127,7 @@ const Profile = (props) => {
           transition={() => CreditPage()}
           right={""}
         />
-        <View style={{ alignItems: "center" }}>
-          <LogoutButton func={() => signOutUser()} />
-        </View>
+        <LogoutButton func={() => signOutUser()} />
       </View>
     </View>
   );

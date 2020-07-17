@@ -9,19 +9,16 @@ import {
 import { globalFontStyles } from "./GlobalFont";
 import { Icon } from "react-native-eva-icons";
 import FirebaseDB from "../FirebaseDB";
-const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const ProfileButton0 = (props) => {
   const user = FirebaseDB.auth().currentUser;
-  const noTransition =
-    props.left === "Course" || props.left === "Year of Matriculation";
 
   return (
     <TouchableOpacity
       style={styles.main}
       onPress={() => props.transition()}
-      activeOpacity={noTransition ? 1 : 0.7}
+      activeOpacity={0.7}
     >
       <View style={{ flexDirection: "row" }}>
         <Text
@@ -51,6 +48,7 @@ const ProfileButton0 = (props) => {
       </View>
       <View style={{ flexDirection: "row" }}>
         <Text
+          numberOfLines={2}
           style={{
             ...globalFontStyles.OSR_14,
             color: "#2D405699",
@@ -60,15 +58,13 @@ const ProfileButton0 = (props) => {
           {props.right}
         </Text>
         <View>
-          {noTransition ? null : (
-            <Icon
-              name="arrow-ios-forward-outline"
-              width={15}
-              height={15}
-              fill="#2D405699"
-              style={styles.icon}
-            />
-          )}
+          <Icon
+            name="arrow-ios-forward-outline"
+            width={15}
+            height={15}
+            fill="#2D405699"
+            style={styles.icon}
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -81,9 +77,7 @@ const styles = StyleSheet.create({
   main: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    paddingHorizontal: 10,
+    paddingVertical: 20,
   },
   icon: {
     marginLeft: 6,
