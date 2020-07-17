@@ -375,7 +375,7 @@ const ChoosingOptions = ({ route }) => {
                         const modulesTakenRef = FB.collection(
                           "takenModules"
                         ).doc(uid);
-                        batch.set(modulesTakenRef, {});
+                        batch.set(modulesTakenRef, { Test: null });
                       }
                     } else {
                       const codeRef = FB.collection("codeArray").doc(uid);
@@ -385,14 +385,6 @@ const ChoosingOptions = ({ route }) => {
                     // levelArray
                     const levelRef = FB.collection("levelArray").doc(uid);
                     batch.set(levelRef, Levels);
-
-                    const usersModulesDetailsRef = FirebaseDB.firestore()
-                      .collection("usersModulesDetails")
-                      .doc(uid);
-
-                    batch.set(usersModulesDetailsRef, {
-                      usersModulesArray: [],
-                    });
 
                     const userRef = FB.collection("users").doc(uid);
                     batch.set(userRef, data);

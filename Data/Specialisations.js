@@ -4306,19 +4306,14 @@ export const specialisations = {
         name: "Robotics",
         key: 2,
         Prereq: {
-          modules: [
-            {
-              code: "",
-              name: "",
-            },
-          ],
+          modules: [],
         },
         Primaries: {
           numRequired: 1,
           modules: [
             {
               code: "ME3243",
-              name: "Robotic System Design",
+              name: "ME3243 Robotic System Design",
             },
           ],
         },
@@ -4526,19 +4521,14 @@ export const specialisations = {
         name: "Robotics",
         key: 2,
         Prereq: {
-          modules: [
-            {
-              code: "",
-              name: "",
-            },
-          ],
+          modules: [],
         },
         Primaries: {
           numRequired: 1,
           modules: [
             {
               code: "ME3243",
-              name: "Robotic System Design",
+              name: "ME3243 Robotic System Design",
             },
           ],
         },
@@ -4746,19 +4736,14 @@ export const specialisations = {
         name: "Robotics",
         key: 2,
         Prereq: {
-          modules: [
-            {
-              code: "",
-              name: "",
-            },
-          ],
+          modules: [],
         },
         Primaries: {
           numRequired: 1,
           modules: [
             {
               code: "ME3243",
-              name: "Robotic System Design",
+              name: "ME3243 Robotic System Design",
             },
           ],
         },

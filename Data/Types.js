@@ -1280,9 +1280,9 @@ export const Mapping = {
     EE4204: "Hardware Design",
     CG2023: "Hardware Design",
 
-    CG1111: "Hardware-Software",
-    CG1112: "Hardware-Software",
-    CG4002: "Hardware-Software",
+    CG1111: "Hardware & Software",
+    CG1112: "Hardware & Software",
+    CG4002: "Hardware & Software",
 
     // All cs/ee 2000/3000 modules + these
     CG3207: "Technical Electives",
@@ -1333,9 +1333,9 @@ export const Mapping = {
     EE4204: "Hardware Design",
     CG2023: "Hardware Design",
 
-    CG1111: "Hardware-Software",
-    CG1112: "Hardware-Software",
-    CG4002: "Hardware-Software",
+    CG1111: "Hardware & Software",
+    CG1112: "Hardware & Software",
+    CG4002: "Hardware & Software",
 
     // All cs/ee 2000/3000 modules + these
     CG3207: "Technical Electives",
@@ -1362,11 +1362,11 @@ export const Mapping = {
     CP4106: "Technical Electives",
     EE4002R: "Technical Electives",
 
-    CS1231: "Mathematical Foundation",
-    MA1511: "Mathematical Foundation",
-    MA1522: "Mathematical Foundation",
-    MA1508E: "Mathematical Foundation",
-    ST2334: "Mathematical Foundation",
+    CS1231: "Math Foundation",
+    MA1511: "Math Foundation",
+    MA1522: "Math Foundation",
+    MA1508E: "Math Foundation",
+    ST2334: "Math Foundation",
 
     CS2101: "Internship",
     EG2401A: "Internship",
@@ -1386,9 +1386,9 @@ export const Mapping = {
     EE4204: "Hardware Design",
     CG2023: "Hardware Design",
 
-    CG1111: "Hardware-Software",
-    CG1112: "Hardware-Software",
-    CG4002: "Hardware-Software",
+    CG1111: "Hardware & Software",
+    CG1112: "Hardware & Software",
+    CG4002: "Hardware & Software",
 
     // All cs/ee 2000/3000 modules + these
     CG3207: "Technical Electives",
@@ -1439,9 +1439,9 @@ export const Mapping = {
     EE4204: "Hardware Design",
     CG2023: "Hardware Design",
 
-    CG1111: "Hardware-Software",
-    CG1112: "Hardware-Software",
-    CG4002: "Hardware-Software",
+    CG1111: "Hardware & Software",
+    CG1112: "Hardware & Software",
+    CG4002: "Hardware & Software",
 
     // All cs/ee 2000/3000 modules + these
     CG3207: "Technical Electives",
@@ -5655,7 +5655,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Hardware-Software",
+        name: "Hardware & Software",
         key: 3,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5684,7 +5684,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Internship and Professionalism",
+        name: "Internship",
         key: 6,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5716,7 +5716,7 @@ export const Types = {
     // Indexes
     "Software Design": 0,
     "Hardware Design": 1,
-    "Hardware-Software": 2,
+    "Hardware & Software": 2,
     "Technical Electives": 3,
     "Math Foundation": 4,
     Internship: 5,
@@ -5746,7 +5746,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Hardware-Software",
+        name: "Hardware & Software",
         key: 3,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5775,7 +5775,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Internship and Professionalism",
+        name: "Internship",
         key: 6,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5807,7 +5807,7 @@ export const Types = {
     // Indexes
     "Software Design": 0,
     "Hardware Design": 1,
-    "Hardware-Software": 2,
+    "Hardware & Software": 2,
     "Technical Electives": 3,
     "Math Foundation": 4,
     Internship: 5,
@@ -5837,7 +5837,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Hardware-Software",
+        name: "Hardware & Software",
         key: 3,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5866,7 +5866,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Internship and Professionalism",
+        name: "Internship",
         key: 6,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5898,7 +5898,7 @@ export const Types = {
     // Indexes
     "Software Design": 0,
     "Hardware Design": 1,
-    "Hardware-Software": 2,
+    "Hardware & Software": 2,
     "Technical Electives": 3,
     "Math Foundation": 4,
     Internship: 5,
@@ -5928,7 +5928,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Hardware-Software",
+        name: "Hardware & Software",
         key: 3,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5957,7 +5957,7 @@ export const Types = {
         points: 0,
       },
       {
-        name: "Internship and Professionalism",
+        name: "Internship",
         key: 6,
         mcsUsedInCap: 0,
         mcsTaken: 0,
@@ -5989,7 +5989,7 @@ export const Types = {
     // Indexes
     "Software Design": 0,
     "Hardware Design": 1,
-    "Hardware-Software": 2,
+    "Hardware & Software": 2,
     "Technical Electives": 3,
     "Math Foundation": 4,
     Internship: 5,
