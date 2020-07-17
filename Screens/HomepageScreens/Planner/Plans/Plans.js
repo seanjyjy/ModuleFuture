@@ -123,7 +123,8 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                {`Last Updated: ${LastUpdated}`}
+                {/* {`Last Updated: ${LastUpdated}`} */}
+                {LastUpdated}
               </Text>
             </View>
           </View>
@@ -215,6 +216,57 @@ const Plans = (props) => {
     },
     [selected]
   );
+
+  // const calcTime = (dateInStr) => {
+  //   let today = new Date();
+  //   const utc = today.getTime() + today.getTimezoneOffset() * 60000;
+  //   let offset = 8;
+  //   let nd = new Date(utc + 3600000 * offset);
+  //   let date = nd.toLocaleString("en-SG", {
+  //     timeZone: "Asia/Singapore",
+  //     hour12: true,
+  //   });
+  //   const todayDateArray = dateExtractor(date);
+  //   const previousDateArray = dateExtractor(dateInStr);
+  //   if (todayDateArray[0] == previousDateArray[0]) {
+  //     return previousDateArray[1];
+  //   } else if () {
+
+  //   } else {
+  //     return previousDateArray[0];
+  //   }
+  // };
+  // const dateExtractor = (str) => {
+  //   let tempStr = "";
+  //   let timeStr = "";
+  //   let tempStart = true;
+  //   let timeStart = false;
+  //   for (let i = 0; i < str.length; i++) {
+  //     if (str.charAt(i) === ",") {
+  //       tempStart = false;
+  //     }
+  //     if (tempStart) {
+  //       tempStr += str.charAt(i);
+  //     }
+  //     if (timeStart) {
+  //       timeStr += str.charAt(i);
+  //     }
+  //     if (str.charAt(i) === " ") {
+  //       timeStart = true;
+  //     }
+  //   }
+  //   return [tempStr, timeStr];
+  // };
+
+  // const isYesturday = (str1, str2) => {
+  //   let oneDayBefore = false;
+  //   let sameMonth = false;
+  //   if (str1.length !== str2.length) {
+  //     return false
+  //   } else {
+
+  //   }
+  // }
 
   const setCurrentlyPressID = (val) => {
     if (val === currentID) {
@@ -791,7 +843,11 @@ const Plans = (props) => {
                   ? arrForRect[parseInt(item.key) - 1].useInCap
                   : 0
               }
-              LastUpdated={"24/04/20 DEMO"}
+              LastUpdated={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].LastUpdated
+                  : 0
+              }
             />
           )}
         />

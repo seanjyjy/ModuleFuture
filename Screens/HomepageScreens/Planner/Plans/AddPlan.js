@@ -795,6 +795,14 @@ const AddPlan = ({ route }) => {
           const arr = val.yearSem;
           const thisPlanLength = arr.length;
           const arr2 = val.ArrForRect;
+          let today = new Date();
+          const utc = today.getTime() + today.getTimezoneOffset() * 60000;
+          let offset = 8;
+          let nd = new Date(utc + 3600000 * offset);
+          let date = nd.toLocaleString("en-SG", {
+            timeZone: "Asia/Singapore",
+            hour12: true,
+          });
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -807,8 +815,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc1,
                   MCsCountedToCap: thisPlanMcUsedInCap1,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 });
                 pushed = true;
               } else {
@@ -823,8 +831,8 @@ const AddPlan = ({ route }) => {
                 Cap: Plannedcap,
                 MCs: thisPlanMc1,
                 MCsCountedToCap: thisPlanMcUsedInCap1,
-                LastUpdated: 0,
                 LONGDPCAP: longdpcap,
+                LastUpdated: date,
               });
             }
             plansArrayRef.set({
@@ -842,8 +850,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc1,
                   MCsCountedToCap: thisPlanMcUsedInCap1,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 },
               ],
               selected: "1",
@@ -944,6 +952,14 @@ const AddPlan = ({ route }) => {
           const arr = val.yearSem;
           const arr2 = val.ArrForRect;
           const thisPlanLength = arr.length;
+          let today = new Date();
+          const utc = today.getTime() + today.getTimezoneOffset() * 60000;
+          let offset = 8;
+          let nd = new Date(utc + 3600000 * offset);
+          let date = nd.toLocaleString("en-SG", {
+            timeZone: "Asia/Singapore",
+            hour12: true,
+          });
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -956,8 +972,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc,
                   MCsCountedToCap: thisPlanMcUsedInCap,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 });
                 pushed = true;
               } else {
@@ -972,8 +988,8 @@ const AddPlan = ({ route }) => {
                 Cap: Plannedcap,
                 MCs: thisPlanMc,
                 MCsCountedToCap: thisPlanMcUsedInCap,
-                LastUpdated: 0,
                 LONGDPCAP: longdpcap,
+                LastUpdated: date,
               });
             }
             plansArrayRef.set({
@@ -991,8 +1007,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc,
                   MCsCountedToCap: thisPlanMcUsedInCap,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 },
               ],
               selected: "1",

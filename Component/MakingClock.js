@@ -116,7 +116,7 @@ const ChoosingOptions = ({ route }) => {
   const [isLoading, setIsLoading] = useState("");
   const [index1, setIndex1] = useState("4");
   const [index2, setIndex2] = useState("4");
-  const [tempboolean, settempboolean] = useState(false);
+
   useEffect(() => {
     if (route.params?.TnCSTATUS) {
       setChecked(route.params?.TnCSTATUS);
@@ -318,6 +318,7 @@ const ChoosingOptions = ({ route }) => {
                     route.params?.item.password
                   )
                   .then((response) => {
+                    console.log(semValue(parseInt(index2)));
                     const uid = response.user.uid;
                     const data = {
                       id: uid,
@@ -388,7 +389,13 @@ const ChoosingOptions = ({ route }) => {
 
                     const userRef = FB.collection("users").doc(uid);
                     batch.set(userRef, data);
-                    settempboolean(true);
+
+                    const usersModulesDetailsRef = FB.collection(
+                      "usersModulesDetails"
+                    ).doc(uid);
+                    batch.set(usersModulesDetailsRef, {
+                      usersModulesArray: [],
+                    });
                     batch.commit().then(setIsLoading(false));
                   })
                   .catch((error) => {
