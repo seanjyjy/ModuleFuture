@@ -11,6 +11,7 @@ import {
   Platform,
   Alert,
   StatusBar,
+  SafeAreaView,
 } from "react-native";
 import { globalFontStyles } from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
@@ -114,7 +115,7 @@ const ChoosingOptions = ({ route }) => {
   const [isLoading, setIsLoading] = useState("");
   const [index1, setIndex1] = useState("4");
   const [index2, setIndex2] = useState("4");
-
+  const [tempboolean, settempboolean] = useState(false);
   useEffect(() => {
     if (route.params?.TnCSTATUS) {
       setChecked(route.params?.TnCSTATUS);
@@ -370,7 +371,7 @@ const ChoosingOptions = ({ route }) => {
 
                     const userRef = FB.collection("users").doc(uid);
                     batch.set(userRef, data);
-
+                    settempboolean(true);
                     batch.commit().then(setIsLoading(false));
                   })
                   .catch((error) => {

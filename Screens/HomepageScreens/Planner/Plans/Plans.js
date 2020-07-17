@@ -147,7 +147,7 @@ const Plans = (props) => {
   const [planName, setPlanName] = useState("");
   const [currentID, setCurrentID] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [size, setSize] = useState(0);
+  const [size, setSize] = useState(props.data[1].length);
   const [showDustBin, setShowDustBin] = useState(true);
   const [alertText, setAlertText] = useState(false);
   const [alertText1, setAlertText1] = useState(false);
@@ -180,7 +180,6 @@ const Plans = (props) => {
             setselectedplansinfo(props.data[4]);
           }
           setSize(arr.length);
-
           if (val.selected === "-1") {
             setShowDustBin(false);
           } else {
@@ -200,7 +199,6 @@ const Plans = (props) => {
       },
       (error) => alert(error)
     );
-
     return () => unsub();
   }, [userID, props.data]);
 
@@ -517,7 +515,11 @@ const Plans = (props) => {
                                 }
                               }
                             }
-
+                            plansArrayRef.set({
+                              yearSem: tempArr,
+                              selected: whatPos,
+                              ArrForRect: newarrForRect,
+                            });
                             for (let i = 0; i < selectedplansinfo.length; i++) {
                               // checking if the plan to be deleted exist in selectedPlansInfo
                               if (
@@ -539,10 +541,6 @@ const Plans = (props) => {
                               } else
                                 newSelectedPlansInfo.push(selectedplansinfo[i]);
                             }
-                            const userRef = FirebaseDB.firestore()
-                              .collection("users")
-                              .doc(userID);
-
                             // deletion in plansArray
                             const currentPlanName = arr[pos].nameOfPlan;
 
@@ -603,27 +601,19 @@ const Plans = (props) => {
                                   semMc = 0;
                                   semSum = 0;
                                 }
-
-                                userRef.update({
-                                  SelectedPlansInfo: newSelectedPlansInfo,
-                                });
-
-                                setselectedplansinfo(newSelectedPlansInfo);
-
-                                plansArrayRef.set({
-                                  yearSem: tempArr,
-                                  selected: whatPos,
-                                  ArrForRect: newarrForRect,
-                                });
                                 // deletion in usersRef
                                 const usersRef = FirebaseDB.firestore()
                                   .collection("users")
                                   .doc(userID);
+                                setselectedplansinfo(newSelectedPlansInfo);
                                 usersRef.update({
                                   CapArray: tempArr2,
+                                  SelectedPlansInfo: newSelectedPlansInfo,
                                 });
-
                                 //deletion in usersModulesDetailsRef
+                                usersModulesDetailsRef.set({
+                                  usersModulesArray: nextArr,
+                                });
                                 FirebaseDB.firestore()
                                   .collection("plansItself")
                                   .doc(
@@ -635,9 +625,6 @@ const Plans = (props) => {
                                     )
                                   )
                                   .delete();
-                                usersModulesDetailsRef.set({
-                                  usersModulesArray: nextArr,
-                                });
                               })
                               .catch((error) => {});
                           },
@@ -817,13 +804,13 @@ const Plans = (props) => {
             style={styles.enterButton}
             onPress={() => {
               // come here later to solve the problem!
-              const currentPlanName =
-                currentArr[parseInt(currentID) - 1].nameOfPlan;
-              const userRef = FirebaseDB.firestore()
-                .collection("users")
-                .doc(userID);
 
               if (currentArr.length > 0) {
+                const currentPlanName =
+                  currentArr[parseInt(currentID) - 1].nameOfPlan;
+                const userRef = FirebaseDB.firestore()
+                  .collection("users")
+                  .doc(userID);
                 plansArrayRef.update({
                   selected: currentID,
                 });
@@ -878,6 +865,8 @@ const Plans = (props) => {
               if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
                 alert("Please select or create a plan");
               } else {
+                const currentPlanName =
+                  currentArr[parseInt(currentID) - 1].nameOfPlan;
                 const plansItselfRef = FirebaseDB.firestore()
                   .collection("plansItself")
                   .doc(

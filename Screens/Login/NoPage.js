@@ -84,28 +84,28 @@ const reviewSchema = yup.object({
           return val.length >= 8;
         }
       }
-    )
-    .test(
-      "testing password1",
-      "Password should contain at least 1 Uppercase",
-      (val) => hasUpperCase(val)
-    )
-    .test(
-      "testing password2",
-      "Password should contain at least 1 Lowercase",
-      (val) => hasLowerCase(val)
-    )
-    .test(
-      "testing password3",
-      "Password should contain at least 1 number",
-      (val) => hasNumber(val)
-    )
-    .test(
-      "testing password4",
-      "Password should contain at least 1 special character",
-      (val) => hasSpecialChar(val)
-    )
-    .typeError(() => {}),
+    ),
+  // .test(
+  //   "testing password1",
+  //   "Password should contain at least 1 Uppercase",
+  //   (val) => hasUpperCase(val)
+  // )
+  // .test(
+  //   "testing password2",
+  //   "Password should contain at least 1 Lowercase",
+  //   (val) => hasLowerCase(val)
+  // )
+  // .test(
+  //   "testing password3",
+  //   "Password should contain at least 1 number",
+  //   (val) => hasNumber(val)
+  // )
+  // .test(
+  //   "testing password4",
+  //   "Password should contain at least 1 special character",
+  //   (val) => hasSpecialChar(val)
+  // )
+  // .typeError(() => {}),
   email: yup
     .string()
     .required()

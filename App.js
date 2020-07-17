@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, StatusBar } from "react-native";
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
 import Homepage from "./Screens/Homepage";

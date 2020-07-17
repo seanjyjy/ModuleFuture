@@ -38,6 +38,7 @@ const ContentPage = (props) => {
   const [favPlanInfo, setFavPlanInfo] = useState([]);
   const [cardArray, setCardArray] = useState([]);
   const [gradSem, setGradSem] = useState("");
+  const [selectedplansinfo, setselectedplansinfo] = useState([]);
   const num = (val) => {
     return val === "Y3S1"
       ? 4
@@ -59,7 +60,7 @@ const ContentPage = (props) => {
       const data = document.data();
       const val = data.expectedSemGrad;
       setGradSem(val);
-
+      setselectedplansinfo(data.SelectedPlansInfo);
       setUsersDetails(data);
       if (data.favPlanArray.length > 0 && data.favPlanInfo.length > 0) {
         setFavPlanArray(data.favPlanArray);
@@ -91,6 +92,20 @@ const ContentPage = (props) => {
     ],
     { useNativeDriver: true }
   );
+
+  const totalSumTotalMc = (val, sem) => {
+    let totalMCs = 0;
+    let totalSum = 0;
+    for (let i = 0; i < val.length; i++) {
+      if (val[i].Semester === sem) {
+        break;
+      }
+      totalMCs += val[i].McUsedInCap;
+      totalSum += val[i].McUsedInCap * val[i].Cap;
+    }
+    return [totalSum, totalMCs];
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -199,73 +214,19 @@ const ContentPage = (props) => {
           data={cardArray}
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) => {
-            return CardWallet(y, item.key.toString(), item.card, () => {
-              const arr = usersDetails.SelectedPlansInfo;
-              let totalMCs = 0;
-              let totalSum = 0;
-              for (let i = 0; i < arr.length; i++) {
-                if (arr[i].Semester === item.PageName) {
-                  break;
-                }
-                totalMCs += arr[i].McUsedInCap;
-                totalSum += arr[i].McUsedInCap * arr[i].Cap;
-              }
-              const plansArrayRef = FirebaseDB.firestore()
-                .collection("plansArray")
-                .doc(userID.concat("_", item.PageName));
-              plansArrayRef
-                .get()
-                .then((document) => {
-                  const val = document.data();
-                  if (val !== undefined) {
-                    const arr = val.yearSem;
-                    const selected = val.selected;
-                    let infoForNextPage = [];
-                    for (let i = 0; i < arr.length; i++) {
-                      const newTotalMcs = totalMCs + arr[i].MCsCountedToCap;
-                      const newTotalSum =
-                        totalSum + arr[i].MCsCountedToCap * arr[i].Cap;
-                      infoForNextPage.push({
-                        SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
-                        OverallCap:
-                          newTotalMcs !== 0
-                            ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
-                            : 0,
-                        PlannedOverallCap:
-                          newTotalMcs !== 0
-                            ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
-                            : 0,
-                        PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
-                        MCs: arr[i].MCs,
-                        LastUpdated: arr[i].LastUpdated,
-                        useInCap: arr[i].useInCap,
-                      });
-                    }
-                    plansArrayRef.update({
-                      ArrForRect: infoForNextPage,
-                    });
-                    return navigation.navigate(item.PageName, {
-                      item: [
-                        userID,
-                        arr,
-                        selected,
-                        infoForNextPage,
-                        usersDetails.SelectedPlansInfo,
-                      ],
-                    });
-                  } else {
-                    plansArrayRef.set({
-                      yearSem: [],
-                      selected: "-1",
-                      ArrForRect: [],
-                    });
-                    return navigation.navigate(item.PageName, {
-                      item: [userID, [], "-1", []],
-                    });
-                  }
-                })
-                .catch((error) => alert(error));
-            });
+            // const arrToPass = await infoExtractor(
+            //   userID,
+            //   item.PageName,
+            //   totalSumTotalMc(selectedplansinfo, item.PageName),
+            //   selectedplansinfo
+            // );
+            return CardWallet(y, item.key.toString(), item.card, () => [
+              userID,
+              item.PageName,
+              totalSumTotalMc(selectedplansinfo, item.PageName),
+              selectedplansinfo,
+              navigation,
+            ]);
           }}
           {...{ onScroll }}
         />

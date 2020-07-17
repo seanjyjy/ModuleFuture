@@ -9,7 +9,6 @@ import {
   FlatList,
   ImageBackground,
   Alert,
-  ToastAndroid,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
@@ -274,10 +273,10 @@ const AddPlan = ({ route }) => {
       nextPage();
     }
   };
+
   const nextPage = () => {
     if (FinalGradesEntered(data)) {
       let semCap = 0;
-
       const origTaken = records.taken;
       const origNotTaken = records.notTaken;
       const toInclude = new Set(records.mapping);
@@ -355,9 +354,9 @@ const AddPlan = ({ route }) => {
         .get()
         .then((document) => {
           const val = document.data();
-          // if (val === undefined) {
-          //   batch.set(batchusersModulesDetailsRef, { usersModulesArray: [] });
-          // }
+          if (val === undefined) {
+            usersModulesDetailsRef.set({ usersModulesArray: [] });
+          }
           const modulesDetailsArray = [];
           let semSum = 0;
           let semMc = 0;
@@ -541,15 +540,6 @@ const AddPlan = ({ route }) => {
             }
           });
 
-          batch.set(typeRef, typeObj);
-          batch.set(codeRef, codeObj);
-          batch.set(levelRef, levelObj);
-          batch.set(takenModulesRef, taken);
-          batch.update(recordsRef, {
-            notTaken: newNotTaken,
-            taken: newTaken,
-          });
-
           semCap = parseFloat((semSum / semMc).toFixed(2));
           let totalSum = 0; // total CAP SUM
           let totalMc = 0; // total MC
@@ -575,6 +565,7 @@ const AddPlan = ({ route }) => {
             if (DontexistBeforeInOldArray) {
               arr.push({ Semester: fromWhere });
             }
+            arr = insertionSort(arr);
             for (let i = 0; i < arr.length; i++) {
               if (arr[i].Semester === fromWhere) {
                 pushed = true;
@@ -646,8 +637,24 @@ const AddPlan = ({ route }) => {
                 MCcountedToCap: semMc, // mc that is counted in cap
               });
             }
-            batch.update(usersRef, { CapArray: tempArr });
-            batch.commit();
+            usersRef.update({ CapArray: tempArr });
+            typeRef.set(typeObj);
+            codeRef.set(codeObj);
+            levelRef.set(levelObj);
+            takenModulesRef.set(taken);
+            recordsRef.set({
+              notTaken: newNotTaken,
+              taken: newTaken,
+            });
+            // batch.set(typeRef, typeObj);
+            // batch.set(codeRef, codeObj);
+            // batch.set(levelRef, levelObj);
+            // batch.set(takenModulesRef, taken);
+            // batch.update(recordsRef, {
+            // notTaken: newNotTaken,
+            // taken: newTaken,
+            // });
+            //batch.commit();
           } else {
             usersRef.set(
               {

@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Text,
   Animated,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "./HomepageScreens/Profile/Profile";
@@ -20,7 +22,6 @@ import FirebaseDB from "../FirebaseDB";
 
 const totalWidth = Dimensions.get("window").width;
 const totalHeight = Dimensions.get("window").height;
-
 const textToReturn = (str) => {
   if (str === "Planner") {
     return "calendar";
@@ -197,24 +198,31 @@ const TabBar = ({ state, descriptors, navigation }) => {
 const Homepage = (data) => {
   const Tab = createBottomTabNavigator();
   const val = useSafeArea().bottom;
+  if (Platform.OS === "android") {
+    StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+    StatusBar.setBarStyle("dark-content");
+    StatusBar.setTranslucent(true);
+  }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-        <Tab.Screen name="Planner">
-          {(props) => <Planner {...props} extraData={data.extraData} />}
-        </Tab.Screen>
-        <Tab.Screen name="Records" component={Records} />
-        <Tab.Screen name="Focus" component={FocusArea} />
-        <Tab.Screen name="Module" component={ModulePage} />
-        <Tab.Screen name="Profile">
-          {(props) => <Profile {...props} extraData={data.extraData} />}
-        </Tab.Screen>
-      </Tab.Navigator>
-      {val > 0 && (
-        <View style={{ height: val - 5, backgroundColor: "white" }} />
-      )}
-    </View>
+    <>
+      <View style={{ flex: 1 }}>
+        <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+          <Tab.Screen name="Planner">
+            {(props) => <Planner {...props} extraData={data.extraData} />}
+          </Tab.Screen>
+          <Tab.Screen name="Records" component={Records} />
+          <Tab.Screen name="Focus" component={FocusArea} />
+          <Tab.Screen name="Module" component={ModulePage} />
+          <Tab.Screen name="Profile">
+            {(props) => <Profile {...props} extraData={data.extraData} />}
+          </Tab.Screen>
+        </Tab.Navigator>
+        {val > 0 && (
+          <View style={{ height: val - 5, backgroundColor: "white" }} />
+        )}
+      </View>
+    </>
   );
 };
 
