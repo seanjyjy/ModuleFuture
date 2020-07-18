@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { CommonActions } from "@react-navigation/native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
 
@@ -55,7 +54,7 @@ const ProgressPageSettings = ({ navigation, route }) => {
       {/* ----------------------------------------------------------------- HIGHLIGHT--------------------------------------------------------------------------- */}
       <View style={styles.topPortion}>
         <TouchableOpacity
-          onPress={() => navigation.dispatch(CommonActions.goBack())}
+          onPress={() => navigation.goBack()}
           activeOpacity={0.9}
           style={styles.headerLeft}
         >

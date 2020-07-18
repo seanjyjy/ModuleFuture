@@ -12,7 +12,6 @@ import { Icon } from "react-native-eva-icons";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
-import Modal from "react-native-modal";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -25,13 +24,12 @@ const FocusArea = ({ navigation }) => {
   const takenModulesRef = fb.collection("takenModules").doc(userID);
 
   useEffect(() => {
-    const unsub = takenModulesRef.onSnapshot((document) => {
+    takenModulesRef.get().then((document) => {
       setTaken(document.data());
-      focusAreaRef.onSnapshot((document) => {
-        setFocus(document.data().cat);
-      });
     });
-    return () => unsub();
+    focusAreaRef.get().then((document) => {
+      setFocus(document.data().cat);
+    });
   }, []);
 
   const [currentType, changeType] = useState("Prereq");
@@ -325,72 +323,42 @@ const FocusArea = ({ navigation }) => {
           data={array}
           renderItem={({ item }) => holders(item)}
           keyExtractor={(item) => item.key.toString()}
-          ListFooterComponent={<View style={{ height: height * 0.11 }} />}
+          ListFooterComponent={
+            <View
+              style={{
+                top: 25,
+                marginBottom: height * 0.11,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  ...globalFontStyles.OSB_15,
+                  color: "#434343",
+                  textAlign: "center",
+                }}
+              >
+                Unable to find a focus area?
+              </Text>
+              <TouchableOpacity
+                style={styles.buttonDesign}
+                activeOpacity={0.875}
+                onPress={() => null}
+              >
+                <Text style={{ ...globalFontStyles.NBEB_15, color: "white" }}>
+                  Add your own!
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
         />
       </View>
     );
   };
 
-  // Suggest button
-
-  /*
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const TextonPopup = (props) => (
-    <View style={styles.popouttext}>
-      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
-        {props.name}
-      </Text>
-      <Text style={{ ...globalFontStyles.OSB_13, color: "#434343" }}>
-        {props.cap}
-      </Text>
-    </View>
-  );
-
-  const SuggestButton = () => (
-    <View>
-      <Modal
-        style={styles.modalBox}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        backdropTransitionOutTiming={0}
-        isVisible={modalVisible}
-        onBackdropPress={() => {
-          setModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setModalVisible(false);
-        }}
-      >
-        <Text style={styles.popoutheader}>
-          Based on CAP, your best performing focus areas are
-        </Text>
-        <TextonPopup name="Artificial Intelligence" cap="4.5" />
-        <TextonPopup name="Computer Security" cap="4.33" />
-        <TextonPopup name="Database Systems" cap="4.0" />
-      </Modal>
-
-      <TouchableOpacity
-        style={styles.buttonDesign}
-        activeOpacity={0.875}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={{ ...globalFontStyles.OSSB_15, color: "white" }}>
-          Suggest
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-  */
-
   return (
     <View style={{ flex: 1 }}>
-      <Header
-        str={"Focus Area"}
-        leftChildren={null}
-        // rightChildren={SuggestButton()}
-        rightChildren={null}
-      />
+      <Header str={"Focus Area"} leftChildren={null} rightChildren={null} />
       {focusArea.length > 0 ? selector() : null}
       <ColouredList colors={colors} array={focusArea} />
     </View>
@@ -449,41 +417,20 @@ const styles = StyleSheet.create({
   },
   // Suggest button
   buttonDesign: {
-    height: 28,
+    height: 30,
     backgroundColor: "#FB5581",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 7,
-    width: 80,
-    top: 1,
-    marginRight: 50,
-    elevation: 6,
+    width: 160,
+    top: 10,
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 2,
     },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-    shadowColor: "#000",
-  },
-  modalBox: {
-    backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.35,
-    width: width * 0.8,
-    paddingLeft: 30,
-    paddingRight: 50,
-    borderRadius: 25,
-  },
-  popoutheader: {
-    ...globalFontStyles.OSB_13,
-    color: "#232323",
-    marginBottom: 20,
-    marginTop: 5,
-  },
-  popouttext: {
-    flexDirection: "row",
-    marginVertical: 10,
-    justifyContent: "space-between",
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
 });

@@ -11,12 +11,8 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import Header from "../../../../Component/Header";
-import Icons from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import Modal from "react-native-modalbox";

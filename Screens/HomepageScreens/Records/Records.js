@@ -28,21 +28,20 @@ const Records = () => {
   const recordsRef = fb.collection("records").doc(userID);
 
   useEffect(() => {
-    const unsub = recordsRef.onSnapshot((document) => {
+    recordsRef.get().then((document) => {
       const data = document.data();
       setTaken(data.taken);
       setNotTaken(data.notTaken);
-      typeRef.onSnapshot((document) => {
-        setType(document.data().cat);
-      });
-      codeRef.onSnapshot((document) => {
-        setCode(document.data().cat);
-      });
-      levelRef.onSnapshot((document) => {
-        setLevel(document.data().cat);
-      });
     });
-    return () => unsub();
+    typeRef.get().then((document) => {
+      setType(document.data().cat);
+    });
+    levelRef.get().then((document) => {
+      setLevel(document.data().cat);
+    });
+    codeRef.get().then((document) => {
+      setCode(document.data().cat);
+    });
   }, []);
 
   const navigation = useNavigation();
@@ -380,7 +379,34 @@ const Records = () => {
           data={array}
           renderItem={({ item }) => holders(item)}
           keyExtractor={(item) => item.key.toString()}
-          ListFooterComponent={<View style={{ height: height * 0.11 }} />}
+          ListFooterComponent={
+            <View
+              style={{
+                marginTop: 25,
+                marginBottom: height * 0.11,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  ...globalFontStyles.OSB_15,
+                  color: "#434343",
+                  textAlign: "center",
+                }}
+              >
+                Unable to find a type?
+              </Text>
+              <TouchableOpacity
+                style={styles.buttonDesign}
+                activeOpacity={0.875}
+                onPress={() => null}
+              >
+                <Text style={{ ...globalFontStyles.NBEB_15, color: "white" }}>
+                  Add your own!
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
         />
       </View>
     );
@@ -389,7 +415,7 @@ const Records = () => {
   /* --------------------------------------------Full view---------------------------------------- */
 
   const FullView = () => {
-    const currentArr = menu().cat;
+    const currentArr = menu();
     const lastKey = currentArr.length;
     const category =
       currentType === "Type"
@@ -595,5 +621,23 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "center",
+  },
+  buttonDesign: {
+    height: 30,
+    backgroundColor: "#FB5581",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 7,
+    width: 160,
+    top: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
   },
 });

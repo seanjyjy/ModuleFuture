@@ -3204,7 +3204,7 @@ export const Modules = {
       {
         name: "MA1101R Linear Algebra I",
         code: "MA1101R",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
@@ -3212,16 +3212,15 @@ export const Modules = {
       {
         name: "MA1521 Calculus for Computing",
         code: "MA1521",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
       },
-
       {
         name: "ST2334 Probability and Statistics",
         code: "ST2334",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 2000,
         codePrefix: "ST",
         numMcs: 4,
@@ -3352,7 +3351,7 @@ export const Modules = {
       {
         name: "MA1101R Linear Algebra I",
         code: "MA1101R",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
@@ -3360,16 +3359,15 @@ export const Modules = {
       {
         name: "MA1521 Calculus for Computing",
         code: "MA1521",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
       },
-
       {
         name: "ST2334 Probability and Statistics",
         code: "ST2334",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 2000,
         codePrefix: "ST",
         numMcs: 4,
@@ -3500,7 +3498,7 @@ export const Modules = {
       {
         name: "MA1101R Linear Algebra I",
         code: "MA1101R",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
@@ -3508,16 +3506,15 @@ export const Modules = {
       {
         name: "MA1521 Calculus for Computing",
         code: "MA1521",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
       },
-
       {
         name: "ST2334 Probability and Statistics",
         code: "ST2334",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 2000,
         codePrefix: "ST",
         numMcs: 4,
@@ -3648,7 +3645,7 @@ export const Modules = {
       {
         name: "MA1101R Linear Algebra I",
         code: "MA1101R",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
@@ -3656,16 +3653,15 @@ export const Modules = {
       {
         name: "MA1521 Calculus for Computing",
         code: "MA1521",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 1000,
         codePrefix: "MA",
         numMcs: 4,
       },
-
       {
         name: "ST2334 Probability and Statistics",
         code: "ST2334",
-        type: "Maths and Sciences",
+        type: "Mathematics",
         level: 2000,
         codePrefix: "ST",
         numMcs: 4,

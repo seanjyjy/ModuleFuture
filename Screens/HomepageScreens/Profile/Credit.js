@@ -39,10 +39,10 @@ const Credit = () => {
         >
           <Text style={styles.biggestWords}>About</Text>
           <Text style={styles.biggerWords}>
-            This app is mainly customized for SoC students, however, some of its
-            functionality extends to all other courses as well! If there are
-            somethings you wish to be included in the app, do suggest to the
-            developers!
+            This app was initially customized for SoC students. Since then, we
+            have extended its functionality to all other courses as well! If
+            there is something you wish to be included in the app, do suggest it
+            to us!
           </Text>
           <Text style={styles.biggestWords}>Developers</Text>
           <Text style={styles.biggerWords}>Keane Chan Jun Yu</Text>
@@ -65,9 +65,6 @@ const Credit = () => {
           <Text style={styles.biggerWords}>
             Photo by Content Pixie from Pexels
           </Text>
-          <Text style={styles.biggestWords}>Special Thanks</Text>
-          <Text style={styles.biggerWords}>Dennis Lim Ze Wei</Text>
-          <Text style={styles.biggerWords}>Ashley Lau Jun Hao</Text>
         </ScrollView>
       </View>
     </View>

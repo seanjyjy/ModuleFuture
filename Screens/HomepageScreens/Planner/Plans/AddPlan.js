@@ -468,7 +468,6 @@ const AddPlan = ({ route }) => {
               NumMcs: NumMcs,
               Level: Level,
               codePrefix: codePrefix,
-              // type: moduleType,
             });
             semSum += modulePoints;
             if (bool) {
@@ -479,7 +478,6 @@ const AddPlan = ({ route }) => {
             }
           }
           // End of for loop for data array
-          // Remove any codes / levels if needed??
           // Sort codes array according to mcs Taken
           const newCodes = [];
           for (let i = codeObj.fixed; i < codeObj.cat.length; i++) {

@@ -259,29 +259,6 @@ const TypePage = ({ navigation, route }) => {
                     }
                     moduleMappingRef.set(current);
                   });
-                  // typeRef.get().then((document) => {
-                  //   const current = document.data();
-                  //   const index = current[title];
-                  //   const obj = current.cat[index];
-                  //   const ue = current.cat[current["UE"]];
-
-                  //   // Check if numbers need changing
-                  //   let currentMcs = 0;
-                  //   for (const mod of taken) {
-                  //     currentMcs += mod.numMcs;
-                  //   }
-                  //   for (const mod of notTaken) {
-                  //     currentMcs += mod.numMcs;
-                  //   }
-                  //   console.log(currentMcs);
-                  //   // Reallocate only if there is extra mcs
-                  //   if (currentMcs > obj.mcsRequired) {
-                  //     const mcIncr = currentMcs - obj.mcsRequired;
-                  //     obj.mcsRequired = currentMcs;
-                  //     ue.mcsRequired -= mcIncr;
-                  //     typeRef.set(current);
-                  //   }
-                  // });
                 }
               }}
               style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}
