@@ -318,7 +318,6 @@ const ChoosingOptions = ({ route }) => {
                     route.params?.item.password
                   )
                   .then((response) => {
-                    console.log(semValue(parseInt(index2)));
                     const uid = response.user.uid;
                     const data = {
                       id: uid,

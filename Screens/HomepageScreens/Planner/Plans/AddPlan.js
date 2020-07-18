@@ -669,6 +669,7 @@ const AddPlan = ({ route }) => {
                 tempArr2.push({
                   Semester: fromWhere,
                   ModulesDetailsArray: modulesDetailsArray,
+                  nameOfPlan: planNameValue,
                 });
                 pushed = true;
               }
@@ -677,6 +678,7 @@ const AddPlan = ({ route }) => {
               tempArr2.push({
                 Semester: fromWhere,
                 ModulesDetailsArray: modulesDetailsArray,
+                nameOfPlan: planNameValue,
               });
             }
             usersModulesDetailsRef.set({
@@ -688,6 +690,7 @@ const AddPlan = ({ route }) => {
                 {
                   Semester: fromWhere,
                   ModulesDetailsArray: modulesDetailsArray,
+                  nameOfPlan: planNameValue,
                 },
               ],
             });

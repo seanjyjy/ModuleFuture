@@ -444,7 +444,7 @@ const ViewPlan = ({ route }) => {
                 <Text
                   style={{ ...globalFontStyles.NB_14, right: 0.045 * width }}
                 >
-                  Current Sem:
+                  {`Current Sem:`}
                 </Text>
               </View>
             </View>
