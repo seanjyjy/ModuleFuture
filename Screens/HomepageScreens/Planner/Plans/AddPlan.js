@@ -35,7 +35,6 @@ const AddPlan = ({ route }) => {
   const [taken, setTaken] = useState({});
 
   const fb = FirebaseDB.firestore();
-  const batch = fb.batch();
   const userID = FirebaseDB.auth().currentUser.uid;
   const typeRef = fb.collection("typeArray").doc(userID);
   const codeRef = fb.collection("codeArray").doc(userID);
@@ -59,10 +58,7 @@ const AddPlan = ({ route }) => {
       if (route.params?.item[4]) setData(route.params?.item[4]);
     }
     if (route.params?.modDetails && route.params?.from === "AddModule") {
-      const tempArr = [];
-      for (let i = 0; i < data.length; i++) {
-        tempArr.push(data[i]);
-      }
+      const tempArr = data.slice(0);
       let keyTobe = data.length;
       const receivedArr = route.params?.modDetails;
       for (let i = 0; i < receivedArr.length; i++) {
@@ -354,9 +350,6 @@ const AddPlan = ({ route }) => {
         .get()
         .then((document) => {
           const val = document.data();
-          if (val === undefined) {
-            usersModulesDetailsRef.set({ usersModulesArray: [] });
-          }
           const modulesDetailsArray = [];
           let semSum = 0;
           let semMc = 0;
@@ -487,7 +480,7 @@ const AddPlan = ({ route }) => {
           }
           // End of for loop for data array
           // Remove any codes / levels if needed??
-          // Sort codes array according to mcs Taken (done)
+          // Sort codes array according to mcs Taken
           const newCodes = [];
           for (let i = codeObj.fixed; i < codeObj.cat.length; i++) {
             if (codeObj.cat[i].mcsTaken !== 0) {
@@ -500,7 +493,6 @@ const AddPlan = ({ route }) => {
               });
             } else {
               delete codeObj[codeObj.cat[i].name];
-              needSorting = true;
             }
           }
           newCodes.sort((a, b) => {
@@ -642,19 +634,10 @@ const AddPlan = ({ route }) => {
             codeRef.set(codeObj);
             levelRef.set(levelObj);
             takenModulesRef.set(taken);
-            recordsRef.set({
+            recordsRef.update({
               notTaken: newNotTaken,
               taken: newTaken,
             });
-            // batch.set(typeRef, typeObj);
-            // batch.set(codeRef, codeObj);
-            // batch.set(levelRef, levelObj);
-            // batch.set(takenModulesRef, taken);
-            // batch.update(recordsRef, {
-            // notTaken: newNotTaken,
-            // taken: newTaken,
-            // });
-            //batch.commit();
           } else {
             usersRef.set(
               {
