@@ -78,22 +78,22 @@ const AddPlan = ({ route }) => {
       }
       setData(tempArr);
     }
-    moduleMappingRef.onSnapshot((document) => {
+    moduleMappingRef.get().then((document) => {
       setModuleMapping(document.data());
     });
-    recordsRef.onSnapshot((document) => {
+    recordsRef.get().then((document) => {
       setRecords(document.data());
     });
-    typeRef.onSnapshot((document) => {
+    typeRef.get().then((document) => {
       setTypes(document.data());
     });
-    codeRef.onSnapshot((document) => {
+    codeRef.get().then((document) => {
       setCodes(document.data());
     });
-    levelRef.onSnapshot((document) => {
+    levelRef.get().then((document) => {
       setLevels(document.data());
     });
-    takenModulesRef.onSnapshot((document) => {
+    takenModulesRef.get().then((document) => {
       setTaken(document.data());
     });
   }, [route.params.item[4], route.params?.modDetails, route.params?.from]);

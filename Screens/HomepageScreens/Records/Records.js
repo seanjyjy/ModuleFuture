@@ -32,14 +32,14 @@ const Records = () => {
       const data = document.data();
       setTaken(data.taken);
       setNotTaken(data.notTaken);
+      typeRef.onSnapshot((document) => {
+        setType(document.data().cat);
+      });
       codeRef.onSnapshot((document) => {
-        setCode(document.data());
+        setCode(document.data().cat);
       });
       levelRef.onSnapshot((document) => {
-        setLevel(document.data());
-      });
-      typeRef.onSnapshot((document) => {
-        setType(document.data());
+        setLevel(document.data().cat);
       });
     });
     return () => unsub();
@@ -54,9 +54,9 @@ const Records = () => {
   const [typeSelection, setTypeVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [showAll, setShow] = useState(true);
-  const [type, setType] = useState({});
-  const [level, setLevel] = useState({});
-  const [code, setCode] = useState({});
+  const [type, setType] = useState([]);
+  const [level, setLevel] = useState([]);
+  const [code, setCode] = useState([]);
   const [taken, setTaken] = useState([]);
   const [notTaken, setNotTaken] = useState([]);
 
@@ -191,6 +191,16 @@ const Records = () => {
       </OverflowMenu>
     );
   };
+
+  // const menu = () => {
+  //   if (currentType === "Type") {
+  //     return type;
+  //   } else if (currentType === "Level") {
+  //     return level;
+  //   } else {
+  //     return code;
+  //   }
+  // };
 
   /* --------------------------------------------Floating content------------------------------------------------ */
 
@@ -334,6 +344,7 @@ const Records = () => {
                 taken: taken,
                 notTaken: notTaken,
                 title: item.name,
+                from: "Records",
               });
             }
           }}
@@ -489,7 +500,6 @@ const Records = () => {
       />
     );
   };
-
   return catView ? (
     <View style={{ flex: 1 }}>
       <Header
@@ -498,7 +508,7 @@ const Records = () => {
         rightChildren={renderOverflowMenuAction()}
       />
       {selector()}
-      <ColouredList colors={colors} mcsOrNum={text1} array={menu().cat} />
+      <ColouredList colors={colors} mcsOrNum={text1} array={menu()} />
     </View>
   ) : (
     <View style={{ flex: 1 }}>

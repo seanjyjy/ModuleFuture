@@ -36,8 +36,8 @@ const FocusArea = ({ navigation }) => {
 
   const [currentType, changeType] = useState("Prereq");
   const [menuVisible, setMenuVisible] = useState(false);
-  const [takenModules, setTaken] = useState(false);
-  const [focusArea, setFocus] = useState(false);
+  const [takenModules, setTaken] = useState([]);
+  const [focusArea, setFocus] = useState([]);
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -290,6 +290,7 @@ const FocusArea = ({ navigation }) => {
                   : current.shortName,
               arr: arr,
               index: current.key - 1,
+              from: "FocusArea",
             });
           }}
         >
@@ -332,6 +333,7 @@ const FocusArea = ({ navigation }) => {
 
   // Suggest button
 
+  /*
   const [modalVisible, setModalVisible] = useState(false);
 
   const TextonPopup = (props) => (
@@ -379,15 +381,17 @@ const FocusArea = ({ navigation }) => {
       </TouchableOpacity>
     </View>
   );
+  */
 
   return (
     <View style={{ flex: 1 }}>
       <Header
         str={"Focus Area"}
         leftChildren={null}
-        rightChildren={SuggestButton()}
+        // rightChildren={SuggestButton()}
+        rightChildren={null}
       />
-      {selector()}
+      {focusArea.length > 0 ? selector() : null}
       <ColouredList colors={colors} array={focusArea} />
     </View>
   );

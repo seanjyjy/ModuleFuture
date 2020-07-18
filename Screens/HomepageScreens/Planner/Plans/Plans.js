@@ -155,6 +155,18 @@ const Plans = (props) => {
   const [arrForRect, setArrForRect] = useState(info[3]);
   const [selectedplansinfo, setselectedplansinfo] = useState(info[4]);
 
+  const fb = FirebaseDB.firestore();
+  const [Types, setTypes] = useState({});
+  const [Codes, setCodes] = useState({});
+  const [Levels, setLevels] = useState({});
+  const [records, setRecords] = useState({});
+  const [taken, setTaken] = useState({});
+
+  const typeRef = fb.collection("typeArray").doc(userID);
+  const codeRef = fb.collection("codeArray").doc(userID);
+  const levelRef = fb.collection("levelArray").doc(userID);
+  const recordsRef = fb.collection("records").doc(userID);
+  const takenModulesRef = fb.collection("takenModules").doc(userID);
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
@@ -197,6 +209,21 @@ const Plans = (props) => {
           setShowDustBin(false);
           setCurrentID("-1");
         }
+        recordsRef.get().then((document) => {
+          setRecords(document.data());
+        });
+        typeRef.get().then((document) => {
+          setTypes(document.data());
+        });
+        codeRef.get().then((document) => {
+          setCodes(document.data());
+        });
+        levelRef.get().then((document) => {
+          setLevels(document.data());
+        });
+        takenModulesRef.get().then((document) => {
+          setTaken(document.data());
+        });
       },
       (error) => alert(error)
     );
@@ -603,6 +630,7 @@ const Plans = (props) => {
                             usersModulesDetailsRef
                               .get()
                               .then((document) => {
+                                console.log("Phase 0");
                                 const val = document.data();
                                 const arr1 = val.usersModulesArray;
                                 const nextArr = [];
@@ -653,6 +681,145 @@ const Plans = (props) => {
                                   semMc = 0;
                                   semSum = 0;
                                 }
+
+                                // Updating for records / focus area
+
+                                const origTaken = records.taken;
+                                const origNotTaken = records.notTaken;
+                                const toInclude = new Set(records.mapping);
+                                const newTaken = [];
+                                console.log("Phase 1");
+                                for (let i = 0; i < origTaken.length; i++) {
+                                  if (origTaken[i].sem === fromWhere) {
+                                    const numMcs = origTaken[i].numMcs;
+                                    const codePrefix = origTaken[i].codePrefix;
+                                    const type = origTaken[i].type;
+                                    const level = origTaken[i].level;
+                                    const code = origTaken[i].code;
+                                    const grade = origTaken[i].grade;
+                                    const modulePoints =
+                                      numMcs * GradeToPoint(grade);
+                                    const bool = lettersChecker(grade);
+
+                                    if (toInclude.has(origTaken[i].type)) {
+                                      origNotTaken.push({
+                                        name: origTaken[i].name,
+                                        type: origTaken[i].type,
+                                        code: origTaken[i].code,
+                                        level: origTaken[i].level,
+                                        codePrefix: origTaken[i].codePrefix,
+                                        numMcs: origTaken[i].numMcs,
+                                      });
+                                    }
+                                    console.log("Phase 2");
+                                    const indexType = Types[type];
+                                    const indexCode = Codes[codePrefix];
+                                    const indexLevel = Levels[level.toString()];
+                                    if (grade !== "CU") {
+                                      Types.cat[indexType].mcsTaken -= numMcs;
+                                      Types.cat[indexType].numTaken -= 1;
+                                      Codes.cat[indexCode].mcsTaken -= numMcs;
+                                      Codes.cat[indexCode].numTaken -= 1;
+                                      Levels.cat[indexLevel].mcsTaken -= numMcs;
+                                      Levels.cat[indexLevel].numTaken -= 1;
+                                    }
+                                    if (bool) {
+                                      Types.cat[
+                                        indexType
+                                      ].mcsUsedInCap -= numMcs;
+                                      Codes.cat[
+                                        indexCode
+                                      ].mcsUsedInCap -= numMcs;
+                                      Levels.cat[
+                                        indexLevel
+                                      ].mcsUsedInCap -= numMcs;
+
+                                      Types.cat[
+                                        indexType
+                                      ].points -= modulePoints;
+                                      Levels.cat[
+                                        indexLevel
+                                      ].points -= modulePoints;
+                                      Codes.cat[
+                                        indexCode
+                                      ].points -= modulePoints;
+                                    }
+                                    delete taken[code];
+                                  } else {
+                                    newTaken.push(origTaken[i]);
+                                  }
+                                }
+                                console.log("Phase 3");
+
+                                let codeObj = Codes;
+                                const newCodes = [];
+                                for (
+                                  let i = codeObj.fixed;
+                                  i < codeObj.cat.length;
+                                  i++
+                                ) {
+                                  if (codeObj.cat[i].mcsTaken !== 0) {
+                                    newCodes.push({
+                                      name: codeObj.cat[i].name,
+                                      mcsTaken: codeObj.cat[i].mcsTaken,
+                                      numTaken: codeObj.cat[i].numTaken,
+                                      mcsUsedInCap: codeObj.cat[i].mcsUsedInCap,
+                                      points: codeObj.cat[i].points,
+                                    });
+                                  } else {
+                                    delete codeObj[codeObj.cat[i].name];
+                                  }
+                                }
+                                console.log("Phase 4");
+                                newCodes.sort((a, b) => {
+                                  if (a.mcsTaken >= b.mcsTaken) {
+                                    return -1;
+                                  } else {
+                                    return 1;
+                                  }
+                                });
+                                // reassign keys and indexes
+                                for (let i = 0; i < newCodes.length; i++) {
+                                  newCodes[i].key = codeObj.fixed + i + 1;
+                                  codeObj[newCodes[i].name] = codeObj.fixed + i;
+                                }
+
+                                codeObj.cat = codeObj.cat
+                                  .slice(0, codeObj.fixed)
+                                  .concat(newCodes);
+
+                                origNotTaken.sort((a, b) => {
+                                  if (a.code <= b.code) {
+                                    return -1;
+                                  } else {
+                                    return 1;
+                                  }
+                                });
+
+                                newTaken.sort((a, b) => {
+                                  if (a.sem < b.sem) {
+                                    return -1;
+                                  } else if (a.sem === b.sem) {
+                                    if (a.code < b.code) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  } else {
+                                    return 1;
+                                  }
+                                });
+
+                                console.log("Phase 5");
+                                typeRef.set(Types);
+                                codeRef.set(codeObj);
+                                levelRef.set(Levels);
+                                takenModulesRef.set(taken);
+                                recordsRef.update({
+                                  notTaken: origNotTaken,
+                                  taken: newTaken,
+                                });
+
                                 // deletion in usersRef
                                 const usersRef = FirebaseDB.firestore()
                                   .collection("users")
@@ -678,7 +845,9 @@ const Plans = (props) => {
                                   )
                                   .delete();
                               })
-                              .catch((error) => {});
+                              .catch((error) => {
+                                console.log(error);
+                              });
                           },
                         },
                       ],
@@ -771,7 +940,7 @@ const Plans = (props) => {
                     selected: "-1",
                   });
                 }
-                navigation.dispatch(CommonActions.goBack());
+                navigation.goBack();
               }}
             />
           </View>

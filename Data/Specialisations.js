@@ -4863,6 +4863,9 @@ export const specialisations = {
       },
     ],
   },
+  Others: {
+    cat: [],
+  },
 };
 
 const temp = {

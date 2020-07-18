@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  FlatList,
-  ScrollView,
-} from "react-native";
+import { View, StyleSheet, Text, Dimensions, FlatList } from "react-native";
 import Header from "../../../Component/Header";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
@@ -20,23 +13,19 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const EachFocusArea = ({ navigation, route }) => {
-  const fb = FirebaseDB.firestore();
-  const userID = FirebaseDB.auth().currentUser.uid;
-  const focusAreaRef = fb.collection("focusArea").doc(userID);
-
   const [arr, setArr] = useState([]);
   const [editMode, setEdit] = useState(false);
   const [index, setIndex] = useState();
+  const [original, setOrig] = useState(route.params?.arr);
 
   useEffect(() => {
-    if (route.params?.name) {
+    if (route.params?.from === "FocusArea" && route.params?.name) {
       setArr(route.params?.arr);
       setIndex(route.params?.index);
     }
-    if (route.params?.modDetails) {
-      console.log(route.params?.modDetails);
+    if (route.params?.from === "AddModule" && route.params?.modDetails) {
       const newArr = route.params?.modDetails;
-      const temp = arr;
+      const temp = arr.slice(0);
       for (let i = 0; i < newArr.length; i++) {
         temp[0].notTaken.push({
           code: newArr[i].code,
@@ -112,10 +101,11 @@ const EachFocusArea = ({ navigation, route }) => {
               height={15}
               fill="#232323"
               onPress={() => {
-                arr[0].notTaken = arr[0].notTaken.filter(
+                const temp = arr.slice(0);
+                temp[0].notTaken = temp[0].notTaken.filter(
                   (x) => x.code !== item.code
                 );
-                setArr(arr);
+                setArr(temp);
               }}
             />
           ) : null}
@@ -205,6 +195,22 @@ const EachFocusArea = ({ navigation, route }) => {
             style={{ color: "#232323" }}
             onPress={() => {
               if (editMode) {
+                setEdit(false);
+                setArr(original);
+              } else {
+                navigation.goBack();
+              }
+            }}
+          />
+        }
+        rightChildren={
+          editMode ? (
+            <Text
+              onPress={() => {
+                setEdit(false);
+                const fb = FirebaseDB.firestore();
+                const userID = FirebaseDB.auth().currentUser.uid;
+                const focusAreaRef = fb.collection("focusArea").doc(userID);
                 focusAreaRef.get().then((document) => {
                   const current = document.data();
                   current.cat[index].Prereq.modules = arr[0].taken.concat(
@@ -212,12 +218,13 @@ const EachFocusArea = ({ navigation, route }) => {
                   );
                   focusAreaRef.set(current);
                 });
-              }
-              editMode ? setEdit(!editMode) : navigation.goBack();
-            }}
-          />
+              }}
+              style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}
+            >
+              Save
+            </Text>
+          ) : null
         }
-        rightChildren={<Text>Tree?</Text>}
       />
       <FullViewHeader fa={true} />
       <FullView />

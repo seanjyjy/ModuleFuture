@@ -372,16 +372,43 @@ const ChoosingOptions = ({ route }) => {
                           uid
                         );
                         batch.set(focusAreaRef, specialisations[courseAndYear]);
-                        // Modules for focusArea
-                        const modulesTakenRef = FB.collection(
-                          "takenModules"
-                        ).doc(uid);
-                        batch.set(modulesTakenRef, { Test: null });
+                      } else {
+                        // For focus area
+                        const focusAreaRef = FB.collection("focusArea").doc(
+                          uid
+                        );
+                        batch.set(focusAreaRef, specialisations["Others"]);
                       }
                     } else {
+                      // For records
+                      const modulesRef = FB.collection("records").doc(uid);
+                      const modules = Modules["Others"];
+                      batch.set(modulesRef, modules);
+
+                      // For records modules mapping
+                      const modulesMapping = FB.collection(
+                        "modulesMapping"
+                      ).doc(uid);
+                      batch.set(modulesMapping, {});
+
+                      // typeArray
+                      const typeRef = FB.collection("typeArray").doc(uid);
+                      batch.set(typeRef, Types["Others"]);
+
+                      // codeArray
                       const codeRef = FB.collection("codeArray").doc(uid);
                       batch.set(codeRef, Codes["Others"]);
+
+                      // For focus area
+                      const focusAreaRef = FB.collection("focusArea").doc(uid);
+                      batch.set(focusAreaRef, specialisations["Others"]);
                     }
+
+                    // Modules for focusArea
+                    const modulesTakenRef = FB.collection("takenModules").doc(
+                      uid
+                    );
+                    batch.set(modulesTakenRef, {});
 
                     // levelArray
                     const levelRef = FB.collection("levelArray").doc(uid);

@@ -6,6 +6,7 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import EditButton from "../../../Component/EditButton";
 import AddModuleButton from "../../../Component/AddModuleButton";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import FirebaseDB from "../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -15,18 +16,7 @@ const TypePage = ({ navigation, route }) => {
   const [editMode, setEdit] = useState(false);
 
   useEffect(() => {
-    if (route.params?.modDetails) {
-      const tempArr = [];
-      for (let i = 0; i < notTaken.length; i++) {
-        tempArr.push(notTaken[i]);
-      }
-      const receivedArr = route.params?.modDetails;
-      for (let i = 0; i < receivedArr.length; i++) {
-        tempArr.push(receivedArr[i]);
-      }
-      setNotTaken(tempArr);
-    }
-    if (route.params?.taken) {
+    if (route.params?.from === "Records" && route.params?.taken) {
       const toMatch = route.params?.title;
       const takenAll = route.params?.taken;
       const notTakenAll = route.params?.notTaken;
@@ -35,10 +25,32 @@ const TypePage = ({ navigation, route }) => {
       setTaken(tempArr1);
       setNotTaken(tempArr2);
     }
-  }, [route.params?.modDetails]);
+    if (route.params?.from === "AddModule" && route.params?.modDetails) {
+      const newArr = route.params?.modDetails;
+      const temp = notTaken.slice(0);
+      const currSet = new Set(toAdd);
+      for (let i = 0; i < newArr.length; i++) {
+        const newMod = {
+          code: newArr[i].code,
+          codePrefix: newArr[i].codePrefix,
+          level: newArr[i].Level,
+          name: newArr[i].name,
+          numMcs: newArr[i].MC,
+          type: title,
+        };
+        temp.push(newMod);
+        currSet.add(newMod);
+      }
+      setAdd(currSet);
+      setNotTaken(temp);
+    }
+  }, [route.params?.taken, route.params?.modDetails]);
 
+  const [title, setTitle] = useState(route.params?.title);
   const [taken, setTaken] = useState([]);
   const [notTaken, setNotTaken] = useState([]);
+  const [toAdd, setAdd] = useState(new Set());
+  const [toDel, setDel] = useState(new Set());
 
   const holders = (item) => (
     <View style={styles.headerText}>
@@ -88,6 +100,8 @@ const TypePage = ({ navigation, route }) => {
           fill="#232323"
           onPress={() => {
             const newList = notTaken.filter((x) => x.code !== item.code);
+            toAdd.delete(item);
+            toDel.add(item);
             setNotTaken(newList);
           }}
         />
@@ -189,18 +203,93 @@ const TypePage = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        str={route.params?.title}
+        str={title}
         leftChildren={
-          <Ionicons
-            name={editMode ? "md-close" : "md-arrow-round-back"}
-            size={25}
-            style={{ color: "#232323" }}
-            onPress={() =>
-              editMode ? setEdit(!editMode) : navigation.goBack()
-            }
-          />
+          editMode ? null : (
+            <Ionicons
+              name={"md-arrow-round-back"}
+              size={25}
+              style={{ color: "#232323" }}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            />
+          )
         }
-        rightChildren={null}
+        rightChildren={
+          editMode ? (
+            <Text
+              onPress={() => {
+                setEdit(!editMode);
+                if (toAdd.size > 0 || toDel.size > 0) {
+                  const arrToAdd = Array.from(toAdd);
+                  const arrToDel = Array.from(toDel);
+                  const fb = FirebaseDB.firestore();
+                  const userID = FirebaseDB.auth().currentUser.uid;
+                  const recordsRef = fb.collection("records").doc(userID);
+                  const moduleMappingRef = fb
+                    .collection("modulesMapping")
+                    .doc(userID);
+                  // const typeRef = fb.collection("typeArray").doc(userID);
+                  recordsRef.get().then((document) => {
+                    let currNotTaken = document.data().notTaken;
+                    currNotTaken = currNotTaken.concat(arrToAdd);
+                    for (const mod of arrToDel) {
+                      currNotTaken = currNotTaken.filter(
+                        (x) => x.code !== mod.code
+                      );
+                    }
+                    recordsRef.update({
+                      notTaken: currNotTaken.sort((a, b) => {
+                        if (a.code < b.code) {
+                          return -1;
+                        } else {
+                          return 1;
+                        }
+                      }),
+                    });
+                  });
+                  moduleMappingRef.get().then((document) => {
+                    const current = document.data();
+                    for (const mod of arrToAdd) {
+                      current[mod.code] = mod.type;
+                    }
+                    for (const mod of arrToDel) {
+                      delete current[mod.code];
+                    }
+                    moduleMappingRef.set(current);
+                  });
+                  // typeRef.get().then((document) => {
+                  //   const current = document.data();
+                  //   const index = current[title];
+                  //   const obj = current.cat[index];
+                  //   const ue = current.cat[current["UE"]];
+
+                  //   // Check if numbers need changing
+                  //   let currentMcs = 0;
+                  //   for (const mod of taken) {
+                  //     currentMcs += mod.numMcs;
+                  //   }
+                  //   for (const mod of notTaken) {
+                  //     currentMcs += mod.numMcs;
+                  //   }
+                  //   console.log(currentMcs);
+                  //   // Reallocate only if there is extra mcs
+                  //   if (currentMcs > obj.mcsRequired) {
+                  //     const mcIncr = currentMcs - obj.mcsRequired;
+                  //     obj.mcsRequired = currentMcs;
+                  //     ue.mcsRequired -= mcIncr;
+                  //     typeRef.set(current);
+                  //   }
+                  // });
+                }
+              }}
+              style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}
+            >
+              Save
+            </Text>
+          ) : null
+        }
       />
       <Box />
     </View>
