@@ -28,16 +28,47 @@ const ImageSet = [
   require("../../../../assets/plan3.png"),
   require("../../../../assets/plan4.png"),
 ];
+const dateFormatter = (date, month, year, hour, minute) => {
+  let newDate = date;
+  let newMonth = month;
+  let newYear = year;
+  let newHour = hour;
+  let newMinute = minute;
+  if (parseInt(date) < 10) {
+    newdate = "0" + newDate;
+  }
+  if (parseInt(newMonth) < 10) {
+    newMonth = "0" + newMonth;
+  }
+  if (parseInt(newHour) < 10) {
+    newHour = "0" + newHour;
+  }
+  if (parseInt(newMinute) < 10) {
+    newMinute = "0" + newMinute;
+  }
+  return (
+    newDate +
+    "/" +
+    newMonth +
+    "/" +
+    newYear +
+    ", " +
+    newHour +
+    ":" +
+    newMinute +
+    " " +
+    (newHour <= 12 ? "AM" : "PM")
+  );
+};
 
-const calcTime = (dateInStr) => {
+const calcTime = (dateInStr, typeOfPhone) => {
   let today = new Date();
-  const utc = today.getTime() + today.getTimezoneOffset() * 60000;
-  let offset = 8;
-  let nd = new Date(utc + 3600000 * offset);
-  let date = nd.toLocaleString("en-SG", {
-    timeZone: "Asia/Singapore",
-    hour12: true,
-  });
+  let getDate = today.getDate();
+  let getMonth = today.getMonth() + 1;
+  let getYear = today.getFullYear();
+  let getHours = today.getHours();
+  let getMinutes = today.getMinutes();
+  let date = dateFormatter(getDate, getMonth, getYear, getHours, getMinutes);
   const todayDateArray = dateExtractor(date);
   const previousDateArray = dateExtractor(dateInStr);
   if (todayDateArray[0] == previousDateArray[0]) {
@@ -48,6 +79,8 @@ const calcTime = (dateInStr) => {
     return previousDateArray[0] + " " + previousDateArray[1];
   }
 };
+//date is Sun Jul 19 01:05:19 2020
+//dateInStr is Sun Jul 19 01:02:17 2020
 const dateExtractor = (str) => {
   let tempStr = "";
   let timeStr = "";

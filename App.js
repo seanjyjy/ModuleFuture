@@ -105,6 +105,7 @@ export default function App() {
       require("./assets/plan4.png"),
       require("./assets/JumpingMan.png"),
       require("./assets/bargraph.png"),
+      require("./assets/aboutbg.png"),
     ]);
 
     const fontAssets = getFonts();
@@ -208,6 +209,7 @@ export default function App() {
                         component={EmailVerification}
                       />
                       <AuthStack.Screen name="Credit" component={Credit} />
+                      <AuthStack.Screen name="TnC" component={TnC} />
                     </>
                   ) : (
                     <>

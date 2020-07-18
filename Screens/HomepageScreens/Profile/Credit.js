@@ -31,12 +31,27 @@ const Credit = () => {
         }
         rightChildren={<View />}
       />
-      <View style={{ height: "95%", width: "95%" }}>
-        <ScrollView
-          style={{
-            marginHorizontal: 15,
-          }}
-        >
+      <View
+        style={{
+          height: "82%",
+          width: "92%",
+          alignSelf: "center",
+          top: 15,
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          backgroundColor: "white",
+          borderRadius: 20,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
+      >
+        <ScrollView>
           <Text style={styles.biggestWords}>About</Text>
           <Text style={styles.biggerWords}>
             This app was initially customized for SoC students. Since then, we
@@ -66,6 +81,14 @@ const Credit = () => {
             Photo by Content Pixie from Pexels
           </Text>
         </ScrollView>
+        <View style={{ height: 25 }}>
+          <Text
+            style={styles.tncStyle}
+            onPress={() => navigation.navigate("TnC", { fromWhere: "Credit" })}
+          >
+            Terms & Conditions.
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -91,5 +114,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     ...globalFontStyles.NBEB_24,
     textDecorationLine: "underline",
+  },
+  tncStyle: {
+    textDecorationLine: "underline",
+    alignSelf: "center",
+    left: 5,
+    ...globalFontStyles.NB_13,
+    color: "#51739B",
+    top: 1,
   },
 });

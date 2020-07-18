@@ -11,9 +11,9 @@ import { useNavigation } from "@react-navigation/native";
 import { globalFontStyles } from "./Component/GlobalFont";
 import SignInButton from "./Component/SignInButton";
 
-const TnC = () => {
+const TnC = (props) => {
   const navigation = useNavigation();
-
+  let fromWhere = props.route.params?.fromWhere;
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, flexDirection: "row" }}>
@@ -126,7 +126,7 @@ const TnC = () => {
           <View style={styles.centerOneWithShadow}>
             <SignInButton
               func={() => {
-                navigation.navigate("ChoosingOptions", { TnCSTATUS: true });
+                navigation.navigate(fromWhere, { TnCSTATUS: true });
               }}
             >
               <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>

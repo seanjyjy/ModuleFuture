@@ -16,6 +16,7 @@ import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FirebaseDB from "../../../../FirebaseDB";
+import { min } from "react-native-reanimated";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -246,6 +247,40 @@ const AddPlan = ({ route }) => {
       return false;
     }
   };
+
+  const dateFormatter = (date, month, year, hour, minute) => {
+    let newDate = date;
+    let newMonth = month;
+    let newYear = year;
+    let newHour = hour;
+    let newMinute = minute;
+    if (parseInt(date) < 10) {
+      newdate = "0" + newDate;
+    }
+    if (parseInt(newMonth) < 10) {
+      newMonth = "0" + newMonth;
+    }
+    if (parseInt(newHour) < 10) {
+      newHour = "0" + newHour;
+    }
+    if (parseInt(newMinute) < 10) {
+      newMinute = "0" + newMinute;
+    }
+    return (
+      newDate +
+      "/" +
+      newMonth +
+      "/" +
+      newYear +
+      ", " +
+      newHour +
+      ":" +
+      newMinute +
+      " " +
+      (newHour <= 12 ? "AM" : "PM")
+    );
+  };
+
   const isThisExtraAlert = (name, year) => {
     // You have entered the final grades for this semester before. Inputting final grades in this plan
     //will overwrite the final grades in the ${other plan}. Proceed?
@@ -780,13 +815,18 @@ const AddPlan = ({ route }) => {
           const thisPlanLength = arr.length;
           const arr2 = val.ArrForRect;
           let today = new Date();
-          const utc = today.getTime() + today.getTimezoneOffset() * 60000;
-          let offset = 8;
-          let nd = new Date(utc + 3600000 * offset);
-          let date = nd.toLocaleString("en-SG", {
-            timeZone: "Asia/Singapore",
-            hour12: true,
-          });
+          let getDate = today.getDate();
+          let getMonth = today.getMonth() + 1;
+          let getYear = today.getFullYear();
+          let getHours = today.getHours();
+          let getMinutes = today.getMinutes();
+          let date = dateFormatter(
+            getDate,
+            getMonth,
+            getYear,
+            getHours,
+            getMinutes
+          );
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -937,13 +977,18 @@ const AddPlan = ({ route }) => {
           const arr2 = val.ArrForRect;
           const thisPlanLength = arr.length;
           let today = new Date();
-          const utc = today.getTime() + today.getTimezoneOffset() * 60000;
-          let offset = 8;
-          let nd = new Date(utc + 3600000 * offset);
-          let date = nd.toLocaleString("en-SG", {
-            timeZone: "Asia/Singapore",
-            hour12: true,
-          });
+          let getDate = today.getDate();
+          let getMonth = today.getMonth() + 1;
+          let getYear = today.getFullYear();
+          let getHours = today.getHours();
+          let getMinutes = today.getMinutes();
+          let date = dateFormatter(
+            getDate,
+            getMonth,
+            getYear,
+            getHours,
+            getMinutes
+          );
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];

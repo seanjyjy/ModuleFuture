@@ -299,7 +299,9 @@ const ChoosingOptions = ({ route }) => {
                 <Text style={styles.ihveStyle}>I've agreed to the </Text>
                 <Text
                   style={styles.tncStyle}
-                  onPress={() => navigation.navigate("TnC")}
+                  onPress={() =>
+                    navigation.navigate("TnC", { fromWhere: "Credit" })
+                  }
                 >
                   Terms & Conditions.
                 </Text>

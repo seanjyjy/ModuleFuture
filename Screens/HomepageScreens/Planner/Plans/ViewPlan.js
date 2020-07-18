@@ -40,6 +40,7 @@ const ViewPlan = ({ route }) => {
   const [arrToUse, setArrToUse] = useState([]);
   const [selectedplansinfo, setselectedplansinfo] = useState([]);
   const [gradSem, setGradSem] = useState("");
+  const [currentSem, setCurrentSem] = useState("");
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
@@ -48,7 +49,6 @@ const ViewPlan = ({ route }) => {
       setFromWhere(route.params?.item[3]);
       setTitle(route.params?.item[0]);
       setfavourite(route.params?.item[5]);
-      //whatsTheCurrentSem(docLoc);
       if (route.params?.item[1] && route.params?.item[3]) {
         setUserID(userIDextractor(route.params?.item[1]));
         setUserRef(
@@ -76,7 +76,7 @@ const ViewPlan = ({ route }) => {
             arrLength = 10;
           }
           setselectedplansinfo(val.SelectedPlansInfo);
-
+          setCurrentSem(findCurrentSem(val.yearOfMatri));
           const arrToUse = whatArrayOfInfoToDisplay(
             route.params?.item[3],
             arrLength
@@ -112,6 +112,22 @@ const ViewPlan = ({ route }) => {
       totalSum += val[i].McUsedInCap * val[i].Cap;
     }
     return [totalSum, totalMCs];
+  };
+
+  const findCurrentSem = (yearOfMatri) => {
+    let today = new Date();
+    let getMonth = today.getMonth() + 1;
+    let getYear = today.getFullYear();
+    let numYear = getYear - yearOfMatri;
+    let textToReturn = "";
+    if (getMonth < 8) {
+      //before august
+      textToReturn += "Y" + numYear + "S2";
+    } else {
+      //during and after august consider start of sem as of 1st aug
+      textToReturn += "Y" + (numYear + 1) + "S1";
+    }
+    return textToReturn;
   };
 
   const infoExtractor = async (
@@ -184,17 +200,6 @@ const ViewPlan = ({ route }) => {
       return [num - 1, num + 1, num + 2];
     }
   };
-  // need to get current year and approximate time? in order to calculate current semester
-  // const whatsTheCurrentSem = (val) => {
-  //   const userID = userIDextractor(val);
-  //   const userRef = FirebaseDB.firestore().collection("users").doc(userID);
-  //   userRef
-  //     .get((document) => {
-  //       const val = document.data();
-  //       const year = val.yearOfMatri;
-  //     })
-  //     .then((error) => alert(error));
-  // };
 
   const semListY3S2 = ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"];
   const semListY4S2 = [...semListY3S2, "Y4S1", "Y4S2"];
@@ -444,7 +449,7 @@ const ViewPlan = ({ route }) => {
                 <Text
                   style={{ ...globalFontStyles.NB_14, right: 0.045 * width }}
                 >
-                  {`Current Sem:`}
+                  {`Current Sem: ${currentSem}`}
                 </Text>
               </View>
             </View>
