@@ -24,6 +24,8 @@ const TypePage = ({ navigation, route }) => {
       const tempArr2 = notTakenAll.filter((x) => x.type === toMatch);
       setTaken(tempArr1);
       setNotTaken(tempArr2);
+      setOrigTaken(tempArr1);
+      setOrigNotTaken(tempArr2);
     }
     if (route.params?.from === "AddModule" && route.params?.modDetails) {
       const newArr = route.params?.modDetails;
@@ -51,6 +53,8 @@ const TypePage = ({ navigation, route }) => {
   const [notTaken, setNotTaken] = useState([]);
   const [toAdd, setAdd] = useState(new Set());
   const [toDel, setDel] = useState(new Set());
+  const [origTaken, setOrigTaken] = useState([]);
+  const [origNotTaken, setOrigNotTaken] = useState([]);
 
   const holders = (item) => (
     <View style={styles.headerText}>
@@ -120,7 +124,6 @@ const TypePage = ({ navigation, route }) => {
           }}
         >
           <Text style={{ ...globalFontStyles.OSB_16, color: "#232323" }}>
-            {/* {editMode ? "" : "Module"} */}
             Module
           </Text>
           <Text
@@ -129,12 +132,10 @@ const TypePage = ({ navigation, route }) => {
               color: "#232323",
             }}
           >
-            {/* {editMode ? "" : "Grade"} */}
             Grade
           </Text>
         </View>
         <Text style={{ ...globalFontStyles.OSB_16, color: "#232323" }}>
-          {/* {editMode ? "" : "Sem"} */}
           Sem
         </Text>
       </View>
@@ -205,16 +206,19 @@ const TypePage = ({ navigation, route }) => {
       <Header
         str={title}
         leftChildren={
-          editMode ? null : (
-            <Ionicons
-              name={"md-arrow-round-back"}
-              size={25}
-              style={{ color: "#232323" }}
-              onPress={() => {
+          <Ionicons
+            name={editMode ? "md-close" : "md-arrow-round-back"}
+            size={25}
+            style={{ color: "#232323" }}
+            onPress={() => {
+              if (editMode) {
+                setEdit(false);
+                setArr(original);
+              } else {
                 navigation.goBack();
-              }}
-            />
-          )
+              }
+            }}
+          />
         }
         rightChildren={
           editMode ? (
@@ -230,7 +234,6 @@ const TypePage = ({ navigation, route }) => {
                   const moduleMappingRef = fb
                     .collection("modulesMapping")
                     .doc(userID);
-                  // const typeRef = fb.collection("typeArray").doc(userID);
                   recordsRef.get().then((document) => {
                     let currNotTaken = document.data().notTaken;
                     currNotTaken = currNotTaken.concat(arrToAdd);

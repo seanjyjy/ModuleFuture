@@ -82,7 +82,7 @@ export default function App() {
     loading: false,
     user: null,
   });
-  const [modLoading, setModLoading] = useState(false);
+  const [mod, setMod] = useState(ModuleListWithKey());
 
   const loadAssetAsync = async () => {
     const imageAssets = cacheImages([
@@ -178,12 +178,7 @@ export default function App() {
                       <AuthStack.Screen name="Y5S2" component={Y5S2} />
                       <AuthStack.Screen name="AddPlan" component={AddPlan} />
                       <AuthStack.Screen name="AddModule">
-                        {(props) => (
-                          <AddModule
-                            {...props}
-                            moduleList={ModuleListWithKey()}
-                          />
-                        )}
+                        {(props) => <AddModule {...props} moduleList={mod} />}
                       </AuthStack.Screen>
                       <AuthStack.Screen
                         name="SeeModules"

@@ -118,6 +118,7 @@ const AddModule = (props) => {
   const [fullList, setFullList] = useState(new Set(props.moduleList));
   const [moduleList, setModuleList] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
+  console.log(props.moduleList[2]);
   // const [modalVisible, setModalVisible] = useState(false);
   // const [current, setItem] = useState(moduleList[0]);
   // const [split, setSplit] = useState(0);
