@@ -16,7 +16,6 @@ import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FirebaseDB from "../../../../FirebaseDB";
-import { min } from "react-native-reanimated";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -316,7 +315,6 @@ const AddPlan = ({ route }) => {
 
       const newSet = new Set();
       data.forEach((x) => {
-        delete taken[x.moduleCode];
         newSet.add(x.moduleCode);
       });
 
@@ -366,6 +364,7 @@ const AddPlan = ({ route }) => {
             Levels.cat[indexLevel].points -= modulePoints;
             Codes.cat[indexCode].points -= modulePoints;
           }
+          delete taken[code];
         } else {
           newTaken.push(origTaken[i]);
         }
@@ -403,7 +402,7 @@ const AddPlan = ({ route }) => {
             const bool = lettersChecker(FinalGrade);
 
             // Check if moduleType exists
-            const moduleType = "";
+            let moduleType = "";
             // Finding type
             if (moduleMapping[moduleCode] !== undefined) {
               moduleType = moduleMapping[moduleCode];
@@ -419,10 +418,11 @@ const AddPlan = ({ route }) => {
               }
             } else {
               const len = typeObj.cat.length;
-              // TODO: Add in Residential Colleges for ULR!
               if (
                 codePrefix.length === 3 &&
-                codePrefix.substring(0, 2) === "GE" &&
+                (codePrefix.substring(0, 2) === "GE" ||
+                  codePrefix === "UTS" ||
+                  codePrefix === "UTC") &&
                 typeObj.cat[len - 1].mcsTaken < typeObj.cat[len - 1].mcsRequired
               ) {
                 moduleType = "ULR";
@@ -430,6 +430,7 @@ const AddPlan = ({ route }) => {
                 moduleType = "UE";
               }
             }
+
             // Check if it is a new code
             if (codeObj[codePrefix] === undefined) {
               codeObj[codePrefix] = codeObj.cat.length;

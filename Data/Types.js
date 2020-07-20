@@ -4629,7 +4629,7 @@ export const Types = {
     UE: 6,
     ULR: 7,
   },
-  "Computer Science 2019": {
+  "Computer Science 2018": {
     cat: [
       {
         name: "Foundation",

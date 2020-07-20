@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  SegmentedControlIOS,
+} from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";
@@ -13,8 +20,6 @@ const height = Dimensions.get("window").height;
 const hairlineWidth = StyleSheet.hairlineWidth;
 
 const TypePage = ({ navigation, route }) => {
-  const [editMode, setEdit] = useState(false);
-
   useEffect(() => {
     if (route.params?.from === "Records" && route.params?.taken) {
       const toMatch = route.params?.title;
@@ -24,8 +29,8 @@ const TypePage = ({ navigation, route }) => {
       const tempArr2 = notTakenAll.filter((x) => x.type === toMatch);
       setTaken(tempArr1);
       setNotTaken(tempArr2);
-      setOrigTaken(tempArr1);
       setOrigNotTaken(tempArr2);
+      setMcs(route.params?.mcsRequired);
     }
     if (route.params?.from === "AddModule" && route.params?.modDetails) {
       const newArr = route.params?.modDetails;
@@ -48,13 +53,14 @@ const TypePage = ({ navigation, route }) => {
     }
   }, [route.params?.taken, route.params?.modDetails]);
 
+  const [editMode, setEdit] = useState(false);
   const [title, setTitle] = useState(route.params?.title);
   const [taken, setTaken] = useState([]);
   const [notTaken, setNotTaken] = useState([]);
   const [toAdd, setAdd] = useState(new Set());
   const [toDel, setDel] = useState(new Set());
-  const [origTaken, setOrigTaken] = useState([]);
   const [origNotTaken, setOrigNotTaken] = useState([]);
+  const [mcs, setMcs] = useState();
 
   const holders = (item) => (
     <View style={styles.headerText}>
@@ -113,6 +119,18 @@ const TypePage = ({ navigation, route }) => {
     </View>
   );
 
+  const amtLeft = () => {
+    let amt = 0;
+    for (let i = 0; i < taken.length; i++) {
+      amt += taken[i].numMcs;
+    }
+    for (let i = 0; i < notTaken.length; i++) {
+      amt += notTaken[i].numMcs;
+    }
+    const ret = mcs - amt;
+    return ret > 0 ? ret : 0;
+  };
+
   const Box = () => (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -140,22 +158,35 @@ const TypePage = ({ navigation, route }) => {
         </Text>
       </View>
       <FlatList
-        initialScrollIndex={0}
         showsVerticalScrollIndicator={false}
         data={taken.concat(notTaken)}
+        extraData={notTaken}
         keyExtractor={(item) => item.code}
         renderItem={({ item }) =>
           item.grade !== undefined ? holders(item) : holders2(item)
         }
       />
-      {editMode ? (
-        <AddModuleButton
-          size={47}
-          func={() => navigation.navigate("AddModule", { item: "TypePage" })}
-        />
-      ) : (
-        <EditButton func={() => setEdit(!editMode)} />
-      )}
+      <View style={{ marginTop: 10 }}>
+        {editMode ? (
+          <AddModuleButton
+            size={45}
+            func={() => navigation.navigate("AddModule", { item: "TypePage" })}
+          />
+        ) : (
+          <EditButton func={() => setEdit(!editMode)} />
+        )}
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_13,
+            color: "#232323",
+            marginTop: 5,
+            marginBottom: 10,
+            alignSelf: "center",
+          }}
+        >
+          {`You currently have ${amtLeft()} MCs left to plan`}
+        </Text>
+      </View>
     </View>
   );
 
@@ -164,10 +195,10 @@ const TypePage = ({ navigation, route }) => {
       width: width * 0.9,
       height: Math.min(
         height * 0.88,
-        (taken.length + notTaken.length) * 37 + 125
+        (taken.length + notTaken.length) * 38 + 140
       ),
       alignSelf: "center",
-      marginTop: 20,
+      marginTop: 18,
       borderRadius: 14,
       borderColor: "#A0A0A0",
       borderWidth: hairlineWidth,
@@ -190,14 +221,15 @@ const TypePage = ({ navigation, route }) => {
       flexDirection: "row",
       justifyContent: "space-between",
       padding: 10,
-      marginBottom: 8,
       borderBottomColor: "#A0A0A0",
       borderBottomWidth: hairlineWidth,
     },
     headerText: {
       flexDirection: "row",
       justifyContent: "space-between",
-      padding: 10,
+      paddingHorizontal: 10,
+      paddingTop: 15,
+      paddingBottom: 5,
     },
   });
 
@@ -211,9 +243,10 @@ const TypePage = ({ navigation, route }) => {
             size={25}
             style={{ color: "#232323" }}
             onPress={() => {
+              // Close
               if (editMode) {
+                setNotTaken(origNotTaken);
                 setEdit(false);
-                setArr(original);
               } else {
                 navigation.goBack();
               }
@@ -226,6 +259,8 @@ const TypePage = ({ navigation, route }) => {
               onPress={() => {
                 setEdit(!editMode);
                 if (toAdd.size > 0 || toDel.size > 0) {
+                  console.log(toAdd);
+                  setOrigNotTaken(notTaken);
                   const arrToAdd = Array.from(toAdd);
                   const arrToDel = Array.from(toDel);
                   const fb = FirebaseDB.firestore();

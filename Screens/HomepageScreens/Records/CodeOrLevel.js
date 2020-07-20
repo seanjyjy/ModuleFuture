@@ -16,14 +16,12 @@ const CodeOrLevel = ({ navigation, route }) => {
       const category = type === "Code" ? "codePrefix" : "level";
       const takenAll = route.params?.taken;
       const notTakenAll = route.params?.notTaken;
-      const tempArr1 = takenAll
-        .filter((x) => x[category] === toMatch)
-        .sort((a, b) => {});
+      const tempArr1 = takenAll.filter((x) => x[category] === toMatch);
       const tempArr2 = notTakenAll.filter((x) => x[category] === toMatch);
       setTaken(tempArr1);
       setNotTaken(tempArr2);
     }
-  }, []);
+  }, [route.params?.taken]);
 
   const [taken, setTaken] = useState([]);
   const [notTaken, setNotTaken] = useState([]);

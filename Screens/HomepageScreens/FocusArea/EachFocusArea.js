@@ -16,70 +16,61 @@ const EachFocusArea = ({ navigation, route }) => {
   const [arr, setArr] = useState([]);
   const [editMode, setEdit] = useState(false);
   const [index, setIndex] = useState();
-  const [original, setOrig] = useState(route.params?.arr);
+  const [origNotTaken, setOrigNotTaken] = useState([]);
+  const [taken, setTaken] = useState([]);
+  const [notTaken, setNotTaken] = useState([]);
 
   useEffect(() => {
     if (route.params?.from === "FocusArea" && route.params?.name) {
+      setTaken(route.params?.taken);
+      setNotTaken(route.params?.notTaken);
+      setOrigNotTaken(route.params?.notTaken);
       setArr(route.params?.arr);
       setIndex(route.params?.index);
     }
     if (route.params?.from === "AddModule" && route.params?.modDetails) {
       const newArr = route.params?.modDetails;
-      const temp = arr.slice(0);
+      const temp = notTaken.slice(0);
       for (let i = 0; i < newArr.length; i++) {
-        temp[0].notTaken.push({
+        temp.push({
           code: newArr[i].code,
           name: newArr[i].name,
         });
       }
-      setArr(temp);
+      setNotTaken(temp);
     }
   }, [route.params?.name, route.params?.modDetails]);
 
   const FullView = () => {
-    const IndividualBox = (current) => {
-      const lastItem = current.name === "Electives";
-
-      const taken = current.taken.sort((a, b) => {
-        if (a.sem < b.sem) {
-          return -1;
-        } else if (a.sem === b.sem) {
-          if (a.code < b.code) {
-            return -1;
-          } else {
-            return 1;
-          }
-        } else {
-          return 1;
-        }
-      });
-
-      const holders = (item) => (
-        <View style={styles.moduleText}>
-          <View style={{ width: "59%" }}>
-            <Text
-              numberOfLines={1}
-              style={{
-                ...globalFontStyles.OSSB_13,
-                color: "#232323",
-              }}
-            >
-              {item.name}
-            </Text>
-          </View>
+    const holders = (item) => (
+      <View style={styles.moduleText}>
+        <View style={{ width: "59%" }}>
           <Text
+            numberOfLines={1}
             style={{
               ...globalFontStyles.OSSB_13,
               color: "#232323",
             }}
           >
-            {item.grade}
-          </Text>
-          <Text style={{ ...globalFontStyles.OSSB_13, color: "#232323" }}>
-            {item.sem}
+            {item.name}
           </Text>
         </View>
-      );
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_13,
+            color: "#232323",
+          }}
+        >
+          {item.grade}
+        </Text>
+        <Text style={{ ...globalFontStyles.OSSB_13, color: "#232323" }}>
+          {item.sem}
+        </Text>
+      </View>
+    );
+
+    const IndividualBox = (current) => {
+      const lastItem = current.name === "Electives";
 
       const holders2 = (item) => (
         <View style={styles.moduleText}>
@@ -94,40 +85,8 @@ const EachFocusArea = ({ navigation, route }) => {
               {item.name}
             </Text>
           </View>
-          {current.name === "Prereq" && editMode ? (
-            <Icon
-              name="trash-2-outline"
-              width={30}
-              height={15}
-              fill="#232323"
-              onPress={() => {
-                const temp = arr.slice(0);
-                temp[0].notTaken = temp[0].notTaken.filter(
-                  (x) => x.code !== item.code
-                );
-                setArr(temp);
-              }}
-            />
-          ) : null}
         </View>
       );
-
-      const edit = () => {
-        if (current.name === "Prereq") {
-          if (editMode) {
-            return (
-              <AddModuleButton
-                size={35}
-                func={() =>
-                  navigation.navigate("AddModule", { item: "EachFocusArea" })
-                }
-              />
-            );
-          } else {
-            return <EditButton func={() => setEdit(!editMode)} />;
-          }
-        }
-      };
 
       return (
         <View
@@ -158,24 +117,104 @@ const EachFocusArea = ({ navigation, route }) => {
           </View>
           <View style={{ flexDirection: "column", width: "80%" }}>
             <FlatList
-              data={taken.concat(current.notTaken)}
+              data={current.taken.concat(current.notTaken)}
               keyExtractor={(item) => item.code}
               renderItem={({ item }) =>
-                item !== undefined && item.grade !== undefined
-                  ? holders(item)
-                  : holders2(item)
+                item.grade !== undefined ? holders(item) : holders2(item)
               }
             />
-            <View style={{ marginTop: 8 }}>{edit()}</View>
           </View>
         </View>
       );
     };
 
+    const holdersPrereq = (item) => (
+      <View style={styles.moduleText}>
+        <View style={{ width: "59%" }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              ...globalFontStyles.OSSB_13,
+              color: "#68686880",
+            }}
+          >
+            {item.name}
+          </Text>
+        </View>
+        {editMode ? (
+          <Icon
+            name="trash-2-outline"
+            width={30}
+            height={15}
+            fill="#232323"
+            onPress={() => {
+              const temp = notTaken.filter((x) => x.code !== item.code);
+              setNotTaken(temp);
+            }}
+          />
+        ) : null}
+      </View>
+    );
+
+    const edit = () => {
+      if (editMode) {
+        return (
+          <AddModuleButton
+            size={35}
+            func={() =>
+              navigation.navigate("AddModule", { item: "EachFocusArea" })
+            }
+          />
+        );
+      } else {
+        return <EditButton func={() => setEdit(!editMode)} />;
+      }
+    };
+
+    const firstBox = () => (
+      <View
+        style={{
+          ...styles.innerFlatList,
+        }}
+      >
+        <View
+          style={{
+            width: "20%",
+            borderRightColor: "lightgrey",
+            borderRightWidth: 0.7,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              ...globalFontStyles.OSSB_13,
+              color: "#232323",
+              textAlign: "center",
+            }}
+          >
+            Prereq
+          </Text>
+        </View>
+        <View style={{ flexDirection: "column", width: "80%" }}>
+          <FlatList
+            data={taken.concat(notTaken)}
+            keyExtractor={(item) => item.code}
+            extraData={notTaken}
+            renderItem={({ item }) =>
+              item.grade !== undefined ? holders(item) : holdersPrereq(item)
+            }
+          />
+          <View style={{ marginTop: 8 }}>{edit()}</View>
+        </View>
+      </View>
+    );
+
     return (
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.fullBox}
+        ListHeaderComponent={firstBox()}
         ListFooterComponent={<View style={{ height: 35 }}></View>}
         data={arr}
         keyExtractor={(item) => item.name}
@@ -195,8 +234,8 @@ const EachFocusArea = ({ navigation, route }) => {
             style={{ color: "#232323" }}
             onPress={() => {
               if (editMode) {
+                setNotTaken(origNotTaken);
                 setEdit(false);
-                setArr(original);
               } else {
                 navigation.goBack();
               }
@@ -207,15 +246,14 @@ const EachFocusArea = ({ navigation, route }) => {
           editMode ? (
             <Text
               onPress={() => {
+                setOrigNotTaken(notTaken);
                 setEdit(false);
                 const fb = FirebaseDB.firestore();
                 const userID = FirebaseDB.auth().currentUser.uid;
                 const focusAreaRef = fb.collection("focusArea").doc(userID);
                 focusAreaRef.get().then((document) => {
                   const current = document.data();
-                  current.cat[index].Prereq.modules = arr[0].taken.concat(
-                    arr[0].notTaken
-                  );
+                  current.cat[index].Prereq.modules = taken.concat(notTaken);
                   focusAreaRef.set(current);
                 });
               }}

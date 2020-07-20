@@ -5,6 +5,7 @@ export const specialisations = {
         name: "Algorithms & Theory",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -21,6 +22,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -40,6 +42,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3233", name: "CS3233 Competitive Programming" },
             {
@@ -78,6 +81,7 @@ export const specialisations = {
         name: "Artificial Intellgence",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -102,6 +106,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -126,6 +131,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -171,6 +177,7 @@ export const specialisations = {
         shortName: "Computer Graphics",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030S Programming Methodology II",
@@ -195,6 +202,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -209,6 +217,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3218",
@@ -247,6 +256,7 @@ export const specialisations = {
         name: "Computer Security",
         key: 4,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1101S Programming Methodology",
@@ -275,6 +285,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -292,6 +303,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3221",
@@ -325,6 +337,7 @@ export const specialisations = {
         name: "Database Systems",
         key: 5,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1231S Discrete Structures",
@@ -341,6 +354,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -358,6 +372,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -377,6 +392,7 @@ export const specialisations = {
         shortName: "Multimedia",
         key: 6,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030S Programming Methodology II",
@@ -393,6 +409,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -407,6 +424,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS5246", name: "CS5246 Text Mining" },
             { code: "CS5241", name: "CS5241 Speech Processing" },
@@ -419,6 +437,7 @@ export const specialisations = {
         shortName: "Networking",
         key: 7,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2040S Data Structures and Algorithms",
@@ -435,6 +454,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -452,6 +472,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3237",
@@ -474,6 +495,7 @@ export const specialisations = {
         name: "Parallel Computing",
         key: 8,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2100 Computer Organisation",
@@ -490,6 +512,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -506,6 +529,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS5222",
@@ -526,6 +550,7 @@ export const specialisations = {
         name: "Programming Languages",
         key: 9,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030S Programming Methodology II",
@@ -542,6 +567,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -558,6 +584,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3234", name: "CS3234 Logic for Proofs and Programs" },
             { code: "CS4216", name: "CS4216 Constraint Logic Programming" },
@@ -582,6 +609,7 @@ export const specialisations = {
         name: "Software Engineering",
         key: 10,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2030S",
@@ -594,6 +622,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -611,6 +640,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3216",
@@ -649,6 +679,7 @@ export const specialisations = {
         name: "Algorithms & Theory",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -665,6 +696,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -684,6 +716,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3233", name: "CS3233 Competitive Programming" },
             {
@@ -722,6 +755,7 @@ export const specialisations = {
         name: "Artificial Intellgence",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -746,6 +780,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -770,6 +805,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -815,6 +851,7 @@ export const specialisations = {
         shortName: "Computer Graphics",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -839,6 +876,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -853,6 +891,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3218",
@@ -891,6 +930,7 @@ export const specialisations = {
         name: "Computer Security",
         key: 4,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1101S Programming Methodology",
@@ -919,6 +959,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -936,6 +977,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3221",
@@ -969,6 +1011,7 @@ export const specialisations = {
         name: "Database Systems",
         key: 5,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1231S Discrete Structures",
@@ -985,6 +1028,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1002,6 +1046,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -1021,6 +1066,7 @@ export const specialisations = {
         shortName: "Multimedia",
         key: 6,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -1037,6 +1083,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1051,6 +1098,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS5246", name: "CS5246 Text Mining" },
             { code: "CS5241", name: "CS5241 Speech Processing" },
@@ -1063,6 +1111,7 @@ export const specialisations = {
         shortName: "Networking",
         key: 7,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2040S Data Structures and Algorithms",
@@ -1079,6 +1128,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1096,6 +1146,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3237",
@@ -1118,6 +1169,7 @@ export const specialisations = {
         name: "Parallel Computing",
         key: 8,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2100 Computer Organisation",
@@ -1134,6 +1186,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1150,6 +1203,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS5222",
@@ -1170,6 +1224,7 @@ export const specialisations = {
         name: "Programming Languages",
         key: 9,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -1186,6 +1241,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1202,6 +1258,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3234", name: "CS3234 Logic for Proofs and Programs" },
             { code: "CS4216", name: "CS4216 Constraint Logic Programming" },
@@ -1226,6 +1283,7 @@ export const specialisations = {
         name: "Software Engineering",
         key: 10,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2030",
@@ -1238,6 +1296,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1255,6 +1314,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3216",
@@ -1293,6 +1353,7 @@ export const specialisations = {
         name: "Algorithms & Theory",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -1309,6 +1370,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -1328,6 +1390,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3233", name: "CS3233 Competitive Programming" },
             {
@@ -1366,6 +1429,7 @@ export const specialisations = {
         name: "Artificial Intellgence",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -1390,6 +1454,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1414,6 +1479,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -1459,6 +1525,7 @@ export const specialisations = {
         shortName: "Computer Graphics",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -1483,6 +1550,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1497,6 +1565,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3218",
@@ -1535,6 +1604,7 @@ export const specialisations = {
         name: "Computer Security",
         key: 4,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1101S Programming Methodology",
@@ -1563,6 +1633,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1580,6 +1651,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3221",
@@ -1613,6 +1685,7 @@ export const specialisations = {
         name: "Database Systems",
         key: 5,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1231S Discrete Structures",
@@ -1629,6 +1702,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1646,6 +1720,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -1665,6 +1740,7 @@ export const specialisations = {
         shortName: "Multimedia",
         key: 6,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -1681,6 +1757,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1695,6 +1772,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS5246", name: "CS5246 Text Mining" },
             { code: "CS5241", name: "CS5241 Speech Processing" },
@@ -1707,6 +1785,7 @@ export const specialisations = {
         shortName: "Networking",
         key: 7,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2040S Data Structures and Algorithms",
@@ -1723,6 +1802,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1740,6 +1820,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3237",
@@ -1762,6 +1843,7 @@ export const specialisations = {
         name: "Parallel Computing",
         key: 8,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2100 Computer Organisation",
@@ -1778,6 +1860,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1794,6 +1877,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS5222",
@@ -1814,6 +1898,7 @@ export const specialisations = {
         name: "Programming Languages",
         key: 9,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -1830,6 +1915,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1846,6 +1932,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3234", name: "CS3234 Logic for Proofs and Programs" },
             { code: "CS4216", name: "CS4216 Constraint Logic Programming" },
@@ -1870,6 +1957,7 @@ export const specialisations = {
         name: "Software Engineering",
         key: 10,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2030",
@@ -1882,6 +1970,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -1899,6 +1988,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3216",
@@ -1937,6 +2027,7 @@ export const specialisations = {
         name: "Algorithms & Theory",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -1953,6 +2044,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -1972,6 +2064,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3233", name: "CS3233 Competitive Programming" },
             {
@@ -2010,6 +2103,7 @@ export const specialisations = {
         name: "Artificial Intellgence",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1231S",
@@ -2034,6 +2128,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2058,6 +2153,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -2103,6 +2199,7 @@ export const specialisations = {
         shortName: "Computer Graphics",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -2127,6 +2224,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2141,6 +2239,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3218",
@@ -2179,6 +2278,7 @@ export const specialisations = {
         name: "Computer Security",
         key: 4,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1101S Programming Methodology",
@@ -2207,6 +2307,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2224,6 +2325,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3221",
@@ -2257,6 +2359,7 @@ export const specialisations = {
         name: "Database Systems",
         key: 5,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS1231S Discrete Structures",
@@ -2273,6 +2376,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2290,6 +2394,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS4220",
@@ -2309,6 +2414,7 @@ export const specialisations = {
         shortName: "Multimedia",
         key: 6,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -2325,6 +2431,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2339,6 +2446,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS5246", name: "CS5246 Text Mining" },
             { code: "CS5241", name: "CS5241 Speech Processing" },
@@ -2351,6 +2459,7 @@ export const specialisations = {
         shortName: "Networking",
         key: 7,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2040S Data Structures and Algorithms",
@@ -2367,6 +2476,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2384,6 +2494,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3237",
@@ -2406,6 +2517,7 @@ export const specialisations = {
         name: "Parallel Computing",
         key: 8,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2100 Computer Organisation",
@@ -2422,6 +2534,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2438,6 +2551,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS5222",
@@ -2458,6 +2572,7 @@ export const specialisations = {
         name: "Programming Languages",
         key: 9,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "CS2030 Programming Methodology II",
@@ -2474,6 +2589,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2490,6 +2606,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             { code: "CS3234", name: "CS3234 Logic for Proofs and Programs" },
             { code: "CS4216", name: "CS4216 Constraint Logic Programming" },
@@ -2514,6 +2631,7 @@ export const specialisations = {
         name: "Software Engineering",
         key: 10,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2030",
@@ -2526,6 +2644,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2543,6 +2662,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           modules: [
             {
               code: "CS3216",
@@ -2581,6 +2701,7 @@ export const specialisations = {
         name: "Financial Analytics",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "BT2101 Decision Making Methods and Tools",
@@ -2601,6 +2722,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -2619,6 +2741,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             { code: "BT4012", name: "BT4012 Fraud Analytics" },
@@ -2645,6 +2768,7 @@ export const specialisations = {
         name: "Marketing Analytics",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "MKT1705X Principles of Marketing",
@@ -2661,6 +2785,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2676,6 +2801,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -2709,6 +2835,7 @@ export const specialisations = {
         name: "Financial Analytics",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "BT2101 Decision Making Methods and Tools",
@@ -2729,6 +2856,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -2747,6 +2875,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             { code: "BT4012", name: "BT4012 Fraud Analytics" },
@@ -2773,6 +2902,7 @@ export const specialisations = {
         name: "Marketing Analytics",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "MKT1705X Principles of Marketing",
@@ -2789,6 +2919,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2804,6 +2935,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -2837,6 +2969,7 @@ export const specialisations = {
         name: "Financial Analytics",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "BT2101 Decision Making Methods and Tools",
@@ -2857,6 +2990,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -2875,6 +3009,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             { code: "BT4012", name: "BT4012 Fraud Analytics" },
@@ -2901,6 +3036,7 @@ export const specialisations = {
         name: "Marketing Analytics",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "MKT1705X Principles of Marketing",
@@ -2917,6 +3053,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -2932,6 +3069,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -2965,6 +3103,7 @@ export const specialisations = {
         name: "Financial Analytics",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "BT2101 Decision Making Methods and Tools",
@@ -2985,6 +3124,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3003,6 +3143,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             { code: "BT4012", name: "BT4012 Fraud Analytics" },
@@ -3029,6 +3170,7 @@ export const specialisations = {
         name: "Marketing Analytics",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               name: "MKT1705X Principles of Marketing",
@@ -3045,6 +3187,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -3060,6 +3203,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3093,6 +3237,7 @@ export const specialisations = {
         name: "Digital Innovation",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS1103",
@@ -3109,6 +3254,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3126,6 +3272,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3171,6 +3318,7 @@ export const specialisations = {
         name: "Electronic Commerce",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS2101",
@@ -3193,6 +3341,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -3211,6 +3360,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3244,6 +3394,7 @@ export const specialisations = {
         name: "Financial Technology",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2102",
@@ -3264,6 +3415,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3281,6 +3433,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3322,6 +3475,7 @@ export const specialisations = {
         name: "Digital Innovation",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS1103",
@@ -3338,6 +3492,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3355,6 +3510,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3400,6 +3556,7 @@ export const specialisations = {
         name: "Electronic Commerce",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS2101",
@@ -3422,6 +3579,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -3440,6 +3598,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3473,6 +3632,7 @@ export const specialisations = {
         name: "Financial Technology",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2102",
@@ -3493,6 +3653,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3510,6 +3671,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3551,6 +3713,7 @@ export const specialisations = {
         name: "Digital Innovation",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS1103",
@@ -3567,6 +3730,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3584,6 +3748,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3629,6 +3794,7 @@ export const specialisations = {
         name: "Electronic Commerce",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS2101",
@@ -3651,6 +3817,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -3669,6 +3836,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3702,6 +3870,7 @@ export const specialisations = {
         name: "Financial Technology",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2102",
@@ -3722,6 +3891,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3739,6 +3909,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3780,6 +3951,7 @@ export const specialisations = {
         name: "Digital Innovation",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS1103",
@@ -3796,6 +3968,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3813,6 +3986,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3858,6 +4032,7 @@ export const specialisations = {
         name: "Electronic Commerce",
         key: 2,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "IS2101",
@@ -3880,6 +4055,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
 
           modules: [
@@ -3898,6 +4074,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -3931,6 +4108,7 @@ export const specialisations = {
         name: "Financial Technology",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS2102",
@@ -3951,6 +4129,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -3968,6 +4147,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -4009,6 +4189,7 @@ export const specialisations = {
         name: "Internet of Things",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4029,6 +4210,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -4046,6 +4228,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -4090,10 +4273,9 @@ export const specialisations = {
       {
         name: "Robotics",
         key: 2,
-        Prereq: {
-          modules: [],
-        },
+        Prereq: { name: "Prereq", modules: [] },
         Primaries: {
+          name: "Primaries",
           numRequired: 1,
           modules: [
             {
@@ -4103,6 +4285,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 4,
           modules: [
             {
@@ -4148,6 +4331,7 @@ export const specialisations = {
         name: "Data Engineering",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4160,6 +4344,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 4,
           modules: [
             {
@@ -4181,6 +4366,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 2,
           modules: [
             {
@@ -4224,6 +4410,7 @@ export const specialisations = {
         name: "Internet of Things",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4244,6 +4431,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -4261,6 +4449,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -4305,10 +4494,9 @@ export const specialisations = {
       {
         name: "Robotics",
         key: 2,
-        Prereq: {
-          modules: [],
-        },
+        Prereq: { name: "Prereq", modules: [] },
         Primaries: {
+          name: "Primaries",
           numRequired: 1,
           modules: [
             {
@@ -4318,6 +4506,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 4,
           modules: [
             {
@@ -4363,6 +4552,7 @@ export const specialisations = {
         name: "Data Engineering",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4375,6 +4565,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 4,
           modules: [
             {
@@ -4396,6 +4587,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 2,
           modules: [
             {
@@ -4439,6 +4631,7 @@ export const specialisations = {
         name: "Internet of Things",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4459,6 +4652,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -4476,6 +4670,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -4520,10 +4715,9 @@ export const specialisations = {
       {
         name: "Robotics",
         key: 2,
-        Prereq: {
-          modules: [],
-        },
+        Prereq: { name: "Prereq", modules: [] },
         Primaries: {
+          name: "Primaries",
           numRequired: 1,
           modules: [
             {
@@ -4533,6 +4727,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 4,
           modules: [
             {
@@ -4578,6 +4773,7 @@ export const specialisations = {
         name: "Data Engineering",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4590,6 +4786,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 4,
           modules: [
             {
@@ -4611,6 +4808,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 2,
           modules: [
             {
@@ -4654,6 +4852,7 @@ export const specialisations = {
         name: "Internet of Things",
         key: 1,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4674,6 +4873,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 3,
           modules: [
             {
@@ -4691,6 +4891,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 3,
           modules: [
             {
@@ -4735,10 +4936,9 @@ export const specialisations = {
       {
         name: "Robotics",
         key: 2,
-        Prereq: {
-          modules: [],
-        },
+        Prereq: { name: "Prereq", modules: [] },
         Primaries: {
+          name: "Primaries",
           numRequired: 1,
           modules: [
             {
@@ -4748,6 +4948,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 4,
           modules: [
             {
@@ -4793,6 +4994,7 @@ export const specialisations = {
         name: "Data Engineering",
         key: 3,
         Prereq: {
+          name: "Prereq",
           modules: [
             {
               code: "CS1010",
@@ -4805,6 +5007,7 @@ export const specialisations = {
           ],
         },
         Primaries: {
+          name: "Primaries",
           numRequired: 4,
           modules: [
             {
@@ -4826,6 +5029,7 @@ export const specialisations = {
           ],
         },
         Electives: {
+          name: "Electives",
           numRequired: 2,
           modules: [
             {

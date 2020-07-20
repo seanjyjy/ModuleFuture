@@ -11,6 +11,7 @@ import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../Component/GlobalFont";
+import AddYourOwn from "../../../Component/AddYourOwn";
 import FirebaseDB from "../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
@@ -24,10 +25,10 @@ const FocusArea = ({ navigation }) => {
   const takenModulesRef = fb.collection("takenModules").doc(userID);
 
   useEffect(() => {
-    takenModulesRef.get().then((document) => {
+    takenModulesRef.onSnapshot((document) => {
       setTaken(document.data());
     });
-    focusAreaRef.get().then((document) => {
+    focusAreaRef.onSnapshot((document) => {
       setFocus(document.data().cat);
     });
   }, []);
@@ -117,6 +118,22 @@ const FocusArea = ({ navigation }) => {
     } else {
       return false;
     }
+  };
+
+  const sort = (arr) => {
+    return arr.sort((a, b) => {
+      if (a.sem < b.sem) {
+        return -1;
+      } else if (a.sem === b.sem) {
+        if (a.code < b.code) {
+          return -1;
+        } else {
+          return 1;
+        }
+      } else {
+        return 1;
+      }
+    });
   };
 
   const GradeToPoint = (val) => {
@@ -274,19 +291,23 @@ const FocusArea = ({ navigation }) => {
           style={styles.container}
           activeOpacity={0.9}
           onPress={() => {
+            // to remove on restart
             current.Prereq.name = "Prereq";
             current.Primaries.name = "Primaries";
             current.Electives.name = "Electives";
-            const arr = [];
-            arr[0] = current.Prereq;
-            arr[1] = current.Primaries;
-            arr[2] = current.Electives;
+
+            current.Primaries.taken = sort(current.Primaries.taken);
+            current.Electives.taken = sort(current.Electives.taken);
+
+            const arr = [current.Primaries, current.Electives];
             navigation.navigate("EachFocusArea", {
               name:
                 current.shortName === undefined
                   ? current.name
                   : current.shortName,
               arr: arr,
+              taken: sort(current.Prereq.taken),
+              notTaken: current.Prereq.notTaken,
               index: current.key - 1,
               from: "FocusArea",
             });
@@ -324,32 +345,7 @@ const FocusArea = ({ navigation }) => {
           renderItem={({ item }) => holders(item)}
           keyExtractor={(item) => item.key.toString()}
           ListFooterComponent={
-            <View
-              style={{
-                top: 25,
-                marginBottom: height * 0.11,
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  ...globalFontStyles.OSB_15,
-                  color: "#434343",
-                  textAlign: "center",
-                }}
-              >
-                Unable to find a focus area?
-              </Text>
-              <TouchableOpacity
-                style={styles.buttonDesign}
-                activeOpacity={0.875}
-                onPress={() => null}
-              >
-                <Text style={{ ...globalFontStyles.NBEB_15, color: "white" }}>
-                  Add your own!
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <AddYourOwn func={() => null} text={"focus area"} />
           }
         />
       </View>

@@ -39,7 +39,7 @@ const ModuleListWithKey = () => {
   let current;
   let i = 0;
 
-  // const getPrereq = async (code) => {
+  // const getPrereq = (code) => {
   //   try {
   //     const response = await fetch(
   //       `https://api.nusmods.com/v2/2020-2021/modules/${code}.json`

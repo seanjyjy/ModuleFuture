@@ -12,8 +12,10 @@ import Header from "../../../Component/Header";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
 import FullViewHeader from "../../../Component/FullViewHeader";
+import AddYourOwn from "../../../Component/AddYourOwn";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
+import { ModuleListWithKey } from "../../../Data/ModuleListMoreInfo";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -28,18 +30,18 @@ const Records = () => {
   const recordsRef = fb.collection("records").doc(userID);
 
   useEffect(() => {
-    recordsRef.get().then((document) => {
+    recordsRef.onSnapshot((document) => {
       const data = document.data();
       setTaken(data.taken);
       setNotTaken(data.notTaken);
     });
-    typeRef.get().then((document) => {
+    typeRef.onSnapshot((document) => {
       setType(document.data().cat);
     });
-    levelRef.get().then((document) => {
+    levelRef.onSnapshot((document) => {
       setLevel(document.data().cat);
     });
-    codeRef.get().then((document) => {
+    codeRef.onSnapshot((document) => {
       setCode(document.data().cat);
     });
   }, []);
@@ -191,16 +193,6 @@ const Records = () => {
     );
   };
 
-  // const menu = () => {
-  //   if (currentType === "Type") {
-  //     return type;
-  //   } else if (currentType === "Level") {
-  //     return level;
-  //   } else {
-  //     return code;
-  //   }
-  // };
-
   /* --------------------------------------------Floating content------------------------------------------------ */
 
   const colors = [
@@ -330,22 +322,22 @@ const Records = () => {
           style={styles.container}
           activeOpacity={0.9}
           onPress={() => {
-            if (item.fixed !== undefined) {
+            if (currentType !== "Type") {
               navigation.navigate("CodeOrLevel", {
                 taken: taken,
                 notTaken: notTaken,
                 title: item.name,
-                context: item.context !== undefined ? item.context : item.name,
+                context: currentType === "Level" ? item.context : item.name,
                 type: currentType,
               });
-            } else {
+            } else
               navigation.navigate("TypePage", {
                 taken: taken,
                 notTaken: notTaken,
                 title: item.name,
+                mcsRequired: item.mcsRequired,
                 from: "Records",
               });
-            }
           }}
         >
           <View
@@ -380,32 +372,11 @@ const Records = () => {
           renderItem={({ item }) => holders(item)}
           keyExtractor={(item) => item.key.toString()}
           ListFooterComponent={
-            <View
-              style={{
-                marginTop: 25,
-                marginBottom: height * 0.11,
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  ...globalFontStyles.OSB_15,
-                  color: "#434343",
-                  textAlign: "center",
-                }}
-              >
-                Unable to find a type?
-              </Text>
-              <TouchableOpacity
-                style={styles.buttonDesign}
-                activeOpacity={0.875}
-                onPress={() => null}
-              >
-                <Text style={{ ...globalFontStyles.NBEB_15, color: "white" }}>
-                  Add your own!
-                </Text>
-              </TouchableOpacity>
-            </View>
+            currentType === "Type" ? (
+              <AddYourOwn func={() => null} text={"type"} />
+            ) : (
+              <View style={{ height: height * 0.11 }}></View>
+            )
           }
         />
       </View>
@@ -621,23 +592,5 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "center",
-  },
-  buttonDesign: {
-    height: 30,
-    backgroundColor: "#FB5581",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 7,
-    width: 160,
-    top: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-
-    elevation: 4,
   },
 });

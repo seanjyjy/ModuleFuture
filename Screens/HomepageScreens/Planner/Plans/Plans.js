@@ -251,6 +251,7 @@ const Plans = (props) => {
   const [selectedplansinfo, setselectedplansinfo] = useState(info[4]);
 
   const fb = FirebaseDB.firestore();
+  const [moduleMapping, setModuleMapping] = useState({});
   const [Types, setTypes] = useState({});
   const [Codes, setCodes] = useState({});
   const [Levels, setLevels] = useState({});
@@ -261,7 +262,9 @@ const Plans = (props) => {
   const codeRef = fb.collection("codeArray").doc(userID);
   const levelRef = fb.collection("levelArray").doc(userID);
   const recordsRef = fb.collection("records").doc(userID);
+  const moduleMappingRef = fb.collection("modulesMapping").doc(userID);
   const takenModulesRef = fb.collection("takenModules").doc(userID);
+
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
       (document) => {
@@ -303,6 +306,9 @@ const Plans = (props) => {
           setShowDustBin(false);
           setCurrentID("-1");
         }
+        moduleMappingRef.get().then((document) => {
+          setModuleMapping(document.data());
+        });
         recordsRef.get().then((document) => {
           setRecords(document.data());
         });
@@ -672,6 +678,72 @@ const Plans = (props) => {
                             const usersModulesDetailsRef = FirebaseDB.firestore()
                               .collection("usersModulesDetails")
                               .doc(userID);
+
+                            // Removing current modules from the current semester
+                            // Updating for records / focus area
+
+                            const origTaken = records.taken;
+                            const origNotTaken = records.notTaken;
+                            const toInclude = new Set(records.mapping);
+                            let newNotTaken = [];
+                            const newTaken = [];
+                            let typeObj = Types;
+                            let codeObj = Codes;
+                            let levelObj = Levels;
+
+                            for (let i = 0; i < origTaken.length; i++) {
+                              if (origTaken[i].sem === fromWhere) {
+                                const numMcs = origTaken[i].numMcs;
+                                const codePrefix = origTaken[i].codePrefix;
+                                const type = origTaken[i].type;
+                                const level = origTaken[i].level;
+                                const code = origTaken[i].code;
+                                const grade = origTaken[i].grade;
+                                const modulePoints =
+                                  numMcs * GradeToPoint(grade);
+                                const bool = lettersChecker(grade);
+
+                                if (toInclude.has(type)) {
+                                  origNotTaken.push({
+                                    name: origTaken[i].name,
+                                    type: type,
+                                    code: code,
+                                    level: level,
+                                    codePrefix: codePrefix,
+                                    numMcs: numMcs,
+                                  });
+                                }
+
+                                const indexType = typeObj[type];
+                                const indexCode = codeObj[codePrefix];
+                                const indexLevel = levelObj[level.toString()];
+                                if (grade !== "CU") {
+                                  typeObj.cat[indexType].mcsTaken -= numMcs;
+                                  typeObj.cat[indexType].numTaken -= 1;
+                                  codeObj.cat[indexCode].mcsTaken -= numMcs;
+                                  codeObj.cat[indexCode].numTaken -= 1;
+                                  levelObj.cat[indexLevel].mcsTaken -= numMcs;
+                                  levelObj.cat[indexLevel].numTaken -= 1;
+                                }
+                                if (bool) {
+                                  typeObj.cat[indexType].mcsUsedInCap -= numMcs;
+                                  codeObj.cat[indexCode].mcsUsedInCap -= numMcs;
+                                  levelObj.cat[
+                                    indexLevel
+                                  ].mcsUsedInCap -= numMcs;
+
+                                  typeObj.cat[indexType].points -= modulePoints;
+                                  levelObj.cat[
+                                    indexLevel
+                                  ].points -= modulePoints;
+                                  codeObj.cat[indexCode].points -= modulePoints;
+                                }
+                                delete taken[code];
+                              } else {
+                                newTaken.push(origTaken[i]);
+                              }
+                            }
+
                             if (haveAchange) {
                               // this signifies that the users has an older data with final grades input
                               const dataToBeInserted = FirebaseDB.firestore()
@@ -691,33 +763,246 @@ const Plans = (props) => {
                               let thisSemtotalMc = 0;
                               let thisSemsemMc = 0;
                               let newModulesDetailsArray = [];
+
                               dataToBeInserted
                                 .get()
                                 .then((document) => {
                                   const val = document.data();
                                   const arr = val.planInfo;
-                                  for (let i = 0; i < arr.length; i++) {
-                                    newModulesDetailsArray.push({
-                                      FinalGrade: arr[i].FinalGrade,
-                                      Level: arr[i].Level,
-                                      NumMcs: arr[i].NumMcs,
-                                      codePrefix: arr[i].codePrefix,
-                                      moduleCode: arr[i].moduleCode,
-                                      moduleName: arr[i].name,
-                                    });
-                                    const mc = arr[i].NumMcs;
-                                    const points = GradeToPoint(
-                                      arr[i].FinalGrade
-                                    );
-                                    if (lettersChecker(arr[i].FinalGrade)) {
-                                      thisSemsemTotalMcUsedInCap += mc;
-                                      thisSemtotalMcUsedInCap += mc;
-                                      thisSemsemSum += mc * points;
-                                      thisSemtotalSum += mc * points;
+                                  // For records & focus
+
+                                  // Remove from notTaken
+                                  const newSet = new Set();
+                                  arr.forEach((x) => {
+                                    newSet.add(x.moduleCode);
+                                  });
+
+                                  for (
+                                    let i = 0;
+                                    i < origNotTaken.length;
+                                    i++
+                                  ) {
+                                    if (!newSet.has(origNotTaken[i].code)) {
+                                      newNotTaken.push(origNotTaken[i]);
                                     }
-                                    thisSemtotalMc += mc;
-                                    thisSemsemMc += mc;
                                   }
+                                  // For moduleDetailsArray & records
+                                  for (let i = 0; i < arr.length; i++) {
+                                    const moduleCode = arr[i].moduleCode;
+                                    const moduleName = arr[i].name;
+                                    const FinalGrade = arr[i].FinalGrade;
+                                    const NumMcs = arr[i].NumMcs;
+                                    const Level = arr[i].Level;
+                                    const codePrefix = arr[i].codePrefix;
+                                    const modulePoints =
+                                      NumMcs * GradeToPoint(FinalGrade);
+                                    const bool = lettersChecker(FinalGrade);
+                                    // Check if moduleType exists
+                                    let moduleType = "";
+                                    // Finding type
+                                    if (
+                                      moduleMapping[moduleCode] !== undefined
+                                    ) {
+                                      moduleType = moduleMapping[moduleCode];
+                                    }
+                                    // Module is found in mapping
+                                    if (moduleType !== "") {
+                                      const indexType = typeObj[moduleType];
+                                      if (
+                                        typeObj.cat[indexType].mcsTaken >=
+                                        typeObj.cat[indexType].mcsRequired
+                                      ) {
+                                        moduleType = "UE";
+                                      }
+                                    } else {
+                                      const len = typeObj.cat.length;
+                                      if (
+                                        codePrefix.length === 3 &&
+                                        (codePrefix.substring(0, 2) === "GE" ||
+                                          codePrefix === "UTS" ||
+                                          codePrefix === "UTC") &&
+                                        typeObj.cat[len - 1].mcsTaken <
+                                          typeObj.cat[len - 1].mcsRequired
+                                      ) {
+                                        moduleType = "ULR";
+                                      } else {
+                                        moduleType = "UE";
+                                      }
+                                    }
+
+                                    // Check if it is a new code
+                                    if (codeObj[codePrefix] === undefined) {
+                                      codeObj[codePrefix] = codeObj.cat.length;
+                                      codeObj.cat.push({
+                                        name: codePrefix,
+                                        key: codeObj.cat.length + 1,
+                                        mcsTaken: 0,
+                                        numTaken: 0,
+                                        mcsUsedInCap: 0,
+                                        points: 0,
+                                      });
+                                    }
+                                    // Check if it is a new level
+                                    if (
+                                      levelObj[Level.toString()] === undefined
+                                    ) {
+                                      levelObj[Level.toString()] =
+                                        levelObj.cat.length;
+                                      levelObj.cat.push({
+                                        name: Level.toString() + "s",
+                                        context: Level,
+                                        key: levelObj.cat.length + 1,
+                                        mcsTaken: 0,
+                                        numTaken: 0,
+                                        mcsUsedInCap: 0,
+                                        points: 0,
+                                      });
+                                    }
+                                    const indexType = typeObj[moduleType];
+                                    const indexCode = codeObj[codePrefix];
+                                    const indexLevel =
+                                      levelObj[Level.toString()];
+
+                                    if (FinalGrade !== "CU") {
+                                      typeObj.cat[indexType].mcsTaken += NumMcs;
+                                      typeObj.cat[indexType].numTaken += 1;
+                                      codeObj.cat[indexCode].mcsTaken += NumMcs;
+                                      codeObj.cat[indexCode].numTaken += 1;
+                                      levelObj.cat[
+                                        indexLevel
+                                      ].mcsTaken += NumMcs;
+                                      levelObj.cat[indexLevel].numTaken += 1;
+                                    }
+                                    if (bool) {
+                                      typeObj.cat[
+                                        indexType
+                                      ].mcsUsedInCap += NumMcs;
+                                      codeObj.cat[
+                                        indexCode
+                                      ].mcsUsedInCap += NumMcs;
+                                      levelObj.cat[
+                                        indexLevel
+                                      ].mcsUsedInCap += NumMcs;
+
+                                      typeObj.cat[
+                                        indexType
+                                      ].points += modulePoints;
+                                      codeObj.cat[
+                                        indexCode
+                                      ].points += modulePoints;
+                                      levelObj.cat[
+                                        indexLevel
+                                      ].points += modulePoints;
+                                    }
+                                    newTaken.push({
+                                      name: moduleName,
+                                      code: moduleCode,
+                                      type: moduleType,
+                                      grade: FinalGrade,
+                                      level: Level,
+                                      codePrefix: codePrefix,
+                                      numMcs: NumMcs,
+                                      sem: fromWhere,
+                                    });
+
+                                    taken[moduleCode] = {
+                                      name: moduleName,
+                                      code: moduleCode,
+                                      grade: FinalGrade,
+                                      numMcs: NumMcs,
+                                      sem: fromWhere,
+                                    };
+
+                                    // moduleDetailsArray
+                                    newModulesDetailsArray.push({
+                                      FinalGrade: FinalGrade,
+                                      Level: Level,
+                                      NumMcs: NumMcs,
+                                      codePrefix: codePrefix,
+                                      moduleCode: moduleCode,
+                                      moduleName: moduleName,
+                                    });
+
+                                    if (bool) {
+                                      thisSemsemTotalMcUsedInCap += NumMcs;
+                                      thisSemtotalMcUsedInCap += NumMcs;
+                                      thisSemsemSum += modulePoints;
+                                      thisSemtotalSum += modulePoints;
+                                    }
+                                    thisSemtotalMc += NumMcs;
+                                    thisSemsemMc += NumMcs;
+                                  }
+
+                                  // Set codeObj & sorting
+                                  const newcodeObj = [];
+                                  for (
+                                    let i = codeObj.fixed;
+                                    i < codeObj.cat.length;
+                                    i++
+                                  ) {
+                                    if (codeObj.cat[i].mcsTaken !== 0) {
+                                      newcodeObj.push({
+                                        name: codeObj.cat[i].name,
+                                        mcsTaken: codeObj.cat[i].mcsTaken,
+                                        numTaken: codeObj.cat[i].numTaken,
+                                        mcsUsedInCap:
+                                          codeObj.cat[i].mcsUsedInCap,
+                                        points: codeObj.cat[i].points,
+                                      });
+                                    } else {
+                                      delete codeObj[codeObj.cat[i].name];
+                                    }
+                                  }
+
+                                  newcodeObj.sort((a, b) => {
+                                    if (a.mcsTaken >= b.mcsTaken) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+                                  // reassign keys and indexes
+                                  for (let i = 0; i < newcodeObj.length; i++) {
+                                    newcodeObj[i].key = codeObj.fixed + i + 1;
+                                    codeObj[newcodeObj[i].name] =
+                                      codeObj.fixed + i;
+                                  }
+
+                                  codeObj.cat = codeObj.cat
+                                    .slice(0, codeObj.fixed)
+                                    .concat(newcodeObj);
+
+                                  newNotTaken.sort((a, b) => {
+                                    if (a.code <= b.code) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  newTaken.sort((a, b) => {
+                                    if (a.sem < b.sem) {
+                                      return -1;
+                                    } else if (a.sem === b.sem) {
+                                      if (a.code < b.code) {
+                                        return -1;
+                                      } else {
+                                        return 1;
+                                      }
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  typeRef.set(typeObj);
+                                  codeRef.set(codeObj);
+                                  levelRef.set(levelObj);
+                                  takenModulesRef.set(taken);
+                                  recordsRef.update({
+                                    notTaken: newNotTaken,
+                                    taken: newTaken,
+                                  });
+                                  // end of for loop
                                   const newObjToInsert = {
                                     Semester: props.headerTitle,
                                     ModulesDetailsArray: newModulesDetailsArray,
@@ -836,9 +1121,12 @@ const Plans = (props) => {
                                         .delete();
                                     });
                                 })
-                                .catch((error) => {});
+                                .catch((error) => {
+                                  console.log(error);
+                                });
                             } else {
                               // this means that no previous useInCap exist(no final grades)
+                              newNotTaken = origNotTaken;
                               usersModulesDetailsRef
                                 .get()
                                 .then((document) => {
@@ -897,151 +1185,6 @@ const Plans = (props) => {
                                         TotalMcUsedInCap: totalMcUsedInCap,
                                       });
                                     }
-                                    // Updating for records / focus area
-
-                                    const origTaken = records.taken;
-                                    const origNotTaken = records.notTaken;
-                                    const toInclude = new Set(records.mapping);
-                                    const newTaken = [];
-
-                                    for (let i = 0; i < origTaken.length; i++) {
-                                      if (origTaken[i].sem === fromWhere) {
-                                        const numMcs = origTaken[i].numMcs;
-                                        const codePrefix =
-                                          origTaken[i].codePrefix;
-                                        const type = origTaken[i].type;
-                                        const level = origTaken[i].level;
-                                        const code = origTaken[i].code;
-                                        const grade = origTaken[i].grade;
-                                        const modulePoints =
-                                          numMcs * GradeToPoint(grade);
-                                        const bool = lettersChecker(grade);
-
-                                        if (toInclude.has(origTaken[i].type)) {
-                                          origNotTaken.push({
-                                            name: origTaken[i].name,
-                                            type: origTaken[i].type,
-                                            code: origTaken[i].code,
-                                            level: origTaken[i].level,
-                                            codePrefix: origTaken[i].codePrefix,
-                                            numMcs: origTaken[i].numMcs,
-                                          });
-                                        }
-
-                                        const indexType = Types[type];
-                                        const indexCode = Codes[codePrefix];
-                                        const indexLevel =
-                                          Levels[level.toString()];
-                                        if (grade !== "CU") {
-                                          Types.cat[
-                                            indexType
-                                          ].mcsTaken -= numMcs;
-                                          Types.cat[indexType].numTaken -= 1;
-                                          Codes.cat[
-                                            indexCode
-                                          ].mcsTaken -= numMcs;
-                                          Codes.cat[indexCode].numTaken -= 1;
-                                          Levels.cat[
-                                            indexLevel
-                                          ].mcsTaken -= numMcs;
-                                          Levels.cat[indexLevel].numTaken -= 1;
-                                        }
-                                        if (bool) {
-                                          Types.cat[
-                                            indexType
-                                          ].mcsUsedInCap -= numMcs;
-                                          Codes.cat[
-                                            indexCode
-                                          ].mcsUsedInCap -= numMcs;
-                                          Levels.cat[
-                                            indexLevel
-                                          ].mcsUsedInCap -= numMcs;
-
-                                          Types.cat[
-                                            indexType
-                                          ].points -= modulePoints;
-                                          Levels.cat[
-                                            indexLevel
-                                          ].points -= modulePoints;
-                                          Codes.cat[
-                                            indexCode
-                                          ].points -= modulePoints;
-                                        }
-                                        delete taken[code];
-                                      } else {
-                                        newTaken.push(origTaken[i]);
-                                      }
-                                    }
-
-                                    let codeObj = Codes;
-                                    const newCodes = [];
-                                    for (
-                                      let i = codeObj.fixed;
-                                      i < codeObj.cat.length;
-                                      i++
-                                    ) {
-                                      if (codeObj.cat[i].mcsTaken !== 0) {
-                                        newCodes.push({
-                                          name: codeObj.cat[i].name,
-                                          mcsTaken: codeObj.cat[i].mcsTaken,
-                                          numTaken: codeObj.cat[i].numTaken,
-                                          mcsUsedInCap:
-                                            codeObj.cat[i].mcsUsedInCap,
-                                          points: codeObj.cat[i].points,
-                                        });
-                                      } else {
-                                        delete codeObj[codeObj.cat[i].name];
-                                      }
-                                    }
-
-                                    newCodes.sort((a, b) => {
-                                      if (a.mcsTaken >= b.mcsTaken) {
-                                        return -1;
-                                      } else {
-                                        return 1;
-                                      }
-                                    });
-                                    // reassign keys and indexes
-                                    for (let i = 0; i < newCodes.length; i++) {
-                                      newCodes[i].key = codeObj.fixed + i + 1;
-                                      codeObj[newCodes[i].name] =
-                                        codeObj.fixed + i;
-                                    }
-
-                                    codeObj.cat = codeObj.cat
-                                      .slice(0, codeObj.fixed)
-                                      .concat(newCodes);
-
-                                    origNotTaken.sort((a, b) => {
-                                      if (a.code <= b.code) {
-                                        return -1;
-                                      } else {
-                                        return 1;
-                                      }
-                                    });
-
-                                    newTaken.sort((a, b) => {
-                                      if (a.sem < b.sem) {
-                                        return -1;
-                                      } else if (a.sem === b.sem) {
-                                        if (a.code < b.code) {
-                                          return -1;
-                                        } else {
-                                          return 1;
-                                        }
-                                      } else {
-                                        return 1;
-                                      }
-                                    });
-
-                                    typeRef.set(Types);
-                                    codeRef.set(codeObj);
-                                    levelRef.set(Levels);
-                                    takenModulesRef.set(taken);
-                                    recordsRef.update({
-                                      notTaken: origNotTaken,
-                                      taken: newTaken,
-                                    });
 
                                     // deletion in usersRef
                                     const usersRef = FirebaseDB.firestore()
@@ -1068,11 +1211,81 @@ const Plans = (props) => {
                                       )
                                       .delete();
                                   }
+                                  // Set codeObj & sorting
+                                  const newcodeObj = [];
+                                  for (
+                                    let i = codeObj.fixed;
+                                    i < codeObj.cat.length;
+                                    i++
+                                  ) {
+                                    if (codeObj.cat[i].mcsTaken !== 0) {
+                                      newcodeObj.push({
+                                        name: codeObj.cat[i].name,
+                                        mcsTaken: codeObj.cat[i].mcsTaken,
+                                        numTaken: codeObj.cat[i].numTaken,
+                                        mcsUsedInCap:
+                                          codeObj.cat[i].mcsUsedInCap,
+                                        points: codeObj.cat[i].points,
+                                      });
+                                    } else {
+                                      delete codeObj[codeObj.cat[i].name];
+                                    }
+                                  }
+
+                                  newcodeObj.sort((a, b) => {
+                                    if (a.mcsTaken >= b.mcsTaken) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+                                  // reassign keys and indexes
+                                  for (let i = 0; i < newcodeObj.length; i++) {
+                                    newcodeObj[i].key = codeObj.fixed + i + 1;
+                                    codeObj[newcodeObj[i].name] =
+                                      codeObj.fixed + i;
+                                  }
+
+                                  codeObj.cat = codeObj.cat
+                                    .slice(0, codeObj.fixed)
+                                    .concat(newcodeObj);
+
+                                  newNotTaken.sort((a, b) => {
+                                    if (a.code <= b.code) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  newTaken.sort((a, b) => {
+                                    if (a.sem < b.sem) {
+                                      return -1;
+                                    } else if (a.sem === b.sem) {
+                                      if (a.code < b.code) {
+                                        return -1;
+                                      } else {
+                                        return 1;
+                                      }
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  typeRef.set(typeObj);
+                                  codeRef.set(codeObj);
+                                  levelRef.set(levelObj);
+                                  takenModulesRef.set(taken);
+                                  recordsRef.update({
+                                    notTaken: newNotTaken,
+                                    taken: newTaken,
+                                  });
                                 })
                                 .catch((error) => {
                                   console.log(error);
                                 });
                             }
+                            // After else block
                           },
                         },
                       ],
