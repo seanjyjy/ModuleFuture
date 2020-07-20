@@ -17,7 +17,8 @@ import FirebaseDB from "./FirebaseDB";
 import ModuleListWithKey from "./Data/ModuleListMoreInfo";
 
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
-import Temp from "./Screens/HomepageScreens/Profile/Temp";
+import ProTip from "./Screens/HomepageScreens/Profile/ProTip/ProTip";
+import PlannerLesson from "./Screens/HomepageScreens/Profile/ProTip/PlannerLesson";
 import TnC from "./TnC";
 import Login from "./Screens/Login/Login";
 import ForgetPW from "./Screens/Login/ForgetPW";
@@ -206,7 +207,11 @@ export default function App() {
                       />
                       <AuthStack.Screen name="Credit" component={Credit} />
                       <AuthStack.Screen name="TnC" component={TnC} />
-                      <AuthStack.Screen name="Temp" component={Temp} />
+                      <AuthStack.Screen name="ProTip" component={ProTip} />
+                      <AuthStack.Screen
+                        name="PlannerLessonStack"
+                        component={PlannerLesson}
+                      />
                     </>
                   ) : (
                     <>

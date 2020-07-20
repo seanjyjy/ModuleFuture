@@ -111,6 +111,10 @@ export const globalFontStyles = StyleSheet.create({
     fontFamily: "Nunito-SemiBold",
     fontSize: 14,
   },
+  NSB_15: {
+    fontFamily: "Nunito-SemiBold",
+    fontSize: 15,
+  },
   NSB_17: {
     fontFamily: "Nunito-SemiBold",
     fontSize: 17,

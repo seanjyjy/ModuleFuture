@@ -11,8 +11,8 @@ const Profile = (props) => {
   const navigation = useNavigation();
   const graduation = () => navigation.navigate("Graduation", { sem: gradSem });
   const EmailVerification = () => navigation.navigate("EmailVerification");
-
   const CreditPage = () => navigation.navigate("Credit");
+  const ProTip = () => navigation.navigate("ProTip");
   const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
   const year = props.extraData.yearOfMatri;
   const course1 = props.extraData.course;
@@ -121,6 +121,11 @@ const Profile = (props) => {
           left={"Email"}
           transition={() => EmailVerification()}
           right={email}
+        />
+        <ProfileButton0
+          left="Pro-tip tutorial"
+          transition={() => ProTip()}
+          right={""}
         />
         <ProfileButton0
           left={"About"}
