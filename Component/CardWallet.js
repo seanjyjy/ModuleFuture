@@ -80,7 +80,7 @@ const CardWallet = (y, index, card, PageName) => {
           const arr = val.yearSem;
           const arrLength = arr.length;
           arrToPass[1] = arr;
-          arrToPass[2] = arrLength.toString();
+          arrToPass[2] = val.selected;
           let tempArr = [];
           for (let i = 0; i < arr.length; i++) {
             const newTotalMcs = SumMcArr[1] + arr[i].MCs;

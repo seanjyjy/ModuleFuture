@@ -281,16 +281,29 @@ const AddPlan = ({ route }) => {
   };
 
   const isThisExtraAlert = (name, year) => {
-    // You have entered the final grades for this semester before. Inputting final grades in this plan
-    //will overwrite the final grades in the ${other plan}. Proceed?
     Alert.alert(
       "Warning",
-      "You have entered the Final Grades for this semester before, are you sure you want to overwrite it?" +
+      "You have entered the final grades for this semester before, Inputting final grades in this plan" +
+        ` will overwrite the final grades in plan ${name}. Proceed? ` +
         "\n" +
-        ` You can choose to delete or edit ${name}'s final grade in semester ${year}`,
+        `Tip: You can choose to edit or delete the older plans in Semester ${year}`,
       [
         { text: "Cancel", onPress: () => {} },
-        { text: "Continue", onPress: () => nextPage() },
+        {
+          text: "Continue",
+          onPress: () => {
+            // const plansArrayRef = FirebaseDB.firestore()
+            //   .collection("plansArray")
+            //   .doc(docLoc);
+            // plansArrayRef.update({
+            //   conflictDetails: {
+            //     conflict: true,
+            //     listOfPlan: []
+            //   }
+            // })
+            return nextPage();
+          },
+        },
       ],
       { cancelable: false }
     );

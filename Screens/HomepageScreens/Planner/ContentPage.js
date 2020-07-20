@@ -214,12 +214,6 @@ const ContentPage = (props) => {
           data={cardArray}
           keyExtractor={(item) => item.key.toString()}
           renderItem={({ item }) => {
-            // const arrToPass = await infoExtractor(
-            //   userID,
-            //   item.PageName,
-            //   totalSumTotalMc(selectedplansinfo, item.PageName),
-            //   selectedplansinfo
-            // );
             return CardWallet(y, item.key.toString(), item.card, () => [
               userID,
               item.PageName,

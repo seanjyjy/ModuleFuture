@@ -6,6 +6,7 @@ import ProfileButton0 from "../../../Component/ProfileButton0";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../../FirebaseDB";
 import { globalFontStyles } from "../../../Component/GlobalFont";
+import ModuleTemplate from "../Planner/Plans/ModuleTemplate";
 
 const Profile = (props) => {
   const navigation = useNavigation();
@@ -13,6 +14,7 @@ const Profile = (props) => {
   const EmailVerification = () => navigation.navigate("EmailVerification");
 
   const CreditPage = () => navigation.navigate("Credit");
+  const Temp = () => navigation.navigate("Temp");
   const [gradSem, setGradSem] = useState(props.extraData.expectedSemGrad);
   const year = props.extraData.yearOfMatri;
   const course1 = props.extraData.course;
@@ -127,6 +129,7 @@ const Profile = (props) => {
           transition={() => CreditPage()}
           right={""}
         />
+        <ProfileButton0 left={"Temp"} transition={() => Temp()} right={""} />
         <LogoutButton func={() => signOutUser()} />
       </View>
     </View>

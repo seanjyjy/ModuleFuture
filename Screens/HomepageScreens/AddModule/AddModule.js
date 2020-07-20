@@ -142,10 +142,11 @@ Prereq: matched with whatever is planned / take
       name={item.name}
       prereq={true}
       button1Press={() => {
+        console.log("wtf");
+        setModalVisible(true);
         return null;
         // setItem(item);
         // setSplit(compute(item.taken, item.notTaken));
-        // setModalVisible(true);
       }}
       button2Press={() => {
         // console.log(item.semesters);
@@ -160,85 +161,82 @@ Prereq: matched with whatever is planned / take
     />
   );
 
-  /*
-  const textWithIcon = (name) => (
-    <View
-      style={{
-        flexDirection: "row",
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "flex-start",
-        paddingVertical: 6,
-      }}
-    >
-      <View
-        style={{
-          backgroundColor: "black",
-          width: 0.02 * width,
-          height: 0.02 * width,
-          borderRadius: (0.02 * width) / 2,
-          marginRight: 7,
-        }}
-      />
-      <View style={{ flex: 1, flexDirection: "row", width: "100%" }}>
-        <Text
-          numberOfLines={1}
-          style={{ ...globalFontStyles.OSR_13, color: "#0E2131" }}
-        >
-          {name}
-        </Text>
-      </View>
-    </View>
-  );
-  
-  const modal = (portion1, portion2) => {
-    return (
-      <Modal
-        style={styles.modalBox}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        backdropTransitionOutTiming={0}
-        isVisible={modalVisible}
-        onBackdropPress={() => {
-          setModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setModalVisible(false);
-        }}
-      >
-        <View
-          style={{
-            height: `${portion1}%`,
-            top: 15,
-            width: "100%",
-            paddingBottom: 10,
-          }}
-        >
-          <Text style={{ ...globalFontStyles.OSSB_14 }}>
-            {portion1 > 0 ? "Taken" : ""}
-          </Text>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={current.taken}
-            keyExtractor={(item) => item.key.toString()}
-            renderItem={({ item }) => textWithIcon(item.name)}
-          />
-        </View>
-        <View style={{ height: `${portion2}%`, width: "100%", paddingTop: 20 }}>
-          <Text style={{ ...globalFontStyles.OSSB_14 }}>
-            {portion2 > 0 ? "Not Taken" : ""}
-          </Text>
-          <FlatList
-            data={current.notTaken}
-            keyExtractor={(item) => item.key.toString()}
-            renderItem={({ item }) => textWithIcon(item.name)}
-          />
-        </View>
-      </Modal>
-    );
-  };
-  */
+  // const textWithIcon = (name) => (
+  //   <View
+  //     style={{
+  //       flexDirection: "row",
+  //       flex: 1,
+  //       alignItems: "center",
+  //       justifyContent: "flex-start",
+  //       paddingVertical: 6,
+  //     }}
+  //   >
+  //     <View
+  //       style={{
+  //         backgroundColor: "black",
+  //         width: 0.02 * width,
+  //         height: 0.02 * width,
+  //         borderRadius: (0.02 * width) / 2,
+  //         marginRight: 7,
+  //       }}
+  //     />
+  //     <View style={{ flex: 1, flexDirection: "row", width: "100%" }}>
+  //       <Text
+  //         numberOfLines={1}
+  //         style={{ ...globalFontStyles.OSR_13, color: "#0E2131" }}
+  //       >
+  //         {name}
+  //       </Text>
+  //     </View>
+  //   </View>
+  // );
 
+  // const modal = (portion1, portion2) => {
+  //   return (
+  //     <Modal
+  //       style={styles.modalBox}
+  //       animationIn="fadeIn"
+  //       animationOut="fadeOut"
+  //       backdropTransitionOutTiming={0}
+  //       isVisible={modalVisible}
+  //       onBackdropPress={() => {
+  //         setModalVisible(false);
+  //       }}
+  //       onBackButtonPress={() => {
+  //         setModalVisible(false);
+  //       }}
+  //     >
+  //       <View
+  //         style={{
+  //           height: `${portion1}%`,
+  //           top: 15,
+  //           width: "100%",
+  //           paddingBottom: 10,
+  //         }}
+  //       >
+  //         <Text style={{ ...globalFontStyles.OSSB_14 }}>
+  //           {portion1 > 0 ? "Taken" : ""}
+  //         </Text>
+  //         <FlatList
+  //           showsVerticalScrollIndicator={false}
+  //           data={current.taken}
+  //           keyExtractor={(item) => item.key.toString()}
+  //           renderItem={({ item }) => textWithIcon(item.name)}
+  //         />
+  //       </View>
+  //       <View style={{ height: `${portion2}%`, width: "100%", paddingTop: 20 }}>
+  //         <Text style={{ ...globalFontStyles.OSSB_14 }}>
+  //           {portion2 > 0 ? "Not Taken" : ""}
+  //         </Text>
+  //         <FlatList
+  //           data={current.notTaken}
+  //           keyExtractor={(item) => item.key.toString()}
+  //           renderItem={({ item }) => textWithIcon(item.name)}
+  //         />
+  //       </View>
+  //     </Modal>
+  //   );
+  // };
   const moduleOrMC = locationFrom === "AddPlan" ? "MC count" : "Modules Added";
 
   return (

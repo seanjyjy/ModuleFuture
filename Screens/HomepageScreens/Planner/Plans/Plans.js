@@ -61,7 +61,7 @@ const dateFormatter = (date, month, year, hour, minute) => {
   );
 };
 
-const calcTime = (dateInStr, typeOfPhone) => {
+const calcTime = (dateInStr) => {
   let today = new Date();
   let getDate = today.getDate();
   let getMonth = today.getMonth() + 1;
@@ -286,16 +286,13 @@ const Plans = (props) => {
             setSelected(new Map().set(selected, true));
             setCurrentArr(props.data[1]);
             setCurrentID(props.data[2]);
-            setShowDustBin(true);
+            if (props.data[2] !== "-1") {
+              setShowDustBin(true);
+            }
             setselectedplansinfo(props.data[4]);
           }
           setSize(arr.length);
           if (val.selected === "-1") {
-            setShowDustBin(false);
-          } else {
-            setShowDustBin(true);
-          }
-          if (arr.length === 0) {
             setShowDustBin(false);
           } else {
             setShowDustBin(true);
