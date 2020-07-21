@@ -32,6 +32,7 @@
     "react-native-modalbox": "^2.0.0",
     "react-native-password-strength-meter": "0.0.3",
     "react-native-reanimated": "^1.7.0",
+    "react-native-redash": "^14.2.3",
     "react-native-safe-area-context": "0.7.3",
     "react-native-screens": "~2.2.0",
     "react-native-svg": "11.0.1",

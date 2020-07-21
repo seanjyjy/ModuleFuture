@@ -29,6 +29,7 @@ const ProTip = () => {
       titleColor: "#232323",
       textColor: "#232323",
       requiredLink: require("../../../../assets/marbleBG.png"),
+      StackName: "PlannerLessonStack",
     },
   ];
 
@@ -37,14 +38,15 @@ const ProTip = () => {
     miniDescription,
     titleColor,
     textColor,
-    ImageToUse
+    ImageToUse,
+    StackName
   ) => {
     return (
       <TouchableOpacity
         style={styles.cardContainer}
         activeOpacity={0.9}
         onPress={() => {
-          navigation.navigate("PlannerLessonStack");
+          navigation.navigate(StackName);
         }}
       >
         <ImageBackground style={styles.cardDesign} source={ImageToUse}>
@@ -58,6 +60,16 @@ const ProTip = () => {
             <Text style={{ ...styles.textStyling, color: textColor }}>
               {miniDescription}
             </Text>
+          </View>
+          <View
+            style={{ flex: 2, alignItems: "flex-end", right: 20, bottom: 5 }}
+          >
+            <Ionicons
+              name="md-arrow-round-forward"
+              size={25}
+              style={{ color: "white" }}
+              onPress={() => navigation.goBack()}
+            />
           </View>
         </ImageBackground>
       </TouchableOpacity>
@@ -90,7 +102,8 @@ const ProTip = () => {
               item.miniDescription,
               item.titleColor,
               item.textColor,
-              item.requiredLink
+              item.requiredLink,
+              item.StackName
             )
           }
         />
@@ -103,7 +116,7 @@ export default ProTip;
 
 const styles = StyleSheet.create({
   cardDesign: {
-    width: 0.9 * width,
+    width: 0.91 * width,
     height: 0.2 * height,
     alignSelf: "center",
     backgroundColor: "white",
@@ -114,17 +127,19 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 3,
   },
   titleStyling: {
     ...globalFontStyles.NBEB_24,
     left: 10,
   },
-  textStyling: { ...globalFontStyles.NSB_15, left: 10 },
+  textStyling: { ...globalFontStyles.NSB_15, paddingHorizontal: 10 },
   cardContainer: {
-    width: 0.95 * width,
+    width: 0.91 * width,
     height: 0.2 * height,
     alignSelf: "center",
+    backgroundColor: "white",
+    elevation: 3,
   },
   headerPos: { flex: 2, justifyContent: "center", paddingHorizontal: 10 },
 });

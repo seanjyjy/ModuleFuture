@@ -74,6 +74,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "transparent",
     width: width,
-    height: 0.113 * height,
+    height: 0.111 * height,
   },
 });

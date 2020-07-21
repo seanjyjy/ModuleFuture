@@ -203,7 +203,6 @@ const Homepage = (data) => {
     StatusBar.setBarStyle("dark-content");
     StatusBar.setTranslucent(true);
   }
-
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -225,10 +224,6 @@ const Homepage = (data) => {
     </>
   );
 };
-
-// const Homepage = (props) => {
-//   return HomeTabNavigator(props);
-// };
 
 export default Homepage;
 

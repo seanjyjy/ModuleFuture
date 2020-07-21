@@ -29,7 +29,7 @@ const height = Dimensions.get("screen").height;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const WalkthroughableView = walkthroughable(View);
 const WalkthroughableTouchableOpacity = walkthroughable(TouchableOpacity);
-const WalkthroughableSafeAreaView = walkthroughable(SafeAreaView);
+
 const ContentPage = (props) => {
   const usaB = useSafeArea().bottom;
   const navigation = useNavigation();
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
   },
   areaPerIcon: {
     width: "20%",
-    bottom: Platform.OS === "android" ? 34 : 0,
+    bottom: Platform.OS === "android" ? 34 : -0.02 * height,
   },
   tooltipContainer: { flex: 1 },
   tooltipText: { ...globalFontStyles.NB_14, color: "#232323" },

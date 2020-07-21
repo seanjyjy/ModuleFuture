@@ -109,6 +109,14 @@ export default function App() {
       require("./assets/JumpingMan.png"),
       require("./assets/bargraph.png"),
       require("./assets/aboutbg.png"),
+      // loading of Planner Tutorial Pictures
+      require("./assets/PlannerPage1.png"),
+      require("./assets/PlannerPage2.png"),
+      require("./assets/PlannerPage3.png"),
+      require("./assets/PlannerPage4.png"),
+      require("./assets/PlannerPage5.png"),
+      require("./assets/PlannerPage6.png"),
+      require("./assets/PlannerPage7.png"),
     ]);
 
     const fontAssets = getFonts();
