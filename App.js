@@ -47,6 +47,7 @@ import EmailVerification from "./Screens/HomepageScreens/Profile/EmailVerificati
 import Credit from "./Screens/HomepageScreens/Profile/Credit";
 import TypePage from "./Screens/HomepageScreens/Records/TypePage";
 import CodeOrLevel from "./Screens/HomepageScreens/Records/CodeOrLevel";
+import EditRecords from "./Screens/HomepageScreens/Records/EditRecords";
 import EachFocusArea from "./Screens/HomepageScreens/FocusArea/EachFocusArea";
 
 // -------------------------------------------------------------------------------------------------------------
@@ -179,6 +180,10 @@ export default function App() {
                       <AuthStack.Screen name="Y5S1" component={Y5S1} />
                       <AuthStack.Screen name="Y5S2" component={Y5S2} />
                       <AuthStack.Screen name="AddPlan" component={AddPlan} />
+                      <AuthStack.Screen
+                        name="EditRecords"
+                        component={EditRecords}
+                      />
                       <AuthStack.Screen name="AddModule">
                         {(props) => <AddModule {...props} moduleList={mod} />}
                       </AuthStack.Screen>

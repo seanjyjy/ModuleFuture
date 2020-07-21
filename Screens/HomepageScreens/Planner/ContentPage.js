@@ -11,6 +11,7 @@ import {
   ImageBackground,
   Alert,
   Image,
+  Platform,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -21,8 +22,10 @@ import FirebaseDB from "../../../FirebaseDB";
 import { useSafeArea, SafeAreaView } from "react-native-safe-area-context";
 import { copilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import Button from "./Button";
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
+
+const width = Dimensions.get("screen").width;
+const height = Dimensions.get("screen").height;
+
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const WalkthroughableView = walkthroughable(View);
 const WalkthroughableTouchableOpacity = walkthroughable(TouchableOpacity);
@@ -259,6 +262,7 @@ const ContentPage = (props) => {
             height: 65,
             width: "100%",
             flexDirection: "row",
+            // bottom: StatusBar.currentHeight,
           }}
         >
           <CopilotStep
@@ -383,7 +387,10 @@ const styles = StyleSheet.create({
     height: "50%",
     right: 0.05 * width,
   },
-  areaPerIcon: { width: "20%", top: 20 },
+  areaPerIcon: {
+    width: "20%",
+    bottom: Platform.OS === "android" ? 34 : 0,
+  },
   tooltipContainer: { flex: 1 },
   tooltipText: { ...globalFontStyles.NB_14, color: "#232323" },
   bottomBar: {

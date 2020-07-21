@@ -430,13 +430,13 @@ const AddPlan = ({ route }) => {
                 moduleType = "UE";
               }
             } else {
-              const len = typeObj.cat.length;
+              const index = typeObj["ULR"];
               if (
                 codePrefix.length === 3 &&
                 (codePrefix.substring(0, 2) === "GE" ||
                   codePrefix === "UTS" ||
                   codePrefix === "UTC") &&
-                typeObj.cat[len - 1].mcsTaken < typeObj.cat[len - 1].mcsRequired
+                typeObj.cat[index].mcsTaken < typeObj.cat[index].mcsRequired
               ) {
                 moduleType = "ULR";
               } else {

@@ -15,13 +15,12 @@ import FullViewHeader from "../../../Component/FullViewHeader";
 import AddYourOwn from "../../../Component/AddYourOwn";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
-import { ModuleListWithKey } from "../../../Data/ModuleListMoreInfo";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const hairlineWidth = StyleSheet.hairlineWidth;
 
-const Records = () => {
+const Records = ({ navigation, route }) => {
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
   const typeRef = fb.collection("typeArray").doc(userID);
@@ -44,9 +43,7 @@ const Records = () => {
     codeRef.onSnapshot((document) => {
       setCode(document.data().cat);
     });
-  }, []);
-
-  const navigation = useNavigation();
+  }, [userID, route.params?.newType]);
 
   // Default states
   const [MCstaken, toggle] = useState(true);
@@ -134,14 +131,27 @@ const Records = () => {
       />
     );
 
+    const editTypes = () => (
+      <MenuItem
+        title={text("Edit current types")}
+        onPress={() => {
+          navigation.navigate("EditRecords", { type: type });
+          toggleMenu();
+        }}
+        activeOpacity={0.9}
+      />
+    );
+
     return (
       <OverflowMenu
+        style={styles.menuStyle}
         visible={menuVisible}
         anchor={MenuIcon}
         onBackdropPress={toggleMenu}
       >
         {!catView ? option2(show) : option(numTaken, MCstaken)}
         {option(overallView, catView)}
+        {currentType === "Type" ? editTypes() : null}
       </OverflowMenu>
     );
   };
@@ -198,9 +208,9 @@ const Records = () => {
   const colors = [
     "#FFB584",
     "#FF6F66",
-    "#C6E198",
-    "#6CD5AF",
     "#8F9ED5",
+    "#6CD5AF",
+    "#DC5E9D",
     "#CE6F73",
     "#241161",
     "#6c2386",
@@ -371,13 +381,7 @@ const Records = () => {
           data={array}
           renderItem={({ item }) => holders(item)}
           keyExtractor={(item) => item.key.toString()}
-          ListFooterComponent={
-            currentType === "Type" ? (
-              <AddYourOwn func={() => null} text={"type"} />
-            ) : (
-              <View style={{ height: height * 0.11 }}></View>
-            )
-          }
+          ListFooterComponent={<View style={{ height: height * 0.11 }}></View>}
         />
       </View>
     );
@@ -534,6 +538,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: hairlineWidth,
     borderBottomEndRadius: 13,
     borderBottomStartRadius: 16,
+  },
+  menuStyle: {
+    width: width * 0.45,
+    borderRadius: 10,
+    left: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
   container: {
     width: (width - 40) / 2,

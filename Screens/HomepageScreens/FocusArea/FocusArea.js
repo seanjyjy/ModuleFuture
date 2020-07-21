@@ -344,9 +344,7 @@ const FocusArea = ({ navigation }) => {
           data={array}
           renderItem={({ item }) => holders(item)}
           keyExtractor={(item) => item.key.toString()}
-          ListFooterComponent={
-            <AddYourOwn func={() => null} text={"focus area"} />
-          }
+          ListFooterComponent={<View style={{ height: height * 0.11 }}></View>}
         />
       </View>
     );

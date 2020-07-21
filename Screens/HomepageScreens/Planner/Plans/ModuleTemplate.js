@@ -7,15 +7,12 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
-  KeyboardAvoidingView,
   Alert,
 } from "react-native";
 
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
-import { useNavigation } from "@react-navigation/native";
-import { CommonActions } from "@react-navigation/native";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
 import Modal from "react-native-modalbox";
