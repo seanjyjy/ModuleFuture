@@ -82,7 +82,7 @@ export default SlideScreen;
 const styles = StyleSheet.create({
   dotDesign: { flex: 1, flexDirection: "row", justifyContent: "center" },
   pictureSpace: {
-    height: 0.61 * height,
+    height: 0.605 * height,
     width: "100%",
     borderBottomWidth: 1,
     borderColor: "#DDDDDD",

@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   description: {
-    ...globalFontStyles.NSB_15,
+    ...globalFontStyles.NSB_14,
     color: "#0C0d34",
     padding: 20,
     bottom: 25,

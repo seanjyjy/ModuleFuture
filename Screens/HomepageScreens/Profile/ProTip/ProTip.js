@@ -22,14 +22,24 @@ const ProTip = () => {
 
   const tutorialArray = [
     {
-      title: "How to use the planner?",
+      title: "How to use the planner I?",
       miniDescription:
-        "This short tutorial will teach you how to use this planner app, for more advance stuff, please view the rest of the tutorials",
+        "This short tutorial will teach you how to use this planner app, for more advance stuff, please view the rest of the tutorials.",
       key: "1",
       titleColor: "#232323",
       textColor: "#232323",
       requiredLink: require("../../../../assets/marbleBG.png"),
       StackName: "PlannerLessonStack",
+    },
+    {
+      title: "How to use the planner II?",
+      miniDescription:
+        "This short tutorial will teach you how to use some other useful functionality of the planner!",
+      key: "2",
+      titleColor: "#232323",
+      textColor: "#232323",
+      requiredLink: require("../../../../assets/marbleBG.png"),
+      StackName: "WhatIfStack",
     },
   ];
 
@@ -89,7 +99,7 @@ const ProTip = () => {
         }
         rightChildren={<View />}
       />
-      <View style={{ height: 20, width: "100%" }} />
+      <View style={{ height: 10, width: "100%" }} />
       <View style={{ flex: 1 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -135,6 +145,7 @@ const styles = StyleSheet.create({
   },
   textStyling: { ...globalFontStyles.NSB_15, paddingHorizontal: 10 },
   cardContainer: {
+    margin: 10,
     width: 0.91 * width,
     height: 0.2 * height,
     alignSelf: "center",

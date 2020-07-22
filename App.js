@@ -19,6 +19,7 @@ import ModuleListWithKey from "./Data/ModuleListMoreInfo";
 // -------------------------------------- SCREEN IMPORTS --------------------------------------------------------
 import ProTip from "./Screens/HomepageScreens/Profile/ProTip/ProTip";
 import PlannerLesson from "./Screens/HomepageScreens/Profile/ProTip/PlannerLesson";
+import WhatIfLesson from "./Screens/HomepageScreens/Profile/ProTip/WhatIfLesson";
 import TnC from "./TnC";
 import Login from "./Screens/Login/Login";
 import ForgetPW from "./Screens/Login/ForgetPW";
@@ -117,6 +118,11 @@ export default function App() {
       require("./assets/PlannerPage5.png"),
       require("./assets/PlannerPage6.png"),
       require("./assets/PlannerPage7.png"),
+      // loading of WhatIfLesson pictures
+      require("./assets/WhatIfLesson1.png"),
+      require("./assets/WhatIfLesson2.png"),
+      require("./assets/WhatIfLesson3.png"),
+      require("./assets/WhatIfLesson4.png"),
     ]);
 
     const fontAssets = getFonts();
@@ -224,6 +230,10 @@ export default function App() {
                       <AuthStack.Screen
                         name="PlannerLessonStack"
                         component={PlannerLesson}
+                      />
+                      <AuthStack.Screen
+                        name="WhatIfStack"
+                        component={WhatIfLesson}
                       />
                     </>
                   ) : (
