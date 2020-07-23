@@ -52,6 +52,10 @@ export const globalFontStyles = StyleSheet.create({
     fontFamily: "OpenSans-SemiBold",
     fontSize: 15,
   },
+  OSSB_16: {
+    fontFamily: "OpenSans-SemiBold",
+    fontSize: 16,
+  },
   OSSB_17: {
     fontFamily: "OpenSans-SemiBold",
     fontSize: 17,
@@ -121,6 +125,10 @@ export const globalFontStyles = StyleSheet.create({
   },
 
   // ---------------------------------------NUNITO-BOLD-------------------------------------------------------------
+  NB_12: {
+    fontFamily: "Nunito-Bold",
+    fontSize: 12,
+  },
   NB_13: {
     fontFamily: "Nunito-Bold",
     fontSize: 13,

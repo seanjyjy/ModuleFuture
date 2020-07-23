@@ -11,8 +11,8 @@ import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import AddYourOwn from "../../../Component/AddYourOwn";
 import FirebaseDB from "../../../FirebaseDB";
+import SuggestButton from "../../../Component/SuggestButton";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -25,18 +25,26 @@ const FocusArea = ({ navigation }) => {
   const takenModulesRef = fb.collection("takenModules").doc(userID);
 
   useEffect(() => {
-    takenModulesRef.onSnapshot((document) => {
-      setTaken(document.data());
-    });
-    focusAreaRef.onSnapshot((document) => {
-      setFocus(document.data().cat);
-    });
+    const unsub = focusAreaRef.onSnapshot(
+      (document) => {
+        setFocus(document.data().cat);
+        takenModulesRef.onSnapshot((document) => {
+          setTaken(document.data());
+        });
+      },
+      (error) => alert(error)
+    );
+    return () => unsub();
   }, []);
 
   const [currentType, changeType] = useState("Prereq");
   const [menuVisible, setMenuVisible] = useState(false);
   const [takenModules, setTaken] = useState([]);
   const [focusArea, setFocus] = useState([]);
+
+  const Edit = () => (
+    <SuggestButton func={() => navigation.navigate("EditFocusArea")} />
+  );
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -58,22 +66,29 @@ const FocusArea = ({ navigation }) => {
   );
 
   const viewType = () => (
-    <TouchableOpacity
-      style={styles.header2}
-      activeOpacity={0.85}
-      onPress={() => toggleMenu()}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_17, color: "#232323" }}>
-        {currentType}
-      </Text>
-      <Icon
-        fill="#232323"
-        width={30}
-        height={20}
-        name="arrow-ios-downward-outline"
-        style={{ marginTop: 4 }}
-      />
-    </TouchableOpacity>
+    <View style={styles.typeOverView}>
+      <TouchableOpacity
+        style={{ flexDirection: "row" }}
+        activeOpacity={0.85}
+        onPress={() => toggleMenu()}
+      >
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_19,
+            color: "#232323",
+          }}
+        >
+          {currentType}
+        </Text>
+        <Icon
+          fill="#232323"
+          width={30}
+          height={20}
+          name="arrow-ios-downward-outline"
+          style={{ marginTop: 4 }}
+        />
+      </TouchableOpacity>
+    </View>
   );
 
   const selector = () => {
@@ -352,7 +367,7 @@ const FocusArea = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header str={"Focus Area"} leftChildren={null} rightChildren={null} />
+      <Header str={"Focus Area"} leftChildren={null} rightChildren={Edit()} />
       {focusArea.length > 0 ? selector() : null}
       <ColouredList colors={colors} array={focusArea} />
     </View>
@@ -362,8 +377,8 @@ const FocusArea = ({ navigation }) => {
 export default FocusArea;
 
 const styles = StyleSheet.create({
-  header2: {
-    flexDirection: "row",
+  typeOverView: {
+    width: width,
     paddingTop: 20,
     paddingBottom: 10,
     justifyContent: "center",

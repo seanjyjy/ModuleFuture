@@ -18,10 +18,8 @@ import Modal from "react-native-modalbox";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const EditRecords = ({ navigation, route }) => {
+const EditFocusArea = ({ navigation, route }) => {
   const [type, setType] = useState([]);
-  const [mcsPlanned, setMCsPlanned] = useState(0);
-  const [totalMC, setTotalMC] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
   const [newMc, setNewMc] = useState(0);
@@ -29,7 +27,6 @@ const EditRecords = ({ navigation, route }) => {
   const [alertText1, set1] = useState(false);
   const [alertText2, set2] = useState(false);
   const [alertText3, set3] = useState(false);
-  const [del, setDel] = useState(new Set());
 
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
@@ -45,10 +42,6 @@ const EditRecords = ({ navigation, route }) => {
           sum += data.cat[i].mcsRequired;
         }
         setMCsPlanned(sum);
-        const usersRef = fb.collection("users").doc(userID);
-        usersRef.get().then((document) => {
-          setTotalMC(document.data().totalMCs);
-        });
       },
       (error) => alert(error)
     );
@@ -108,7 +101,6 @@ const EditRecords = ({ navigation, route }) => {
             onChangeText={(val) => {
               if (index === "numRequired") {
                 if (val === "" || val === "not specified") {
-                  delete type[item.key - 1][index];
                 } else {
                   const nextNum = parseInt(val);
                   type[item.key - 1][index] = nextNum;
@@ -196,7 +188,6 @@ const EditRecords = ({ navigation, route }) => {
                 onPress={() => {
                   const newArr = type.filter((x) => x.name !== name);
                   setMCsPlanned(mcsPlanned - item.mcsRequired);
-                  del.add(name);
                   setType(newArr);
                 }}
               />
@@ -441,7 +432,6 @@ const EditRecords = ({ navigation, route }) => {
                     canDelete: true,
                   });
                 }
-                del.delete(name);
                 setType(newArr);
                 setModalVisible(false);
                 set1(false);
@@ -526,9 +516,6 @@ const EditRecords = ({ navigation, route }) => {
                 for (let i = 0; i < type.length; i++) {
                   typeObj[type[i].name] = i;
                 }
-                for (const name of del) {
-                  delete typeObj[name];
-                }
                 typeObj.cat = type;
                 typeRef.set(typeObj);
               });
@@ -554,7 +541,7 @@ const EditRecords = ({ navigation, route }) => {
         ListFooterComponent={<View style={{ height: height * 0.1 }} />}
       />
       <BottomBar
-        leftText={`MCs planned : ${mcsPlanned} / ${totalMC}`}
+        leftText={`No. of focus areas : ${mcsPlanned}`}
         leftTextSize={16}
         rightText={"Add a type"}
         size={100}
@@ -564,7 +551,7 @@ const EditRecords = ({ navigation, route }) => {
   );
 };
 
-export default EditRecords;
+export default EditFocusArea;
 
 const styles = StyleSheet.create({
   topPortion: {
@@ -629,6 +616,15 @@ const styles = StyleSheet.create({
     height: "68%",
     width: "100%",
     paddingLeft: 10,
+  },
+  btmButtonHolder: {
+    width: 55,
+    height: 55,
+    backgroundColor: "#393939",
+    borderRadius: 100,
+    left: 0.78 * width,
+    alignItems: "center",
+    justifyContent: "center",
   },
   modalBox: {
     backgroundColor: "white",

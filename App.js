@@ -49,6 +49,7 @@ import Credit from "./Screens/HomepageScreens/Profile/Credit";
 import TypePage from "./Screens/HomepageScreens/Records/TypePage";
 import CodeOrLevel from "./Screens/HomepageScreens/Records/CodeOrLevel";
 import EditRecords from "./Screens/HomepageScreens/Records/EditRecords";
+import EditFocusArea from "./Screens/HomepageScreens/FocusArea/EditFocusArea";
 import EachFocusArea from "./Screens/HomepageScreens/FocusArea/EachFocusArea";
 
 // -------------------------------------------------------------------------------------------------------------
@@ -206,6 +207,10 @@ export default function App() {
                         component={SeeModules}
                       />
                       <AuthStack.Screen name="ViewPlan" component={ViewPlan} />
+                      <AuthStack.Screen
+                        name="EditFocusArea"
+                        component={EditFocusArea}
+                      />
                       <AuthStack.Screen
                         name="EachFocusArea"
                         component={EachFocusArea}

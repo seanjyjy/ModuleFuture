@@ -12,7 +12,6 @@ import Header from "../../../Component/Header";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
 import FullViewHeader from "../../../Component/FullViewHeader";
-import AddYourOwn from "../../../Component/AddYourOwn";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
 
@@ -29,21 +28,26 @@ const Records = ({ navigation, route }) => {
   const recordsRef = fb.collection("records").doc(userID);
 
   useEffect(() => {
-    recordsRef.onSnapshot((document) => {
-      const data = document.data();
-      setTaken(data.taken);
-      setNotTaken(data.notTaken);
-    });
-    typeRef.onSnapshot((document) => {
-      setType(document.data().cat);
-    });
-    levelRef.onSnapshot((document) => {
-      setLevel(document.data().cat);
-    });
-    codeRef.onSnapshot((document) => {
-      setCode(document.data().cat);
-    });
-  }, [userID, route.params?.newType]);
+    const unsub = typeRef.onSnapshot(
+      (document) => {
+        console.log("updated in records");
+        setType(document.data().cat);
+        recordsRef.onSnapshot((document) => {
+          const data = document.data();
+          setTaken(data.taken);
+          setNotTaken(data.notTaken);
+        });
+        levelRef.onSnapshot((document) => {
+          setLevel(document.data().cat);
+        });
+        codeRef.onSnapshot((document) => {
+          setCode(document.data().cat);
+        });
+      },
+      (error) => alert(error)
+    );
+    return () => unsub();
+  }, []);
 
   // Default states
   const [MCstaken, toggle] = useState(true);
@@ -157,27 +161,29 @@ const Records = ({ navigation, route }) => {
   };
 
   const viewType = () => (
-    <TouchableOpacity
-      style={styles.header2}
-      activeOpacity={0.85}
-      onPress={toggleTypeMenu}
-    >
-      <Text
-        style={{
-          ...globalFontStyles.OSSB_19,
-          color: "#232323",
-        }}
+    <View style={styles.typeOverView}>
+      <TouchableOpacity
+        style={{ flexDirection: "row" }}
+        activeOpacity={0.85}
+        onPress={toggleTypeMenu}
       >
-        {currentType}
-      </Text>
-      <Icon
-        fill="#232323"
-        width={30}
-        height={20}
-        name="arrow-ios-downward-outline"
-        style={{ marginTop: 4 }}
-      />
-    </TouchableOpacity>
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_19,
+            color: "#232323",
+          }}
+        >
+          {currentType}
+        </Text>
+        <Icon
+          fill="#232323"
+          width={30}
+          height={20}
+          name="arrow-ios-downward-outline"
+          style={{ marginTop: 4 }}
+        />
+      </TouchableOpacity>
+    </View>
   );
 
   const selector = () => {
@@ -528,8 +534,8 @@ const Records = ({ navigation, route }) => {
 export default Records;
 
 const styles = StyleSheet.create({
-  header2: {
-    flexDirection: "row",
+  typeOverView: {
+    width: width,
     paddingTop: 20,
     paddingBottom: 10,
     justifyContent: "center",

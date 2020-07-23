@@ -23,7 +23,9 @@ const BottomBar = (props) => {
       <TouchableOpacity onPress={() => props.clearAll()}>
         <Text
           style={{
-            ...globalFontStyles.OSSB_17,
+            ...(props.leftTextSize === undefined
+              ? globalFontStyles.OSSB_17
+              : globalFontStyles.OSSB_16),
             color: "#232323",
             bottom:
               useSafeArea().bottom > 0 ? (useSafeArea().bottom - 5) / 2 : 0,

@@ -66,7 +66,7 @@ const ContentPage = (props) => {
 
   useEffect(() => {
     if (!FirebaseDB.auth().currentUser.emailVerified) {
-      props.start();
+      // props.start();
     }
     const unsub = userInfo.doc(userID).onSnapshot((document) => {
       const data = document.data();
@@ -133,7 +133,7 @@ const ContentPage = (props) => {
             }}
           >
             <CopilotStep
-              text="This is where you can select your favourite plans!"
+              text="This is where you can view your favourite plan!"
               order={2}
               name="favourite plans"
             >
@@ -180,7 +180,7 @@ const ContentPage = (props) => {
             }}
           >
             <CopilotStep
-              text="This is where you can view your progress"
+              text="This is where you can view your progress!"
               order={3}
               name="progress page"
             >
@@ -219,7 +219,7 @@ const ContentPage = (props) => {
         }}
       >
         <CopilotStep
-          text="This is where you can select your plans!"
+          text="Here is where you can select your plans!"
           order={1}
           name="plans"
         >
@@ -262,32 +262,31 @@ const ContentPage = (props) => {
             height: 65,
             width: "100%",
             flexDirection: "row",
-            // bottom: StatusBar.currentHeight,
           }}
         >
           <CopilotStep
-            text="This is where you can select and create your plans!"
+            text="This is where you can create and view all your plans!"
             order={4}
             name="planner"
           >
             <WalkthroughableView style={styles.areaPerIcon} />
           </CopilotStep>
           <CopilotStep
-            text="This is where you can view and edit your records"
+            text="This is where you can view your modules statistics!"
             order={5}
             name="records"
           >
             <WalkthroughableView style={styles.areaPerIcon} />
           </CopilotStep>
           <CopilotStep
-            text="This is where you can view information on the focus area"
+            text="This is where you can view your focus areas!"
             order={6}
             name="focus"
           >
             <WalkthroughableView style={styles.areaPerIcon} />
           </CopilotStep>
           <CopilotStep
-            text="This is where you can search for information on the modules"
+            text="Here is where you can search for information on each module!"
             order={7}
             name="module"
           >
