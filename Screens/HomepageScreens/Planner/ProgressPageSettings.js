@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
@@ -49,6 +50,11 @@ const ProgressPageSettings = ({ navigation, route }) => {
     );
   };
 
+  const checkValidInput = (val) => {
+    let isnum = /^\d+$/.test(val);
+    return isnum;
+  };
+
   return (
     <>
       {/* ----------------------------------------------------------------- HIGHLIGHT--------------------------------------------------------------------------- */}
@@ -69,17 +75,37 @@ const ProgressPageSettings = ({ navigation, route }) => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            const usersRef = FirebaseDB.firestore()
-              .collection("users")
-              .doc(userID);
-            usersRef.update({
-              totalMCs: parseInt(totalMCs),
-              TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
-            });
-            navigation.navigate("ProgressPage", {
-              items: [totalMCs, TargetCAP],
-              from: "ProgressPageSettings",
-            });
+            if (
+              !checkValidInput(TargetCAP) ||
+              TargetCAP <= 0 ||
+              TargetCAP > 5
+            ) {
+              Alert.alert(
+                "Warning",
+                `Invalid value of ${TargetCAP} inputted into target CAP. It should be more than 0 and less than 5`,
+                [{ text: "Cancel", onPress: () => {} }],
+                { cancelable: false }
+              );
+            } else if (!checkValidInput(totalMCs) || totalMCs <= 0) {
+              Alert.alert(
+                "Warning",
+                `Invalid value of ${totalMCs} inputted into total MCs`,
+                [{ text: "Cancel", onPress: () => {} }],
+                { cancelable: false }
+              );
+            } else {
+              const usersRef = FirebaseDB.firestore()
+                .collection("users")
+                .doc(userID);
+              usersRef.update({
+                totalMCs: parseInt(totalMCs),
+                TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
+              });
+              navigation.navigate("ProgressPage", {
+                items: [totalMCs, TargetCAP],
+                from: "ProgressPageSettings",
+              });
+            }
           }}
           activeOpacity={0.9}
           style={styles.headerRight}

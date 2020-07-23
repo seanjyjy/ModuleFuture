@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ImageBackground,
+  Image,
 } from "react-native";
 import Header from "../../../../Component/Header";
 import { useNavigation } from "@react-navigation/native";
@@ -22,24 +23,40 @@ const ProTip = () => {
 
   const tutorialArray = [
     {
-      title: "How to use the planner I?",
+      title: "How to use planner I?",
       miniDescription:
-        "This short tutorial will teach you how to use this planner app, for more advance stuff, please view the rest of the tutorials.",
+        "This tutorial will highlight the usage of this planner, for more advance stuff, please view the rest of the tutorials.",
       key: "1",
-      titleColor: "#232323",
-      textColor: "#232323",
-      requiredLink: require("../../../../assets/marbleBG.png"),
+      titleColor: "white",
+      textColor: "white",
+      requiredLink: require("../../../../assets/TutorialPic1.png"),
       StackName: "PlannerLessonStack",
+      bgColor: "#1DDEAA",
+      arrowColor: "white",
     },
     {
-      title: "How to use the planner II?",
+      title: "How to use planner II?",
       miniDescription:
-        "This short tutorial will teach you how to use some other useful functionality of the planner!",
+        "This tutorial will highlight some useful functionalities of the planner!",
       key: "2",
-      titleColor: "#232323",
-      textColor: "#232323",
-      requiredLink: require("../../../../assets/marbleBG.png"),
+      titleColor: "white",
+      textColor: "white",
+      requiredLink: require("../../../../assets/TutorialPic2.png"),
       StackName: "WhatIfStack",
+      bgColor: "#757CFE",
+      arrowColor: "white",
+    },
+    {
+      title: "How to track progress?",
+      miniDescription:
+        "This tutorial will highlight the usage of progress page!",
+      key: "3",
+      titleColor: "white",
+      textColor: "white",
+      requiredLink: require("../../../../assets/TutorialPic2.png"),
+      StackName: "ProgressLessonStack",
+      bgColor: "#FE75C1",
+      arrowColor: "white",
     },
   ];
 
@@ -49,39 +66,60 @@ const ProTip = () => {
     titleColor,
     textColor,
     ImageToUse,
-    StackName
+    StackName,
+    bgColor,
+    arrowColor
   ) => {
     return (
       <TouchableOpacity
-        style={styles.cardContainer}
+        style={{ ...styles.cardContainer, backgroundColor: bgColor }}
         activeOpacity={0.9}
         onPress={() => {
           navigation.navigate(StackName);
         }}
       >
-        <ImageBackground style={styles.cardDesign} source={ImageToUse}>
-          <View style={{ height: 10 }} />
+        <View style={{ height: "100%", width: "57%" }}>
+          <View style={{ height: 0.035 * height }} />
           <View style={styles.headerPos}>
             <Text style={{ ...styles.titleStyling, color: titleColor }}>
               {title}
             </Text>
           </View>
-          <View style={{ flex: 5, paddingHorizontal: 10 }}>
+          <View style={{ flex: 5, paddingHorizontal: 10, bottom: 10 }}>
             <Text style={{ ...styles.textStyling, color: textColor }}>
               {miniDescription}
             </Text>
           </View>
+        </View>
+        <View style={{ height: "100%", width: "43%" }}>
           <View
-            style={{ flex: 2, alignItems: "flex-end", right: 20, bottom: 5 }}
+            style={{
+              flex: 2,
+              width: "95%",
+              top: 0.02 * height,
+            }}
+          >
+            <ImageBackground source={ImageToUse} style={styles.cardDesign} />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              alignItems: "flex-end",
+              justifyContent: "center",
+            }}
           >
             <Ionicons
               name="md-arrow-round-forward"
-              size={25}
-              style={{ color: "white" }}
+              size={20}
+              style={{
+                color: arrowColor,
+                right: 0.075 * width,
+                top: 0.015 * height,
+              }}
               onPress={() => navigation.goBack()}
             />
           </View>
-        </ImageBackground>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -113,7 +151,9 @@ const ProTip = () => {
               item.titleColor,
               item.textColor,
               item.requiredLink,
-              item.StackName
+              item.StackName,
+              item.bgColor,
+              item.arrowColor
             )
           }
         />
@@ -126,10 +166,27 @@ export default ProTip;
 
 const styles = StyleSheet.create({
   cardDesign: {
-    width: 0.91 * width,
-    height: 0.2 * height,
+    resizeMode: "cover",
+    flex: 1,
+    height: "100%",
+    width: "100%",
+    top: 0.01 * height,
+  },
+  titleStyling: {
+    ...globalFontStyles.NB_19,
+    left: 10,
+    letterSpacing: -1,
+  },
+  textStyling: {
+    ...globalFontStyles.NSB_15,
+    paddingHorizontal: 5,
+    letterSpacing: -1,
+  },
+  cardContainer: {
+    margin: 10,
+    width: 0.94 * width,
+    height: 0.25 * height,
     alignSelf: "center",
-    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -138,19 +195,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 3,
+    flexDirection: "row",
+    borderRadius: 10,
   },
-  titleStyling: {
-    ...globalFontStyles.NBEB_24,
-    left: 10,
+  headerPos: {
+    flex: 2,
+    justifyContent: "center",
+    paddingHorizontal: 5,
   },
-  textStyling: { ...globalFontStyles.NSB_15, paddingHorizontal: 10 },
-  cardContainer: {
-    margin: 10,
-    width: 0.91 * width,
-    height: 0.2 * height,
-    alignSelf: "center",
-    backgroundColor: "white",
-    elevation: 3,
-  },
-  headerPos: { flex: 2, justifyContent: "center", paddingHorizontal: 10 },
 });

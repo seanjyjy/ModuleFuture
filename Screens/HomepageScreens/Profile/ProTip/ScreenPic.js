@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     width: 0.605 * width,
-    height: 0.59 * height,
+    height: 0.62 * height,
     backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {

@@ -33,7 +33,7 @@ const WhatIfLesson = () => {
       imageLink: require("../../../../assets/WhatIfLesson5.png"),
       subtitle: "Part III",
       description:
-        "Now if we were to insert our final grades instead, we do not need to worry about current being in wrong position. Note that plan CC terms has changed",
+        "Now if we were to insert our final grades instead, we do not need to worry about current being in wrong position. Note that plan CC's terminology has changed",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson6.png"),

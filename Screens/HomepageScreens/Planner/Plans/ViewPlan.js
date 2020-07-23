@@ -447,9 +447,9 @@ const ViewPlan = ({ route }) => {
               </View>
               <View style={styles.oneCenter}>
                 <Text
-                  style={{ ...globalFontStyles.NB_14, right: 0.045 * width }}
+                  style={{ ...globalFontStyles.NB_14, left: 0.015 * width }}
                 >
-                  {`Current Sem: ${currentSem}`}
+                  {`Current Academic sem: ${currentSem}`}
                 </Text>
               </View>
             </View>

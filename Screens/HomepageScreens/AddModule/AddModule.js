@@ -8,6 +8,8 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import { Icon } from "react-native-eva-icons";
@@ -15,7 +17,8 @@ import BottomBar from "../../../Component/BottomBar";
 import Modal from "react-native-modal";
 import Cross from "../../../Component/Cross";
 import Container from "../../../Component/Container";
-
+import Entypo from "react-native-vector-icons/Entypo";
+import ModuleBlocks from "./ModuleBlocks";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
@@ -118,7 +121,10 @@ const AddModule = (props) => {
   const [fullList, setFullList] = useState(new Set(props.moduleList));
   const [moduleList, setModuleList] = useState(props.moduleList);
   const [MCcount, addVal] = useState(0);
-  // const [modalVisible, setModalVisible] = useState(false);
+  const [preReqmodalVisible, setPreReqModalVisible] = useState(false);
+  const [infomodalVisible, setInfoModalVisible] = useState(false);
+  const [infoInfo, setInfoInfo] = useState([]);
+  const [preReqInfo, setpreReqInfo] = useState([]);
   // const [current, setItem] = useState(moduleList[0]);
   // const [split, setSplit] = useState(0);
   const [modules, add] = useState([]); // modules are stored here
@@ -142,14 +148,39 @@ Prereq: matched with whatever is planned / take
       name={item.name}
       prereq={true}
       button1Press={() => {
-        console.log("wtf");
-        setModalVisible(true);
+        if (item.preclusion && item.prerequisite) {
+          setpreReqInfo([item.preclusion, item.prerequisite]);
+          setPreReqModalVisible(true);
+        } else if (item.preclusion) {
+          setpreReqInfo([item.preclusion, ""]);
+          setPreReqModalVisible(true);
+        } else if (item.prerequisite) {
+          setpreReqInfo(["", item.prerequisite]);
+          setPreReqModalVisible(true);
+        } else {
+          Alert.alert(
+            "Note",
+            "There are no prerequisite nor preclusion for this module",
+            [{ text: "Cancel", onPress: () => {} }],
+            { cancelable: false }
+          );
+        }
+        //setPreReqInfo();
         return null;
         // setItem(item);
         // setSplit(compute(item.taken, item.notTaken));
       }}
       button2Press={() => {
         // console.log(item.semesters);
+        setInfoModalVisible(true);
+        setInfoInfo([
+          item.MC,
+          item.code,
+          item.description,
+          item.semData,
+          item.suOption,
+          item.workLoad,
+        ]);
         return null;
       }}
       incr={() => {
@@ -239,6 +270,148 @@ Prereq: matched with whatever is planned / take
   // };
   const moduleOrMC = locationFrom === "AddPlan" ? "MC count" : "Modules Added";
 
+  const preReqModal = () => {
+    const prereq = preReqInfo[1];
+    const preclu = preReqInfo[0];
+    return (
+      <Modal
+        style={styles.modalBox2}
+        backdropOpacity={0.3}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropTransitionOutTiming={0}
+        isVisible={preReqmodalVisible}
+        onBackdropPress={() => {
+          setPreReqModalVisible(false);
+        }}
+        onBackButtonPress={() => {
+          setPreReqModalVisible(false);
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.headerPreStyling}>Preclusion</Text>
+            </View>
+            <View style={{ flex: 3 }}>
+              <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
+                <Text style={{ color: "#3B6EA2", ...globalFontStyles.OSSB_13 }}>
+                  {preclu}
+                </Text>
+              </ScrollView>
+            </View>
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.headerPreStyling}>prerequisite</Text>
+            </View>
+            <View style={{ flex: 3 }}>
+              <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
+                <Text style={{ color: "#3B6EA2", ...globalFontStyles.OSSB_13 }}>
+                  {prereq}
+                </Text>
+              </ScrollView>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+  const crossIcon = (
+    <Entypo size={20} name="cross" style={{ color: "red", top: 2 }} />
+  );
+  const tickIcon = (
+    <Entypo size={20} name="check" style={{ color: "green", top: 1 }} />
+  );
+
+  const workloaddisplays = (array) => {
+    let sum = 0;
+    const colorArray = ["#F49097", "#DFB2F4", "#5467CE", "#5491CE", "#55D6C2"];
+    const titleArray = ["Lec", "Tut", "Lab", "Proj", "Prep"];
+    const arrayToMake = [];
+    for (let i = 0; i < array.length; i++) {
+      sum += array[i];
+      for (let j = 0; j < array[i]; j++) {
+        if (j === 0) {
+          arrayToMake.push({
+            color: colorArray[i],
+            title: titleArray[i],
+          });
+        } else {
+          arrayToMake.push({
+            color: colorArray[i],
+            title: "",
+          });
+        }
+      }
+    }
+    if (array) {
+      return (
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          {arrayToMake.map(({ color, title }, index) => (
+            <ModuleBlocks color={color} key={index} title={title} sum={sum} />
+          ))}
+        </View>
+      );
+    }
+  };
+  const infoModal = () => {
+    const codeName = infoInfo[1];
+    const mc = infoInfo[0];
+    const description = infoInfo[2];
+    const semData = infoInfo[3]; // check with keane if he did anything to do checking of displaying the information !
+    const suOptions = infoInfo[4];
+    const workLoad = infoInfo[5];
+    return (
+      <Modal
+        style={styles.modalBox}
+        backdropOpacity={0.3}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropTransitionOutTiming={0}
+        isVisible={infomodalVisible}
+        onBackdropPress={() => {
+          setInfoModalVisible(false);
+        }}
+        onBackButtonPress={() => {
+          setInfoModalVisible(false);
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={styles.twoCenter}>
+            <Text style={styles.headerStyling}>{codeName ? codeName : ""}</Text>
+          </View>
+          <View style={styles.lineDesign} />
+          <View style={{ flex: 11 }}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.mdStyle}>Module Details</Text>
+            </View>
+            <View style={{ flex: 12 }}>
+              <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
+                <Text style={{ color: "#3B6EA2", ...globalFontStyles.OSR_13 }}>
+                  {description}
+                </Text>
+                <Text></Text>
+              </ScrollView>
+            </View>
+          </View>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={{ ...styles.oneCenter, bottom: 10 }}>
+              <Text style={styles.mcTextStyle}>{`Number of MCs: ${mc}`}</Text>
+            </View>
+            <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
+              <Text style={styles.suTextStyle}>SU availability:</Text>
+              {suOptions ? tickIcon : crossIcon}
+            </View>
+          </View>
+          <View style={{ ...styles.twoCenter }}>
+            {workLoad ? workloaddisplays(workLoad) : <View />}
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
   return (
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
@@ -273,6 +446,8 @@ Prereq: matched with whatever is planned / take
         rightText={"Add modules"}
         size={"33%"}
       />
+      {preReqModal()}
+      {infoModal()}
     </View>
   );
 };
@@ -315,9 +490,57 @@ const styles = StyleSheet.create({
   modalBox: {
     backgroundColor: "white",
     alignSelf: "center",
-    marginVertical: height * 0.35,
-    width: width * 0.8,
-    paddingLeft: 25,
+    marginVertical: height * 0.2,
+    width: width * 0.9,
     borderRadius: 25,
+  },
+  modalBox2: {
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginVertical: height * 0.35,
+    width: width * 0.9,
+    borderRadius: 25,
+  },
+  twoCenter: { flex: 2, alignItems: "center", justifyContent: "center" },
+  headerStyling: {
+    ...globalFontStyles.OSB_17,
+    alignSelf: "center",
+    color: "#1F3C58",
+  },
+  mcTextStyle: {
+    alignSelf: "center",
+    ...globalFontStyles.OSSB_14,
+    color: "#2A4F74",
+  },
+  suTextStyle: {
+    ...globalFontStyles.OSSB_14,
+    color: "#2A4F74",
+  },
+  lineDesign: {
+    height: 1,
+    width: "90%",
+    backgroundColor: "#D0CECE",
+    alignSelf: "center",
+    bottom: 10,
+  },
+  oneCenter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  flexRow10: {
+    flexDirection: "row",
+    bottom: 10,
+  },
+  headerPreStyling: {
+    ...globalFontStyles.OSB_15,
+    color: "#2A4F74",
+    left: 0.05 * width,
+    top: 5,
+  },
+  mdStyle: {
+    alignSelf: "center",
+    ...globalFontStyles.OSB_17,
+    color: "#2A4F74",
   },
 });

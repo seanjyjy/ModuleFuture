@@ -27,14 +27,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   subtitle: {
-    ...globalFontStyles.NB_24,
+    ...globalFontStyles.NB_20,
     color: "#0C0d34",
     padding: 10,
     left: 10,
     textDecorationLine: "underline",
   },
   description: {
-    ...globalFontStyles.NSB_14,
+    ...globalFontStyles.NSB_13,
     color: "#0C0d34",
     padding: 20,
     bottom: 25,

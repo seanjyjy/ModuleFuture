@@ -20,6 +20,7 @@ import ModuleListWithKey from "./Data/ModuleListMoreInfo";
 import ProTip from "./Screens/HomepageScreens/Profile/ProTip/ProTip";
 import PlannerLesson from "./Screens/HomepageScreens/Profile/ProTip/PlannerLesson";
 import WhatIfLesson from "./Screens/HomepageScreens/Profile/ProTip/WhatIfLesson";
+import ProgressLesson from "./Screens/HomepageScreens/Profile/ProTip/ProgressLesson";
 import TnC from "./TnC";
 import Login from "./Screens/Login/Login";
 import ForgetPW from "./Screens/Login/ForgetPW";
@@ -111,6 +112,9 @@ export default function App() {
       require("./assets/JumpingMan.png"),
       require("./assets/bargraph.png"),
       require("./assets/aboutbg.png"),
+      // loading of the displays of the Tutorial pics
+      require("./assets/TutorialPic1.png"),
+      require("./assets/TutorialPic2.png"),
       // loading of Planner Tutorial Pictures
       require("./assets/PlannerPage1.png"),
       require("./assets/PlannerPage2.png"),
@@ -124,6 +128,12 @@ export default function App() {
       require("./assets/WhatIfLesson2.png"),
       require("./assets/WhatIfLesson3.png"),
       require("./assets/WhatIfLesson4.png"),
+      require("./assets/WhatIfLesson5.png"),
+      require("./assets/WhatIfLesson6.png"),
+      // loading of Progress pictures
+      require("./assets/ProgressLesson1.png"),
+      require("./assets/ProgressLesson2.png"),
+      require("./assets/ProgressLesson3.png"),
     ]);
 
     const fontAssets = getFonts();
@@ -239,6 +249,10 @@ export default function App() {
                       <AuthStack.Screen
                         name="WhatIfStack"
                         component={WhatIfLesson}
+                      />
+                      <AuthStack.Screen
+                        name="ProgressLessonStack"
+                        component={ProgressLesson}
                       />
                     </>
                   ) : (

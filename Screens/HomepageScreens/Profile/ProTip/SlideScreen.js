@@ -16,6 +16,7 @@ const SlideScreen = (props) => {
   const scroll = useRef(null);
   const { scrollHandler, x } = useScrollHandler();
   const navigation = useNavigation();
+
   return (
     <View style={{ flex: 1 }}>
       <Header
@@ -82,7 +83,7 @@ export default SlideScreen;
 const styles = StyleSheet.create({
   dotDesign: { flex: 1, flexDirection: "row", justifyContent: "center" },
   pictureSpace: {
-    height: 0.605 * height,
+    height: 0.63 * height,
     width: "100%",
     borderBottomWidth: 1,
     borderColor: "#DDDDDD",

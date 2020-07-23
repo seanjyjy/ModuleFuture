@@ -25,6 +25,7 @@ const ProgressPage = ({ navigation, route }) => {
   const [OverallData, setOverallData] = useState([]);
   const [previousCap, setPreviousCap] = useState(0);
   const [allowClicks, setAllowClicks] = useState(false);
+  const [userID, setUserID] = useState("");
   useEffect(() => {
     if (
       route.params?.usersDetails &&
@@ -66,7 +67,7 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(usersOverallMc, usersTARGETMC) / usersTARGETMC) * 100,
             usersOverallMc,
             usersTARGETMC,
-            "#169A7F"
+            "#12DDB3"
           )
         );
         setCircleRight(
@@ -74,7 +75,7 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100,
             usersCurrentCap,
             usersTARGETCAP,
-            "#B25DE4"
+            "#C86FFC"
           )
         );
         setTextToShow(
@@ -100,7 +101,7 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(MCs, first) / first) * 100,
             MCs,
             first,
-            "#169A7F"
+            "#12DDB3"
           )
         );
         setCircleRight(
@@ -108,10 +109,13 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(cap, second) / second) * 100,
             cap,
             second,
-            "#B25DE4"
+            "#C86FFC"
           )
         );
         setTextToShow(whatText((Math.min(cap, second) / second) * 100));
+        if (route.params?.userID) {
+          setUserID(route.params?.userID);
+        }
       } else {
         setAllowClicks(false);
         //GET THE DATA FROM THE USERS TO SEE TO SHOW TILL Y4S2 OR Y5S2
@@ -131,9 +135,12 @@ const ProgressPage = ({ navigation, route }) => {
         setShowGraph(true);
         setProgress(0);
         setProgress2(0);
-        setCircleLeft(whatCircle(0, 0, 160, "#169A7F"));
-        setCircleRight(whatCircle(0, 0, 5, "#B25DE4"));
+        setCircleLeft(whatCircle(0, 0, 160, "#12DDB3"));
+        setCircleRight(whatCircle(0, 0, 5, "#C86FFC"));
         setTextToShow(whatText(0));
+        if (route.params?.userID) {
+          setUserID(route.params?.userID);
+        }
       }
     }
   }, [route.params?.items, route.params?.usersDetails]);
@@ -153,7 +160,6 @@ const ProgressPage = ({ navigation, route }) => {
 
   // ***********************************************this data is going to get from the back end data*****************************************************
 
-  const [userID, setUserID] = useState("");
   const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
   const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
 
@@ -178,7 +184,7 @@ const ProgressPage = ({ navigation, route }) => {
       progress={progress}
       size={0.4 * width}
       strokeWidth={7}
-      circleOuterStroke="#169A7F"
+      circleOuterStroke="#12DDB3"
       circleInnerStroke="#E5E5E5"
       numerator={MCs}
       denominator={MCprogressTotal}
@@ -190,7 +196,7 @@ const ProgressPage = ({ navigation, route }) => {
       progress={progress2}
       size={0.4 * width}
       strokeWidth={7}
-      circleOuterStroke="#B25DE4"
+      circleOuterStroke="#C86FFC"
       circleInnerStroke="#E5E5E5"
       numerator={cap}
       denominator={capGoalDenominator}
@@ -476,9 +482,9 @@ const ProgressPage = ({ navigation, route }) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("ProgressPageSettings", { userID: userID })
-          }
+          onPress={() => {
+            navigation.navigate("ProgressPageSettings", { userID: userID });
+          }}
           activeOpacity={0.9}
           style={{
             flex: 1,
@@ -593,7 +599,7 @@ const ProgressPage = ({ navigation, route }) => {
                   }}
                 >
                   <View
-                    style={{ backgroundColor: "#169A7F", ...styles.dotDesign }}
+                    style={{ backgroundColor: "#12DDB3", ...styles.dotDesign }}
                   />
                 </View>
 
@@ -641,7 +647,7 @@ const ProgressPage = ({ navigation, route }) => {
                   }}
                 >
                   <View
-                    style={{ backgroundColor: "#169A7F", ...styles.dotDesign }}
+                    style={{ backgroundColor: "#12DDB3", ...styles.dotDesign }}
                   />
                 </View>
 
@@ -722,7 +728,7 @@ const ProgressPage = ({ navigation, route }) => {
                 }}
               >
                 <View
-                  style={{ backgroundColor: "#B25DE4", ...styles.dotDesign }}
+                  style={{ backgroundColor: "#C86FFC", ...styles.dotDesign }}
                 />
               </View>
               {/* -------------------------------------------Right Section ----------------------------------------------------- */}

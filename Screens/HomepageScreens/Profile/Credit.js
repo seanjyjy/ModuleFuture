@@ -103,6 +103,7 @@ const Credit = () => {
               <Text style={styles.biggerWords}>
                 Photo by Content Pixie from Pexels
               </Text>
+              <Text style={styles.biggerWords}>Photo pngtree.com</Text>
             </ScrollView>
             <View style={{ height: 40 }}>
               <Text
