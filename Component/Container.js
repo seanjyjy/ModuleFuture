@@ -63,17 +63,6 @@ const Container = (props) => {
             <Text style={{ ...globalFontStyles.OSSB_12, color: "white" }}>
               Prereq
             </Text>
-            <View>
-              {props.prereq ? null : (
-                <Icon
-                  style={{ marginLeft: 2 }}
-                  fill="white"
-                  width={15}
-                  height={15}
-                  name="alert-circle"
-                />
-              )}
-            </View>
           </TouchableOpacity>
           {/* Info button */}
           <TouchableOpacity

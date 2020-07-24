@@ -315,11 +315,6 @@ const FocusArea = ({ navigation }) => {
           style={styles.container}
           activeOpacity={0.9}
           onPress={() => {
-            // to remove on restart
-            current.Prereq.name = "Prereq";
-            current.Primaries.name = "Primaries";
-            current.Electives.name = "Electives";
-
             current.Primaries.taken = sort(current.Primaries.taken);
             current.Electives.taken = sort(current.Electives.taken);
 

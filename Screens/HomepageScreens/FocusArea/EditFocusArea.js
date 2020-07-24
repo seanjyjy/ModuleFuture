@@ -528,10 +528,10 @@ const EditRecords = ({ navigation, route }) => {
         renderItem={({ item }) => holders(item)}
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={<View style={{ height: height * 0.1 }} />}
+        ListFooterComponent={<View style={{ height: 90 }} />}
       />
       <BottomBar
-        leftText={`No. of focus areas: ${num}`}
+        leftText={`Focus areas: ${num}`}
         leftTextSize={16}
         rightText={"Add a focus area"}
         size={140}

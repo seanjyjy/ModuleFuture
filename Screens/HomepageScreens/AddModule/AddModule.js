@@ -330,7 +330,7 @@ Prereq: matched with whatever is planned / take
             <View style={{ height: 10 }} />
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Semester 1:</Text>
+                <Text style={styles.suTextStyle}>Semester 1</Text>
                 {arrOfBoolean[0] ? tickIcon : crossIcon}
               </View>
               <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
@@ -340,11 +340,11 @@ Prereq: matched with whatever is planned / take
             </View>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Special term I:</Text>
+                <Text style={styles.suTextStyle}>Special term I</Text>
                 {arrOfBoolean[2] ? tickIcon : crossIcon}
               </View>
               <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Special term II:</Text>
+                <Text style={styles.suTextStyle}>Special term II</Text>
                 {arrOfBoolean[3] ? tickIcon : crossIcon}
               </View>
             </View>
@@ -354,7 +354,7 @@ Prereq: matched with whatever is planned / take
               <Text style={styles.mcTextStyle}>{`Number of MCs: ${mc}`}</Text>
             </View>
             <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-              <Text style={styles.suTextStyle}>SU availability:</Text>
+              <Text style={styles.suTextStyle}>SU availability</Text>
               {suOptions ? tickIcon : crossIcon}
             </View>
           </View>

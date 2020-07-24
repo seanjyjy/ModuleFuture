@@ -511,7 +511,7 @@ const Records = ({ navigation }) => {
     return (
       <FlatList
         contentContainerStyle={styles.fullBox}
-        ListFooterComponent={<View style={{ height: height * 0.11 }}></View>}
+        ListFooterComponent={<View style={{ height: 90 }}></View>}
         data={currentArr}
         keyExtractor={(item) => item.key.toString()}
         renderItem={({ item }) => IndividualBox(item)}
@@ -570,7 +570,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   menuStyle: {
-    marginTop: Platform.OS === "android" ? 0 : StatusBar.currentHeight,
+    marginTop: Platform.OS === "android" ? 0 : -StatusBar.currentHeight,
     width: width * 0.45,
     borderRadius: 10,
     left: 8,
