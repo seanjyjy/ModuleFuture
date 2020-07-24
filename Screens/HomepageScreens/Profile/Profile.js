@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Dimensions } from "react-native";
 import Header from "../../../Component/Header";
 import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../../FirebaseDB";
 import { globalFontStyles } from "../../../Component/GlobalFont";
+
+const width = Dimensions.get("window").width;
 
 const Profile = (props) => {
   const navigation = useNavigation();
@@ -59,6 +61,7 @@ const Profile = (props) => {
             color: "#2D405699",
             width: "75%",
             textAlign: "right",
+            right: 0.05 * width,
           }}
         >
           {props.right}
@@ -91,6 +94,7 @@ const Profile = (props) => {
           style={{
             ...globalFontStyles.OSR_14,
             color: "#2D405699",
+            right: 0.05 * width,
           }}
         >
           {props.right}
