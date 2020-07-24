@@ -7,45 +7,45 @@ const WhatIfLesson = () => {
   const slides = [
     {
       imageLink: require("../../../../assets/WhatIfLesson1.png"),
-      subtitle: "Part I",
+      subtitle: "Choosing plan AA",
       description:
-        "Given the two plans, with current being at Plan AA, your future plans will be calculated using this plan",
+        "Suppose we have 2 plans, AA and CC. Let us proceed with the current plan selected being AA first. ",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson2.png"),
-      subtitle: "Part I result",
+      subtitle: "CAP with plan AA selected",
       description:
-        "In the future sem(e.g Y1S2), with the planned cap being of CAP 5, since we use Plan AA which is of cap 5, planned semestral CAP is 5 .",
+        "Now we create another plan for Y1S2 with semestral CAP being 5. Notice that the planned overall CAP is 5, which is based on Plan AA of Y1S1 and this current plan.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson3.png"),
-      subtitle: "Part II",
+      subtitle: "Switching current plan to plan CC",
       description:
-        "Now switch we to Plan CC by clicking onto Plan CC. Note that current is now on Plan CC",
+        "Now we switch the current plan to Plan CC by clicking onto it.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson4.png"),
-      subtitle: "Plat II result",
+      subtitle: "CAP with plan CC selected",
       description:
-        "Looking at the CAP now, we can see the planned semestral CAP to have change now.",
+        "Looking at the CAP in Y1S2 now, we can see that the planned overall CAP has changed since the plan selected in Y1S1 is now Plan CC.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson5.png"),
-      subtitle: "Part III",
+      subtitle: "With final grades",
       description:
-        "Now if we were to insert our final grades instead, we do not need to worry about current being in wrong position. Note that plan CC's terminology has changed",
+        "If we were to insert our final grades to Plan CC, we do not need to worry about current being in wrong position, since the plan used will be the one with the final grades.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson6.png"),
-      subtitle: "Part III result",
+      subtitle: "CAP with final grades inserted",
       description:
-        "Looking at the CAP now, we will use the final grade regardless of the position of current.",
+        "We can see that the planned overall CAP in Y1S2 computed is based on Plan CC.",
     },
     {
       imageLink: require("../../../../assets/PlannerPage1.png"),
       subtitle: "Final",
       description:
-        "To enjoy the best experience for the app, it is adviced to enter only one set of final grades for each semester!",
+        "To enjoy the best experience for the app, it is advised to enter only one set of final grades for each semester!",
     },
   ];
   return (
@@ -54,7 +54,7 @@ const WhatIfLesson = () => {
         {(props) => (
           <SlideScreen
             {...props}
-            title={"How to use planner"}
+            title={"How to use planner II"}
             slides={slides}
             backTo="ProTip"
           />

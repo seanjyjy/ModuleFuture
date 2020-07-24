@@ -37,7 +37,7 @@ const FocusAreaLesson = () => {
         {(props) => (
           <SlideScreen
             {...props}
-            title={"How to use records"}
+            title={"How to use focus area"}
             slides={slides}
             backTo="ProTip"
           />

@@ -26,13 +26,14 @@ const PlannerLesson = () => {
     {
       imageLink: require("../../../../assets/PlannerPage4.png"),
       subtitle: "Confirmation",
-      description: "Confirmation on the modules to add.",
+      description:
+        "On clicking add modules, we reach the confirmation page. Here we can choose to edit our current modules to make sure it is correct before clicking confirm.",
     },
     {
       imageLink: require("../../../../assets/PlannerPage5.png"),
       subtitle: "Addition of grades",
       description:
-        "Add your grades at the end of the semester to track your progress!",
+        "Add your target grade for each module. At the end of the semester, submit your final grades and view your progress!",
     },
     {
       imageLink: require("../../../../assets/PlannerPage6.png"),
@@ -44,7 +45,7 @@ const PlannerLesson = () => {
       imageLink: require("../../../../assets/PlannerPage7.png"),
       subtitle: "Quick Navigation",
       description:
-        "Tap the button at the top Left to open the quick navigation tab. It suggests some semesters for you to start planning as well!",
+        "Access the quick navigation tab through the button in the top left corner. It suggests some semesters for you to start planning as well!",
     },
   ];
   return (
@@ -53,7 +54,7 @@ const PlannerLesson = () => {
         {(props) => (
           <SlideScreen
             {...props}
-            title={"How to use planner"}
+            title={"How to use planner I"}
             slides={slides}
             backTo="ProTip"
           />
