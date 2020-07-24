@@ -43,7 +43,9 @@ const FocusArea = ({ navigation }) => {
   const [focusArea, setFocus] = useState([]);
 
   const Edit = () => (
-    <SuggestButton func={() => navigation.navigate("EditFocusArea")} />
+    <SuggestButton
+      func={() => navigation.navigate("EditFocusArea", { type: focusArea })}
+    />
   );
 
   const toggleMenu = () => {

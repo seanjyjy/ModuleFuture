@@ -9,13 +9,13 @@ const PlannerLesson = () => {
       imageLink: require("../../../../assets/PlannerPage1.png"),
       subtitle: "Selecting of semester",
       description:
-        "Interactive scroll for you to find the semester you wish to create your plan in.",
+        "Interactive scroll-based interface for you to find the semester you wish to create your plan in.",
     },
     {
       imageLink: require("../../../../assets/PlannerPage2.png"),
       subtitle: "Creating of your plans",
       description:
-        "Create a memorable plan name for you to remember. Note that no duplicate names are allow in the same semester.",
+        "Create a memorable plan name for you to remember. Note that no duplicate names are allowed in the same semester.",
     },
     {
       imageLink: require("../../../../assets/PlannerPage3.png"),
@@ -32,19 +32,19 @@ const PlannerLesson = () => {
       imageLink: require("../../../../assets/PlannerPage5.png"),
       subtitle: "Addition of grades",
       description:
-        "Add your CAP for the calculation of CAP to track the progress!",
+        "Add your grades at the end of the semester to track your progress!",
     },
     {
       imageLink: require("../../../../assets/PlannerPage6.png"),
       subtitle: "Module plans display",
       description:
-        "View the beautiful displays of your modules!\nYou can favourite this plan by clicking the icon beside My Plans",
+        "Finally view your modules planned for the semester!\nYou can favourite and provide quick access to each plan by clicking the bookmark icon beside each plan's name.",
     },
     {
       imageLink: require("../../../../assets/PlannerPage7.png"),
       subtitle: "Quick Navigation",
       description:
-        "Tap the button at the top Left to activate quick navigation tab. It will suggest some semester for you to start planning as well!",
+        "Tap the button at the top Left to open the quick navigation tab. It suggests some semesters for you to start planning as well!",
     },
   ];
   return (

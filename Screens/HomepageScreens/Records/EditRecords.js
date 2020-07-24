@@ -278,7 +278,7 @@ const EditRecords = ({ navigation, route }) => {
                   color: "#cc0000",
                 }}
               >
-                Please enter a valid string
+                Please enter a text
               </Text>
             ) : null}
           </View>
@@ -512,7 +512,7 @@ const EditRecords = ({ navigation, route }) => {
                   cont = false;
                   Alert.alert(
                     "Error",
-                    `Please fill in a valid number for ${type[i].name}'s No. required`,
+                    `Input should be empty or a valid number for ${type[i].name}'s No. required`,
                     [
                       {
                         text: "OK",
@@ -529,6 +529,7 @@ const EditRecords = ({ navigation, route }) => {
                 const typeObj = document.data();
                 for (let i = 0; i < type.length; i++) {
                   typeObj[type[i].name] = i;
+                  type[i].key = i + 1;
                 }
                 for (const name of del) {
                   delete typeObj[name];
@@ -551,7 +552,7 @@ const EditRecords = ({ navigation, route }) => {
       {/* ----------------- ALL TYPES ------------------------------- */}
       <FlatList
         data={type}
-        keyExtractor={(item) => item.key.toString()}
+        keyExtractor={(item) => item.name.toString()}
         renderItem={({ item }) => holders(item)}
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}

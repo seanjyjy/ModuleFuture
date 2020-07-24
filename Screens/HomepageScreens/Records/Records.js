@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -30,7 +29,6 @@ const Records = ({ navigation, route }) => {
   useEffect(() => {
     const unsub = typeRef.onSnapshot(
       (document) => {
-        console.log("updated in records");
         setType(document.data().cat);
         recordsRef.onSnapshot((document) => {
           const data = document.data();

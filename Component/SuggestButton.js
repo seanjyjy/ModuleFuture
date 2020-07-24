@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
 
-const SuggestButton = () => {
+const SuggestButton = (props) => {
   return (
     <TouchableOpacity
       style={styles.buttonDesign}

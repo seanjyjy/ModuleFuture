@@ -7,9 +7,9 @@ const ProgressLesson = () => {
   const slides = [
     {
       imageLink: require("../../../../assets/ProgressLesson1.png"),
-      subtitle: "Beautiful Displays",
+      subtitle: "Visuals",
       description:
-        "The progress page allows you to track your MC progression, as well as CAP progression using beautiful displays.",
+        "The progress page allows you to track your MC progression, as well as CAP progression using intuitive displays.",
     },
     {
       imageLink: require("../../../../assets/ProgressLesson2.png"),
@@ -21,7 +21,7 @@ const ProgressLesson = () => {
       imageLink: require("../../../../assets/ProgressLesson3.png"),
       subtitle: "Settings",
       description:
-        "You can change your target CAP and total MCs. Default values are 5 and 160 respectively",
+        "You can change your target CAP and total MCs by clicking on the cog icon. Default values are 5 and 160 respectively",
     },
   ];
   return (

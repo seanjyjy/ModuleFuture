@@ -18,7 +18,7 @@ import Modal from "react-native-modalbox";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const EditFocusArea = ({ navigation, route }) => {
+const EditRecords = ({ navigation, route }) => {
   const [type, setType] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
@@ -27,21 +27,18 @@ const EditFocusArea = ({ navigation, route }) => {
   const [alertText1, set1] = useState(false);
   const [alertText2, set2] = useState(false);
   const [alertText3, set3] = useState(false);
+  const [num, setNum] = useState(0);
 
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
-  const typeRef = fb.collection("typeArray").doc(userID);
+  const focusAreaRef = fb.collection("focusArea").doc(userID);
 
   useEffect(() => {
-    const unsub = typeRef.onSnapshot(
+    const unsub = focusAreaRef.onSnapshot(
       (document) => {
-        const data = document.data();
-        setType(document.data().cat);
-        let sum = 0;
-        for (let i = 0; i < data.cat.length; i++) {
-          sum += data.cat[i].mcsRequired;
-        }
-        setMCsPlanned(sum);
+        const arr = document.data().cat;
+        setType(arr);
+        setNum(arr.length);
       },
       (error) => alert(error)
     );
@@ -49,33 +46,27 @@ const EditFocusArea = ({ navigation, route }) => {
   }, [route.params?.type]);
 
   const colors = [
-    "#FFB584",
-    "#FF6F66",
-    "#8F9ED5",
-    "#6CD5AF",
+    "#5EDCC2",
+    "#4ABBEE",
+    "#5E77DC",
+    "#765EDC",
+    "#BB5EDC",
     "#DC5E9D",
-    "#CE6F73",
-    "#241161",
-    "#6c2386",
+    "#A47777",
+    "#E19797",
+    "#20A87F",
+    "#FF6F66",
   ];
 
-  const theAlert = () => {
-    Alert.alert(
-      "Error",
-      "Please fill in a valid number more than 0",
-      [
-        {
-          text: "OK",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
   const content = (item) => {
-    const mcsReq = item.mcsRequired;
-    const numReq =
-      item.numRequired !== undefined ? item.numRequired : "not specified";
+    const numPrimaries =
+      item.Primaries.numRequired !== undefined
+        ? item.Primaries.numRequired
+        : "nil";
+    const numElectives =
+      item.Electives.numRequired !== undefined
+        ? item.Electives.numRequired
+        : "nil";
 
     const choice = (question, current, index) => (
       <View
@@ -99,39 +90,12 @@ const EditFocusArea = ({ navigation, route }) => {
           <TextInput
             keyboardType="numeric"
             onChangeText={(val) => {
-              if (index === "numRequired") {
-                if (val === "" || val === "not specified") {
-                } else {
-                  const nextNum = parseInt(val);
-                  type[item.key - 1][index] = nextNum;
-                }
+              if (val === "" || val === "nil") {
+                delete type[item.key - 1][index].numRequired;
               } else {
                 const nextNum = parseInt(val);
-                type[item.key - 1][index] = nextNum;
+                type[item.key - 1][index].numRequired = nextNum;
               }
-            }}
-            onEndEditing={(current) => {
-              const val = current.nativeEvent.text;
-              // if (index === "numRequired") {
-              //   if (val === "" || val === "not specified") {
-              //   } else {
-              //     const nextNum = parseInt(val);
-              //     if (isNaN(nextNum) || nextNum < 0) {
-              //       theAlert();
-              //     }
-              //   }
-              // } else {
-              const nextNum = parseInt(val);
-              if (isNaN(nextNum) || nextNum <= 0) {
-                // if (val !== "") theAlert();
-              } else {
-                let sum = 0;
-                for (const eachType of type) {
-                  if (!isNaN(eachType.mcsRequired)) sum += eachType.mcsRequired;
-                }
-                setMCsPlanned(sum);
-              }
-              // }
             }}
             placeholder={current.toString()}
             style={{ textAlign: "center" }}
@@ -142,8 +106,8 @@ const EditFocusArea = ({ navigation, route }) => {
 
     return (
       <View style={styles.whitelayer}>
-        {choice("MCs required :", mcsReq, "mcsRequired")}
-        {choice("No. required :", numReq, "numRequired")}
+        {choice("Primaries required :", numPrimaries, "Primaries")}
+        {choice("Electives required :", numElectives, "Electives")}
       </View>
     );
   };
@@ -179,19 +143,17 @@ const EditFocusArea = ({ navigation, route }) => {
             >
               {name}
             </Text>
-            {item.canDelete !== undefined ? (
-              <Icon
-                name="trash-2"
-                width={30}
-                height={17}
-                fill="#F4F4F4"
-                onPress={() => {
-                  const newArr = type.filter((x) => x.name !== name);
-                  setMCsPlanned(mcsPlanned - item.mcsRequired);
-                  setType(newArr);
-                }}
-              />
-            ) : null}
+            <Icon
+              name="trash-2"
+              width={30}
+              height={17}
+              fill="#F4F4F4"
+              onPress={() => {
+                const newArr = type.filter((x) => x.name !== name);
+                setNum(num - 1);
+                setType(newArr);
+              }}
+            />
           </View>
         </View>
         {content(item)}
@@ -211,20 +173,35 @@ const EditFocusArea = ({ navigation, route }) => {
     >
       <View
         style={{
-          height: "82%",
+          height: "88%",
         }}
       >
-        <Text
+        <View
           style={{
-            ...globalFontStyles.OSB_15,
-            alignSelf: "center",
+            width: "90%",
             marginTop: 8,
-            textDecorationLine: "underline",
             marginBottom: 15,
+            alignSelf: "center",
+            alignItems: "center",
           }}
         >
-          Create a type
-        </Text>
+          <Text
+            style={{
+              ...globalFontStyles.OSB_16,
+              color: "#074285",
+            }}
+          >
+            Create a focus area
+          </Text>
+          <View
+            style={{
+              marginTop: 4,
+              width: "100%",
+              borderBottomColor: "lightgrey",
+              borderBottomWidth: 1,
+            }}
+          />
+        </View>
         <View style={{ marginLeft: 15 }}>
           <View
             style={{
@@ -234,27 +211,20 @@ const EditFocusArea = ({ navigation, route }) => {
             }}
           >
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              Name:
+              Name
             </Text>
-            <View
-              style={{
-                marginLeft: 10,
-                marginTop: 1,
-                borderBottomColor: "#B5B5B5",
-                borderBottomWidth: 0.5,
-              }}
-            >
-              <TextInput
-                onChangeText={(val) => {
-                  setName(val);
-                }}
-                placeholder={"Name of type"}
-                autoCapitalize="words"
-                style={{ textAlign: "left" }}
-              />
-            </View>
           </View>
-          <View style={{ height: 25, alignSelf: "center", marginRight: 15 }}>
+          <View style={styles.modalInputBox}>
+            <TextInput
+              onChangeText={(val) => {
+                setName(val);
+              }}
+              placeholder={"Name of focus area"}
+              autoCapitalize="words"
+              style={{ textAlign: "left", marginLeft: 5 }}
+            />
+          </View>
+          <View style={{ height: 25, marginTop: 5, marginBottom: 10 }}>
             {alertText1 ? (
               <Text
                 style={{
@@ -262,7 +232,7 @@ const EditFocusArea = ({ navigation, route }) => {
                   color: "#cc0000",
                 }}
               >
-                Please enter a valid string
+                Please enter a text
               </Text>
             ) : null}
           </View>
@@ -274,27 +244,20 @@ const EditFocusArea = ({ navigation, route }) => {
             }}
           >
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              MCs required:
+              Primaries required
             </Text>
-            <View
-              style={{
-                marginLeft: 10,
-                marginTop: 1,
-                borderBottomColor: "#B5B5B5",
-                borderBottomWidth: 0.5,
-              }}
-            >
-              <TextInput
-                keyboardType="numeric"
-                onChangeText={(val) => {
-                  setNewMc(parseInt(val));
-                }}
-                placeholder={"1 - 160"}
-                style={{ textAlign: "left" }}
-              />
-            </View>
           </View>
-          <View style={{ height: 25, alignSelf: "center", marginRight: 15 }}>
+          <View style={styles.modalInputBox}>
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={(val) => {
+                setNewMc(parseInt(val));
+              }}
+              placeholder={"1 - 40"}
+              style={{ textAlign: "left", marginLeft: 5 }}
+            />
+          </View>
+          <View style={{ height: 25, marginTop: 5, marginBottom: 10 }}>
             {alertText2 ? (
               <Text
                 style={{
@@ -302,7 +265,7 @@ const EditFocusArea = ({ navigation, route }) => {
                   color: "#cc0000",
                 }}
               >
-                Please enter a valid number
+                Input should be a valid number
               </Text>
             ) : null}
           </View>
@@ -314,43 +277,43 @@ const EditFocusArea = ({ navigation, route }) => {
             }}
           >
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              No. required:
+              Electives required
             </Text>
-            <View
+            <Text
               style={{
-                marginLeft: 10,
-                marginTop: 1,
-                borderBottomColor: "#B5B5B5",
-                borderBottomWidth: 0.5,
+                ...globalFontStyles.OSR_13,
+                color: "#CBCBCB",
+                marginLeft: 5,
               }}
             >
-              <TextInput
-                keyboardType="numeric"
-                onChangeText={(val) => {
-                  setNumReq(val);
-                }}
-                placeholder={"No. of modules, if any"}
-                style={{ textAlign: "left" }}
-              />
-            </View>
+              - optional field
+            </Text>
           </View>
-          <View style={{ height: 25, alignSelf: "center", marginRight: 15 }}>
+          <View style={styles.modalInputBox}>
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={(val) => {
+                setNumReq(val);
+              }}
+              placeholder={"nil"}
+              style={{ textAlign: "left", marginLeft: 5 }}
+            />
+          </View>
+          <View style={{ height: 25, marginTop: 5 }}>
             {alertText3 ? (
               <Text
                 style={{
                   ...globalFontStyles.NB_12,
                   color: "#cc0000",
-                  marginLeft: 15,
-                  marginTop: 4,
                 }}
               >
-                Please enter a valid number
+                Input should be empty or a valid number
               </Text>
             ) : null}
           </View>
         </View>
       </View>
-      <View style={{ height: "18%" }}>
+      <View style={{ height: "12%" }}>
         <View
           style={{
             flex: 1,
@@ -398,7 +361,11 @@ const EditFocusArea = ({ navigation, route }) => {
               }
               const numAfter = parseInt(numReq);
               // Allowing for either zero or empty string
-              if (numReq === "" || (!isNaN(numAfter) && numAfter > 0)) {
+              if (
+                numReq === "" ||
+                numReq === "nil" ||
+                (!isNaN(numAfter) && numAfter > 0)
+              ) {
                 set3(false);
               } else {
                 succeed = false;
@@ -408,28 +375,46 @@ const EditFocusArea = ({ navigation, route }) => {
                 // update type array
                 let newArr = type.slice(0);
                 const newKey = newArr.length + 1;
+                // Primaries
                 if (numReq === "" || numAfter === 0) {
                   newArr.push({
                     key: newKey,
-                    mcsRequired: newMc,
+                    numRequired: newMc,
                     name: name,
-                    mcsTaken: 0,
-                    mcsUsedInCap: 0,
-                    numTaken: 0,
-                    points: 0,
-                    canDelete: true,
+                    Primaries: {
+                      modules: [],
+                      name: "Primaries",
+                      numRequired: newMc,
+                    },
+                    Prereq: {
+                      modules: [],
+                      name: "Prereq",
+                    },
+                    Electives: {
+                      modules: [],
+                      name: "Electives",
+                    },
                   });
+                  // Electives
                 } else {
                   newArr.push({
                     key: newKey,
-                    mcsRequired: newMc,
-                    numRequired: numAfter,
+                    numRequired: newMc,
                     name: name,
-                    mcsTaken: 0,
-                    mcsUsedInCap: 0,
-                    numTaken: 0,
-                    points: 0,
-                    canDelete: true,
+                    Primaries: {
+                      modules: [],
+                      name: "Primaries",
+                      numRequired: newMc,
+                    },
+                    Prereq: {
+                      modules: [],
+                      name: "Prereq",
+                    },
+                    Electives: {
+                      modules: [],
+                      name: "Electives",
+                      numRequired: numAfter,
+                    },
                   });
                 }
                 setType(newArr);
@@ -440,7 +425,7 @@ const EditFocusArea = ({ navigation, route }) => {
                 setName("");
                 setNewMc(0);
                 setNumReq("");
-                setMCsPlanned(mcsPlanned + newMc);
+                setNum(num + 1);
               }
             }}
             activeOpacity={0.9}
@@ -472,33 +457,41 @@ const EditFocusArea = ({ navigation, route }) => {
         </TouchableOpacity>
         <View style={styles.headerMiddle}>
           <Text style={{ ...globalFontStyles.NB_17, color: "#232323" }}>
-            Edit Types
+            Edit Focus Area
           </Text>
         </View>
         <TouchableOpacity
           onPress={() => {
             let cont = true;
             for (let i = 0; i < type.length; i++) {
-              if (isNaN(type[i].mcsRequired) || type[i].mcsRequired <= 0) {
-                cont = false;
-                Alert.alert(
-                  "Error",
-                  `Please fill in a valid number for ${type[i].name}'s MCs required`,
-                  [
-                    {
-                      text: "OK",
-                    },
-                  ],
-                  { cancelable: false }
-                );
-                break;
-              }
-              if (type[i].numRequired !== undefined) {
-                if (isNaN(type[i].numRequired) || type[i].numRequired <= 0) {
+              if (type[i].Primaries.numRequired !== undefined) {
+                if (
+                  isNaN(type[i].Primaries.numRequired) ||
+                  type[i].Primaries.numRequired <= 0
+                ) {
                   cont = false;
                   Alert.alert(
                     "Error",
-                    `Please fill in a valid number for ${type[i].name}'s No. required`,
+                    `Input should be empty or a valid number for ${type[i].name}'s primaries required`,
+                    [
+                      {
+                        text: "OK",
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                  break;
+                }
+              }
+              if (type[i].Electives.numRequired !== undefined) {
+                if (
+                  isNaN(type[i].Electives.numRequired) ||
+                  type[i].Electives.numRequired <= 0
+                ) {
+                  cont = false;
+                  Alert.alert(
+                    "Error",
+                    `Input should be empty or a valid number for ${type[i].name}'s electives required`,
                     [
                       {
                         text: "OK",
@@ -511,15 +504,12 @@ const EditFocusArea = ({ navigation, route }) => {
               }
             }
             if (cont) {
-              typeRef.get().then((document) => {
-                const typeObj = document.data();
-                for (let i = 0; i < type.length; i++) {
-                  typeObj[type[i].name] = i;
-                }
-                typeObj.cat = type;
-                typeRef.set(typeObj);
-              });
-              navigation.navigate("Records");
+              let typeObj = type;
+              for (let i = 0; i < typeObj.length; i++) {
+                typeObj[i].key = i + 1;
+              }
+              focusAreaRef.set({ cat: typeObj });
+              navigation.navigate("Focus");
             }
           }}
           activeOpacity={0.9}
@@ -531,27 +521,27 @@ const EditFocusArea = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       {popUp()}
-      {/* ----------------- ALL TYPES ------------------------------- */}
+      {/* ----------------- ALL FOCUS AREAS ------------------------------- */}
       <FlatList
         data={type}
-        keyExtractor={(item) => item.key.toString()}
+        keyExtractor={(item) => item.name.toString()}
         renderItem={({ item }) => holders(item)}
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
         ListFooterComponent={<View style={{ height: height * 0.1 }} />}
       />
       <BottomBar
-        leftText={`No. of focus areas : ${mcsPlanned}`}
+        leftText={`No. of focus areas: ${num}`}
         leftTextSize={16}
-        rightText={"Add a type"}
-        size={100}
+        rightText={"Add a focus area"}
+        size={140}
         transition={() => setModalVisible(true)}
       />
     </>
   );
 };
 
-export default EditFocusArea;
+export default EditRecords;
 
 const styles = StyleSheet.create({
   topPortion: {
@@ -589,7 +579,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: width * 0.88,
-    height: height / 5,
+    height: 165,
     marginTop: 18,
     marginBottom: 6,
     alignSelf: "center",
@@ -617,20 +607,20 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingLeft: 10,
   },
-  btmButtonHolder: {
-    width: 55,
-    height: 55,
-    backgroundColor: "#393939",
-    borderRadius: 100,
-    left: 0.78 * width,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   modalBox: {
     backgroundColor: "white",
-    width: 280,
-    height: 260,
+    width: 300,
+    height: 440,
     borderRadius: 30,
+  },
+  modalInputBox: {
+    marginTop: 6,
+    borderColor: "#B5B5B5",
+    height: 40,
+    borderWidth: 0.8,
+    borderRadius: 5,
+    width: "70%",
+    justifyContent: "center",
   },
   flexOneCenter: {
     flex: 1,

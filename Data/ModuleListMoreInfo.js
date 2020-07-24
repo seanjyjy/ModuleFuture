@@ -56,7 +56,6 @@ const ModuleListWithKey = () => {
     if (current.semesterData.length !== 0) {
       codeArr = firstDigit(current.moduleCode);
       const code = current.moduleCode;
-
       arr[k] = {
         code: code, // string
         name: current.moduleCode + " " + current.title,

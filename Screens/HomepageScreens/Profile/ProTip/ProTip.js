@@ -25,50 +25,56 @@ const ProTip = () => {
     {
       title: "How to use planner I?",
       miniDescription:
-        "This tutorial will highlight the usage of this planner, for more advance stuff, please view the rest of the tutorials.",
+        "This tutorial highlights the basic usage of this planner. View the next tutorial for more advanced features!",
       key: "1",
-      titleColor: "white",
-      textColor: "white",
       requiredLink: require("../../../../assets/TutorialPic1.png"),
       StackName: "PlannerLessonStack",
       bgColor: "#1DDEAA",
-      arrowColor: "white",
     },
     {
       title: "How to use planner II?",
       miniDescription:
-        "This tutorial will highlight some useful functionalities of the planner!",
+        "This tutorial highlights some useful features of the planner!",
       key: "2",
-      titleColor: "white",
-      textColor: "white",
       requiredLink: require("../../../../assets/TutorialPic2.png"),
       StackName: "WhatIfStack",
       bgColor: "#757CFE",
-      arrowColor: "white",
     },
     {
       title: "How to track progress?",
       miniDescription:
-        "This tutorial will highlight the usage of progress page!",
+        "This tutorial highlights the features of the progress page!",
       key: "3",
-      titleColor: "white",
-      textColor: "white",
       requiredLink: require("../../../../assets/TutorialPic2.png"),
       StackName: "ProgressLessonStack",
       bgColor: "#FE75C1",
-      arrowColor: "white",
+    },
+    {
+      title: "How to use records?",
+      miniDescription:
+        "This tutorial highlights the most optimal way to utilise the records page!",
+      key: "4",
+      requiredLink: require("../../../../assets/TutorialPic2.png"),
+      StackName: "RecordsLessonStack",
+      bgColor: "#FE75C1",
+    },
+    {
+      title: "How to use focus area?",
+      miniDescription:
+        "This tutorial highlights the features of the focus area page!",
+      key: "5",
+      requiredLink: require("../../../../assets/TutorialPic2.png"),
+      StackName: "FocusAreaLessonStack",
+      bgColor: "#FE75C1",
     },
   ];
 
   const cardMaker = (
     title,
     miniDescription,
-    titleColor,
-    textColor,
     ImageToUse,
     StackName,
-    bgColor,
-    arrowColor
+    bgColor
   ) => {
     return (
       <TouchableOpacity
@@ -81,12 +87,12 @@ const ProTip = () => {
         <View style={{ height: "100%", width: "57%" }}>
           <View style={{ height: 0.035 * height }} />
           <View style={styles.headerPos}>
-            <Text style={{ ...styles.titleStyling, color: titleColor }}>
+            <Text style={{ ...styles.titleStyling, color: "white" }}>
               {title}
             </Text>
           </View>
           <View style={{ flex: 5, paddingHorizontal: 10, bottom: 10 }}>
-            <Text style={{ ...styles.textStyling, color: textColor }}>
+            <Text style={{ ...styles.textStyling, color: "white" }}>
               {miniDescription}
             </Text>
           </View>
@@ -107,18 +113,7 @@ const ProTip = () => {
               alignItems: "flex-end",
               justifyContent: "center",
             }}
-          >
-            <Ionicons
-              name="md-arrow-round-forward"
-              size={20}
-              style={{
-                color: arrowColor,
-                right: 0.075 * width,
-                top: 0.015 * height,
-              }}
-              onPress={() => navigation.goBack()}
-            />
-          </View>
+          ></View>
         </View>
       </TouchableOpacity>
     );
@@ -148,12 +143,9 @@ const ProTip = () => {
             cardMaker(
               item.title,
               item.miniDescription,
-              item.titleColor,
-              item.textColor,
               item.requiredLink,
               item.StackName,
-              item.bgColor,
-              item.arrowColor
+              item.bgColor
             )
           }
         />
@@ -180,7 +172,7 @@ const styles = StyleSheet.create({
   textStyling: {
     ...globalFontStyles.NSB_15,
     paddingHorizontal: 5,
-    letterSpacing: -1,
+    letterSpacing: -0.91,
   },
   cardContainer: {
     margin: 10,

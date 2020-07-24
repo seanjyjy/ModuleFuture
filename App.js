@@ -21,6 +21,8 @@ import ProTip from "./Screens/HomepageScreens/Profile/ProTip/ProTip";
 import PlannerLesson from "./Screens/HomepageScreens/Profile/ProTip/PlannerLesson";
 import WhatIfLesson from "./Screens/HomepageScreens/Profile/ProTip/WhatIfLesson";
 import ProgressLesson from "./Screens/HomepageScreens/Profile/ProTip/ProgressLesson";
+import RecordsLesson from "./Screens/HomepageScreens/Profile/ProTip/RecordsLesson";
+import FocusAreaLesson from "./Screens/HomepageScreens/Profile/ProTip/FocusAreaLesson";
 import TnC from "./TnC";
 import Login from "./Screens/Login/Login";
 import ForgetPW from "./Screens/Login/ForgetPW";
@@ -88,7 +90,6 @@ export default function App() {
     loading: false,
     user: null,
   });
-  const [mod, setMod] = useState(ModuleListWithKey());
 
   const loadAssetAsync = async () => {
     const imageAssets = cacheImages([
@@ -210,7 +211,12 @@ export default function App() {
                         component={EditRecords}
                       />
                       <AuthStack.Screen name="AddModule">
-                        {(props) => <AddModule {...props} moduleList={mod} />}
+                        {(props) => (
+                          <AddModule
+                            {...props}
+                            moduleList={ModuleListWithKey()}
+                          />
+                        )}
                       </AuthStack.Screen>
                       <AuthStack.Screen
                         name="SeeModules"
@@ -253,6 +259,14 @@ export default function App() {
                       <AuthStack.Screen
                         name="ProgressLessonStack"
                         component={ProgressLesson}
+                      />
+                      <AuthStack.Screen
+                        name="RecordsLessonStack"
+                        component={RecordsLesson}
+                      />
+                      <AuthStack.Screen
+                        name="FocusAreaLessonStack"
+                        component={FocusAreaLesson}
                       />
                     </>
                   ) : (
