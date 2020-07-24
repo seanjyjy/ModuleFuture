@@ -81,8 +81,7 @@ const EditRecords = ({ navigation, route }) => {
 
   const content = (item) => {
     const mcsReq = item.mcsRequired;
-    const numReq =
-      item.numRequired !== undefined ? item.numRequired : "not specified";
+    const numReq = item.numRequired !== undefined ? item.numRequired : "nil";
 
     const choice = (question, current, index) => (
       <View
@@ -107,7 +106,7 @@ const EditRecords = ({ navigation, route }) => {
             keyboardType="numeric"
             onChangeText={(val) => {
               if (index === "numRequired") {
-                if (val === "" || val === "not specified") {
+                if (val === "" || val === "nil") {
                   delete type[item.key - 1][index];
                 } else {
                   const nextNum = parseInt(val);
@@ -220,20 +219,35 @@ const EditRecords = ({ navigation, route }) => {
     >
       <View
         style={{
-          height: "82%",
+          height: "88%",
         }}
       >
-        <Text
+        <View
           style={{
-            ...globalFontStyles.OSB_15,
-            alignSelf: "center",
+            width: "90%",
             marginTop: 8,
-            textDecorationLine: "underline",
             marginBottom: 15,
+            alignSelf: "center",
+            alignItems: "center",
           }}
         >
-          Create a type
-        </Text>
+          <Text
+            style={{
+              ...globalFontStyles.OSB_16,
+              color: "#074285",
+            }}
+          >
+            Create a type
+          </Text>
+          <View
+            style={{
+              marginTop: 4,
+              width: "100%",
+              borderBottomColor: "lightgrey",
+              borderBottomWidth: 1,
+            }}
+          />
+        </View>
         <View style={{ marginLeft: 15 }}>
           <View
             style={{
@@ -243,27 +257,20 @@ const EditRecords = ({ navigation, route }) => {
             }}
           >
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              Name:
+              Name
             </Text>
-            <View
-              style={{
-                marginLeft: 10,
-                marginTop: 1,
-                borderBottomColor: "#B5B5B5",
-                borderBottomWidth: 0.5,
-              }}
-            >
-              <TextInput
-                onChangeText={(val) => {
-                  setName(val);
-                }}
-                placeholder={"Name of type"}
-                autoCapitalize="words"
-                style={{ textAlign: "left" }}
-              />
-            </View>
           </View>
-          <View style={{ height: 25, alignSelf: "center", marginRight: 15 }}>
+          <View style={styles.modalInputBox}>
+            <TextInput
+              onChangeText={(val) => {
+                setName(val);
+              }}
+              placeholder={"Name of type"}
+              autoCapitalize="words"
+              style={{ textAlign: "left", marginLeft: 5 }}
+            />
+          </View>
+          <View style={{ height: 25, marginTop: 5, marginBottom: 10 }}>
             {alertText1 ? (
               <Text
                 style={{
@@ -283,27 +290,20 @@ const EditRecords = ({ navigation, route }) => {
             }}
           >
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              MCs required:
+              MCs required
             </Text>
-            <View
-              style={{
-                marginLeft: 10,
-                marginTop: 1,
-                borderBottomColor: "#B5B5B5",
-                borderBottomWidth: 0.5,
-              }}
-            >
-              <TextInput
-                keyboardType="numeric"
-                onChangeText={(val) => {
-                  setNewMc(parseInt(val));
-                }}
-                placeholder={"1 - 160"}
-                style={{ textAlign: "left" }}
-              />
-            </View>
           </View>
-          <View style={{ height: 25, alignSelf: "center", marginRight: 15 }}>
+          <View style={styles.modalInputBox}>
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={(val) => {
+                setNewMc(parseInt(val));
+              }}
+              placeholder={"1 - 160"}
+              style={{ textAlign: "left", marginLeft: 5 }}
+            />
+          </View>
+          <View style={{ height: 25, marginTop: 5, marginBottom: 10 }}>
             {alertText2 ? (
               <Text
                 style={{
@@ -323,43 +323,43 @@ const EditRecords = ({ navigation, route }) => {
             }}
           >
             <Text style={{ ...globalFontStyles.NB_15, color: "#232323" }}>
-              No. required:
+              No. required
             </Text>
-            <View
+            <Text
               style={{
-                marginLeft: 10,
-                marginTop: 1,
-                borderBottomColor: "#B5B5B5",
-                borderBottomWidth: 0.5,
+                ...globalFontStyles.OSR_13,
+                color: "#CBCBCB",
+                marginLeft: 5,
               }}
             >
-              <TextInput
-                keyboardType="numeric"
-                onChangeText={(val) => {
-                  setNumReq(val);
-                }}
-                placeholder={"No. of modules, if any"}
-                style={{ textAlign: "left" }}
-              />
-            </View>
+              - optional field
+            </Text>
           </View>
-          <View style={{ height: 25, alignSelf: "center", marginRight: 15 }}>
+          <View style={styles.modalInputBox}>
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={(val) => {
+                setNumReq(val);
+              }}
+              placeholder={"nil"}
+              style={{ textAlign: "left", marginLeft: 5 }}
+            />
+          </View>
+          <View style={{ height: 25, marginTop: 5 }}>
             {alertText3 ? (
               <Text
                 style={{
                   ...globalFontStyles.NB_12,
                   color: "#cc0000",
-                  marginLeft: 15,
-                  marginTop: 4,
                 }}
               >
-                Please enter a valid number
+                Input should be empty or a valid number
               </Text>
             ) : null}
           </View>
         </View>
       </View>
-      <View style={{ height: "18%" }}>
+      <View style={{ height: "12%" }}>
         <View
           style={{
             flex: 1,
@@ -407,7 +407,11 @@ const EditRecords = ({ navigation, route }) => {
               }
               const numAfter = parseInt(numReq);
               // Allowing for either zero or empty string
-              if (numReq === "" || (!isNaN(numAfter) && numAfter > 0)) {
+              if (
+                numReq === "" ||
+                numReq === "nil" ||
+                (!isNaN(numAfter) && numAfter > 0)
+              ) {
                 set3(false);
               } else {
                 succeed = false;
@@ -602,7 +606,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: width * 0.88,
-    height: height / 5,
+    height: 165,
     marginTop: 18,
     marginBottom: 6,
     alignSelf: "center",
@@ -632,9 +636,18 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     backgroundColor: "white",
-    width: 280,
-    height: 260,
+    width: 300,
+    height: 440,
     borderRadius: 30,
+  },
+  modalInputBox: {
+    marginTop: 6,
+    borderColor: "#B5B5B5",
+    height: 40,
+    borderWidth: 0.8,
+    borderRadius: 5,
+    width: "70%",
+    justifyContent: "center",
   },
   flexOneCenter: {
     flex: 1,
