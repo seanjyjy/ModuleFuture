@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  StatusBar,
+  Platform,
 } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
@@ -63,10 +65,6 @@ const FocusArea = ({ navigation }) => {
       ? "Electives"
       : "Prereq";
 
-  const text = (word) => (
-    <Text style={{ ...globalFontStyles.OSR_14, color: "#232323" }}>{word}</Text>
-  );
-
   const viewType = () => (
     <View style={styles.typeOverView}>
       <TouchableOpacity
@@ -76,7 +74,7 @@ const FocusArea = ({ navigation }) => {
       >
         <Text
           style={{
-            ...globalFontStyles.OSSB_19,
+            ...globalFontStyles.OSSB_17,
             color: "#232323",
           }}
         >
@@ -96,7 +94,15 @@ const FocusArea = ({ navigation }) => {
   const selector = () => {
     const option = (item) => (
       <MenuItem
-        title={text(item())}
+        title={
+          <Text
+            style={{
+              ...globalFontStyles.OSR_15,
+            }}
+          >
+            {item()}
+          </Text>
+        }
         onPress={() => {
           changeType(item());
           toggleMenu();
@@ -109,6 +115,7 @@ const FocusArea = ({ navigation }) => {
         visible={menuVisible}
         anchor={viewType}
         onBackdropPress={() => toggleMenu()}
+        style={styles.selector}
       >
         {option(item1)}
         {option(item2)}
@@ -389,6 +396,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: hairlineWidth,
     borderBottomEndRadius: 13,
     borderBottomStartRadius: 16,
+  },
+  selector: {
+    marginTop: (Platform.OS === "android" ? StatusBar.currentHeight : 0) - 4,
+    width: 115,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
   container: {
     width: (width - 40) / 2,

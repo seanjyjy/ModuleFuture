@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  StatusBar,
+  Platform,
 } from "react-native";
 import Header from "../../../Component/Header";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
@@ -18,7 +20,7 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const hairlineWidth = StyleSheet.hairlineWidth;
 
-const Records = ({ navigation, route }) => {
+const Records = ({ navigation }) => {
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
   const typeRef = fb.collection("typeArray").doc(userID);
@@ -81,7 +83,7 @@ const Records = ({ navigation, route }) => {
     setTypeVisible(!typeSelection);
   };
 
-  /* --------------------------------------------Selector---------------------------------------- */
+  /* --------------------------------------------Ellipsis---------------------------------------- */
 
   const text = (word) => (
     <Text
@@ -158,6 +160,8 @@ const Records = ({ navigation, route }) => {
     );
   };
 
+  /* --------------------------------------------Selector---------------------------------------- */
+
   const viewType = () => (
     <View style={styles.typeOverView}>
       <TouchableOpacity
@@ -187,7 +191,15 @@ const Records = ({ navigation, route }) => {
   const selector = () => {
     const option = (item) => (
       <MenuItem
-        title={text(item())}
+        title={
+          <Text
+            style={{
+              ...globalFontStyles.OSR_17,
+            }}
+          >
+            {item()}
+          </Text>
+        }
         onPress={() => {
           changeType(item());
           toggleTypeMenu();
@@ -200,6 +212,7 @@ const Records = ({ navigation, route }) => {
         visible={typeSelection}
         anchor={viewType}
         onBackdropPress={toggleTypeMenu}
+        style={styles.selector}
       >
         {option(item1)}
         {option(item2)}
@@ -543,7 +556,21 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: 13,
     borderBottomStartRadius: 16,
   },
+  selector: {
+    marginTop: (Platform.OS === "android" ? StatusBar.currentHeight : 0) - 4,
+    width: 95,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
   menuStyle: {
+    marginTop: Platform.OS === "android" ? 0 : StatusBar.currentHeight,
     width: width * 0.45,
     borderRadius: 10,
     left: 8,
