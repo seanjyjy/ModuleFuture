@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Dimensions, Text } from "react-native";
+import { View, Dimensions, Text, Platform } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 const width = Dimensions.get("window").width;
 const ModuleBlocks = ({ color, title, sum }) => {
@@ -17,7 +17,7 @@ const ModuleBlocks = ({ color, title, sum }) => {
           width: widthToUse,
           height: 30,
           marginHorizontal: 2,
-          bottom: title !== "" ? 1 : 0,
+          bottom: title !== "" ? (Platform.OS === "android" ? 0.5 : 1) : 0,
         }}
       />
     </View>

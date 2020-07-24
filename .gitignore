@@ -12,3 +12,4 @@ storage.rules
 index.html
 index.js
 firestore.indexes.json
+node_modules

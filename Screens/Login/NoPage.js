@@ -16,28 +16,28 @@ const height = Dimensions.get("window").height;
 const temp = [
   {
     label: "Very Weak",
-    labelColor: "grey",
-    activeBarColor: "grey",
+    labelColor: "#747373",
+    activeBarColor: "#747373",
   },
   {
     label: "Weak",
-    labelColor: "#ff2900",
-    activeBarColor: "#ff2900",
+    labelColor: "#FF0000",
+    activeBarColor: "#FF0000",
   },
   {
     label: "Fair",
-    labelColor: "#ff6900",
-    activeBarColor: "#ff6900",
+    labelColor: "#FF6C00",
+    activeBarColor: "#FF6C00",
   },
   {
     label: "Good",
-    labelColor: "#f2cf1f",
-    activeBarColor: "#f2cf1f",
+    labelColor: "#FCF069",
+    activeBarColor: "#FCF069",
   },
   {
     label: "Strong",
-    labelColor: "#02C178",
-    activeBarColor: "#02C178",
+    labelColor: "#07FFA0",
+    activeBarColor: "#07FFA0",
   },
   {
     label: "Perfect",

@@ -111,7 +111,7 @@ export default function App() {
       require("./assets/plan4.png"),
       require("./assets/JumpingMan.png"),
       require("./assets/bargraph.png"),
-      require("./assets/aboutbg.png"),
+      require("./assets/woodBG.png"),
       // loading of the displays of the Tutorial pics
       require("./assets/TutorialPic1.png"),
       require("./assets/TutorialPic2.png"),

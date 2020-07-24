@@ -38,35 +38,10 @@ const Credit = () => {
         rightChildren={<View />}
       />
 
-      <View
-        style={{
-          width: width - 26,
-          height: 0.82 * height,
-          top: 10,
-          shadowOffset: {
-            width: 3,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          backgroundColor: "white",
-          elevation: 5,
-          borderBottomLeftRadius: 20,
-          borderBottomRightRadius: 20,
-          borderTopRightRadius: 20,
-          borderTopLeftRadius: 20,
-          overflow: Platform.OS === "android" ? "hidden" : null,
-          alignSelf: "center",
-        }}
-      >
+      <View style={styles.containerStyling}>
         <ImageBackground
-          source={require("../../../assets/aboutbg.png")}
-          style={{
-            flex: 1,
-            resizeMode: "cover",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          source={require("../../../assets/woodBG.png")}
+          style={styles.imageStyling}
           imageStyle={{ borderRadius: 20 }}
         >
           <View style={styles.creditDesign}>
@@ -77,6 +52,11 @@ const Credit = () => {
                 we have extended its functionality to all other courses as well!
                 If there is something you wish to be included in the app, do
                 suggest it to us!
+              </Text>
+              <Text style={styles.biggestWords}>Note</Text>
+              <Text style={styles.biggerWords}>
+                There will be some deviation between different Platform mainly
+                IOS vs Android phones
               </Text>
               <Text style={styles.biggestWords}>Developers</Text>
               <Text style={styles.biggerWords}>Keane Chan Jun Yu</Text>
@@ -103,7 +83,7 @@ const Credit = () => {
               <Text style={styles.biggerWords}>
                 Photo by Content Pixie from Pexels
               </Text>
-              <Text style={styles.biggerWords}>Photo pngtree.com</Text>
+              <Text style={styles.biggerWords}>Photo from pngtree.com</Text>
             </ScrollView>
             <View style={{ height: 40 }}>
               <Text
@@ -136,20 +116,21 @@ const styles = StyleSheet.create({
     marginTop: 10,
     ...globalFontStyles.NSB_13,
     left: 5,
-    color: "#232323",
+    color: "#FFFDD0",
   },
   biggestWords: {
     left: 5,
     marginTop: 10,
     ...globalFontStyles.NBEB_24,
     textDecorationLine: "underline",
+    color: "white",
   },
   tncStyle: {
     textDecorationLine: "underline",
     alignSelf: "center",
     left: 5,
     ...globalFontStyles.NB_13,
-    color: "#51739B",
+    color: "#f0f0f0",
     top: 1,
   },
   creditDesign: {
@@ -159,5 +140,30 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: "transparent",
     overflow: "hidden",
+  },
+  containerStyling: {
+    width: width - 26,
+    height: 0.82 * height,
+    top: 10,
+    shadowOffset: {
+      width: 3,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    backgroundColor: "white",
+    elevation: 5,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    overflow: Platform.OS === "android" ? "hidden" : null,
+    alignSelf: "center",
+  },
+  imageStyling: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

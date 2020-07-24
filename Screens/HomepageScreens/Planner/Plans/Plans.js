@@ -285,7 +285,7 @@ const Plans = (props) => {
             setArrForRect(props.data[3]);
             setSelected(new Map().set(selected, true));
             setCurrentArr(props.data[1]);
-            setCurrentID(props.data[2]);
+            setCurrentID(selected);
             if (props.data[2] !== "-1") {
               setShowDustBin(true);
             }
@@ -615,7 +615,9 @@ const Plans = (props) => {
                               }
                             }
                             let whatPos = (parseInt(currentID) - 1).toString();
-
+                            if (whatPos === "0" && tempArr.length > 0) {
+                              whatPos = "1";
+                            }
                             let newSelectedPlansInfo = [];
                             let isThereApreviousFinalGrade = false;
                             let thepreviousObjFinalGrade;
@@ -1455,118 +1457,125 @@ const Plans = (props) => {
           )}
         />
       </View>
-      <View style={styles.btmPart}>
-        <View style={{ flex: 1 }} />
-        <View style={styles.btmMidPart}>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.enterButton}
-            onPress={() => {
-              // come here later to solve the problem!
-              if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
-                alert("Please select or create a plan");
-              } else {
-                if (currentArr.length > 0) {
-                  const currentPlanName =
-                    currentArr[parseInt(currentID) - 1].nameOfPlan;
-                  const userRef = FirebaseDB.firestore()
-                    .collection("users")
-                    .doc(userID);
-                  plansArrayRef.update({
-                    selected: currentID,
-                  });
+      <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
+        <View style={styles.btmPart}>
+          <View style={{ flex: 1 }} />
+          <View style={styles.btmMidPart}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.enterButton}
+              onPress={() => {
+                // come here later to solve the problem!
+                if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
+                  alert("Please select or create a plan");
+                } else {
+                  if (currentArr.length > 0) {
+                    const currentPlanName =
+                      currentArr[parseInt(currentID) - 1].nameOfPlan;
+                    const userRef = FirebaseDB.firestore()
+                      .collection("users")
+                      .doc(userID);
+                    plansArrayRef.update({
+                      selected: currentID,
+                    });
 
-                  userRef
-                    .get()
-                    .then((document) => {
-                      const val = document.data();
-                      const arr = val.SelectedPlansInfo;
-                      let doIChange = true;
+                    userRef
+                      .get()
+                      .then((document) => {
+                        const val = document.data();
+                        const arr = val.SelectedPlansInfo;
+                        let doIChange = true;
 
-                      for (let i = 0; i < arr.length; i++) {
-                        if (arr[i].Semester === props.headerTitle) {
-                          if (
-                            arr[i].useInCap ||
-                            arr[i].nameOfPlan === currentPlanName
-                          ) {
-                            doIChange = false;
-                          }
-                          break;
-                        }
-                      }
-                      if (doIChange) {
-                        let tempArr = [];
                         for (let i = 0; i < arr.length; i++) {
                           if (arr[i].Semester === props.headerTitle) {
-                            tempArr.push({
-                              Cap: currentArr[parseInt(currentID) - 1].Cap,
-                              McUsedInCap:
-                                currentArr[parseInt(currentID) - 1]
-                                  .MCsCountedToCap,
-                              Semester: props.headerTitle,
-                              nameOfPlan: currentPlanName,
-                              useInCap: false,
-                            });
-                          } else {
-                            tempArr.push(arr[i]);
+                            if (
+                              arr[i].useInCap ||
+                              arr[i].nameOfPlan === currentPlanName
+                            ) {
+                              doIChange = false;
+                            }
+                            break;
                           }
                         }
-                        userRef.update({
-                          SelectedPlansInfo: tempArr,
+                        if (doIChange) {
+                          let tempArr = [];
+                          for (let i = 0; i < arr.length; i++) {
+                            if (arr[i].Semester === props.headerTitle) {
+                              tempArr.push({
+                                Cap: currentArr[parseInt(currentID) - 1].Cap,
+                                McUsedInCap:
+                                  currentArr[parseInt(currentID) - 1]
+                                    .MCsCountedToCap,
+                                Semester: props.headerTitle,
+                                nameOfPlan: currentPlanName,
+                                useInCap: false,
+                              });
+                            } else {
+                              tempArr.push(arr[i]);
+                            }
+                          }
+                          userRef.update({
+                            SelectedPlansInfo: tempArr,
+                          });
+                        }
+                      })
+                      .catch((error) => {});
+                  } else {
+                    plansArrayRef.update({
+                      selected: "-1",
+                    });
+                  }
+                  const currentPlanName =
+                    currentArr[parseInt(currentID) - 1].nameOfPlan;
+                  const plansItselfRef = FirebaseDB.firestore()
+                    .collection("plansItself")
+                    .doc(
+                      userID.concat(
+                        "_",
+                        props.headerTitle,
+                        "_",
+                        currentPlanName
+                      )
+                    );
+                  const val = plansItselfRef
+                    .get()
+                    .then((document) => {
+                      const info = document.data();
+                      if (info !== undefined) {
+                        const moduleInformations = info.planInfo;
+                        const thisPlanName = info.nameOfPlan;
+                        const amIfavourite = info.amIfavourite;
+                        navigation.navigate("ViewPlan", {
+                          item: [
+                            thisPlanName,
+                            docLoc,
+                            size,
+                            fromWhere,
+                            moduleInformations,
+                            amIfavourite,
+                          ],
                         });
                       }
                     })
                     .catch((error) => {});
-                } else {
-                  plansArrayRef.update({
-                    selected: "-1",
-                  });
                 }
-                const currentPlanName =
-                  currentArr[parseInt(currentID) - 1].nameOfPlan;
-                const plansItselfRef = FirebaseDB.firestore()
-                  .collection("plansItself")
-                  .doc(
-                    userID.concat("_", props.headerTitle, "_", currentPlanName)
-                  );
-                const val = plansItselfRef
-                  .get()
-                  .then((document) => {
-                    const info = document.data();
-                    if (info !== undefined) {
-                      const moduleInformations = info.planInfo;
-                      const thisPlanName = info.nameOfPlan;
-                      const amIfavourite = info.amIfavourite;
-                      navigation.navigate("ViewPlan", {
-                        item: [
-                          thisPlanName,
-                          docLoc,
-                          size,
-                          fromWhere,
-                          moduleInformations,
-                          amIfavourite,
-                        ],
-                      });
-                    }
-                  })
-                  .catch((error) => {});
-              }
+              }}
+            >
+              <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
+                Enter
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.btmRightPart}
+            activeOpacity={0.9}
+            onPress={() => {
+              setModalVisible(true);
             }}
           >
-            <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
-              Enter
-            </Text>
+            <Icon name="plus-circle" width={60} height={60} fill={"#FB5581"} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.btmRightPart}
-          activeOpacity={0.9}
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        >
-          <Icon name="plus-circle" width={60} height={60} fill={"#FB5581"} />
-        </TouchableOpacity>
       </View>
       {PopOutBox()}
     </View>
@@ -1619,7 +1628,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
     backgroundColor: "white",
   },

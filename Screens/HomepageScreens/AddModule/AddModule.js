@@ -289,39 +289,46 @@ Prereq: matched with whatever is planned / take
         }}
       >
         <View style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.oneCenter}>
+            <Text style={{ ...globalFontStyles.OSB_15, bottom: 5 }}>
+              Requirements
+            </Text>
+            <View style={{ ...styles.lineDesign, top: 5 }} />
+          </View>
+          <View style={{ flex: 3 }}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.headerPreStyling}>Preclusion</Text>
+              <Text style={{ ...styles.headerPreStyling }}>Preclusion</Text>
             </View>
-            <View style={{ flex: 3 }}>
-              <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
-                <Text style={{ color: "#3B6EA2", ...globalFontStyles.OSSB_13 }}>
-                  {preclu}
-                </Text>
+            <View style={styles.infoBox}>
+              <View style={{ height: 5 }} />
+              <ScrollView style={styles.ScrollViewStyling}>
+                <Text style={styles.informationStyling}>{preclu}</Text>
               </ScrollView>
+              <View style={{ height: 2 }} />
             </View>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 3 }}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.headerPreStyling}>prerequisite</Text>
+              <Text style={{ ...styles.headerPreStyling }}>Prerequisite</Text>
             </View>
-            <View style={{ flex: 3 }}>
-              <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
-                <Text style={{ color: "#3B6EA2", ...globalFontStyles.OSSB_13 }}>
-                  {prereq}
-                </Text>
+            <View style={styles.infoBox}>
+              <View style={{ height: 5 }} />
+              <ScrollView style={styles.ScrollViewStyling}>
+                <Text style={styles.informationStyling}>{prereq}</Text>
               </ScrollView>
+              <View style={{ height: 2 }} />
             </View>
           </View>
         </View>
+        <View style={{ height: 10 }} />
       </Modal>
     );
   };
   const crossIcon = (
-    <Entypo size={20} name="cross" style={{ color: "red", top: 2 }} />
+    <Entypo size={20} name="cross" style={{ color: "#FF6C7D", top: 2 }} />
   );
   const tickIcon = (
-    <Entypo size={20} name="check" style={{ color: "green", top: 1 }} />
+    <Entypo size={20} name="check" style={{ color: "#4AE8AB", top: 1 }} />
   );
 
   const workloaddisplays = (array) => {
@@ -358,10 +365,19 @@ Prereq: matched with whatever is planned / take
   const infoModal = () => {
     const codeName = infoInfo[1];
     const mc = infoInfo[0];
-    const description = infoInfo[2];
-    const semData = infoInfo[3]; // check with keane if he did anything to do checking of displaying the information !
+    let description = infoInfo[2];
+    if (description) {
+      description = description.replace(/(\r\n|\n|\r)/gm, "");
+    }
+    const semData = infoInfo[3];
     const suOptions = infoInfo[4];
     const workLoad = infoInfo[5];
+    let arrOfBoolean = [false, false, false, false];
+    if (semData) {
+      for (let i = 0; i < semData.length; i++) {
+        arrOfBoolean[semData[i].semester - 1] = true;
+      }
+    }
     return (
       <Modal
         style={styles.modalBox}
@@ -382,7 +398,7 @@ Prereq: matched with whatever is planned / take
             <Text style={styles.headerStyling}>{codeName ? codeName : ""}</Text>
           </View>
           <View style={styles.lineDesign} />
-          <View style={{ flex: 11 }}>
+          <View style={{ flex: 10 }}>
             <View style={{ flex: 1 }}>
               <Text style={styles.mdStyle}>Module Details</Text>
             </View>
@@ -393,6 +409,29 @@ Prereq: matched with whatever is planned / take
                 </Text>
                 <Text></Text>
               </ScrollView>
+            </View>
+          </View>
+          <View style={{ flex: 2 }}>
+            <View style={{ height: 10 }} />
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
+                <Text style={styles.suTextStyle}>Semester 1:</Text>
+                {arrOfBoolean[0] ? tickIcon : crossIcon}
+              </View>
+              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
+                <Text style={styles.suTextStyle}>Semester 2</Text>
+                {arrOfBoolean[1] ? tickIcon : crossIcon}
+              </View>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
+                <Text style={styles.suTextStyle}>Special term I:</Text>
+                {arrOfBoolean[2] ? tickIcon : crossIcon}
+              </View>
+              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
+                <Text style={styles.suTextStyle}>Special term II:</Text>
+                {arrOfBoolean[3] ? tickIcon : crossIcon}
+              </View>
             </View>
           </View>
           <View style={{ flex: 1, flexDirection: "row" }}>
@@ -497,7 +536,7 @@ const styles = StyleSheet.create({
   modalBox2: {
     backgroundColor: "white",
     alignSelf: "center",
-    marginVertical: height * 0.35,
+    marginVertical: height * 0.29,
     width: width * 0.9,
     borderRadius: 25,
   },
@@ -535,12 +574,29 @@ const styles = StyleSheet.create({
   headerPreStyling: {
     ...globalFontStyles.OSB_15,
     color: "#2A4F74",
-    left: 0.05 * width,
-    top: 5,
+    alignSelf: "center",
+    textDecorationLine: "underline",
   },
   mdStyle: {
     alignSelf: "center",
     ...globalFontStyles.OSB_17,
     color: "#2A4F74",
+  },
+  ScrollViewStyling: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  informationStyling: {
+    color: "#3B6EA2",
+    ...globalFontStyles.OSSB_13,
+    alignSelf: "center",
+  },
+  infoBox: {
+    flex: 3,
+    backgroundColor: "#f0f0f0",
+    bottom: 10,
+    width: 0.9 * width - 40,
+    alignSelf: "center",
+    borderRadius: 5,
   },
 });
