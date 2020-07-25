@@ -30,6 +30,8 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const WalkthroughableView = walkthroughable(View);
 const WalkthroughableTouchableOpacity = walkthroughable(TouchableOpacity);
 
+console.disableYellowBox = true;
+
 const ContentPage = (props) => {
   const usaB = useSafeArea().bottom;
   const navigation = useNavigation();
@@ -48,6 +50,11 @@ const ContentPage = (props) => {
   const [cardArray, setCardArray] = useState([]);
   const [gradSem, setGradSem] = useState("");
   const [selectedplansinfo, setselectedplansinfo] = useState([]);
+  const [didTutorialBefore, setDidTutorialBefore] = useState(
+    FirebaseDB.auth().currentUser
+      ? FirebaseDB.auth().currentUser.emailVerified
+      : false
+  );
   const num = (val) => {
     return val === "Y3S1"
       ? 4
@@ -65,8 +72,9 @@ const ContentPage = (props) => {
   const [y, setY] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    if (!FirebaseDB.auth().currentUser.emailVerified) {
+    if (!FirebaseDB.auth().currentUser.emailVerified && !didTutorialBefore) {
       props.start();
+      props.copilotEvents.on("stop", () => setDidTutorialBefore(true));
     }
     const unsub = userInfo.doc(userID).onSnapshot((document) => {
       const data = document.data();

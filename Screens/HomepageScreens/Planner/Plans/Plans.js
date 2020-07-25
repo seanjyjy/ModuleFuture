@@ -22,6 +22,8 @@ import FirebaseDB from "../../../../FirebaseDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+console.disableYellowBox = true;
+
 const ImageSet = [
   require("../../../../assets/plan1.png"),
   require("../../../../assets/plan2.png"),
@@ -183,8 +185,8 @@ function RectInfoSelected({
                 }}
               >
                 {useInCap
-                  ? `Semestral Cap: ${SemestralCap === 0 ? "-" : SemestralCap}`
-                  : `Planned Cap: ${PlannedCap === 0 ? "-" : PlannedCap}`}
+                  ? `Semestral CAP: ${SemestralCap === 0 ? "-" : SemestralCap}`
+                  : `Planned CAP: ${PlannedCap === 0 ? "-" : PlannedCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -195,8 +197,8 @@ function RectInfoSelected({
                 }}
               >
                 {useInCap
-                  ? `Overall Cap: ${OverallCap === 0 ? "-" : OverallCap}`
-                  : `Planned Overall Cap: ${
+                  ? `Overall CAP: ${OverallCap === 0 ? "-" : OverallCap}`
+                  : `Planned Overall CAP: ${
                       PlannedOverallCap === 0 ? "-" : PlannedOverallCap
                     }`}
               </Text>
@@ -1370,7 +1372,7 @@ const Plans = (props) => {
                         });
                       }
                     })
-                    .catch((error) => {});
+                    .catch((error) => alert(error));
                 } else {
                   plansArrayRef.update({
                     selected: "-1",
@@ -1519,7 +1521,7 @@ const Plans = (props) => {
                           });
                         }
                       })
-                      .catch((error) => {});
+                      .catch((error) => alert(error));
                   } else {
                     plansArrayRef.update({
                       selected: "-1",
@@ -1557,7 +1559,7 @@ const Plans = (props) => {
                         });
                       }
                     })
-                    .catch((error) => {});
+                    .catch((error) => alert(error));
                 }
               }}
             >

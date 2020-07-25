@@ -23,6 +23,8 @@ import Tabs from "./Tabs";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+console.disableYellowBox = true;
+
 const ViewPlan = ({ route }) => {
   const navigation = useNavigation();
   const usaBTM = useSafeArea().bottom;
@@ -421,25 +423,12 @@ const ViewPlan = ({ route }) => {
         backdropOpacity={0.3}
         onBackdropPress={() => setModalVisible(false)}
       >
-        <View
-          style={{
-            width: 0.6 * width,
-            height: height,
-            backgroundColor: "white",
-            right: 0.1 * width,
-          }}
-        >
+        <View style={styles.customDrawerContainer}>
           <View style={{ flex: 7 }}>
             {/* "Profile information portion" */}
             <View style={{ flex: 1 }}>
               <View style={{ flex: 1 }} />
-              <View
-                style={{
-                  flex: 2,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
+              <View style={styles.centerThree}>
                 <Image
                   source={require("../../../../assets/ModuleFutureLogo1.png")}
                   style={{ width: 175, height: 175, right: 0.07 * width }}
@@ -449,7 +438,7 @@ const ViewPlan = ({ route }) => {
                 <Text
                   style={{ ...globalFontStyles.NB_14, left: 0.015 * width }}
                 >
-                  {`Current Academic sem: ${currentSem}`}
+                  {`Current Acad Sem: ${currentSem}`}
                 </Text>
               </View>
             </View>
@@ -463,21 +452,8 @@ const ViewPlan = ({ route }) => {
                   {ProgressButon}
                   {SmartRecall(fromWhere)}
                 </View>
-                <Text
-                  style={{
-                    ...globalFontStyles.NB_15,
-                    left: 0.11 * width,
-                    top: 0.01 * height,
-                  }}
-                >
-                  Also see
-                </Text>
-                <View
-                  style={{
-                    flex: 3,
-                    top: 0.02 * height,
-                  }}
-                >
+                <Text style={styles.alsoSee}>Also see</Text>
+                <View style={{ flex: 3, top: 0.02 * height }}>
                   {SmartRecall2}
                   {SmartRecall3}
                   {SmartRecall4}
@@ -596,12 +572,7 @@ const ViewPlan = ({ route }) => {
                   from: "ViewPlan",
                 });
               }}
-              style={{
-                bottom: 12,
-                ...globalFontStyles.NB_14,
-                color: "#007AFF",
-                left: 15,
-              }}
+              style={styles.editStyling}
             >
               Edit
             </Text>
@@ -641,11 +612,7 @@ const ViewPlan = ({ route }) => {
             }}
           >
             <Text
-              style={{
-                left: 15,
-                ...globalFontStyles.NB_15,
-                color: "#4a4e5d",
-              }}
+              style={styles.left15NB154a4e5d}
             >{`Module: ${moduleCode}`}</Text>
           </View>
           <View
@@ -668,11 +635,7 @@ const ViewPlan = ({ route }) => {
               }}
             >
               <Text
-                style={{
-                  left: 15,
-                  ...globalFontStyles.NB_15,
-                  color: "#4a4e5d",
-                }}
+                style={styles.left15NB154a4e5d}
               >{`Final grade: ${FinalGrade}`}</Text>
             </View>
           )}
@@ -829,5 +792,32 @@ const styles = StyleSheet.create({
   },
   avatar: {
     margin: 8,
+  },
+  centerThree: {
+    flex: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  alsoSee: {
+    ...globalFontStyles.NB_15,
+    left: 0.11 * width,
+    top: 0.01 * height,
+  },
+  editStyling: {
+    bottom: 12,
+    ...globalFontStyles.NB_14,
+    color: "#007AFF",
+    left: 15,
+  },
+  customDrawerContainer: {
+    width: 0.6 * width,
+    height: height,
+    backgroundColor: "white",
+    right: 0.1 * width,
+  },
+  left15NB154a4e5d: {
+    left: 15,
+    ...globalFontStyles.NB_15,
+    color: "#4a4e5d",
   },
 });
