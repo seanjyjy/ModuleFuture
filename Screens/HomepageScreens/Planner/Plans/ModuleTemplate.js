@@ -20,6 +20,8 @@ import Modal from "react-native-modalbox";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+console.disableYellowBox = true;
+
 const ModuleTemplate = (props) => {
   const clash = props.dataObj.clash;
   const moduleCode = props.dataObj.moduleCode;

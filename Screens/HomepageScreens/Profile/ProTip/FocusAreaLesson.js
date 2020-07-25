@@ -15,7 +15,7 @@ const FocusAreaLesson = () => {
       imageLink: require("../../../../assets/FocusLesson2.png"),
       subtitle: "Different categorical view types",
       description:
-        "There are three types of views - Prerequisites (prereq), Primaries and Electives. Prerequisites helps you to choose your focus areas, while primaries and electives helps you to track your progress in the focus area.",
+        "3 types of views - Prerequisites, Primaries and Electives. Prerequisites help you to choose your focus areas, while the other two help to track your progress in that area.",
     },
     {
       imageLink: require("../../../../assets/FocusLesson3.png"),

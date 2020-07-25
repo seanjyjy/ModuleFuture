@@ -38,5 +38,6 @@ const styles = StyleSheet.create({
     color: "#0C0d34",
     padding: 20,
     bottom: 25,
+    letterSpacing: -0.3,
   },
 });

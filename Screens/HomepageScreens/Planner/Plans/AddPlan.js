@@ -7,18 +7,17 @@ import {
   TouchableOpacity,
   Animated,
   FlatList,
-  ImageBackground,
   Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
 import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
-import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FirebaseDB from "../../../../FirebaseDB";
 
-const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+
+console.disableYellowBox = true;
 
 const AddPlan = ({ route }) => {
   const [planNameValue, setPlanName] = useState("Plan 1");
@@ -140,44 +139,13 @@ const AddPlan = ({ route }) => {
           }
         }
       })
-      .catch((error) => {});
+      .catch((error) => alert(error));
     return [isThereAPast, name, yearExtractor(docLoc)];
-  };
-
-  const TargetGradesFilled = (val) => {
-    for (let i = 0; i < val.length; i++) {
-      if (val[i].TargetGrade === "") {
-        return false;
-      }
-    }
-    return true;
   };
 
   const yearExtractor = (val) => {
     const len = val.length;
     return val.substring(len - 4);
-  };
-
-  const searchSem = (val) => {
-    if (val === "Y1S2") {
-      return "Y1S1";
-    } else if (val === "Y2S1") {
-      return "Y1S2";
-    } else if (val === "Y2S2") {
-      return "Y2S1";
-    } else if (val === "Y3S1") {
-      return "Y2S2";
-    } else if (val === "Y3S2") {
-      return "Y3S1";
-    } else if (val === "Y4S1") {
-      return "Y3S2";
-    } else if (val === "Y4S2") {
-      return "Y4S1";
-    } else if (val === "Y5S1") {
-      return "Y4S2";
-    } else {
-      return "Y5S1";
-    }
   };
 
   const GradeToPoint = (val) => {
@@ -291,18 +259,7 @@ const AddPlan = ({ route }) => {
         { text: "Cancel", onPress: () => {} },
         {
           text: "Continue",
-          onPress: () => {
-            // const plansArrayRef = FirebaseDB.firestore()
-            //   .collection("plansArray")
-            //   .doc(docLoc);
-            // plansArrayRef.update({
-            //   conflictDetails: {
-            //     conflict: true,
-            //     listOfPlan: []
-            //   }
-            // })
-            return nextPage();
-          },
+          onPress: () => nextPage(),
         },
       ],
       { cancelable: false }

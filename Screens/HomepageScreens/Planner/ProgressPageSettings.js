@@ -14,6 +14,8 @@ import FirebaseDB from "../../../FirebaseDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+console.disableYellowBox = true;
+
 const ProgressPageSettings = ({ navigation, route }) => {
   const userID = route.params?.userID;
   const [totalMCs, setTotalMCs] = useState(160);

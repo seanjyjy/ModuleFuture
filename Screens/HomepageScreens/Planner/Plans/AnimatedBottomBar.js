@@ -3,6 +3,8 @@ import { View, Animated, StyleSheet, Dimensions } from "react-native";
 import { Icon } from "react-native-eva-icons";
 import { useNavigation } from "@react-navigation/native";
 
+console.disableYellowBox = true;
+
 const width = Dimensions.get("window").width;
 const AnimatedBottomBar = ({ translateY, dataArray }) => {
   const navigation = useNavigation();

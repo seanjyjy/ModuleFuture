@@ -77,7 +77,7 @@ const EmailVerification = () => {
         <FeatherIcon
           name="check-circle"
           size={100}
-          style={{ color: "green" }}
+          style={{ color: "#4AE8AB" }}
         />
         <Text style={styles.topTextDesign}>Email Verified</Text>
         <Text style={styles.ThanksDesign}>
@@ -110,7 +110,7 @@ const EmailVerification = () => {
         <FeatherIcon
           name="x-circle"
           size={100}
-          style={{ color: "red", top: 10, alignSelf: "center" }}
+          style={{ color: "#FF6C7D", top: 10, alignSelf: "center" }}
         />
         <Text style={{ ...styles.topTextDesign }}>Email Not Verified</Text>
 

@@ -16,6 +16,8 @@ import { LineChart } from "react-native-chart-kit";
 import Modal from "react-native-modal";
 import FirebaseDB from "../../../FirebaseDB";
 
+console.disableYellowBox = true;
+
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
