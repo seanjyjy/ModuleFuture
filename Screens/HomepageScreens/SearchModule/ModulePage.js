@@ -12,27 +12,26 @@ import {
   Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import { Icon } from "react-native-eva-icons";
-import BottomBar from "../../../Component/BottomBar";
-import Modal from "react-native-modal";
-import Cross from "../../../Component/Cross";
-import Container from "../../../Component/Container";
+import Container1 from "../../../Component/Container1";
+import ModuleBlocks from "../AddModule/ModuleBlocks";
 import Entypo from "react-native-vector-icons/Entypo";
-import ModuleBlocks from "./ModuleBlocks";
+import Modal from "react-native-modal";
+import { Icon } from "react-native-eva-icons";
+
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const AddModule = (props) => {
+const ModulePage = (props) => {
   const current = React.createRef();
 
   const header = (
     <View style={styles.header}>
       <View style={{ padding: width * 0.05 }}>
-        <Cross
-          top={22}
-          transition={() => props.navigation.goBack()}
-          text={"Add a module"}
-        />
+        <Text
+          style={{ ...globalFontStyles.OSB_15, top: 22, alignSelf: "center" }}
+        >
+          Module Search
+        </Text>
         <View style={styles.second}>
           <View style={styles.item2}>
             <Icon
@@ -48,11 +47,6 @@ const AddModule = (props) => {
                   placeholder="Module code, name"
                   placeholderTextColor="#76768080"
                   autoCapitalize="words"
-                  onFocus={() => {
-                    for (const mod of modules) {
-                      fullList.delete(mod);
-                    }
-                  }}
                   onChangeText={(text) => {
                     let newList = Array.from(fullList).filter(
                       (item) =>
@@ -72,15 +66,11 @@ const AddModule = (props) => {
             height={28}
             name="options-2-outline"
             onPress={() => {
-              for (const mod of modules) {
-                origList.delete(mod);
-                fullList.delete(mod);
-              }
               props.navigation.navigate("Filter", {
                 fullList: Array.from(fullList),
                 currentFilters: filterArr,
                 origList: Array.from(origList),
-                loc: "AddModule",
+                loc: "Module",
               });
               current.current.clear();
             }}
@@ -96,48 +86,20 @@ const AddModule = (props) => {
       setFullList(new Set(newList));
       setModuleList(newList);
       setFilterArr(props.route.params?.currentFilters);
-    } else if (
-      props.route.params?.locationFrom === "SeeModules" &&
-      props.route.params?.value !== MCcount
-    ) {
-      const reAdded = props.route.params?.reAddedModules;
-      const newList = fullList;
-      for (const mod of reAdded) {
-        fullList.add(mod);
-        origList.add(mod);
-      }
-      setFullList(newList);
-      setModuleList(Array.from(newList));
-      setOrigList(origList);
-      add(props.route.params?.newModules);
-      addVal(props.route.params?.value);
     }
   }, [props.route.params?.newModules || props.route.params?.currentFilters]);
 
-  // TODO: Tag modules that are already planned in the current plan
-  const modulesPlanned = props.route.params?.modulesPlanned;
-  const locationFrom = props.route.params?.item;
   const [filterArr, setFilterArr] = useState([]);
   const [origList, setOrigList] = useState(new Set(props.moduleList));
   const [fullList, setFullList] = useState(new Set(props.moduleList));
   const [moduleList, setModuleList] = useState(props.moduleList);
-  const [MCcount, addVal] = useState(0);
   const [preReqmodalVisible, setPreReqModalVisible] = useState(false);
   const [infomodalVisible, setInfoModalVisible] = useState(false);
   const [infoInfo, setInfoInfo] = useState([]);
   const [preReqInfo, setpreReqInfo] = useState([]);
-  const [modules, add] = useState([]); // modules are stored here
-
-  const valAdded = (item) => (locationFrom === "AddPlan" ? item.MC : 1);
-
-  /*
-Filter: 
-When entering from planner: Filter all modules planned
-Entering from records: Filter all modules mapped (to course) + planned
-*/
 
   const holders = (item) => (
-    <Container
+    <Container1
       name={item.name}
       button1Press={() => {
         if (item.preclusion && item.prerequisite) {
@@ -160,7 +122,6 @@ Entering from records: Filter all modules mapped (to course) + planned
         return null;
       }}
       button2Press={() => {
-        // console.log(item.semesters);
         setInfoModalVisible(true);
         setInfoInfo([
           item.MC,
@@ -172,16 +133,8 @@ Entering from records: Filter all modules mapped (to course) + planned
         ]);
         return null;
       }}
-      incr={() => {
-        addVal(MCcount + valAdded(item));
-        modules.push(item);
-        let newArr = moduleList.filter((x) => x.code !== item.code);
-        setModuleList(newArr);
-      }}
     />
   );
-
-  const moduleOrMC = locationFrom === "AddPlan" ? "MC count" : "Modules Added";
 
   const preReqModal = () => {
     const prereq = preReqInfo[1];
@@ -372,38 +325,19 @@ Entering from records: Filter all modules mapped (to course) + planned
           keyboardShouldPersistTaps="always"
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
           data={moduleList}
-          extraData={modules}
           keyExtractor={(item) => item.code}
           renderItem={({ item }) => holders(item)}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<View style={{ height: height * 0.06 - 20 }} />}
         />
       </View>
-      <BottomBar
-        leftText={`${moduleOrMC}: ${MCcount}`}
-        opacity={1}
-        transition={() => {
-          for (const mod of modules) {
-            fullList.delete(mod);
-            origList.delete(mod);
-          }
-          props.navigation.navigate("SeeModules", {
-            modDetails: modules,
-            location: locationFrom,
-            MC: MCcount,
-          });
-          current.current.clear();
-        }}
-        rightText={"Add modules"}
-        size={"33%"}
-      />
       {preReqModal()}
       {infoModal()}
     </View>
   );
 };
 
-export default AddModule;
+export default ModulePage;
 
 const styles = StyleSheet.create({
   // Stylesheet for header

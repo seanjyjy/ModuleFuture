@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StatusBar } from "react-native";
+import { View } from "react-native";
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
 import Homepage from "./Screens/Homepage";
@@ -11,7 +11,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
 import FirebaseDB from "./FirebaseDB";
 import ModuleListWithKey from "./Data/ModuleListMoreInfo";
@@ -206,7 +206,11 @@ export default function App() {
                     <>
                       <AuthStack.Screen name="Homepage">
                         {(props) => (
-                          <Homepage {...props} extraData={data.user} />
+                          <Homepage
+                            {...props}
+                            extraData={data.user}
+                            moduleList={ModuleListWithKey()}
+                          />
                         )}
                       </AuthStack.Screen>
                       <AuthStack.Screen

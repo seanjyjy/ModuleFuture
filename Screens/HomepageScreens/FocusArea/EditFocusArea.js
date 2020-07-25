@@ -534,6 +534,8 @@ const EditRecords = ({ navigation, route }) => {
         leftText={`Focus areas: ${num}`}
         leftTextSize={16}
         rightText={"Add a focus area"}
+        clearAll={() => null}
+        opacity={1}
         size={140}
         transition={() => setModalVisible(true)}
       />

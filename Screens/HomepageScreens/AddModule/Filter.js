@@ -493,8 +493,9 @@ const Filter = ({ navigation, route }) => {
       </View>
       <BottomBar
         leftText={"Clear all"}
+        opacity={0.7}
         transition={() =>
-          navigation.navigate("AddModule", {
+          navigation.navigate(route.params.loc, {
             afterFilter: list,
             currentFilters: filterArr,
             locationFrom: "Filter",

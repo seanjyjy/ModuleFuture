@@ -12,7 +12,7 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "./HomepageScreens/Profile/Profile";
 import Records from "./HomepageScreens/Records/Records";
-import ModulePage from "./HomepageScreens/ModulePage";
+import ModulePage from "./HomepageScreens/SearchModule/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";
 import FocusArea from "./HomepageScreens/FocusArea/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
@@ -21,7 +21,6 @@ import { useSafeArea } from "react-native-safe-area-context";
 import FirebaseDB from "../FirebaseDB";
 
 const totalWidth = Dimensions.get("window").width;
-const totalHeight = Dimensions.get("window").height;
 const textToReturn = (str) => {
   if (str === "Planner") {
     return "calendar";
@@ -212,7 +211,9 @@ const Homepage = (data) => {
           </Tab.Screen>
           <Tab.Screen name="Records" component={Records} />
           <Tab.Screen name="Focus" component={FocusArea} />
-          <Tab.Screen name="Module" component={ModulePage} />
+          <Tab.Screen name="Module">
+            {(props) => <ModulePage {...props} moduleList={data.moduleList} />}
+          </Tab.Screen>
           <Tab.Screen name="Profile">
             {(props) => <Profile {...props} extraData={data.extraData} />}
           </Tab.Screen>

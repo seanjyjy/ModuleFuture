@@ -5,32 +5,19 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  Animated,
 } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
-import { Icon } from "react-native-eva-icons";
-import { Easing } from "react-native-reanimated";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const Container = (props) => {
-  const xVal = useRef(new Animated.Value(0)).current;
-
-  const move = () => {
-    Animated.timing(xVal, {
-      toValue: -width,
-      duration: 300,
-      easing: Easing.linear,
-    }).start(() => props.incr());
-  };
-
   return (
-    <Animated.View style={{ ...styles.container, left: xVal }}>
+    <View style={{ ...styles.container }}>
       <View style={{ flexDirection: "column", flex: 1 }}>
         <View
           style={{
-            width: 0.65 * width,
+            width: 0.76 * width,
             flex: 1,
             justifyContent: "center",
           }}
@@ -78,16 +65,7 @@ const Container = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      <Icon
-        name={"plus-circle"}
-        width={43}
-        height={43}
-        fill={"#3FE2D3"}
-        onPress={() => {
-          move();
-        }}
-      />
-    </Animated.View>
+    </View>
   );
 };
 

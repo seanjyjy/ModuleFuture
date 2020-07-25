@@ -562,6 +562,8 @@ const EditRecords = ({ navigation, route }) => {
         leftText={`MCs planned : ${mcsPlanned} / ${totalMC}`}
         leftTextSize={16}
         rightText={"Add a type"}
+        clearAll={() => null}
+        opacity={1}
         size={100}
         transition={() => setModalVisible(true)}
       />
