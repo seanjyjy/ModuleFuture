@@ -61,7 +61,7 @@ const Container = (props) => {
             }}
           >
             <Text style={{ ...globalFontStyles.OSSB_12, color: "white" }}>
-              Prereq
+              Req
             </Text>
           </TouchableOpacity>
           {/* Info button */}

@@ -300,7 +300,7 @@ const ChoosingOptions = ({ route }) => {
                 <Text
                   style={styles.tncStyle}
                   onPress={() =>
-                    navigation.navigate("TnC", { fromWhere: "Credit" })
+                    navigation.navigate("TnC", { fromWhere: "ChoosingOptions" })
                   }
                 >
                   Terms & Conditions.

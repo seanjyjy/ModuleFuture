@@ -7,39 +7,45 @@ const WhatIfLesson = () => {
   const slides = [
     {
       imageLink: require("../../../../assets/WhatIfLesson1.png"),
-      subtitle: "Choosing plan AA",
+      subtitle: "Choosing plan A",
       description:
-        "Suppose we have 2 plans, AA and CC. Let us proceed with the current plan selected being AA first. ",
+        "Suppose we have 2 plans, A and C. Let us proceed with the current plan selected being A first. ",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson2.png"),
-      subtitle: "CAP with plan AA selected",
+      subtitle: "CAP with plan A selected",
       description:
-        "Now we create another plan for Y1S2 with semestral CAP being 5. Notice that the planned overall CAP is 5, which is based on Plan AA of Y1S1 and this current plan.",
+        "Now we create another plan for Y1S2 with semestral CAP being 5. Notice that the planned overall CAP is 5, which is based on Plan A of Y1S1 and this current plan.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson3.png"),
-      subtitle: "Switching current plan to plan CC",
+      subtitle: "Switching current plan to plan C",
       description:
-        "Now we switch the current plan to Plan CC by clicking onto it.",
+        "Now we switch the current plan to Plan C by clicking onto it.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson4.png"),
-      subtitle: "CAP with plan CC selected",
+      subtitle: "CAP with plan C selected",
       description:
-        "Looking at the CAP in Y1S2 now, we can see that the planned overall CAP has changed since the plan selected in Y1S1 is now Plan CC.",
+        "Looking at the CAP in Y1S2 now, we can see that the planned overall CAP has changed since the plan selected in Y1S1 is now Plan C.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson5.png"),
       subtitle: "With final grades",
       description:
-        "If we were to insert our final grades to Plan CC, we do not need to worry about current being in wrong position, since the plan used will be the one with the final grades.",
+        "After insert final grades to Plan C, we do not need to worry about current's position, it will automatically take the final grades in this semester. ",
+    },
+    {
+      imageLink: require("../../../../assets/WhatIfLesson5.png"),
+      subtitle: "Changes in terminology",
+      description:
+        "Note that when a plan has the final grades, the terminology will change from Planned Cap to Semestral Cap and Planned Overall Cap to Overall Cap.",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson6.png"),
       subtitle: "CAP with final grades inserted",
       description:
-        "We can see that the planned overall CAP in Y1S2 computed is based on Plan CC.",
+        "We can see that the planned overall CAP in Y1S2 computed is based on Plan C.",
     },
     {
       imageLink: require("../../../../assets/PlannerPage1.png"),

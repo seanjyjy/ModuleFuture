@@ -66,7 +66,7 @@ const ContentPage = (props) => {
 
   useEffect(() => {
     if (!FirebaseDB.auth().currentUser.emailVerified) {
-      // props.start();
+      props.start();
     }
     const unsub = userInfo.doc(userID).onSnapshot((document) => {
       const data = document.data();

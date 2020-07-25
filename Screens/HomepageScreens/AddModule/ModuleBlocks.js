@@ -9,7 +9,7 @@ const ModuleBlocks = ({ color, title, sum }) => {
       <Text
         style={{ ...globalFontStyles.NSB_11, color: color, left: 2, bottom: 3 }}
       >
-        {title}
+        {title ? title : " "}
       </Text>
       <View
         style={{
@@ -17,7 +17,7 @@ const ModuleBlocks = ({ color, title, sum }) => {
           width: widthToUse,
           height: 30,
           marginHorizontal: 2,
-          bottom: title !== "" ? (Platform.OS === "android" ? 0.5 : 1) : 0,
+          //bottom: title !== "" ? (Platform.OS === "android" ? 0.5 : 1) : 0,
         }}
       />
     </View>

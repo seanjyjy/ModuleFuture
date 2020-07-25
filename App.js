@@ -113,9 +113,13 @@ export default function App() {
       require("./assets/JumpingMan.png"),
       require("./assets/bargraph.png"),
       require("./assets/woodBG.png"),
+      require("./assets/ModuleFutureLogo1.png"),
       // loading of the displays of the Tutorial pics
       require("./assets/TutorialPic1.png"),
       require("./assets/TutorialPic2.png"),
+      require("./assets/TutorialPic3.png"),
+      require("./assets/TutorialPic4.png"),
+      require("./assets/TutorialPic5.png"),
       // loading of Planner Tutorial Pictures
       require("./assets/PlannerPage1.png"),
       require("./assets/PlannerPage2.png"),
@@ -124,6 +128,8 @@ export default function App() {
       require("./assets/PlannerPage5.png"),
       require("./assets/PlannerPage6.png"),
       require("./assets/PlannerPage7.png"),
+      require("./assets/PlannerPage8.png"),
+      require("./assets/PlannerPage9.png"),
       // loading of WhatIfLesson pictures
       require("./assets/WhatIfLesson1.png"),
       require("./assets/WhatIfLesson2.png"),
@@ -135,6 +141,18 @@ export default function App() {
       require("./assets/ProgressLesson1.png"),
       require("./assets/ProgressLesson2.png"),
       require("./assets/ProgressLesson3.png"),
+      // loading of RecordsLesson pictures
+      require("./assets/RecordsLesson1.png"),
+      require("./assets/RecordsLesson2.png"),
+      require("./assets/RecordsLesson3.png"),
+      require("./assets/RecordsLesson4.png"),
+      require("./assets/RecordsLesson5.png"),
+      // loading of FocusLesson pictures
+      require("./assets/FocusLesson1.png"),
+      require("./assets/FocusLesson2.png"),
+      require("./assets/FocusLesson3.png"),
+      require("./assets/FocusLesson4.png"),
+      require("./assets/FocusLesson5.png"),
     ]);
 
     const fontAssets = getFonts();

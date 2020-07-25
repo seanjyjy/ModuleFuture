@@ -15,6 +15,7 @@ import { Icon } from "react-native-eva-icons";
 import FullViewHeader from "../../../Component/FullViewHeader";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FirebaseDB from "../../../FirebaseDB";
+import { useSafeArea } from "react-native-safe-area-context";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -148,7 +149,10 @@ const Records = ({ navigation }) => {
 
     return (
       <OverflowMenu
-        style={styles.menuStyle}
+        style={{
+          ...styles.menuStyle,
+          marginTop: Platform.OS === "android" ? 0 : -useSafeArea().top,
+        }}
         visible={menuVisible}
         anchor={MenuIcon}
         onBackdropPress={toggleMenu}
@@ -570,7 +574,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   menuStyle: {
-    marginTop: Platform.OS === "android" ? 0 : -StatusBar.currentHeight,
     width: width * 0.45,
     borderRadius: 10,
     left: 8,

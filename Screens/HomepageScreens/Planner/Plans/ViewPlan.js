@@ -6,6 +6,7 @@ import {
   Dimensions,
   FlatList,
   Animated,
+  Image,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import EntypoIcon from "react-native-vector-icons/Entypo";
@@ -439,10 +440,9 @@ const ViewPlan = ({ route }) => {
                   alignItems: "center",
                 }}
               >
-                <Avatar
-                  style={styles.avatar}
-                  size="giant"
-                  source={require("../../../../assets/JumpingMan.png")}
+                <Image
+                  source={require("../../../../assets/ModuleFutureLogo1.png")}
+                  style={{ width: 175, height: 175, right: 0.07 * width }}
                 />
               </View>
               <View style={styles.oneCenter}>

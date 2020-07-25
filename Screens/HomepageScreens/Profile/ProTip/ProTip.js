@@ -27,7 +27,7 @@ const ProTip = () => {
       miniDescription:
         "This tutorial highlights the basic usage of this planner. View the next tutorial for more advanced features!",
       key: "1",
-      requiredLink: require("../../../../assets/TutorialPic1.png"),
+      requiredLink: require("../../../../assets/TutorialPic2.png"),
       StackName: "PlannerLessonStack",
       bgColor: "#1DDEAA",
     },
@@ -36,7 +36,7 @@ const ProTip = () => {
       miniDescription:
         "This tutorial highlights some useful features of the planner!",
       key: "2",
-      requiredLink: require("../../../../assets/TutorialPic2.png"),
+      requiredLink: require("../../../../assets/TutorialPic1.png"),
       StackName: "WhatIfStack",
       bgColor: "#757CFE",
     },
@@ -45,27 +45,27 @@ const ProTip = () => {
       miniDescription:
         "This tutorial highlights the features of the progress page!",
       key: "3",
-      requiredLink: require("../../../../assets/TutorialPic2.png"),
+      requiredLink: require("../../../../assets/TutorialPic3.png"),
       StackName: "ProgressLessonStack",
-      bgColor: "#FE75C1",
+      bgColor: "#FB5581",
     },
     {
       title: "How to use records?",
       miniDescription:
         "This tutorial highlights the most optimal way to utilise the records page!",
       key: "4",
-      requiredLink: require("../../../../assets/TutorialPic2.png"),
+      requiredLink: require("../../../../assets/TutorialPic4.png"),
       StackName: "RecordsLessonStack",
-      bgColor: "#FE75C1",
+      bgColor: "#763964",
     },
     {
       title: "How to use focus area?",
       miniDescription:
         "This tutorial highlights the features of the focus area page!",
       key: "5",
-      requiredLink: require("../../../../assets/TutorialPic2.png"),
+      requiredLink: require("../../../../assets/TutorialPic5.png"),
       StackName: "FocusAreaLessonStack",
-      bgColor: "#FE75C1",
+      bgColor: "#6b45a4",
     },
   ];
 
@@ -150,6 +150,7 @@ const ProTip = () => {
           }
         />
       </View>
+      <View style={{ height: 0.03 * height }} />
     </>
   );
 };
