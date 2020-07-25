@@ -5,25 +5,18 @@ import {
   View,
   Text,
   Dimensions,
-  TouchableWithoutFeedback,
-  TextInput,
-  Keyboard,
-  Platform,
   Alert,
   StatusBar,
-  SafeAreaView,
 } from "react-native";
 import { globalFontStyles } from "../Component/GlobalFont";
 import SignInButton from "../Component/SignInButton";
 import BackgroundFaded from "../Screens/Backgrounds/BackgroundFaded";
 import FirebaseDB from "../FirebaseDB";
 import { Modules, Mapping, Levels, Codes, Types } from "../Data/Types";
-import { Icon } from "react-native-eva-icons";
 import { CheckBox } from "@ui-kitten/components";
 import { Autocomplete, AutocompleteItem } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
 import { specialisations } from "../Data/Specialisations";
-import { database } from "firebase";
 
 const height = Dimensions.get("window").height;
 
@@ -58,7 +51,6 @@ let courseList = [
   { title: "Dentistry" },
   { title: "Architecture" },
   { title: "Industrial Design" },
-
   { title: "Landscape Architecture" },
   { title: "Project & Facilities Management" },
   { title: "Real Estate" },
@@ -114,8 +106,22 @@ const filter = (item, query) =>
 const ChoosingOptions = ({ route }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState("");
-  const [index1, setIndex1] = useState("4");
+  const [index1, setIndex1] = useState("5");
   const [index2, setIndex2] = useState("4");
+
+  const date = new Date();
+  const currentYear = date.getFullYear();
+  const yearList = [];
+  for (let i = 0; i < 5; i++) {
+    yearList.push({
+      key: currentYear - 4 + i,
+      value: (currentYear - 4 + i).toString(),
+    });
+  }
+
+  const yearValue = (val) => {
+    return yearList[val - 1].value;
+  };
 
   useEffect(() => {
     if (route.params?.TnCSTATUS) {
@@ -123,17 +129,6 @@ const ChoosingOptions = ({ route }) => {
     }
   }, [route.params]);
 
-  const yearValue = (val) => {
-    return val === 1
-      ? "2016"
-      : val === 2
-      ? "2017"
-      : val === 3
-      ? "2018"
-      : val === 4
-      ? "2019"
-      : "2020";
-  };
   const semValue = (val) => {
     return val === 1
       ? "Y3S1"
@@ -147,15 +142,6 @@ const ChoosingOptions = ({ route }) => {
       ? "Y5S1"
       : "Y5S2";
   };
-
-  const courseValue = () => {};
-  const yearList = [
-    { key: 2016, value: "2016" },
-    { key: 2017, value: "2017" },
-    { key: 2018, value: "2018" },
-    { key: 2019, value: "2019" },
-    { key: 2020, value: "2020" },
-  ];
 
   const semList = [
     { key: "Y3S1", value: "Y3S1" },
@@ -187,7 +173,7 @@ const ChoosingOptions = ({ route }) => {
     <AutocompleteItem key={index} title={item.title} />
   );
 
-  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(3));
+  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(4));
   const [selectedIndex2, setSelectedIndex2] = useState(new IndexPath(3));
 
   const YearDisplayValue = yearList[selectedIndex.row].value;
@@ -243,7 +229,6 @@ const ChoosingOptions = ({ route }) => {
                   value={value}
                   onSelect={onSelectSearch}
                   onChangeText={onChangeTextSearch}
-                  //style={{ marginBottom: StatusBar.currentHeight }}
                 >
                   {data.map(renderOptionSearch)}
                 </Autocomplete>
@@ -253,10 +238,7 @@ const ChoosingOptions = ({ route }) => {
                   <Select
                     size={"large"}
                     label={textSem}
-                    style={{
-                      ...styles.select,
-                      //paddingBottom: StatusBar.currentHeight,
-                    }}
+                    style={styles.select}
                     placeholder="Default"
                     value={SemDisplayValue}
                     selectedIndex={selectedIndex2}
@@ -296,7 +278,7 @@ const ChoosingOptions = ({ route }) => {
                   checked={checked}
                   onChange={(nextChecked) => setChecked(nextChecked)}
                 />
-                <Text style={styles.ihveStyle}>I've agreed to the </Text>
+                <Text style={styles.ihveStyle}>I have agreed to the </Text>
                 <Text
                   style={styles.tncStyle}
                   onPress={() =>

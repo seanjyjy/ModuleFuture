@@ -130,6 +130,7 @@ const ViewPlan = ({ route }) => {
       //during and after august consider start of sem as of 1st aug
       textToReturn += "Y" + (numYear + 1) + "S1";
     }
+    // show Y0S2 or ???
     return textToReturn;
   };
 
@@ -431,7 +432,7 @@ const ViewPlan = ({ route }) => {
               <View style={styles.centerThree}>
                 <Image
                   source={require("../../../../assets/ModuleFutureLogo1.png")}
-                  style={{ width: 175, height: 175, right: 0.07 * width }}
+                  style={styles.imageStylingForDrawer}
                 />
               </View>
               <View style={styles.oneCenter}>
@@ -819,5 +820,10 @@ const styles = StyleSheet.create({
     left: 15,
     ...globalFontStyles.NB_15,
     color: "#4a4e5d",
+  },
+  imageStylingForDrawer: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
   },
 });

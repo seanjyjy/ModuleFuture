@@ -316,7 +316,7 @@ const ModuleTemplate = (props) => {
               </View>
               <TouchableOpacity
                 style={styles.flexThreeColumnCenter}
-                activeOpacity={0.9}
+                activeOpacity={0.1}
                 onPress={() => {
                   setTargetOrFinal(1);
                   setModalVisible(true);

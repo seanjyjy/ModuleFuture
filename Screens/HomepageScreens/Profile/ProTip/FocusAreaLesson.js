@@ -21,7 +21,7 @@ const FocusAreaLesson = () => {
       imageLink: require("../../../../assets/FocusLesson3.png"),
       subtitle: "Editing focus areas",
       description:
-        "Here, we can edit the allocations of mcs as well as add or delete focus areas.",
+        "Here, you can edit the allocations of mcs as well as add or delete focus areas.",
     },
     {
       imageLink: require("../../../../assets/FocusLesson4.png"),

@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
   modalBox: {
     backgroundColor: "white",
     alignSelf: "center",
-    marginVertical: height * 0.2,
+    marginVertical: height * 0.15,
     width: width * 0.9,
     borderRadius: 25,
   },

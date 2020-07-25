@@ -17,6 +17,7 @@ import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import Modal from "react-native-modalbox";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import FeatherIcon from "react-native-vector-icons/Feather";
 import FirebaseDB from "../../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
@@ -245,6 +246,7 @@ const Plans = (props) => {
   const [planName, setPlanName] = useState("");
   const [currentID, setCurrentID] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleDeletion, setModalVisibleDeletion] = useState(false);
   const [size, setSize] = useState(props.data[1].length);
   const [showDustBin, setShowDustBin] = useState(true);
   const [alertText, setAlertText] = useState(false);
@@ -391,6 +393,37 @@ const Plans = (props) => {
       : 0;
   };
 
+  const SuccessFulDeletion = () => {
+    return (
+      <Modal
+        style={styles.modalBox2}
+        isOpen={modalVisibleDeletion}
+        backdropPressToClose={false}
+        backdropOpacity={0.1}
+        animationDuration={300}
+        coverScreen={true}
+        onClosed={() => setModalVisibleDeletion(false)}
+        keyboardTopOffset={300}
+        position="center"
+      >
+        <View style={{ flex: 1 }}>
+          <View style={styles.deletionTextAlertStyle}>
+            <Text style={{ ...globalFontStyles.NBEB_24, color: "#4AE8AB" }}>
+              Successful Deletion!
+            </Text>
+          </View>
+          <View style={{ flex: 2 }}>
+            <FeatherIcon
+              name="check-circle"
+              size={75}
+              style={{ color: "#4AE8AB", alignSelf: "center" }}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
   // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
     return (
@@ -487,6 +520,8 @@ const Plans = (props) => {
         activeOpacity={0.9}
         onPress={() => {
           if (currentArr.length > 0) {
+            setModalVisibleDeletion(true);
+            setTimeout(() => setModalVisibleDeletion(false), 1500);
             plansArrayRef
               .get()
               .then((document) => {
@@ -1304,19 +1339,13 @@ const Plans = (props) => {
     </View>
   );
   return (
-    <View style={{ flex: 1, minHeight: hp("100%") }}>
+    <View style={styles.overallContainer}>
       <View style={styles.header}>
         <ImageBackground
           style={styles.header}
           source={require("../../../../assets/HeaderBG.png")}
         >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "flex-start",
-            }}
-          >
+          <View style={styles.arrowContainer}>
             <Ionicons
               name="md-arrow-round-back"
               size={25}
@@ -1382,28 +1411,14 @@ const Plans = (props) => {
               }}
             />
           </View>
-          <View
-            style={{
-              flex: 3,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                ...globalFontStyles.NB_20,
-                color: "#3E3E3E",
-                bottom: 15,
-              }}
-            >
-              {props.headerTitle}
-            </Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.textStyling}>{props.headerTitle}</Text>
           </View>
 
           {showDustBin ? dustBin : emptySpace}
         </ImageBackground>
       </View>
-      <View style={{ flex: 6, backgroundColor: "#f9f9f9" }}>
+      <View style={{ flex: 6, backgroundColor: "#f9f9f9", top: 5 }}>
         <FlatList
           ListEmptyComponent={
             <View style={{ flex: 1, backgroundColor: "#f9f9f9" }} />
@@ -1580,6 +1595,7 @@ const Plans = (props) => {
         </View>
       </View>
       {PopOutBox()}
+      {SuccessFulDeletion()}
     </View>
   );
 };
@@ -1652,6 +1668,12 @@ const styles = StyleSheet.create({
     height: 0.17 * height,
     borderRadius: 30,
   },
+  modalBox2: {
+    backgroundColor: "#F4FFFC",
+    width: 0.7 * width,
+    height: 0.2 * height,
+    borderRadius: 20,
+  },
   popouttext: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -1714,6 +1736,7 @@ const styles = StyleSheet.create({
     height: 0.11 * height,
     width: "100%",
     flexDirection: "row",
+    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -1757,5 +1780,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     bottom: 10,
+  },
+  overallContainer: {
+    flex: 1,
+    minHeight: hp("100%"),
+    backgroundColor: "#f9f9f9",
+  },
+  arrowContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
+  },
+  textContainer: {
+    flex: 3,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  textStyling: {
+    ...globalFontStyles.NB_20,
+    color: "#3E3E3E",
+    bottom: 15,
+  },
+  deletionTextAlertStyle: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 });

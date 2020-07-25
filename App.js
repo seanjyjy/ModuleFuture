@@ -58,7 +58,7 @@ import EachFocusArea from "./Screens/HomepageScreens/FocusArea/EachFocusArea";
 // -------------------------------------------------------------------------------------------------------------
 
 const AuthStack = createStackNavigator();
-
+console.disableYellowBox = true;
 const getFonts = () => {
   return Font.loadAsync({
     "OpenSans-Italic": require("./assets/Font/OpenSans-Italic.ttf"),

@@ -127,7 +127,7 @@ const ContentPage = (props) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       <View style={styles.header}>
         <ImageBackground
           style={styles.header}
@@ -212,22 +212,16 @@ const ContentPage = (props) => {
           </View>
         </ImageBackground>
       </View>
-      <View
-        style={{
-          height: 5,
-          width: "100%",
-          backgroundColor: "#f9f9f9",
-        }}
-      />
 
       <View
         style={{
           flex: 1,
           backgroundColor: "#f9f9f9",
+          top: 5,
         }}
       >
         <CopilotStep
-          text="Here is where you can select your plans!"
+          text="This is where you can select your plans!"
           order={1}
           name="plans"
         >
@@ -294,7 +288,7 @@ const ContentPage = (props) => {
             <WalkthroughableView style={styles.areaPerIcon} />
           </CopilotStep>
           <CopilotStep
-            text="Here is where you can search for information on each module!"
+            text="This is where you can search for information on each module!"
             order={7}
             name="module"
           >
@@ -378,13 +372,14 @@ const styles = StyleSheet.create({
     height: 0.113 * height,
     width: "100%",
     flexDirection: "row",
+    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.18,
-    shadowRadius: 1.0,
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
     elevation: 2,
   },
   walkableIcon: {

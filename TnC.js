@@ -124,15 +124,19 @@ const TnC = (props) => {
             </ScrollView>
           </View>
           <View style={styles.centerOneWithShadow}>
-            <SignInButton
-              func={() => {
-                navigation.navigate(fromWhere, { TnCSTATUS: true });
-              }}
-            >
-              <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                Accept & Continue
-              </Text>
-            </SignInButton>
+            {fromWhere === "ChoosingOptions" ? (
+              <SignInButton
+                func={() => {
+                  navigation.navigate(fromWhere, { TnCSTATUS: true });
+                }}
+              >
+                <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+                  Accept & Continue
+                </Text>
+              </SignInButton>
+            ) : (
+              <View />
+            )}
           </View>
         </View>
       </View>

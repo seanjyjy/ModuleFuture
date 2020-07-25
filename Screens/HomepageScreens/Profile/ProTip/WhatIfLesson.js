@@ -33,7 +33,7 @@ const WhatIfLesson = () => {
       imageLink: require("../../../../assets/WhatIfLesson5.png"),
       subtitle: "With final grades",
       description:
-        "After insert final grades to Plan C, we do not need to worry about current's position, it will automatically take the final grades in this semester. ",
+        "After inserting final grades to Plan C, we do not need to worry about current's position, it will automatically take the final grades in this semester. ",
     },
     {
       imageLink: require("../../../../assets/WhatIfLesson5.png"),
@@ -45,7 +45,7 @@ const WhatIfLesson = () => {
       imageLink: require("../../../../assets/WhatIfLesson6.png"),
       subtitle: "CAP with final grades inserted",
       description:
-        "We can see that the planned overall CAP in Y1S2 computed is based on Plan C.",
+        "Observe that the planned overall CAP in Y1S2 computed is based on Plan C.",
     },
     {
       imageLink: require("../../../../assets/PlannerPage1.png"),

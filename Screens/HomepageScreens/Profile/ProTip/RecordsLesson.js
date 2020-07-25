@@ -27,7 +27,7 @@ const RecordsLesson = () => {
       imageLink: require("../../../../assets/RecordsLesson4.png"),
       subtitle: "Editing types",
       description:
-        "Here, we can edit the allocations of mcs as well as add or delete new types. For some types which do not have a specific number required, we can leave them empty.",
+        "Here, you can edit the allocations of mcs as well as add or delete new types. For types which do not have a specific number required, we can leave them empty.",
     },
     {
       imageLink: require("../../../../assets/RecordsLesson5.png"),

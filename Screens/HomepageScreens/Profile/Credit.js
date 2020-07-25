@@ -56,7 +56,11 @@ const Credit = () => {
               <Text style={styles.biggestWords}>Note</Text>
               <Text style={styles.biggerWords}>
                 There will be some deviation between different Platform mainly
-                IOS vs Android phones
+                IOS vs Android phones.
+              </Text>
+              <Text style={styles.biggerWords}>
+                Phone size of less than 5 inch will be likely to have inaccurate
+                rendering of the app.
               </Text>
               <Text style={styles.biggestWords}>Developers</Text>
               <Text style={styles.biggerWords}>Keane Chan Jun Yu</Text>
