@@ -186,7 +186,8 @@ const FocusArea = ({ navigation }) => {
     const colors = props.colors;
     const array = props.array;
 
-    const leftText = `Number of ${currentType.toLowerCase()} taken`;
+    const leftText1 = "Number of";
+    const leftText2 = `${currentType.toLowerCase()} taken`;
 
     const content = (curr) => {
       const key = curr.key;
@@ -213,18 +214,6 @@ const FocusArea = ({ navigation }) => {
         />
       );
 
-      const text = (input) => (
-        <Text
-          numberOfLines={2}
-          style={{
-            ...globalFontStyles.NBEB_13,
-            color: "#686868",
-          }}
-        >
-          {input}
-        </Text>
-      );
-
       const text1 = () => {
         // See if all of them has number required
         if (numReq !== 0) {
@@ -234,7 +223,7 @@ const FocusArea = ({ navigation }) => {
         }
       };
 
-      const line = (text1, text2) => (
+      const line1 = (text2) => (
         <View style={styles.innerText}>
           <View
             style={{
@@ -247,7 +236,22 @@ const FocusArea = ({ navigation }) => {
             {circle}
           </View>
           <View style={{ flex: 7, justifyContent: "center" }}>
-            {text(text1)}
+            <Text
+              style={{
+                ...globalFontStyles.NBEB_13,
+                color: "#686868",
+              }}
+            >
+              {leftText1}
+            </Text>
+            <Text
+              style={{
+                ...globalFontStyles.NBEB_13,
+                color: "#686868",
+              }}
+            >
+              {leftText2}
+            </Text>
           </View>
           <View
             style={{
@@ -256,15 +260,63 @@ const FocusArea = ({ navigation }) => {
               justifyContent: "center",
             }}
           >
-            {text(text2)}
+            <Text
+              style={{
+                ...globalFontStyles.NBEB_13,
+                color: "#686868",
+              }}
+            >
+              {text2}
+            </Text>
+          </View>
+        </View>
+      );
+
+      const line2 = (text1, text2) => (
+        <View style={styles.innerText}>
+          <View
+            style={{
+              flex: 0.5,
+              justifyContent: "center",
+              top: 1,
+              marginRight: 12,
+            }}
+          >
+            {circle}
+          </View>
+          <View style={{ flex: 7, justifyContent: "center" }}>
+            <Text
+              style={{
+                ...globalFontStyles.NBEB_13,
+                color: "#686868",
+              }}
+            >
+              {text1}
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 2.3,
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                ...globalFontStyles.NBEB_13,
+                color: "#686868",
+              }}
+            >
+              {text2}
+            </Text>
           </View>
         </View>
       );
 
       return (
         <View style={styles.whitelayer}>
-          {line(leftText, text1())}
-          {line("CAP", CAP())}
+          {line1(text1())}
+          {line2("CAP", CAP())}
         </View>
       );
     };

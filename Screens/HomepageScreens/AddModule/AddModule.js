@@ -133,7 +133,6 @@ const AddModule = (props) => {
 Filter: 
 When entering from planner: Filter all modules planned
 Entering from records: Filter all modules mapped (to course) + planned
-Prereq: matched with whatever is planned / take
 */
 
   const holders = (item) => (
@@ -158,7 +157,6 @@ Prereq: matched with whatever is planned / take
             { cancelable: false }
           );
         }
-        //setPreReqInfo();
         return null;
       }}
       button2Press={() => {

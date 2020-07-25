@@ -556,7 +556,7 @@ const EditRecords = ({ navigation, route }) => {
         renderItem={({ item }) => holders(item)}
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={<View style={{ height: height * 0.1 }} />}
+        ListFooterComponent={<View style={{ height: 95 }} />}
       />
       <BottomBar
         leftText={`MCs planned : ${mcsPlanned} / ${totalMC}`}

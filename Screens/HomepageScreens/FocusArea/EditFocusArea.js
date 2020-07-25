@@ -528,7 +528,7 @@ const EditRecords = ({ navigation, route }) => {
         renderItem={({ item }) => holders(item)}
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={<View style={{ height: 90 }} />}
+        ListFooterComponent={<View style={{ height: 95 }} />}
       />
       <BottomBar
         leftText={`Focus areas: ${num}`}
