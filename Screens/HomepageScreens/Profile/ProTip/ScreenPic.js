@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, ImageBackground } from "react-native";
+import { View, StyleSheet, Dimensions, Image } from "react-native";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -7,7 +7,9 @@ const width = Dimensions.get("window").width;
 const ScreenPic = ({ imageLink }) => {
   return (
     <View style={styles.container}>
-      <ImageBackground source={imageLink} style={styles.imageStyling} />
+      <View style={styles.shadowImage}>
+        <Image source={imageLink} style={styles.imageStyling} />
+      </View>
     </View>
   );
 };
@@ -19,15 +21,11 @@ const styles = StyleSheet.create({
     width: width,
     justifyContent: "center",
     alignItems: "center",
-    resizeMode: "center",
+    overflow: "hidden",
   },
-  imageStyling: {
-    justifyContent: "center",
-    alignSelf: "center",
-    alignItems: "center",
+  shadowImage: {
     width: 0.605 * width,
     height: 0.62 * height,
-    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -36,5 +34,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
+  },
+  imageStyling: {
+    resizeMode: "contain",
+    alignSelf: "center",
+    width: 0.605 * width,
+    height: 0.62 * height,
   },
 });

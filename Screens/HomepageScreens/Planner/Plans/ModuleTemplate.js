@@ -36,7 +36,7 @@ const ModuleTemplate = (props) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [TargetOrFinal, setTargetOrFinal] = useState(0);
   const [alertText, setAlertText] = useState(false);
-  const [alertText2, setAlertText2] = useState(false);
+
   const MenuIcon = () => (
     <Icon
       fill="#232323"
@@ -64,14 +64,6 @@ const ModuleTemplate = (props) => {
             const deleteMethod = props.deleteMethod;
             deleteMethod(moduleCode);
             toggleMenu();
-          }}
-          activeOpacity={0.9}
-        />
-        <MenuItem
-          title={"Accept conflict"}
-          onPress={() => {
-            toggleMenu();
-            setClash(false);
           }}
           activeOpacity={0.9}
         />

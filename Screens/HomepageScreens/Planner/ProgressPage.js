@@ -28,6 +28,7 @@ const ProgressPage = ({ navigation, route }) => {
   const [previousCap, setPreviousCap] = useState(0);
   const [allowClicks, setAllowClicks] = useState(false);
   const [userID, setUserID] = useState("");
+  const [mcremainder, setmcRemainder] = useState(0);
   useEffect(() => {
     if (
       route.params?.usersDetails &&
@@ -56,13 +57,15 @@ const ProgressPage = ({ navigation, route }) => {
         setOverallData(route.params?.usersDetails.CapArray);
         setCap(usersCurrentCap);
         setMCs(usersOverallMc);
+        setMCprogressTotal(usersTARGETMC);
+        setcapGoalDenominator(usersTARGETCAP);
+        setmcRemainder(usersTARGETMC - usersOverallMc);
         setShowGraph(true);
         setProgress(
-          (Math.min(usersOverallMc, MCprogressTotal) / MCprogressTotal) * 100
+          (Math.min(usersOverallMc, usersTARGETMC) / usersTARGETMC) * 100
         );
         setProgress2(
-          (Math.min(usersCurrentCap, capGoalDenominator) / capGoalDenominator) *
-            100
+          (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100
         );
         setCircleLeft(
           whatCircle(
@@ -82,9 +85,7 @@ const ProgressPage = ({ navigation, route }) => {
         );
         setTextToShow(
           whatText(
-            (Math.min(usersCurrentCap, capGoalDenominator) /
-              capGoalDenominator) *
-              100
+            (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100
           )
         );
       }
@@ -98,6 +99,9 @@ const ProgressPage = ({ navigation, route }) => {
         const second = route.params?.items[1];
         setProgress((Math.min(MCs, first) / second) * 100);
         setProgress2((Math.min(cap, second) / second) * 100);
+        setMCprogressTotal(first);
+        setcapGoalDenominator(second);
+        setmcRemainder(first - MCs);
         setCircleLeft(
           whatCircle(
             (Math.min(MCs, first) / first) * 100,
@@ -677,7 +681,7 @@ const ProgressPage = ({ navigation, route }) => {
                   <Text
                     style={{ ...globalFontStyles.OSB_15, color: "#686868" }}
                   >
-                    {Math.max(MCprogressTotal - MCs, 0)}
+                    {Math.max(mcremainder, 0)}
                   </Text>
                 </View>
               </View>
