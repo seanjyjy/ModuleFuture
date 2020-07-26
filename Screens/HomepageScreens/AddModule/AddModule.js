@@ -267,10 +267,21 @@ Entering from records: Filter all modules mapped (to course) + planned
     }
     if (array) {
       return (
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          {arrayToMake.map(({ color, title }, index) => (
-            <ModuleBlocks color={color} key={index} title={title} sum={sum} />
-          ))}
+        <View>
+          <Text
+            style={{
+              ...globalFontStyles.OSSB_13,
+              color: "#232323",
+              marginBottom: 12,
+            }}
+          >
+            {`Workload: ${sum} hrs`}
+          </Text>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            {arrayToMake.map(({ color, title }, index) => (
+              <ModuleBlocks color={color} key={index} title={title} sum={sum} />
+            ))}
+          </View>
         </View>
       );
     }

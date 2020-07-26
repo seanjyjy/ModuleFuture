@@ -8,14 +8,10 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
-  Alert,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import Container1 from "../../../Component/Container1";
 import ModuleBlocks from "../AddModule/ModuleBlocks";
 import Entypo from "react-native-vector-icons/Entypo";
-import Modal from "react-native-modal";
 import { Icon } from "react-native-eva-icons";
 
 const height = Dimensions.get("window").height;
@@ -93,108 +89,124 @@ const ModulePage = (props) => {
   const [origList, setOrigList] = useState(new Set(props.moduleList));
   const [fullList, setFullList] = useState(new Set(props.moduleList));
   const [moduleList, setModuleList] = useState(props.moduleList);
-  const [preReqmodalVisible, setPreReqModalVisible] = useState(false);
-  const [infomodalVisible, setInfoModalVisible] = useState(false);
-  const [infoInfo, setInfoInfo] = useState([]);
-  const [preReqInfo, setpreReqInfo] = useState([]);
 
-  const holders = (item) => (
-    <Container1
-      name={item.name}
-      button1Press={() => {
-        if (item.preclusion && item.prerequisite) {
-          setpreReqInfo([item.preclusion, item.prerequisite]);
-          setPreReqModalVisible(true);
-        } else if (item.preclusion) {
-          setpreReqInfo([item.preclusion, ""]);
-          setPreReqModalVisible(true);
-        } else if (item.prerequisite) {
-          setpreReqInfo(["", item.prerequisite]);
-          setPreReqModalVisible(true);
-        } else {
-          Alert.alert(
-            "Note",
-            "There are no prerequisites nor preclusions for this module",
-            [{ text: "Cancel" }],
-            { cancelable: false }
-          );
-        }
-        return null;
-      }}
-      button2Press={() => {
-        setInfoModalVisible(true);
-        setInfoInfo([
-          item.MC,
-          item.code,
-          item.description,
-          item.semData,
-          item.suOption,
-          item.workLoad,
-        ]);
-        return null;
-      }}
-    />
-  );
-
-  const preReqModal = () => {
-    const prereq = preReqInfo[1];
-    const preclu = preReqInfo[0];
-    return (
-      <Modal
-        style={styles.modalBox2}
-        backdropOpacity={0.3}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        backdropTransitionOutTiming={0}
-        isVisible={preReqmodalVisible}
-        onBackdropPress={() => {
-          setPreReqModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setPreReqModalVisible(false);
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <View style={styles.oneCenter}>
-            <Text style={{ ...globalFontStyles.OSB_15, bottom: 5 }}>
-              Requirements
-            </Text>
-            <View style={{ ...styles.lineDesign, top: 5 }} />
-          </View>
-          <View style={{ flex: 3 }}>
-            <View style={{ flex: 1 }}>
-              <Text style={{ ...styles.headerPreStyling }}>Preclusion</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <View style={{ height: 5 }} />
-              <ScrollView style={styles.ScrollViewStyling}>
-                <Text style={styles.informationStyling}>{preclu}</Text>
-              </ScrollView>
-              <View style={{ height: 2 }} />
-            </View>
-          </View>
-          <View style={{ flex: 3 }}>
-            <View style={{ flex: 1 }}>
-              <Text style={{ ...styles.headerPreStyling }}>Prerequisite</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <View style={{ height: 5 }} />
-              <ScrollView style={styles.ScrollViewStyling}>
-                <Text style={styles.informationStyling}>{prereq}</Text>
-              </ScrollView>
-              <View style={{ height: 2 }} />
-            </View>
-          </View>
-        </View>
-        <View style={{ height: 10 }} />
-      </Modal>
-    );
-  };
   const crossIcon = (
     <Entypo size={20} name="cross" style={{ color: "#FF6C7D", top: 2 }} />
   );
   const tickIcon = (
     <Entypo size={20} name="check" style={{ color: "#4AE8AB", top: 1 }} />
+  );
+
+  const setSem = (array) => {
+    if (array) {
+      const arrOfBoolean = [false, false, false, false];
+      for (let i = 0; i < array.length; i++) {
+        arrOfBoolean[array[i] - 1] = true;
+      }
+      return arrOfBoolean;
+    }
+  };
+
+  const holders = (item) => {
+    const mc = item.MC;
+    const suOptions = item.suOption;
+    let description = item.description;
+    if (description) {
+      description = description.replace(/(\r\n|\n|\r)/gm, "");
+    }
+    const semData = setSem(item.Semester);
+    const workLoad = item.workLoad;
+
+    let totalWork = 0;
+    if (workLoad) {
+      for (let i = 0; i < workLoad.length; i++) {
+        totalWork += workLoad[i];
+      }
+    }
+
+    return (
+      <View style={{ ...styles.container }}>
+        <View
+          style={{
+            width: "78%",
+          }}
+        >
+          <Text
+            numberOfLines={1}
+            style={{
+              ...globalFontStyles.OSSB_14,
+              color: "#232323",
+              marginBottom: 15,
+            }}
+          >
+            {item.name}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignContent: "center",
+              marginBottom: 15,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: 15,
+              }}
+            >
+              <Text style={{ ...styles.suTextStyle, marginRight: 2 }}>
+                SU availability
+              </Text>
+              {suOptions ? tickIcon : crossIcon}
+            </View>
+            <View
+              style={{
+                borderLeftWidth: 1,
+                borderLeftColor: "black",
+                marginRight: 15,
+              }}
+            />
+            <Text
+              style={{
+                alignSelf: "center",
+                ...globalFontStyles.OSSB_14,
+                color: "#2A4F74",
+              }}
+            >{`MCs : ${mc}`}</Text>
+          </View>
+          <Text
+            numberOfLines={4}
+            style={{
+              color: "#3B6EA2",
+              ...globalFontStyles.OSSB_13,
+              marginBottom: 20,
+            }}
+          >
+            {description}
+          </Text>
+          {workLoad ? workloaddisplays(workLoad) : null}
+        </View>
+        <View style={{ width: "22%", alignItems: "flex-end" }}>
+          {sidetab("Sem 1", semData[0])}
+          {sidetab("Sem 2", semData[1])}
+          {sidetab("ST I", semData[2])}
+          {sidetab("ST II", semData[3])}
+        </View>
+      </View>
+    );
+  };
+
+  const sidetab = (sem, bool) => (
+    <View
+      style={{
+        ...styles.sideTab,
+        backgroundColor: bool ? "#FF6B6B" : "#927575",
+      }}
+    >
+      <Text style={{ ...globalFontStyles.OSSB_13, color: "white" }}>{sem}</Text>
+    </View>
   );
 
   const workloaddisplays = (array) => {
@@ -220,101 +232,24 @@ const ModulePage = (props) => {
     }
     if (array) {
       return (
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          {arrayToMake.map(({ color, title }, index) => (
-            <ModuleBlocks color={color} key={index} title={title} sum={sum} />
-          ))}
+        <View>
+          <Text
+            style={{
+              ...globalFontStyles.OSSB_13,
+              color: "#232323",
+              marginBottom: 12,
+            }}
+          >
+            {`Workload: ${sum} hrs`}
+          </Text>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            {arrayToMake.map(({ color, title }, index) => (
+              <ModuleBlocks color={color} key={index} title={title} sum={sum} />
+            ))}
+          </View>
         </View>
       );
     }
-  };
-  const infoModal = () => {
-    const codeName = infoInfo[1];
-    const mc = infoInfo[0];
-    let description = infoInfo[2];
-    if (description) {
-      description = description.replace(/(\r\n|\n|\r)/gm, "");
-    }
-    const semData = infoInfo[3];
-    const suOptions = infoInfo[4];
-    const workLoad = infoInfo[5];
-    let arrOfBoolean = [false, false, false, false];
-    if (semData) {
-      for (let i = 0; i < semData.length; i++) {
-        arrOfBoolean[semData[i].semester - 1] = true;
-      }
-    }
-    return (
-      <Modal
-        style={styles.modalBox}
-        backdropOpacity={0.3}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        backdropTransitionOutTiming={0}
-        isVisible={infomodalVisible}
-        onBackdropPress={() => {
-          setInfoModalVisible(false);
-        }}
-        onBackButtonPress={() => {
-          setInfoModalVisible(false);
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <View style={styles.twoCenter}>
-            <Text style={styles.headerStyling}>{codeName ? codeName : ""}</Text>
-          </View>
-          <View style={styles.lineDesign} />
-          <View style={{ flex: 10 }}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.mdStyle}>Module Details</Text>
-            </View>
-            <View style={{ flex: 12 }}>
-              <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
-                <Text style={{ color: "#3B6EA2", ...globalFontStyles.OSR_13 }}>
-                  {description}
-                </Text>
-                <Text></Text>
-              </ScrollView>
-            </View>
-          </View>
-          <View style={{ flex: 2 }}>
-            <View style={{ height: 10 }} />
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Semester 1</Text>
-                {arrOfBoolean[0] ? tickIcon : crossIcon}
-              </View>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Semester 2</Text>
-                {arrOfBoolean[1] ? tickIcon : crossIcon}
-              </View>
-            </View>
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Special term I</Text>
-                {arrOfBoolean[2] ? tickIcon : crossIcon}
-              </View>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Special term II</Text>
-                {arrOfBoolean[3] ? tickIcon : crossIcon}
-              </View>
-            </View>
-          </View>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <View style={{ ...styles.oneCenter, bottom: 10 }}>
-              <Text style={styles.mcTextStyle}>{`Number of MCs: ${mc}`}</Text>
-            </View>
-            <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-              <Text style={styles.suTextStyle}>SU availability</Text>
-              {suOptions ? tickIcon : crossIcon}
-            </View>
-          </View>
-          <View style={{ ...styles.twoCenter }}>
-            {workLoad ? workloaddisplays(workLoad) : <View />}
-          </View>
-        </View>
-      </Modal>
-    );
   };
 
   return (
@@ -331,8 +266,6 @@ const ModulePage = (props) => {
           ListFooterComponent={<View style={{ height: height * 0.06 - 20 }} />}
         />
       </View>
-      {preReqModal()}
-      {infoModal()}
     </View>
   );
 };
@@ -379,23 +312,11 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     borderRadius: 25,
   },
-  modalBox2: {
-    backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.29,
-    width: width * 0.9,
-    borderRadius: 25,
-  },
   twoCenter: { flex: 2, alignItems: "center", justifyContent: "center" },
   headerStyling: {
     ...globalFontStyles.OSB_17,
     alignSelf: "center",
     color: "#1F3C58",
-  },
-  mcTextStyle: {
-    alignSelf: "center",
-    ...globalFontStyles.OSSB_14,
-    color: "#2A4F74",
   },
   suTextStyle: {
     ...globalFontStyles.OSSB_14,
@@ -428,21 +349,37 @@ const styles = StyleSheet.create({
     ...globalFontStyles.OSB_17,
     color: "#2A4F74",
   },
-  ScrollViewStyling: {
+  container: {
+    backgroundColor: "white",
+    borderRadius: 15,
+    borderColor: "lightgrey",
+    borderWidth: StyleSheet.hairlineWidth * 2,
+
+    width: width * 0.94,
+    height: 275,
+    paddingLeft: 10,
+    paddingTop: 20,
+    marginVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
     flex: 1,
-    paddingHorizontal: 10,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
-  informationStyling: {
-    color: "#3B6EA2",
-    ...globalFontStyles.OSSB_13,
-    alignSelf: "center",
-  },
-  infoBox: {
-    flex: 3,
-    backgroundColor: "#f0f0f0",
-    bottom: 10,
-    width: 0.9 * width - 40,
-    alignSelf: "center",
-    borderRadius: 5,
+  sideTab: {
+    width: 55,
+    height: 30,
+    marginBottom: 0.5,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

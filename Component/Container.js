@@ -51,10 +51,7 @@ const Container = (props) => {
         >
           {/* Prereq button */}
           <TouchableOpacity
-            style={{
-              ...styles.button1,
-              backgroundColor: "#303030",
-            }}
+            style={styles.button1}
             activeOpacity={0.85}
             onPress={() => {
               props.button1Press();
@@ -124,6 +121,6 @@ const styles = StyleSheet.create({
     height: 30,
     width: 75,
     borderRadius: 5,
-    backgroundColor: "#303030",
+    backgroundColor: "#DDAB57",
   },
 });
