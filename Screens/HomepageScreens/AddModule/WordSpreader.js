@@ -4,7 +4,8 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 const width = Dimensions.get("window").width;
 const WordSpreader = ({ arrayToMake, array, sum }) => {
   let index = 0;
-  const widthToUse = sum !== 0 ? (0.9 * width - 50 - sum * 2) / sum : 0;
+  const widthToUse =
+    sum !== 0 ? (0.9 * width - 50 - Math.ceil(sum) * 2) / Math.ceil(sum) : 0;
   return (
     <View style={{ flex: 1, flexDirection: "row" }}>
       {array.map((x) => {
@@ -12,7 +13,7 @@ const WordSpreader = ({ arrayToMake, array, sum }) => {
           const toReturn = (
             <View
               style={{
-                width: widthToUse * x + 4 * x,
+                width: widthToUse * Math.ceil(x) + 4 * Math.ceil(x),
                 justifyContent: "center",
               }}
               key={index}
@@ -20,12 +21,12 @@ const WordSpreader = ({ arrayToMake, array, sum }) => {
               <Text
                 style={{
                   ...globalFontStyles.NSB_11,
-                  color: arrayToMake[Math.floor(index)].color,
+                  color: arrayToMake[Math.ceil(index)].color,
                   bottom: 3,
                   left: 2,
                 }}
               >
-                {arrayToMake[Math.floor(index)].title}
+                {arrayToMake[Math.ceil(index)].title}
               </Text>
             </View>
           );

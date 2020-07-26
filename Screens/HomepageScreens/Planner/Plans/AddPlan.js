@@ -1052,7 +1052,13 @@ const AddPlan = ({ route }) => {
     <View style={styles.headerDesign}>
       <TouchableOpacity
         onPress={() => {
-          return navigation.goBack();
+          if (route.params?.from === "ViewPlan" && route.params?.item) {
+            const received = route.params?.item;
+            const itemToReturn = [...received, false];
+            return navigation.navigate("ViewPlan", { item: itemToReturn });
+          } else {
+            return navigation.goBack();
+          }
         }}
         style={styles.flexOneCenterFlexEnd}
         activeOpacity={0.9}
