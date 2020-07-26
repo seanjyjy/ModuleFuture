@@ -415,9 +415,7 @@ const Filter = ({ navigation, route }) => {
       } else {
         throw "Category does not exist!";
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const textWithIcon2 = (name) => (

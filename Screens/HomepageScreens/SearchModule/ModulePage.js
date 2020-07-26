@@ -249,7 +249,6 @@ const ModulePage = (props) => {
       }
     }
     if (array) {
-      console.log(array.length);
       return (
         <View style={{ flex: 1 }}>
           <Text
