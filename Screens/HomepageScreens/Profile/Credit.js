@@ -45,7 +45,10 @@ const Credit = () => {
           imageStyle={{ borderRadius: 20 }}
         >
           <View style={styles.creditDesign}>
-            <ScrollView style={{ marginHorizontal: 20 }}>
+            <ScrollView
+              style={{ marginHorizontal: 20 }}
+              showsVerticalScrollIndicator={false}
+            >
               <Text style={styles.biggestWords}>About</Text>
               <Text style={styles.biggerWords}>
                 This app was initially customized for SoC students. Since then,
@@ -61,6 +64,9 @@ const Credit = () => {
               <Text style={styles.biggerWords}>
                 Phone size of less than 5 inch will be likely to have inaccurate
                 rendering of the app.
+              </Text>
+              <Text style={styles.biggerWords}>
+                Performance will vary between phones.
               </Text>
               <Text style={styles.biggestWords}>Developers</Text>
               <Text style={styles.biggerWords}>Keane Chan Jun Yu</Text>
