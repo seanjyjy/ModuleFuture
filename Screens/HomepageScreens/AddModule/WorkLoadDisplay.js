@@ -3,15 +3,11 @@ import { View } from "react-native";
 import WordSpreader from "./WordSpreader";
 import ModuleBlocks from "./ModuleBlocks";
 
-const WorkLoadDisplay = ({ arrayToMake, sum }) => {
+const WorkLoadDisplay = ({ arrayToMake, sum, array }) => {
   return (
     <>
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-        {arrayToMake.map(({ color, title }, index) => (
-          <WordSpreader title={title} key={index} color={color} />
-        ))}
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+      <WordSpreader arrayToMake={arrayToMake} array={array} sum={sum} />
+      <View style={{ flexDirection: "row" }}>
         {arrayToMake.map(({ color }, index) => (
           <ModuleBlocks color={color} key={index} sum={sum} />
         ))}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   View,
@@ -14,12 +14,11 @@ import {
   Platform,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import Entypo from "react-native-vector-icons/Entypo";
 import CardWallet from "../../../Component/CardWallet";
 import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { Menu } from "../../../Data/CardList";
 import FirebaseDB from "../../../FirebaseDB";
-import { useSafeArea, SafeAreaView } from "react-native-safe-area-context";
+import { useSafeArea } from "react-native-safe-area-context";
 import { copilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import Button from "./Button";
 

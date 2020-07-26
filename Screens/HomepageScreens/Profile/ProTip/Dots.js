@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 import Animated, { interpolate, Extrapolate } from "react-native-reanimated";
 
 const Dots = ({ index, currentIndex }) => {

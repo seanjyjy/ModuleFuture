@@ -174,7 +174,7 @@ export default function App() {
               loading: true,
             });
           })
-          .catch((error) => error);
+          .catch((error) => {});
       } else {
         setData({ loading: true });
       }

@@ -9,9 +9,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import ModuleBlocks from "../AddModule/ModuleBlocks";
+import WorkLoadDisplay from "../AddModule/WorkLoadDisplay";
 import Entypo from "react-native-vector-icons/Entypo";
 import { Icon } from "react-native-eva-icons";
 
@@ -23,57 +24,62 @@ const ModulePage = (props) => {
 
   const header = (
     <View style={styles.header}>
-      <View style={{ padding: width * 0.05 }}>
-        <Text
-          style={{ ...globalFontStyles.OSB_15, top: 22, alignSelf: "center" }}
-        >
-          Module Search
-        </Text>
-        <View style={styles.second}>
-          <View style={styles.item2}>
+      <ImageBackground
+        style={styles.header}
+        source={require("../../../assets/HeaderBG.png")}
+      >
+        <View style={{ padding: width * 0.05 }}>
+          <Text
+            style={{ ...globalFontStyles.OSB_15, top: 22, alignSelf: "center" }}
+          >
+            Module Search
+          </Text>
+          <View style={styles.second}>
+            <View style={styles.item2}>
+              <Icon
+                style={{ marginLeft: 10, marginRight: 12 }}
+                fill="#808080"
+                width={20}
+                height={20}
+                name="search-outline"
+              />
+              <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
+                <View style={{ flex: 1 }}>
+                  <TextInput
+                    placeholder="Module code, name"
+                    placeholderTextColor="#808080"
+                    autoCapitalize="words"
+                    onChangeText={(text) => {
+                      let newList = Array.from(fullList).filter(
+                        (item) =>
+                          item.lowerCasedName.indexOf(text.toLowerCase()) !== -1
+                      );
+                      setModuleList(newList);
+                    }}
+                    ref={current}
+                  ></TextInput>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
             <Icon
-              style={{ marginLeft: 10, marginRight: 12 }}
-              fill="#76768080"
-              width={20}
-              height={20}
-              name="search-outline"
+              style={{ marginLeft: 10 }}
+              fill="#3FE2D3"
+              width={28}
+              height={28}
+              name="options-2-outline"
+              onPress={() => {
+                props.navigation.navigate("Filter", {
+                  fullList: Array.from(fullList),
+                  currentFilters: filterArr,
+                  origList: Array.from(origList),
+                  loc: "Module",
+                });
+                current.current.clear();
+              }}
             />
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
-              <View style={{ flex: 1 }}>
-                <TextInput
-                  placeholder="Module code, name"
-                  placeholderTextColor="#76768080"
-                  autoCapitalize="words"
-                  onChangeText={(text) => {
-                    let newList = Array.from(fullList).filter(
-                      (item) =>
-                        item.lowerCasedName.indexOf(text.toLowerCase()) !== -1
-                    );
-                    setModuleList(newList);
-                  }}
-                  ref={current}
-                ></TextInput>
-              </View>
-            </TouchableWithoutFeedback>
           </View>
-          <Icon
-            style={{ marginLeft: 10 }}
-            fill="#3FE2D3"
-            width={28}
-            height={28}
-            name="options-2-outline"
-            onPress={() => {
-              props.navigation.navigate("Filter", {
-                fullList: Array.from(fullList),
-                currentFilters: filterArr,
-                origList: Array.from(origList),
-                loc: "Module",
-              });
-              current.current.clear();
-            }}
-          />
         </View>
-      </View>
+      </ImageBackground>
     </View>
   );
 
@@ -232,39 +238,40 @@ const ModulePage = (props) => {
     const colorArray = ["#F49097", "#DFB2F4", "#5467CE", "#5491CE", "#55D6C2"];
     const titleArray = ["Lec", "Tut", "Lab", "Proj", "Prep"];
     const arrayToMake = [];
-    for (let i = 0; i < array.length; i++) {
-      sum += array[i];
-      for (let j = 0; j < array[i]; j++) {
-        if (j === 0) {
-          arrayToMake.push({
-            color: colorArray[i],
-            title: titleArray[i],
-          });
-        } else {
-          arrayToMake.push({
-            color: colorArray[i],
-            title: "",
-          });
+    if (array) {
+      for (let i = 0; i < array.length; i++) {
+        sum += array[i];
+        for (let j = 0; j < array[i]; j++) {
+          if (j === 0) {
+            arrayToMake.push({
+              color: colorArray[i],
+              title: titleArray[i],
+            });
+          } else {
+            arrayToMake.push({
+              color: colorArray[i],
+              title: "",
+            });
+          }
         }
       }
-    }
-    if (array) {
       return (
         <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              ...globalFontStyles.OSSB_13,
-              color: "#333333",
-              marginBottom: 10,
-            }}
-          >
-            {`Workload: ${sum} hrs`}
-          </Text>
-          <View style={{ flexDirection: "row", flex: 1 }}>
-            {arrayToMake.map(({ color, title }, index) => (
-              <ModuleBlocks color={color} key={index} title={title} sum={sum} />
-            ))}
+          <View style={{ flex: 2, top: 5 }}>
+            <View>
+              <Text
+                style={{ ...styles.workloadStyling, bottom: 10 }}
+              >{`Workload: ${sum} hrs`}</Text>
+            </View>
+            <View style={{ width: width * 0.9 - 20, flex: 1 }}>
+              <WorkLoadDisplay
+                arrayToMake={arrayToMake}
+                sum={sum}
+                array={array}
+              />
+            </View>
           </View>
+          <View style={{ flex: 1 }} />
         </View>
       );
     }
@@ -311,7 +318,7 @@ const styles = StyleSheet.create({
   },
   item2: {
     flexDirection: "row",
-    backgroundColor: "#7676801F",
+    backgroundColor: "#3E3D3D1F",
     height: "100%",
     width: "88%",
     alignItems: "center",
@@ -333,7 +340,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: "lightgrey",
     borderWidth: StyleSheet.hairlineWidth * 3,
-    width: width * 0.92,
+    width: width * 0.95,
     paddingLeft: 18,
     paddingTop: 18,
     marginVertical: 10,
@@ -357,5 +364,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+  },
+  workloadStyling: {
+    ...globalFontStyles.OSSB_13,
+    color: "#333333",
+    bottom: 5,
   },
 });

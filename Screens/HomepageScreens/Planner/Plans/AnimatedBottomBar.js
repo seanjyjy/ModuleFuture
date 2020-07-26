@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Animated, StyleSheet, Dimensions } from "react-native";
+import { Animated, StyleSheet, Dimensions } from "react-native";
 import { Icon } from "react-native-eva-icons";
 import { useNavigation } from "@react-navigation/native";
 

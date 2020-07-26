@@ -201,7 +201,7 @@ const AddModule = (props) => {
           backgroundColor: "white",
           alignSelf: "center",
           marginVertical: height * 0.29,
-          width: width * 0.9,
+          width: width * 0.95,
           borderRadius: 25,
         },
       },
@@ -212,7 +212,7 @@ const AddModule = (props) => {
           backgroundColor: "white",
           alignSelf: "center",
           marginVertical: height * 0.36,
-          width: width * 0.9,
+          width: width * 0.95,
           borderRadius: 25,
         },
       },
@@ -223,7 +223,7 @@ const AddModule = (props) => {
           backgroundColor: "white",
           alignSelf: "center",
           marginVertical: height * 0.36,
-          width: width * 0.9,
+          width: width * 0.95,
           borderRadius: 25,
         },
       },
@@ -331,7 +331,7 @@ const AddModule = (props) => {
     const arrayToMake = [];
     for (let i = 0; i < array.length; i++) {
       sum += array[i];
-      for (let j = 0; j < array[i]; j++) {
+      for (let j = 0; j < Math.floor(array[i]); j++) {
         if (j === 0) {
           arrayToMake.push({
             color: colorArray[i],
@@ -349,8 +349,18 @@ const AddModule = (props) => {
       return (
         <View style={{ flex: 1, bottom: 7 }}>
           <Text style={styles.workloadStyling}>{`Workload: ${sum} hrs`}</Text>
-          <View style={{ flex: 1, width: width * 0.9 - 20 }}>
-            <WorkLoadDisplay arrayToMake={arrayToMake} sum={sum} />
+          <View
+            style={{
+              flex: 1,
+              width: width * 0.9 - 20,
+              bottom: 3,
+            }}
+          >
+            <WorkLoadDisplay
+              arrayToMake={arrayToMake}
+              sum={sum}
+              array={array}
+            />
           </View>
         </View>
       );
@@ -389,8 +399,8 @@ const AddModule = (props) => {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * 0.23,
-          width: width * 0.9,
+          marginVertical: height * 0.22,
+          width: width * 0.95,
           borderRadius: 25,
         },
         descriptionflex: 6,
@@ -400,8 +410,8 @@ const AddModule = (props) => {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * 0.32,
-          width: width * 0.9,
+          marginVertical: height * 0.31,
+          width: width * 0.95,
           borderRadius: 25,
         },
         descriptionflex: 0,
@@ -411,8 +421,8 @@ const AddModule = (props) => {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * 0.27,
-          width: width * 0.9,
+          marginVertical: height * 0.26,
+          width: width * 0.95,
           borderRadius: 25,
         },
         descriptionflex: 6,
@@ -422,7 +432,7 @@ const AddModule = (props) => {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * 0.37,
+          marginVertical: height * 0.36,
           width: width * 0.9,
           borderRadius: 25,
         },

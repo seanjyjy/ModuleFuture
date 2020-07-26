@@ -1,5 +1,4 @@
 import React from "react";
-import { View, StyleSheet, Text, TextInput } from "react-native";
 import Plans from "./Plans";
 
 console.disableYellowBox = true;

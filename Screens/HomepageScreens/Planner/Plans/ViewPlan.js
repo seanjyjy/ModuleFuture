@@ -5,12 +5,10 @@ import {
   Text,
   Dimensions,
   FlatList,
-  Animated,
   Image,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import EntypoIcon from "react-native-vector-icons/Entypo";
-import { Avatar } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { useSafeArea } from "react-native-safe-area-context";

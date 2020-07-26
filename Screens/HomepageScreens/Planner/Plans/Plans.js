@@ -82,8 +82,7 @@ const calcTime = (dateInStr) => {
     return previousDateArray[0] + " " + previousDateArray[1];
   }
 };
-//date is Sun Jul 19 01:05:19 2020
-//dateInStr is Sun Jul 19 01:02:17 2020
+
 const dateExtractor = (str) => {
   let tempStr = "";
   let timeStr = "";
@@ -221,7 +220,6 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                {/* {`Last Updated: ${LastUpdated}`} */}
                 {calcTime(LastUpdated)}
               </Text>
             </View>
@@ -1331,7 +1329,7 @@ const Plans = (props) => {
                   }
                 }
               })
-              .catch((error) => alert(error));
+              .catch((error) => {});
           }
         }}
       >
@@ -1402,7 +1400,7 @@ const Plans = (props) => {
                         });
                       }
                     })
-                    .catch((error) => alert(error));
+                    .catch((error) => {});
                 } else {
                   plansArrayRef.update({
                     selected: "-1",
@@ -1537,7 +1535,7 @@ const Plans = (props) => {
                           });
                         }
                       })
-                      .catch((error) => alert(error));
+                      .catch((error) => {});
                   } else {
                     plansArrayRef.update({
                       selected: "-1",
@@ -1575,7 +1573,7 @@ const Plans = (props) => {
                         });
                       }
                     })
-                    .catch((error) => alert(error));
+                    .catch((error) => {});
                 }
               }}
             >

@@ -139,7 +139,7 @@ const AddPlan = ({ route }) => {
           }
         }
       })
-      .catch((error) => alert(error));
+      .catch((error) => {});
     return [isThereAPast, name, yearExtractor(docLoc)];
   };
 
@@ -1079,9 +1079,6 @@ const AddPlan = ({ route }) => {
               [{ text: "Cancel", onPress: () => {} }],
               { cancelable: false }
             );
-            // alert("Please add some modules into your plans");
-            // } else if (!TargetGradesFilled(data)) {
-            //   alert("Please fill in your target grades to advance");
           } else if (checkMcs(data) && block) {
             Alert.alert(
               "Warning",
@@ -1092,7 +1089,6 @@ const AddPlan = ({ route }) => {
                   text: "Continue",
                   onPress: () => {
                     setBlock("false");
-                    //nextPage();
                     firstChecks();
                   },
                 },
@@ -1101,7 +1097,6 @@ const AddPlan = ({ route }) => {
             );
           } else {
             firstChecks();
-            //nextPage();
           }
         }}
         style={styles.flexOneCenterFlexEnd}

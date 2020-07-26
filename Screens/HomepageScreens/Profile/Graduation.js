@@ -97,7 +97,7 @@ const Graduation = ({ navigation, route }) => {
                 .update({
                   expectedSemGrad: arr[currentYear],
                 })
-                .catch((error) => null);
+                .catch((error) => {});
               navigation.navigate("Profile", { grad: arr[currentYear] });
             }}
           />

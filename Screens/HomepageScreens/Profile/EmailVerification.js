@@ -69,7 +69,7 @@ const EmailVerification = () => {
           { cancelable: false }
         );
       })
-      .catch((error) => alert(error));
+      .catch((error) => {});
   };
   const verified = () => {
     return (
