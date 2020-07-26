@@ -14,7 +14,6 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
 import Modal from "react-native-modal";
-import FirebaseDB from "../../../FirebaseDB";
 
 console.disableYellowBox = true;
 

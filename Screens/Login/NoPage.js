@@ -117,7 +117,7 @@ const reviewSchema = yup.object({
         return FirebaseDB.auth()
           .fetchSignInMethodsForEmail(val.toLowerCase())
           .then((array) => array.length === 0)
-          .catch((error) => alert(error));
+          .catch((error) => {});
       }
       return true;
     }),
