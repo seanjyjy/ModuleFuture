@@ -13,8 +13,6 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-console.disableYellowBox = true;
-
 const SeeModules = ({ navigation, route }) => {
   const [modArr, setModArr] = useState([]);
   const [MCcount, setMCcount] = useState(0);
@@ -83,7 +81,7 @@ const SeeModules = ({ navigation, route }) => {
         <Text
           style={{ bottom: 10, ...globalFontStyles.NB_20, color: "#232323" }}
         >
-          Modules added
+          Modules Added
         </Text>
       </View>
       <TouchableOpacity
@@ -112,17 +110,18 @@ const SeeModules = ({ navigation, route }) => {
       alignSelf: "center",
       marginTop: 20,
       borderRadius: 14,
-      borderColor: "#C6C6C6",
       justifyContent: "space-between",
       alignContent: "stretch",
-      shadowColor: "#000",
+      shadowColor: "#333333",
       shadowOffset: {
         width: 0,
-        height: 2,
+        height: 1,
       },
-      shadowOpacity: 0.23,
-      shadowRadius: 2.62,
-      elevation: 4,
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+      elevation: 3,
+      borderBottomWidth: 1,
+      borderColor: "#DDDDDD",
       flexDirection: "column",
       backgroundColor: "white",
     },

@@ -14,8 +14,8 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import CircularBarProgress from "../../../Component/CircularBarProgress";
 import { LineChart } from "react-native-chart-kit";
 import Modal from "react-native-modal";
-import FirebaseDB from "../../../FirebaseDB";
-import { set } from "react-native-reanimated";
+
+console.disableYellowBox = true;
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -26,29 +26,9 @@ const ProgressPage = ({ navigation, route }) => {
   const [OverallData, setOverallData] = useState([]);
   const [previousCap, setPreviousCap] = useState(0);
   const [allowClicks, setAllowClicks] = useState(false);
+  const [userID, setUserID] = useState("");
+  const [mcremainder, setmcRemainder] = useState(0);
   useEffect(() => {
-    if (route.params?.items && route.params?.from === "ProgressPageSettings") {
-      const first = route.params?.items[0];
-      const second = route.params?.items[1];
-
-      setMCprogressTotal(first);
-      setcapGoalDenominator(second);
-      setProgress((Math.min(MCs, first) / second) * 100);
-      setProgress2((Math.min(cap, second) / second) * 100);
-      setCircleLeft(
-        whatCircle((Math.min(MCs, first) / first) * 100, MCs, first, "#169A7F")
-      );
-      setCircleRight(
-        whatCircle(
-          (Math.min(cap, second) / second) * 100,
-          cap,
-          second,
-          "#B25DE4"
-        )
-      );
-      setTextToShow(whatText((Math.min(cap, second) / second) * 100));
-    }
-
     if (
       route.params?.usersDetails &&
       route.params?.usersDetails.CapArray.length > 0 &&
@@ -76,76 +56,115 @@ const ProgressPage = ({ navigation, route }) => {
         setOverallData(route.params?.usersDetails.CapArray);
         setCap(usersCurrentCap);
         setMCs(usersOverallMc);
+        setMCprogressTotal(usersTARGETMC);
+        setcapGoalDenominator(usersTARGETCAP);
+        setmcRemainder(usersTARGETMC - usersOverallMc);
         setShowGraph(true);
         setProgress(
-          (Math.min(usersOverallMc, MCprogressTotal) / MCprogressTotal) * 100
+          (Math.min(usersOverallMc, usersTARGETMC) / usersTARGETMC) * 100
         );
         setProgress2(
-          (Math.min(usersCurrentCap, capGoalDenominator) / capGoalDenominator) *
-            100
+          (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100
         );
         setCircleLeft(
           whatCircle(
-            (Math.min(usersOverallMc, MCprogressTotal) / MCprogressTotal) * 100,
+            (Math.min(usersOverallMc, usersTARGETMC) / usersTARGETMC) * 100,
             usersOverallMc,
             usersTARGETMC,
-            "#169A7F"
+            "#12DDB3"
           )
         );
         setCircleRight(
           whatCircle(
-            (Math.min(usersCurrentCap, capGoalDenominator) /
-              capGoalDenominator) *
-              100,
+            (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100,
             usersCurrentCap,
             usersTARGETCAP,
-            "#B25DE4"
+            "#C86FFC"
           )
         );
         setTextToShow(
           whatText(
-            (Math.min(usersCurrentCap, capGoalDenominator) /
-              capGoalDenominator) *
-              100
+            (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100
           )
         );
       }
       setAllowClicks(true);
     } else {
-      setAllowClicks(false);
-      //GET THE DATA FROM THE USERS
-      setLineData({
-        labels: [
-          "Y1S1",
-          "Y1S2",
-          "Y2S1",
-          "Y2S2",
-          "Y3S1",
-          "Y3S2",
-          "Y4S1",
-          "Y4S2",
-          "Y5S1",
-          "Y5S2",
-        ],
-        datasets: [
-          {
-            data: [0],
-            strokeWidth: 2,
-          },
-        ],
-      });
-      setShowGraph(true);
-      setProgress(0);
-      setProgress2(0);
-      setCircleLeft(whatCircle(0, 0, 160, "#169A7F"));
-      setCircleRight(whatCircle(0, 0, 5, "#B25DE4"));
-      setTextToShow(whatText(0));
+      if (
+        route.params?.items &&
+        route.params?.from === "ProgressPageSettings"
+      ) {
+        const first = route.params?.items[0];
+        const second = route.params?.items[1];
+        setProgress((Math.min(MCs, first) / second) * 100);
+        setProgress2((Math.min(cap, second) / second) * 100);
+        setMCprogressTotal(first);
+        setcapGoalDenominator(second);
+        setmcRemainder(first - MCs);
+        setCircleLeft(
+          whatCircle(
+            (Math.min(MCs, first) / first) * 100,
+            MCs,
+            first,
+            "#12DDB3"
+          )
+        );
+        setCircleRight(
+          whatCircle(
+            (Math.min(cap, second) / second) * 100,
+            cap,
+            second,
+            "#C86FFC"
+          )
+        );
+        setTextToShow(whatText((Math.min(cap, second) / second) * 100));
+        if (route.params?.userID) {
+          setUserID(route.params?.userID);
+        }
+      } else {
+        setAllowClicks(false);
+        //GET THE DATA FROM THE USERS TO SEE TO SHOW TILL Y4S2 OR Y5S2
+        if (route.params?.gradSem === "Y3S1") {
+          setLineData({ labels: arrayY3S1, datasets: datasetsForAll });
+        } else if (route.params?.gradSem === "Y3S2") {
+          setLineData({ labels: arrayY3S2, datasets: datasetsForAll });
+        } else if (route.params?.gradSem === "Y4S1") {
+          setLineData({ labels: arrayY4S1, datasets: datasetsForAll });
+        } else if (route.params?.gradSem === "Y4S2") {
+          setLineData({ labels: arrayY4S2, datasets: datasetsForAll });
+        } else if (route.params?.gradSem === "Y5S1") {
+          setLineData({ labels: arrayY5S1, datasets: datasetsForAll });
+        } else {
+          setLineData({ labels: arrayY5S2, datasets: datasetsForAll });
+        }
+        setShowGraph(true);
+        setProgress(0);
+        setProgress2(0);
+        setCircleLeft(whatCircle(0, 0, 160, "#12DDB3"));
+        setCircleRight(whatCircle(0, 0, 5, "#C86FFC"));
+        setTextToShow(whatText(0));
+        if (route.params?.userID) {
+          setUserID(route.params?.userID);
+        }
+      }
     }
   }, [route.params?.items, route.params?.usersDetails]);
 
+  const arrayY3S1 = ["Y1S1", "Y1S2", "Y2S1", "Y2S1", "Y3S1"];
+  const arrayY3S2 = [...arrayY3S1, "Y3S2"];
+  const arrayY4S1 = [...arrayY3S2, "Y4S1"];
+  const arrayY4S2 = [...arrayY4S1, "Y4S2"];
+  const arrayY5S1 = [...arrayY4S2, "Y5S1"];
+  const arrayY5S2 = [...arrayY5S1, "Y5S2"];
+  const datasetsForAll = [
+    {
+      data: [0],
+      strokeWidth: 2,
+    },
+  ];
+
   // ***********************************************this data is going to get from the back end data*****************************************************
 
-  const [userID, setUserID] = useState("");
   const [cap, setCap] = useState(0); // ********************************** 8this data is calculated from user's current standing *************************************
   const [MCs, setMCs] = useState(0); //**********************************/ this data is calculated from user's current standing ************************************
 
@@ -170,7 +189,7 @@ const ProgressPage = ({ navigation, route }) => {
       progress={progress}
       size={0.4 * width}
       strokeWidth={7}
-      circleOuterStroke="#169A7F"
+      circleOuterStroke="#12DDB3"
       circleInnerStroke="#E5E5E5"
       numerator={MCs}
       denominator={MCprogressTotal}
@@ -182,7 +201,7 @@ const ProgressPage = ({ navigation, route }) => {
       progress={progress2}
       size={0.4 * width}
       strokeWidth={7}
-      circleOuterStroke="#B25DE4"
+      circleOuterStroke="#C86FFC"
       circleInnerStroke="#E5E5E5"
       numerator={cap}
       denominator={capGoalDenominator}
@@ -468,9 +487,9 @@ const ProgressPage = ({ navigation, route }) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("ProgressPageSettings", { userID: userID })
-          }
+          onPress={() => {
+            navigation.navigate("ProgressPageSettings", { userID: userID });
+          }}
           activeOpacity={0.9}
           style={{
             flex: 1,
@@ -585,7 +604,7 @@ const ProgressPage = ({ navigation, route }) => {
                   }}
                 >
                   <View
-                    style={{ backgroundColor: "#169A7F", ...styles.dotDesign }}
+                    style={{ backgroundColor: "#12DDB3", ...styles.dotDesign }}
                   />
                 </View>
 
@@ -633,7 +652,7 @@ const ProgressPage = ({ navigation, route }) => {
                   }}
                 >
                   <View
-                    style={{ backgroundColor: "#169A7F", ...styles.dotDesign }}
+                    style={{ backgroundColor: "#12DDB3", ...styles.dotDesign }}
                   />
                 </View>
 
@@ -661,7 +680,7 @@ const ProgressPage = ({ navigation, route }) => {
                   <Text
                     style={{ ...globalFontStyles.OSB_15, color: "#686868" }}
                   >
-                    {Math.max(MCprogressTotal - MCs, 0)}
+                    {Math.max(mcremainder, 0)}
                   </Text>
                 </View>
               </View>
@@ -714,7 +733,7 @@ const ProgressPage = ({ navigation, route }) => {
                 }}
               >
                 <View
-                  style={{ backgroundColor: "#B25DE4", ...styles.dotDesign }}
+                  style={{ backgroundColor: "#C86FFC", ...styles.dotDesign }}
                 />
               </View>
               {/* -------------------------------------------Right Section ----------------------------------------------------- */}

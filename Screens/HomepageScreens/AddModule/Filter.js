@@ -18,7 +18,6 @@ export const TodosDispatch = React.createContext(null);
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-console.disableYellowBox = true;
 const Filter = ({ navigation, route }) => {
   useEffect(() => {
     if (route.params?.fullList) {
@@ -378,7 +377,7 @@ const Filter = ({ navigation, route }) => {
             : name === "Special Term I"
             ? 3
             : 4;
-        tempList = tempList.filter((x) => x.Semester.has(num));
+        tempList = tempList.filter((x) => x.Semester.includes(num));
         setList(tempList);
       } else if (cat === "Level") {
         tempList = tempList.filter((x) => x.Level === parseInt(name));
@@ -403,9 +402,7 @@ const Filter = ({ navigation, route }) => {
       } else {
         throw "Category does not exist!";
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const filterAll = (filters) => {
@@ -494,7 +491,7 @@ const Filter = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       {header}
-      <View style={{ marginBottom: height * 0.21, width: "83.6%" }}>
+      <View style={{ marginBottom: height * 0.23, width: "83.6%" }}>
         <FlatList
           ListHeaderComponent={FilterHeader}
           ListFooterComponent={otherSection}
@@ -506,8 +503,9 @@ const Filter = ({ navigation, route }) => {
       </View>
       <BottomBar
         leftText={"Clear all"}
+        opacity={0.7}
         transition={() =>
-          navigation.navigate("AddModule", {
+          navigation.navigate(route.params.loc, {
             afterFilter: list,
             currentFilters: filterArr,
             locationFrom: "Filter",

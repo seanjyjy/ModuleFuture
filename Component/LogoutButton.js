@@ -16,7 +16,6 @@ const LogoutButton = (props) => {
     <TouchableOpacity
       style={styles.buttonDesign}
       activeOpacity={0.875}
-      // TEMPORARY SOLUTION TO THE LOG OUT
       onPress={() => props.func()}
     >
       <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
@@ -28,16 +27,16 @@ const LogoutButton = (props) => {
 
 export default LogoutButton;
 const screenwidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   buttonDesign: {
     height: 40,
     backgroundColor: "#FB5581",
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "center",
     marginTop: 25,
     borderRadius: 10,
-    width: screenwidth * 0.845,
+    width: "95%",
     elevation: 6,
     shadowOffset: {
       width: 0,

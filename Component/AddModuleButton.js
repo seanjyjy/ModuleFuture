@@ -7,8 +7,8 @@ const AddModuleButton = (props) => {
     <Icon
       style={styles.buttonDesign}
       name="plus-circle"
-      width={47}
-      height={47}
+      width={props.size}
+      height={props.size}
       fill="#393939"
       onPress={() => props.func()}
     />

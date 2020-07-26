@@ -5,11 +5,10 @@ import {
   Text,
   Dimensions,
   FlatList,
-  Animated,
+  Image,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import EntypoIcon from "react-native-vector-icons/Entypo";
-import { Avatar } from "@ui-kitten/components";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import FontisoIcon from "react-native-vector-icons/Fontisto";
 import { useSafeArea } from "react-native-safe-area-context";
@@ -21,6 +20,8 @@ import Tabs from "./Tabs";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+
+console.disableYellowBox = true;
 
 const ViewPlan = ({ route }) => {
   const navigation = useNavigation();
@@ -39,6 +40,8 @@ const ViewPlan = ({ route }) => {
   const [usersDetails, setUsersDetails] = useState([]);
   const [arrToUse, setArrToUse] = useState([]);
   const [selectedplansinfo, setselectedplansinfo] = useState([]);
+  const [gradSem, setGradSem] = useState("");
+  const [currentSem, setCurrentSem] = useState("");
   useEffect(() => {
     if (route.params?.item) {
       setDocLoc(route.params?.item[1]);
@@ -47,7 +50,6 @@ const ViewPlan = ({ route }) => {
       setFromWhere(route.params?.item[3]);
       setTitle(route.params?.item[0]);
       setfavourite(route.params?.item[5]);
-      //whatsTheCurrentSem(docLoc);
       if (route.params?.item[1] && route.params?.item[3]) {
         setUserID(userIDextractor(route.params?.item[1]));
         setUserRef(
@@ -62,6 +64,7 @@ const ViewPlan = ({ route }) => {
           const val = document.data();
           setUsersDetails(val);
           const sem = val.expectedSemGrad;
+          setGradSem(sem);
           let arrLength = 0;
           if (calculatorOfSem(sem) <= 5) {
             setSemList(semListY3S2);
@@ -74,7 +77,7 @@ const ViewPlan = ({ route }) => {
             arrLength = 10;
           }
           setselectedplansinfo(val.SelectedPlansInfo);
-
+          setCurrentSem(findCurrentSem(val.yearOfMatri));
           const arrToUse = whatArrayOfInfoToDisplay(
             route.params?.item[3],
             arrLength
@@ -110,6 +113,23 @@ const ViewPlan = ({ route }) => {
       totalSum += val[i].McUsedInCap * val[i].Cap;
     }
     return [totalSum, totalMCs];
+  };
+
+  const findCurrentSem = (yearOfMatri) => {
+    let today = new Date();
+    let getMonth = today.getMonth() + 1;
+    let getYear = today.getFullYear();
+    let numYear = getYear - yearOfMatri;
+    let textToReturn = "";
+    if (getMonth < 8) {
+      //before august
+      textToReturn += "Y" + numYear + "S2";
+    } else {
+      //during and after august consider start of sem as of 1st aug
+      textToReturn += "Y" + (numYear + 1) + "S1";
+    }
+    // show Y0S2 or ???
+    return textToReturn;
   };
 
   const infoExtractor = async (
@@ -182,17 +202,6 @@ const ViewPlan = ({ route }) => {
       return [num - 1, num + 1, num + 2];
     }
   };
-  // need to get current year and approximate time? in order to calculate current semester
-  // const whatsTheCurrentSem = (val) => {
-  //   const userID = userIDextractor(val);
-  //   const userRef = FirebaseDB.firestore().collection("users").doc(userID);
-  //   userRef
-  //     .get((document) => {
-  //       const val = document.data();
-  //       const year = val.yearOfMatri;
-  //     })
-  //     .then((error) => alert(error));
-  // };
 
   const semListY3S2 = ["Y1S1", "Y1S2", "Y2S1", "Y2S2", "Y3S1", "Y3S2"];
   const semListY4S2 = [...semListY3S2, "Y4S1", "Y4S2"];
@@ -307,6 +316,7 @@ const ViewPlan = ({ route }) => {
               usersDetails: usersDetails,
               from: "ViewPlan",
               userID: userID,
+              gradSem: gradSem,
             }),
           400
         );
@@ -412,36 +422,25 @@ const ViewPlan = ({ route }) => {
         backdropOpacity={0.3}
         onBackdropPress={() => setModalVisible(false)}
       >
-        <View
-          style={{
-            width: 0.6 * width,
-            height: height,
-            backgroundColor: "white",
-            right: 0.1 * width,
-          }}
-        >
+        <View style={styles.customDrawerContainer}>
           <View style={{ flex: 7 }}>
             {/* "Profile information portion" */}
             <View style={{ flex: 1 }}>
               <View style={{ flex: 1 }} />
-              <View
-                style={{
-                  flex: 2,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Avatar
-                  style={styles.avatar}
-                  size="giant"
-                  source={require("../../../../assets/JumpingMan.png")}
+              <View style={styles.centerThree}>
+                <Image
+                  source={require("../../../../assets/ModuleFutureLogo1.png")}
+                  style={{
+                    ...styles.imageStylingForDrawer,
+                    left: 0.02 * width,
+                  }}
                 />
               </View>
               <View style={styles.oneCenter}>
                 <Text
-                  style={{ ...globalFontStyles.NB_14, right: 0.045 * width }}
+                  style={{ ...globalFontStyles.NB_14, left: 0.015 * width }}
                 >
-                  Current Sem:
+                  {`Current Acad Sem: ${currentSem}`}
                 </Text>
               </View>
             </View>
@@ -455,21 +454,8 @@ const ViewPlan = ({ route }) => {
                   {ProgressButon}
                   {SmartRecall(fromWhere)}
                 </View>
-                <Text
-                  style={{
-                    ...globalFontStyles.NB_15,
-                    left: 0.11 * width,
-                    top: 0.01 * height,
-                  }}
-                >
-                  Also see
-                </Text>
-                <View
-                  style={{
-                    flex: 3,
-                    top: 0.02 * height,
-                  }}
-                >
+                <Text style={styles.alsoSee}>Also see</Text>
+                <View style={{ flex: 3, top: 0.02 * height }}>
                   {SmartRecall2}
                   {SmartRecall3}
                   {SmartRecall4}
@@ -588,12 +574,7 @@ const ViewPlan = ({ route }) => {
                   from: "ViewPlan",
                 });
               }}
-              style={{
-                bottom: 12,
-                ...globalFontStyles.NB_14,
-                color: "#007AFF",
-                left: 15,
-              }}
+              style={styles.editStyling}
             >
               Edit
             </Text>
@@ -633,11 +614,7 @@ const ViewPlan = ({ route }) => {
             }}
           >
             <Text
-              style={{
-                left: 15,
-                ...globalFontStyles.NB_15,
-                color: "#4a4e5d",
-              }}
+              style={styles.left15NB154a4e5d}
             >{`Module: ${moduleCode}`}</Text>
           </View>
           <View
@@ -660,11 +637,7 @@ const ViewPlan = ({ route }) => {
               }}
             >
               <Text
-                style={{
-                  left: 15,
-                  ...globalFontStyles.NB_15,
-                  color: "#4a4e5d",
-                }}
+                style={styles.left15NB154a4e5d}
               >{`Final grade: ${FinalGrade}`}</Text>
             </View>
           )}
@@ -692,7 +665,9 @@ const ViewPlan = ({ route }) => {
   return (
     <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {Header()}
-      <View style={{ ...styles.oneCenter, backgroundColor: "transparent" }}>
+      <View
+        style={{ ...styles.oneCenter, backgroundColor: "transparent", top: 5 }}
+      >
         <View
           style={{
             ...styles.container,
@@ -777,13 +752,20 @@ const styles = StyleSheet.create({
     color: "#232323",
   },
   headerDesign: {
-    width: width,
     height: 0.11 * height,
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomWidth: 0.3,
     backgroundColor: "#f9f9f9",
+    shadowColor: "#333333",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+    borderBottomWidth: 1,
+    borderColor: "#DDDDDD",
   },
   lineAtPlan: {
     width: 0.85 * width,
@@ -821,5 +803,37 @@ const styles = StyleSheet.create({
   },
   avatar: {
     margin: 8,
+  },
+  centerThree: {
+    flex: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  alsoSee: {
+    ...globalFontStyles.NB_15,
+    left: 0.11 * width,
+    top: 0.01 * height,
+  },
+  editStyling: {
+    bottom: 12,
+    ...globalFontStyles.NB_14,
+    color: "#007AFF",
+    left: 15,
+  },
+  customDrawerContainer: {
+    width: 0.6 * width,
+    height: height,
+    backgroundColor: "white",
+    right: 0.1 * width,
+  },
+  left15NB154a4e5d: {
+    left: 15,
+    ...globalFontStyles.NB_15,
+    color: "#4a4e5d",
+  },
+  imageStylingForDrawer: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
   },
 });

@@ -3,3 +3,13 @@ node_modules/**/*
 package-lock.json
 package.json
 .DS_Store
+.firebaserc
+database.rules.json
+firebase.json
+firestore.rules
+storage.rules
+.eslintrc.json
+index.html
+index.js
+firestore.indexes.json
+node_modules

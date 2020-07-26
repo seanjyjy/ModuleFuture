@@ -6,11 +6,13 @@ import {
   StyleSheet,
   Text,
   Animated,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "./HomepageScreens/Profile/Profile";
 import Records from "./HomepageScreens/Records/Records";
-import ModulePage from "./HomepageScreens/ModulePage";
+import ModulePage from "./HomepageScreens/SearchModule/ModulePage";
 import Planner from "../Screens/HomepageScreens/Planner/Planner";
 import FocusArea from "./HomepageScreens/FocusArea/FocusArea";
 import { globalFontStyles } from "../Component/GlobalFont";
@@ -19,8 +21,6 @@ import { useSafeArea } from "react-native-safe-area-context";
 import FirebaseDB from "../FirebaseDB";
 
 const totalWidth = Dimensions.get("window").width;
-const totalHeight = Dimensions.get("window").height;
-
 const textToReturn = (str) => {
   if (str === "Planner") {
     return "calendar";
@@ -44,16 +44,62 @@ const TabDesign = (props) => {
         alignItems: "center",
       }}
     >
-      <Icon
-        name={props.iconName}
-        size={19}
-        style={{ color: props.isCurrent ? "#FB5581" : "#979797" }}
-      />
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <View />
+        <Icon
+          name={props.iconName}
+          size={19}
+          style={{
+            color: props.isCurrent ? "#FB5581" : "#979797",
+            left:
+              !FirebaseDB.auth().currentUser.emailVerified &&
+              props.iconName === "user-circle"
+                ? 8
+                : 0,
+            top:
+              !FirebaseDB.auth().currentUser.emailVerified &&
+              props.iconName === "user-circle"
+                ? 2
+                : 0,
+          }}
+        />
+        {!FirebaseDB.auth().currentUser.emailVerified &&
+        props.iconName === "user-circle" ? (
+          <View
+            style={{
+              backgroundColor: "red",
+              height: 15,
+              width: 15,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 20,
+              bottom: 2,
+              left: 0.03 * totalWidth,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 12, left: 0.5 }}>!</Text>
+          </View>
+        ) : (
+          <View />
+        )}
+      </View>
       <Text
         style={
           props.isCurrent
-            ? { ...globalFontStyles.OSB_13, color: "#FB5581", top: 5 }
-            : { ...globalFontStyles.OSSB_13, color: "#8E8E8E", top: 5 }
+            ? {
+                ...globalFontStyles.OSB_13,
+                color: "#FB5581",
+                top: 5,
+              }
+            : {
+                ...globalFontStyles.OSSB_13,
+                color: "#8E8E8E",
+                top: 5,
+              }
         }
       >
         {props.name}
@@ -151,32 +197,34 @@ const TabBar = ({ state, descriptors, navigation }) => {
 const Homepage = (data) => {
   const Tab = createBottomTabNavigator();
   const val = useSafeArea().bottom;
-
+  if (Platform.OS === "android") {
+    StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+    StatusBar.setBarStyle("dark-content");
+    StatusBar.setTranslucent(true);
+  }
   return (
-    <View style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-        <Tab.Screen name="Planner">
-          {(props) => <Planner {...props} extraData={data.extraData} />}
-        </Tab.Screen>
-        <Tab.Screen name="Records">
-          {(props) => <Records {...props} recordsData={data.recordsData} />}
-        </Tab.Screen>
-        <Tab.Screen name="Focus" component={FocusArea} />
-        <Tab.Screen name="Module" component={ModulePage} />
-        <Tab.Screen name="Profile">
-          {(props) => <Profile {...props} extraData={data.extraData} />}
-        </Tab.Screen>
-      </Tab.Navigator>
-      {val > 0 && (
-        <View style={{ height: val - 5, backgroundColor: "white" }} />
-      )}
-    </View>
+    <>
+      <View style={{ flex: 1 }}>
+        <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+          <Tab.Screen name="Planner">
+            {(props) => <Planner {...props} extraData={data.extraData} />}
+          </Tab.Screen>
+          <Tab.Screen name="Records" component={Records} />
+          <Tab.Screen name="Focus" component={FocusArea} />
+          <Tab.Screen name="Module">
+            {(props) => <ModulePage {...props} moduleList={data.moduleList} />}
+          </Tab.Screen>
+          <Tab.Screen name="Profile">
+            {(props) => <Profile {...props} extraData={data.extraData} />}
+          </Tab.Screen>
+        </Tab.Navigator>
+        {val > 0 && (
+          <View style={{ height: val - 5, backgroundColor: "white" }} />
+        )}
+      </View>
+    </>
   );
 };
-
-// const Homepage = (props) => {
-//   return HomeTabNavigator(props);
-// };
 
 export default Homepage;
 

@@ -7,19 +7,17 @@ import {
   TouchableOpacity,
   Animated,
   FlatList,
-  ImageBackground,
   Alert,
-  ToastAndroid,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
 import ModuleTemplate from "./ModuleTemplate";
 import { useNavigation } from "@react-navigation/native";
-import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FirebaseDB from "../../../../FirebaseDB";
 
-const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+
+console.disableYellowBox = true;
 
 const AddPlan = ({ route }) => {
   const [planNameValue, setPlanName] = useState("Plan 1");
@@ -33,6 +31,7 @@ const AddPlan = ({ route }) => {
   const [Codes, setCodes] = useState({});
   const [Levels, setLevels] = useState({});
   const [records, setRecords] = useState({});
+  const [taken, setTaken] = useState({});
 
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
@@ -41,6 +40,7 @@ const AddPlan = ({ route }) => {
   const levelRef = fb.collection("levelArray").doc(userID);
   const recordsRef = fb.collection("records").doc(userID);
   const moduleMappingRef = fb.collection("modulesMapping").doc(userID);
+  const takenModulesRef = fb.collection("takenModules").doc(userID);
 
   const deleteItem = (moduleCode) => {
     setData((newData) => {
@@ -57,10 +57,7 @@ const AddPlan = ({ route }) => {
       if (route.params?.item[4]) setData(route.params?.item[4]);
     }
     if (route.params?.modDetails && route.params?.from === "AddModule") {
-      const tempArr = [];
-      for (let i = 0; i < data.length; i++) {
-        tempArr.push(data[i]);
-      }
+      const tempArr = data.slice(0);
       let keyTobe = data.length;
       const receivedArr = route.params?.modDetails;
       for (let i = 0; i < receivedArr.length; i++) {
@@ -80,20 +77,23 @@ const AddPlan = ({ route }) => {
       }
       setData(tempArr);
     }
-    moduleMappingRef.onSnapshot((document) => {
+    moduleMappingRef.get().then((document) => {
       setModuleMapping(document.data());
     });
-    recordsRef.onSnapshot((document) => {
+    recordsRef.get().then((document) => {
       setRecords(document.data());
     });
-    typeRef.onSnapshot((document) => {
+    typeRef.get().then((document) => {
       setTypes(document.data());
     });
-    codeRef.onSnapshot((document) => {
+    codeRef.get().then((document) => {
       setCodes(document.data());
     });
-    levelRef.onSnapshot((document) => {
+    levelRef.get().then((document) => {
       setLevels(document.data());
+    });
+    takenModulesRef.get().then((document) => {
+      setTaken(document.data());
     });
   }, [route.params.item[4], route.params?.modDetails, route.params?.from]);
 
@@ -143,40 +143,9 @@ const AddPlan = ({ route }) => {
     return [isThereAPast, name, yearExtractor(docLoc)];
   };
 
-  const TargetGradesFilled = (val) => {
-    for (let i = 0; i < val.length; i++) {
-      if (val[i].TargetGrade === "") {
-        return false;
-      }
-    }
-    return true;
-  };
-
   const yearExtractor = (val) => {
     const len = val.length;
     return val.substring(len - 4);
-  };
-
-  const searchSem = (val) => {
-    if (val === "Y1S2") {
-      return "Y1S1";
-    } else if (val === "Y2S1") {
-      return "Y1S2";
-    } else if (val === "Y2S2") {
-      return "Y2S1";
-    } else if (val === "Y3S1") {
-      return "Y2S2";
-    } else if (val === "Y3S2") {
-      return "Y3S1";
-    } else if (val === "Y4S1") {
-      return "Y3S2";
-    } else if (val === "Y4S2") {
-      return "Y4S1";
-    } else if (val === "Y5S1") {
-      return "Y4S2";
-    } else {
-      return "Y5S1";
-    }
   };
 
   const GradeToPoint = (val) => {
@@ -245,17 +214,53 @@ const AddPlan = ({ route }) => {
       return false;
     }
   };
+
+  const dateFormatter = (date, month, year, hour, minute) => {
+    let newDate = date;
+    let newMonth = month;
+    let newYear = year;
+    let newHour = hour;
+    let newMinute = minute;
+    if (parseInt(date) < 10) {
+      newdate = "0" + newDate;
+    }
+    if (parseInt(newMonth) < 10) {
+      newMonth = "0" + newMonth;
+    }
+    if (parseInt(newHour) < 10) {
+      newHour = "0" + newHour;
+    }
+    if (parseInt(newMinute) < 10) {
+      newMinute = "0" + newMinute;
+    }
+    return (
+      newDate +
+      "/" +
+      newMonth +
+      "/" +
+      newYear +
+      ", " +
+      newHour +
+      ":" +
+      newMinute +
+      " " +
+      (newHour <= 12 ? "AM" : "PM")
+    );
+  };
+
   const isThisExtraAlert = (name, year) => {
-    // You have entered the final grades for this semester before. Inputting final grades in this plan
-    //will overwrite the final grades in the ${other plan}. Proceed?
     Alert.alert(
       "Warning",
-      "You have entered the Final Grades for this semester before, are you sure you want to overwrite it?" +
+      "You have entered the final grades for this semester before, Inputting final grades in this plan" +
+        ` will overwrite the final grades in plan ${name}. Proceed? ` +
         "\n" +
-        ` You can choose to delete or edit ${name}'s final grade in semester ${year}`,
+        `Tip: You can choose to edit or delete the older plans in Semester ${year}`,
       [
         { text: "Cancel", onPress: () => {} },
-        { text: "Continue", onPress: () => nextPage() },
+        {
+          text: "Continue",
+          onPress: () => nextPage(),
+        },
       ],
       { cancelable: false }
     );
@@ -268,10 +273,10 @@ const AddPlan = ({ route }) => {
       nextPage();
     }
   };
+
   const nextPage = () => {
     if (FinalGradesEntered(data)) {
       let semCap = 0;
-
       const origTaken = records.taken;
       const origNotTaken = records.notTaken;
       const toInclude = new Set(records.mapping);
@@ -279,7 +284,9 @@ const AddPlan = ({ route }) => {
       const newNotTaken = [];
 
       const newSet = new Set();
-      data.forEach((x) => newSet.add(x.moduleCode));
+      data.forEach((x) => {
+        newSet.add(x.moduleCode);
+      });
 
       // Remove from taken
       for (let i = 0; i < origTaken.length; i++) {
@@ -327,6 +334,7 @@ const AddPlan = ({ route }) => {
             Levels.cat[indexLevel].points -= modulePoints;
             Codes.cat[indexCode].points -= modulePoints;
           }
+          delete taken[code];
         } else {
           newTaken.push(origTaken[i]);
         }
@@ -346,9 +354,6 @@ const AddPlan = ({ route }) => {
         .get()
         .then((document) => {
           const val = document.data();
-          if (val === undefined) {
-            usersModulesDetailsRef.set({ usersModulesArray: [] });
-          }
           const modulesDetailsArray = [];
           let semSum = 0;
           let semMc = 0;
@@ -367,7 +372,7 @@ const AddPlan = ({ route }) => {
             const bool = lettersChecker(FinalGrade);
 
             // Check if moduleType exists
-            const moduleType = "";
+            let moduleType = "";
             // Finding type
             if (moduleMapping[moduleCode] !== undefined) {
               moduleType = moduleMapping[moduleCode];
@@ -382,18 +387,20 @@ const AddPlan = ({ route }) => {
                 moduleType = "UE";
               }
             } else {
-              const len = typeObj.cat.length;
-              // TODO: Add in Residential Colleges for ULR!
+              const index = typeObj["ULR"];
               if (
                 codePrefix.length === 3 &&
-                codePrefix.substring(0, 2) === "GE" &&
-                typeObj.cat[len - 1].mcsTaken < typeObj.cat[len - 1].mcsRequired
+                (codePrefix.substring(0, 2) === "GE" ||
+                  codePrefix === "UTS" ||
+                  codePrefix === "UTC") &&
+                typeObj.cat[index].mcsTaken < typeObj.cat[index].mcsRequired
               ) {
                 moduleType = "ULR";
               } else {
                 moduleType = "UE";
               }
             }
+
             // Check if it is a new code
             if (codeObj[codePrefix] === undefined) {
               codeObj[codePrefix] = codeObj.cat.length;
@@ -448,10 +455,17 @@ const AddPlan = ({ route }) => {
               grade: FinalGrade,
               level: Level,
               codePrefix: codePrefix,
-              taken: true,
               numMcs: NumMcs,
               sem: fromWhere,
             });
+
+            taken[moduleCode] = {
+              name: moduleName,
+              code: moduleCode,
+              grade: FinalGrade,
+              numMcs: NumMcs,
+              sem: fromWhere,
+            };
 
             modulesDetailsArray.push({
               moduleCode: moduleCode,
@@ -460,7 +474,6 @@ const AddPlan = ({ route }) => {
               NumMcs: NumMcs,
               Level: Level,
               codePrefix: codePrefix,
-              // type: moduleType,
             });
             semSum += modulePoints;
             if (bool) {
@@ -471,8 +484,7 @@ const AddPlan = ({ route }) => {
             }
           }
           // End of for loop for data array
-          // Remove any codes / levels if needed??
-          // Sort codes array according to mcs Taken (done)
+          // Sort codes array according to mcs Taken
           const newCodes = [];
           for (let i = codeObj.fixed; i < codeObj.cat.length; i++) {
             if (codeObj.cat[i].mcsTaken !== 0) {
@@ -485,7 +497,6 @@ const AddPlan = ({ route }) => {
               });
             } else {
               delete codeObj[codeObj.cat[i].name];
-              needSorting = true;
             }
           }
           newCodes.sort((a, b) => {
@@ -503,52 +514,27 @@ const AddPlan = ({ route }) => {
 
           codeObj.cat = codeObj.cat.slice(0, codeObj.fixed).concat(newCodes);
 
-          // level w/o sorting
-          // const newLevels = [];
-          // let keyId = levelObj.fixed;
-          // for (let i = 0; i < levelObj.cat.length; i++) {
-          //   if (i < levelObj.fixed) {
-          //     newLevels.push(levelObj.cat[i]);
-          //   } else {
-          //     if (levelObj.cat[i].mcsTaken !== 0) {
-          //       keyId++;
-          //       levelObj.cat[i].key = keyId;
-          //       newLevels.push(levelObj.cat[i]);
-          //     } else {
-          //       delete levelObj[levelObj.cat[i].context.toString()];
-          //     }
-          //   }
-          // }
-          // levelObj.cat = newLevels;
-
-          const batch = fb.batch();
-          batch.set(typeRef, typeObj);
-          batch.set(codeRef, codeObj);
-          batch.set(levelRef, levelObj);
-          batch.update(recordsRef, {
-            notTaken: newNotTaken.sort((a, b) => {
-              if (a.code <= b.code) {
-                return -1;
-              } else {
-                return 1;
-              }
-            }),
-            taken: newTaken.sort((a, b) => {
-              if (a.sem < b.sem) {
-                return -1;
-              } else if (a.sem === b.sem) {
-                if (a.code < b.code) {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              } else {
-                return 1;
-              }
-            }),
+          newNotTaken.sort((a, b) => {
+            if (a.code <= b.code) {
+              return -1;
+            } else {
+              return 1;
+            }
           });
 
-          batch.commit();
+          newTaken.sort((a, b) => {
+            if (a.sem < b.sem) {
+              return -1;
+            } else if (a.sem === b.sem) {
+              if (a.code < b.code) {
+                return -1;
+              } else {
+                return 1;
+              }
+            } else {
+              return 1;
+            }
+          });
 
           semCap = parseFloat((semSum / semMc).toFixed(2));
           let totalSum = 0; // total CAP SUM
@@ -575,6 +561,7 @@ const AddPlan = ({ route }) => {
             if (DontexistBeforeInOldArray) {
               arr.push({ Semester: fromWhere });
             }
+            arr = insertionSort(arr);
             for (let i = 0; i < arr.length; i++) {
               if (arr[i].Semester === fromWhere) {
                 pushed = true;
@@ -646,8 +633,14 @@ const AddPlan = ({ route }) => {
                 MCcountedToCap: semMc, // mc that is counted in cap
               });
             }
-            usersRef.update({
-              CapArray: tempArr,
+            usersRef.update({ CapArray: tempArr });
+            typeRef.set(typeObj);
+            codeRef.set(codeObj);
+            levelRef.set(levelObj);
+            takenModulesRef.set(taken);
+            recordsRef.update({
+              notTaken: newNotTaken,
+              taken: newTaken,
             });
           } else {
             usersRef.set(
@@ -658,7 +651,7 @@ const AddPlan = ({ route }) => {
 
                     SemestralCap: semCap,
                     OverallCap:
-                      semMC !== 0 ? parseFloat((semSum / semMc).toFixed(2)) : 0,
+                      semMc !== 0 ? parseFloat((semSum / semMc).toFixed(2)) : 0,
 
                     SemestralMc: semTotalMc,
                     OverallMc: semTotalMc,
@@ -670,7 +663,6 @@ const AddPlan = ({ route }) => {
               { merge: true }
             );
           }
-
           if (val !== undefined) {
             const tempArr2 = [];
             let pushed = false;
@@ -681,6 +673,7 @@ const AddPlan = ({ route }) => {
                 tempArr2.push({
                   Semester: fromWhere,
                   ModulesDetailsArray: modulesDetailsArray,
+                  nameOfPlan: planNameValue,
                 });
                 pushed = true;
               }
@@ -689,6 +682,7 @@ const AddPlan = ({ route }) => {
               tempArr2.push({
                 Semester: fromWhere,
                 ModulesDetailsArray: modulesDetailsArray,
+                nameOfPlan: planNameValue,
               });
             }
             usersModulesDetailsRef.set({
@@ -700,12 +694,15 @@ const AddPlan = ({ route }) => {
                 {
                   Semester: fromWhere,
                   ModulesDetailsArray: modulesDetailsArray,
+                  nameOfPlan: planNameValue,
                 },
               ],
             });
           }
         })
-        .catch((error) => {});
+        .catch((error) => {
+          alert(error);
+        });
       // -----------------UPDATING PLANS ARRAY WITH FINAL GRADE-------------------------------------------------
 
       let thisPlanSum1 = 0;
@@ -788,6 +785,19 @@ const AddPlan = ({ route }) => {
           const arr = val.yearSem;
           const thisPlanLength = arr.length;
           const arr2 = val.ArrForRect;
+          let today = new Date();
+          let getDate = today.getDate();
+          let getMonth = today.getMonth() + 1;
+          let getYear = today.getFullYear();
+          let getHours = today.getHours();
+          let getMinutes = today.getMinutes();
+          let date = dateFormatter(
+            getDate,
+            getMonth,
+            getYear,
+            getHours,
+            getMinutes
+          );
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -800,8 +810,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc1,
                   MCsCountedToCap: thisPlanMcUsedInCap1,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 });
                 pushed = true;
               } else {
@@ -816,15 +826,23 @@ const AddPlan = ({ route }) => {
                 Cap: Plannedcap,
                 MCs: thisPlanMc1,
                 MCsCountedToCap: thisPlanMcUsedInCap1,
-                LastUpdated: 0,
                 LONGDPCAP: longdpcap,
+                LastUpdated: date,
               });
             }
-            plansArrayRef.set({
-              yearSem: newPlansArr,
-              selected: (thisPlanLength + 1).toString(),
-              ArrForRect: arr2,
-            });
+            if (newPlansArr.length === thisPlanLength) {
+              // only change the internal
+              plansArrayRef.update({
+                yearSem: newPlansArr,
+                ArrForRect: arr2,
+              });
+            } else {
+              plansArrayRef.set({
+                yearSem: newPlansArr,
+                selected: (thisPlanLength + 1).toString(),
+                ArrForRect: arr2,
+              });
+            }
           } else {
             plansArrayRef.set({
               yearSem: [
@@ -835,8 +853,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc1,
                   MCsCountedToCap: thisPlanMcUsedInCap1,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 },
               ],
               selected: "1",
@@ -844,7 +862,9 @@ const AddPlan = ({ route }) => {
             });
           }
         })
-        .catch((error) => {});
+        .catch((error) => {
+          alert(error);
+        });
     } else {
       // -----------------UPDATING PLANS ARRAY when no FINAL GRADE -------------------------------------------------
 
@@ -869,7 +889,7 @@ const AddPlan = ({ route }) => {
           ? parseFloat((thisPlanSum / thisPlanMcUsedInCap).toFixed(2))
           : 0;
       longdpcap =
-        thisPlanMcUsedInCao !== 0 ? thisPlanSum / thisPlanMcUsedInCap : 0;
+        thisPlanMcUsedInCap !== 0 ? thisPlanSum / thisPlanMcUsedInCap : 0;
       const userRef = FirebaseDB.firestore()
         .collection("users")
         .doc(userIDextractor(docLoc));
@@ -937,6 +957,19 @@ const AddPlan = ({ route }) => {
           const arr = val.yearSem;
           const arr2 = val.ArrForRect;
           const thisPlanLength = arr.length;
+          let today = new Date();
+          let getDate = today.getDate();
+          let getMonth = today.getMonth() + 1;
+          let getYear = today.getFullYear();
+          let getHours = today.getHours();
+          let getMinutes = today.getMinutes();
+          let date = dateFormatter(
+            getDate,
+            getMonth,
+            getYear,
+            getHours,
+            getMinutes
+          );
           if (arr.length > 0) {
             let pushed = false;
             const newPlansArr = [];
@@ -949,8 +982,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc,
                   MCsCountedToCap: thisPlanMcUsedInCap,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 });
                 pushed = true;
               } else {
@@ -965,8 +998,8 @@ const AddPlan = ({ route }) => {
                 Cap: Plannedcap,
                 MCs: thisPlanMc,
                 MCsCountedToCap: thisPlanMcUsedInCap,
-                LastUpdated: 0,
                 LONGDPCAP: longdpcap,
+                LastUpdated: date,
               });
             }
             plansArrayRef.set({
@@ -984,8 +1017,8 @@ const AddPlan = ({ route }) => {
                   Cap: Plannedcap,
                   MCs: thisPlanMc,
                   MCsCountedToCap: thisPlanMcUsedInCap,
-                  LastUpdated: 0,
                   LONGDPCAP: longdpcap,
+                  LastUpdated: date,
                 },
               ],
               selected: "1",
@@ -993,7 +1026,9 @@ const AddPlan = ({ route }) => {
             });
           }
         })
-        .catch((error) => {});
+        .catch((error) => {
+          alert(error);
+        });
     }
     // -----------------UPDATING PLANSitself array-------------------------------------------------
     const plansItself = FirebaseDB.firestore()
@@ -1005,7 +1040,6 @@ const AddPlan = ({ route }) => {
       fromWhere: fromWhere,
       amIfavourite: false,
     });
-
     // ----------------figure out how to reset the data!--------------------------------------------------------------------------------
     const newArr = data.map((x) => x);
     setData([]);
@@ -1017,7 +1051,9 @@ const AddPlan = ({ route }) => {
   const Header = () => (
     <View style={styles.headerDesign}>
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
+        onPress={() => {
+          return navigation.goBack();
+        }}
         style={styles.flexOneCenterFlexEnd}
         activeOpacity={0.9}
       >
@@ -1043,9 +1079,6 @@ const AddPlan = ({ route }) => {
               [{ text: "Cancel", onPress: () => {} }],
               { cancelable: false }
             );
-            // alert("Please add some modules into your plans");
-            // } else if (!TargetGradesFilled(data)) {
-            //   alert("Please fill in your target grades to advance");
           } else if (checkMcs(data) && block) {
             Alert.alert(
               "Warning",
@@ -1056,7 +1089,6 @@ const AddPlan = ({ route }) => {
                   text: "Continue",
                   onPress: () => {
                     setBlock("false");
-                    //nextPage();
                     firstChecks();
                   },
                 },
@@ -1065,7 +1097,6 @@ const AddPlan = ({ route }) => {
             );
           } else {
             firstChecks();
-            //nextPage();
           }
         }}
         style={styles.flexOneCenterFlexEnd}
@@ -1088,7 +1119,7 @@ const AddPlan = ({ route }) => {
   });
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {Header()}
       <View style={styles.container}>
         <FlatList
@@ -1109,7 +1140,7 @@ const AddPlan = ({ route }) => {
         translateY={translateY}
         dataArray={data}
       ></AnimatedBottomBar>
-    </>
+    </View>
   );
 };
 
@@ -1118,21 +1149,21 @@ export default AddPlan;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "transparent",
   },
   headerDesign: {
     height: 0.11 * height,
     width: "100%",
     flexDirection: "row",
     backgroundColor: "#f9f9f9",
-    shadowColor: "#000",
+    shadowColor: "#333333",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
     borderBottomWidth: 1,
     borderColor: "#DDDDDD",
   },

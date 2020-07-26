@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -27,7 +27,6 @@ const Container = (props) => {
 
   return (
     <Animated.View style={{ ...styles.container, left: xVal }}>
-      {/* <View style={styles.container}> */}
       <View style={{ flexDirection: "column", flex: 1 }}>
         <View
           style={{
@@ -52,33 +51,19 @@ const Container = (props) => {
         >
           {/* Prereq button */}
           <TouchableOpacity
-            style={{
-              ...styles.button1,
-              backgroundColor: props.prereq ? "#303030" : "#FF6B6B",
-            }}
+            style={{ ...styles.button1, backgroundColor: "#373F51" }}
             activeOpacity={0.85}
             onPress={() => {
               props.button1Press();
             }}
           >
             <Text style={{ ...globalFontStyles.OSSB_12, color: "white" }}>
-              Prereq
+              Req
             </Text>
-            <View>
-              {props.prereq ? null : (
-                <Icon
-                  style={{ marginLeft: 2 }}
-                  fill="white"
-                  width={15}
-                  height={15}
-                  name="alert-circle"
-                />
-              )}
-            </View>
           </TouchableOpacity>
           {/* Info button */}
           <TouchableOpacity
-            style={styles.button1}
+            style={{ ...styles.button1, backgroundColor: "#DAA49A" }}
             activeOpacity={0.85}
             onPress={() => {
               props.button2Press();
@@ -90,16 +75,27 @@ const Container = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      <Icon
-        name={"plus-circle"}
-        width={43}
-        height={43}
-        fill={"#3FE2D3"}
-        onPress={() => {
-          move();
-        }}
-      />
-      {/* </View> */}
+      {props.canAdd ? (
+        <Icon
+          name={"plus-circle"}
+          width={43}
+          height={43}
+          fill={"#3FE2D3"}
+          onPress={() => {
+            move();
+          }}
+        />
+      ) : (
+        <Text
+          style={{
+            ...globalFontStyles.OSR_12,
+            color: "#D5D5D5",
+            alignSelf: "flex-start",
+          }}
+        >
+          Already exists
+        </Text>
+      )}
     </Animated.View>
   );
 };
@@ -111,17 +107,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     borderColor: "lightgrey",
-    borderWidth: StyleSheet.hairlineWidth * 2,
+    borderWidth: StyleSheet.hairlineWidth * 3,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
     width: width * 0.9,
-    height: height * 0.12,
+    height: height * 0.13,
     paddingHorizontal: 15,
     paddingLeft: 20,
     marginVertical: 10,
@@ -137,6 +133,5 @@ const styles = StyleSheet.create({
     height: 30,
     width: 75,
     borderRadius: 5,
-    backgroundColor: "#303030",
   },
 });

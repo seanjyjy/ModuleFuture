@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -7,44 +6,49 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  StatusBar,
+  Platform,
 } from "react-native";
 import Header from "../../../Component/Header";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
+import FullViewHeader from "../../../Component/FullViewHeader";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-// import ColouredList from "../../../Component/ColouredList";
-import FullView from "../../../Component/FullView";
 import FirebaseDB from "../../../FirebaseDB";
+import { useSafeArea } from "react-native-safe-area-context";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+const hairlineWidth = StyleSheet.hairlineWidth;
 
-const Records = () => {
+const Records = ({ navigation }) => {
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
-  const typeRef = fb.collection("typeArray");
-  const codeRef = fb.collection("codeArray");
-  const levelRef = fb.collection("levelArray");
-  const recordsRef = fb.collection("records");
+  const typeRef = fb.collection("typeArray").doc(userID);
+  const codeRef = fb.collection("codeArray").doc(userID);
+  const levelRef = fb.collection("levelArray").doc(userID);
+  const recordsRef = fb.collection("records").doc(userID);
 
   useEffect(() => {
-    recordsRef.doc(userID).onSnapshot((document) => {
-      const data = document.data();
-      setTaken(data.taken);
-      setNotTaken(data.notTaken);
-    });
-    typeRef.doc(userID).onSnapshot((document) => {
-      setType(document.data().cat);
-    });
-    codeRef.doc(userID).onSnapshot((document) => {
-      setCode(document.data().cat);
-    });
-    levelRef.doc(userID).onSnapshot((document) => {
-      setLevel(document.data().cat);
-    });
+    const unsub = typeRef.onSnapshot(
+      (document) => {
+        setType(document.data().cat);
+        recordsRef.onSnapshot((document) => {
+          const data = document.data();
+          setTaken(data.taken);
+          setNotTaken(data.notTaken);
+        });
+        levelRef.onSnapshot((document) => {
+          setLevel(document.data().cat);
+        });
+        codeRef.onSnapshot((document) => {
+          setCode(document.data().cat);
+        });
+      },
+      (error) => alert(error)
+    );
+    return () => unsub();
   }, []);
-
-  const navigation = useNavigation();
 
   // Default states
   const [MCstaken, toggle] = useState(true);
@@ -52,6 +56,7 @@ const Records = () => {
   const [currentType, changeType] = useState("Type");
   const [typeSelection, setTypeVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [showAll, setShow] = useState(true);
   const [type, setType] = useState([]);
   const [level, setLevel] = useState([]);
   const [code, setCode] = useState([]);
@@ -79,15 +84,24 @@ const Records = () => {
     setTypeVisible(!typeSelection);
   };
 
-  /* --------------------------------------------Selector---------------------------------------- */
+  /* --------------------------------------------Ellipsis---------------------------------------- */
 
   const text = (word) => (
-    <Text style={{ ...globalFontStyles.OSR_15, color: "#232323" }}>{word}</Text>
+    <Text
+      style={{
+        ...globalFontStyles.OSR_15,
+        color: "#232323",
+      }}
+    >
+      {word}
+    </Text>
   );
 
   const numTaken = () => (MCstaken ? "Toggle no. taken" : "Toggle MCs taken");
 
   const overallView = () => (catView ? "Full view" : "Categorical view");
+
+  const show = () => (showAll ? "Show taken only" : "Show all");
 
   const item1 = () =>
     currentType === "Type" || currentType === "Level" ? "Code" : "Type";
@@ -111,41 +125,85 @@ const Records = () => {
       />
     );
 
+    const option2 = (menu1) => (
+      <MenuItem
+        title={text(menu1())}
+        onPress={() => {
+          setShow(!showAll);
+          toggleMenu();
+        }}
+        activeOpacity={0.9}
+      />
+    );
+
+    const editTypes = () => (
+      <MenuItem
+        title={text("Edit current types")}
+        onPress={() => {
+          navigation.navigate("EditRecords", { type: type });
+          toggleMenu();
+        }}
+        activeOpacity={0.9}
+      />
+    );
+
     return (
       <OverflowMenu
+        style={{
+          ...styles.menuStyle,
+          marginTop: Platform.OS === "android" ? 0 : -useSafeArea().top,
+        }}
         visible={menuVisible}
         anchor={MenuIcon}
         onBackdropPress={toggleMenu}
       >
-        {option(numTaken, MCstaken)}
+        {!catView ? option2(show) : option(numTaken, MCstaken)}
         {option(overallView, catView)}
+        {currentType === "Type" ? editTypes() : null}
       </OverflowMenu>
     );
   };
 
+  /* --------------------------------------------Selector---------------------------------------- */
+
   const viewType = () => (
-    <TouchableOpacity
-      style={styles.header2}
-      activeOpacity={0.85}
-      onPress={toggleTypeMenu}
-    >
-      <Text style={{ ...globalFontStyles.OSSB_19, color: "#232323" }}>
-        {currentType}
-      </Text>
-      <Icon
-        fill="#232323"
-        width={30}
-        height={20}
-        name="arrow-ios-downward-outline"
-        style={{ marginTop: 4 }}
-      />
-    </TouchableOpacity>
+    <View style={styles.typeOverView}>
+      <TouchableOpacity
+        style={{ flexDirection: "row" }}
+        activeOpacity={0.85}
+        onPress={toggleTypeMenu}
+      >
+        <Text
+          style={{
+            ...globalFontStyles.OSSB_19,
+            color: "#232323",
+          }}
+        >
+          {currentType}
+        </Text>
+        <Icon
+          fill="#232323"
+          width={30}
+          height={20}
+          name="arrow-ios-downward-outline"
+          style={{ marginTop: 4 }}
+        />
+      </TouchableOpacity>
+    </View>
   );
 
   const selector = () => {
     const option = (item) => (
       <MenuItem
-        title={text(item())}
+        title={
+          <Text
+            style={{
+              ...globalFontStyles.OSR_17,
+            }}
+          >
+            {item()}
+          </Text>
+        }
         onPress={() => {
           changeType(item());
           toggleTypeMenu();
@@ -158,6 +216,7 @@ const Records = () => {
         visible={typeSelection}
         anchor={viewType}
         onBackdropPress={toggleTypeMenu}
+        style={styles.selector}
       >
         {option(item1)}
         {option(item2)}
@@ -170,9 +229,9 @@ const Records = () => {
   const colors = [
     "#FFB584",
     "#FF6F66",
-    "#C6E198",
-    "#6CD5AF",
     "#8F9ED5",
+    "#6CD5AF",
+    "#DC5E9D",
     "#CE6F73",
     "#241161",
     "#6c2386",
@@ -194,7 +253,6 @@ const Records = () => {
 
   const ColouredList = (props) => {
     const colors = props.colors;
-    const bool = false;
     const mcsOrNum = props.mcsOrNum;
     const array = props.array;
 
@@ -229,7 +287,7 @@ const Records = () => {
         <Text
           numberOfLines={2}
           style={{
-            ...(bool ? globalFontStyles.NBEB_13 : globalFontStyles.NBEB_14),
+            ...globalFontStyles.NBEB_14,
             color: "#686868",
           }}
         >
@@ -269,7 +327,7 @@ const Records = () => {
           </View>
           <View
             style={{
-              flex: bool ? 1.3 : 2.5,
+              flex: 2.5,
               flexDirection: "row",
               justifyContent: "center",
             }}
@@ -295,13 +353,22 @@ const Records = () => {
           style={styles.container}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.navigate("Foundation", {
-              taken: taken,
-              notTaken: notTaken,
-              title: item.name,
-              context: item.context !== undefined ? item.context : item.name,
-              type: currentType,
-            });
+            if (currentType !== "Type") {
+              navigation.navigate("CodeOrLevel", {
+                taken: taken,
+                notTaken: notTaken,
+                title: item.name,
+                context: currentType === "Level" ? item.context : item.name,
+                type: currentType,
+              });
+            } else
+              navigation.navigate("TypePage", {
+                taken: taken,
+                notTaken: notTaken,
+                title: item.name,
+                mcsRequired: item.mcsRequired,
+                from: "Records",
+              });
           }}
         >
           <View
@@ -313,9 +380,7 @@ const Records = () => {
             <View style={{ width: "90%" }}>
               <Text
                 style={{
-                  ...(bool
-                    ? globalFontStyles.NBEB_15
-                    : globalFontStyles.NBEB_17),
+                  ...globalFontStyles.NBEB_17,
                   color: "#F4F4F4",
                   textAlign: "center",
                 }}
@@ -337,149 +402,126 @@ const Records = () => {
           data={array}
           renderItem={({ item }) => holders(item)}
           keyExtractor={(item) => item.key.toString()}
-          ListFooterComponent={<View style={{ height: 70 }} />}
+          ListFooterComponent={<View style={{ height: height * 0.11 }}></View>}
         />
       </View>
     );
   };
 
-  const FullView = (props) => {
-    if (currentType === "Type") {
-    } else if (currentType === "Code") {
-    } else {
-    }
-    const holders = (item) => (
-      <View style={styles.headerText}>
-        <View style={{ width: width * 0.52 }}>
+  /* --------------------------------------------Full view---------------------------------------- */
+
+  const FullView = () => {
+    const currentArr = menu();
+    const lastKey = currentArr.length;
+    const category =
+      currentType === "Type"
+        ? "type"
+        : currentType === "Code"
+        ? "codePrefix"
+        : "level";
+
+    const IndividualBox = (current) => {
+      const toMatch =
+        current.context !== undefined ? current.context : current.name;
+      const currTaken = () => taken.filter((x) => x[category] === toMatch);
+      const currNotTaken = () =>
+        notTaken.filter((x) => x[category] === toMatch);
+
+      const holders = (item) => (
+        <View style={styles.moduleText}>
+          <View style={{ width: "57%" }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                ...globalFontStyles.OSSB_12,
+                color: "#232323",
+              }}
+            >
+              {item.name}
+            </Text>
+          </View>
           <Text
-            numberOfLines={1}
             style={{
               ...globalFontStyles.OSSB_12,
               color: "#232323",
             }}
           >
-            {item.name}
+            {item.grade}
           </Text>
-        </View>
-        <Text
-          style={{
-            ...globalFontStyles.OSSB_12,
-            color: "#232323",
-          }}
-        >
-          {item.grade}
-        </Text>
-        <Text style={{ ...globalFontStyles.OSSB_12, color: "#232323" }}>
-          {item.sem}
-        </Text>
-      </View>
-    );
-
-    const holders2 = (item) => (
-      <View style={styles.headerText}>
-        <View style={{ width: width * 0.52 }}>
-          <Text
-            numberOfLines={1}
-            style={{
-              ...globalFontStyles.OSSB_12,
-              color: "#68686880",
-            }}
-          >
-            {item.name}
-          </Text>
-        </View>
-      </View>
-    );
-
-    const Box = () => (
-      <View style={styles.container}>
-        <View>
-          {/* check 11 or 12 size */}
           <Text style={{ ...globalFontStyles.OSSB_12, color: "#232323" }}>
-            {}
+            {item.sem}
           </Text>
         </View>
-        <View style={styles.header}>
-          <View
-            style={{
-              flexDirection: "row",
-              width: width * 0.71,
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>
-              Module
-            </Text>
+      );
+
+      const holders2 = (item) => (
+        <View style={styles.moduleText}>
+          <View style={{ width: "57%" }}>
             <Text
+              numberOfLines={1}
               style={{
-                ...globalFontStyles.OSB_13,
-                color: "#232323",
+                ...globalFontStyles.OSSB_12,
+                color: "#68686880",
               }}
             >
-              Grade
+              {item.name}
             </Text>
           </View>
-          <Text style={{ ...globalFontStyles.OSB_13, color: "#232323" }}>
-            Sem
-          </Text>
         </View>
-        <FlatList
-          // data={taken.concat(notTaken)}
-          keyExtractor={(item) => item.name.toString()}
-          renderItem={({ item }) =>
-            item.taken !== undefined ? holders(item) : holders2(item)
-          }
-        />
-      </View>
-    );
+      );
 
-    const styles = StyleSheet.create({
-      container: {
-        width: width * 0.9,
-        height: Math.min(
-          height * 0.88,
-          (taken.length + notTaken.length) * 37 + 118
-        ),
-        alignSelf: "center",
-        marginTop: 20,
-        borderRadius: 14,
-        borderColor: "#C6C6C6",
-        justifyContent: "space-between",
-        alignContent: "stretch",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
-        flexDirection: "column",
-        backgroundColor: "white",
-      },
-      header: {
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 10,
-        borderBottomColor: "#A0A0A0",
-        borderBottomWidth: StyleSheet.hairlineWidth,
-      },
-      headerText: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 10,
-      },
-    });
+      return (
+        <View
+          style={{
+            ...styles.innerFlatList,
+            borderBottomLeftRadius: current.key === lastKey ? 14 : 0,
+            borderBottomRightRadius: current.key === lastKey ? 14 : 0,
+          }}
+        >
+          <View
+            style={{
+              width: "23%",
+              borderRightColor: "lightgrey",
+              borderRightWidth: 0.7,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              textBreakStrategy="simple"
+              numberOfLines={2}
+              style={{
+                ...globalFontStyles.OSSB_11,
+                color: "#232323",
+                textAlign: "center",
+              }}
+            >
+              {current.name}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "column", width: "77%" }}>
+            <FlatList
+              data={showAll ? currTaken().concat(currNotTaken()) : currTaken()}
+              keyExtractor={(item) => item.name.toString()}
+              renderItem={({ item }) =>
+                item.grade !== undefined ? holders(item) : holders2(item)
+              }
+            />
+          </View>
+        </View>
+      );
+    };
 
     return (
-      <View style={{ flex: 1 }}>
-        <Box />
-      </View>
+      <FlatList
+        contentContainerStyle={styles.fullBox}
+        ListFooterComponent={<View style={{ height: 90 }}></View>}
+        data={currentArr}
+        keyExtractor={(item) => item.key.toString()}
+        renderItem={({ item }) => IndividualBox(item)}
+      />
     );
   };
-
   return catView ? (
     <View style={{ flex: 1 }}>
       <Header
@@ -491,7 +533,6 @@ const Records = () => {
       <ColouredList colors={colors} mcsOrNum={text1} array={menu()} />
     </View>
   ) : (
-    // To be updated for Full View
     <View style={{ flex: 1 }}>
       <Header
         str={"Records"}
@@ -499,6 +540,8 @@ const Records = () => {
         rightChildren={renderOverflowMenuAction()}
       />
       {selector()}
+      <FullViewHeader />
+      <FullView />
     </View>
   );
 };
@@ -506,16 +549,42 @@ const Records = () => {
 export default Records;
 
 const styles = StyleSheet.create({
-  header2: {
-    flexDirection: "row",
+  typeOverView: {
+    width: width,
     paddingTop: 20,
     paddingBottom: 10,
     justifyContent: "center",
     alignItems: "center",
     borderBottomColor: "grey",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: hairlineWidth,
     borderBottomEndRadius: 13,
     borderBottomStartRadius: 16,
+  },
+  selector: {
+    marginTop: (Platform.OS === "android" ? StatusBar.currentHeight : 0) - 4,
+    width: 95,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  menuStyle: {
+    width: width * 0.45,
+    borderRadius: 10,
+    left: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
   container: {
     width: (width - 40) / 2,
@@ -552,5 +621,27 @@ const styles = StyleSheet.create({
     height: "68%",
     width: "100%",
     paddingHorizontal: width * 0.02,
+  },
+  // For full
+  moduleText: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  innerFlatList: {
+    justifyContent: "space-between",
+    alignContent: "stretch",
+    flexDirection: "row",
+    backgroundColor: "white",
+    minHeight: 40,
+    borderWidth: 0.7,
+    borderColor: "lightgrey",
+    borderTopWidth: 0,
+  },
+  fullBox: {
+    width: width * 0.95,
+    flexDirection: "column",
+    alignItems: "center",
+    alignSelf: "center",
   },
 });

@@ -7,21 +7,20 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
-  KeyboardAvoidingView,
   Alert,
 } from "react-native";
 
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
-import { useNavigation } from "@react-navigation/native";
-import { CommonActions } from "@react-navigation/native";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
 import Modal from "react-native-modalbox";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+
+console.disableYellowBox = true;
 
 const ModuleTemplate = (props) => {
   const clash = props.dataObj.clash;
@@ -37,7 +36,7 @@ const ModuleTemplate = (props) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [TargetOrFinal, setTargetOrFinal] = useState(0);
   const [alertText, setAlertText] = useState(false);
-  const [alertText2, setAlertText2] = useState(false);
+
   const MenuIcon = () => (
     <Icon
       fill="#232323"
@@ -65,14 +64,6 @@ const ModuleTemplate = (props) => {
             const deleteMethod = props.deleteMethod;
             deleteMethod(moduleCode);
             toggleMenu();
-          }}
-          activeOpacity={0.9}
-        />
-        <MenuItem
-          title={"Accept conflict"}
-          onPress={() => {
-            toggleMenu();
-            setClash(false);
           }}
           activeOpacity={0.9}
         />
@@ -325,7 +316,7 @@ const ModuleTemplate = (props) => {
               </View>
               <TouchableOpacity
                 style={styles.flexThreeColumnCenter}
-                activeOpacity={0.9}
+                activeOpacity={0.1}
                 onPress={() => {
                   setTargetOrFinal(1);
                   setModalVisible(true);

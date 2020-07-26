@@ -6,8 +6,7 @@ export const globalStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#7F8E9E",
     padding: 10,
-    marginHorizontal: 50,
-    right: 20,
+    marginHorizontal: 40,
   },
   buttonDesign2: {
     height: 65,

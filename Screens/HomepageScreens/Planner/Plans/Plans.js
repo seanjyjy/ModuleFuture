@@ -11,20 +11,19 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import Header from "../../../../Component/Header";
-import Icons from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { CommonActions } from "@react-navigation/native";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import Modal from "react-native-modalbox";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import FeatherIcon from "react-native-vector-icons/Feather";
 import FirebaseDB from "../../../../FirebaseDB";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+
+console.disableYellowBox = true;
 
 const ImageSet = [
   require("../../../../assets/plan1.png"),
@@ -32,7 +31,105 @@ const ImageSet = [
   require("../../../../assets/plan3.png"),
   require("../../../../assets/plan4.png"),
 ];
+const dateFormatter = (date, month, year, hour, minute) => {
+  let newDate = date;
+  let newMonth = month;
+  let newYear = year;
+  let newHour = hour;
+  let newMinute = minute;
+  if (parseInt(date) < 10) {
+    newdate = "0" + newDate;
+  }
+  if (parseInt(newMonth) < 10) {
+    newMonth = "0" + newMonth;
+  }
+  if (parseInt(newHour) < 10) {
+    newHour = "0" + newHour;
+  }
+  if (parseInt(newMinute) < 10) {
+    newMinute = "0" + newMinute;
+  }
+  return (
+    newDate +
+    "/" +
+    newMonth +
+    "/" +
+    newYear +
+    ", " +
+    newHour +
+    ":" +
+    newMinute +
+    " " +
+    (newHour <= 12 ? "AM" : "PM")
+  );
+};
 
+const calcTime = (dateInStr) => {
+  let today = new Date();
+  let getDate = today.getDate();
+  let getMonth = today.getMonth() + 1;
+  let getYear = today.getFullYear();
+  let getHours = today.getHours();
+  let getMinutes = today.getMinutes();
+  let date = dateFormatter(getDate, getMonth, getYear, getHours, getMinutes);
+  const todayDateArray = dateExtractor(date);
+  const previousDateArray = dateExtractor(dateInStr);
+  if (todayDateArray[0] == previousDateArray[0]) {
+    return "Today " + previousDateArray[1];
+  } else if (isYesturday(todayDateArray[0], previousDateArray[0])) {
+    return "Yesturday " + previousDateArray[1];
+  } else {
+    return previousDateArray[0] + " " + previousDateArray[1];
+  }
+};
+
+const dateExtractor = (str) => {
+  let tempStr = "";
+  let timeStr = "";
+  let tempStart = true;
+  let timeStart = false;
+  for (let i = 0; i < str.length; i++) {
+    if (str.charAt(i) === ",") {
+      tempStart = false;
+    }
+    if (tempStart) {
+      tempStr += str.charAt(i);
+    }
+    if (timeStart) {
+      timeStr += str.charAt(i);
+    }
+    if (str.charAt(i) === " ") {
+      timeStart = true;
+    }
+  }
+  return [tempStr, timeStr];
+};
+
+const isYesturday = (str1, str2) => {
+  if (str1.length !== str2.length) {
+    return false;
+  } else {
+    let dateForStr1 = "";
+    let dateForStr2 = "";
+    let len = str1.length;
+    for (let i = 0; i < len; i++) {
+      if (str1.charAt(i) === "/") {
+        if (parseInt(dateForStr1) - parseInt(dateForStr2) === 1) {
+          if (
+            str1.charAt(i + 1) + str1.charAt(i + 2) ===
+            str2.charAt(i + 1) + str2.charAt(i + 2)
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+    }
+  }
+};
 const colorSet = ["#E09797", "#745454", "white", "#fcf2d8"];
 function RectInfoSelected({
   id,
@@ -88,8 +185,8 @@ function RectInfoSelected({
                 }}
               >
                 {useInCap
-                  ? `Semestral Cap: ${SemestralCap}`
-                  : `Planned Cap: ${PlannedCap}`}
+                  ? `Semestral CAP: ${SemestralCap === 0 ? "-" : SemestralCap}`
+                  : `Planned CAP: ${PlannedCap === 0 ? "-" : PlannedCap}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -100,8 +197,10 @@ function RectInfoSelected({
                 }}
               >
                 {useInCap
-                  ? `Overall Cap: ${OverallCap}`
-                  : `Planned Overall Cap: ${PlannedOverallCap}`}
+                  ? `Overall CAP: ${OverallCap === 0 ? "-" : OverallCap}`
+                  : `Planned Overall CAP: ${
+                      PlannedOverallCap === 0 ? "-" : PlannedOverallCap
+                    }`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -111,7 +210,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                {`MCs: ${MCs}`}
+                {`MCs: ${MCs === 0 ? "-" : MCs}`}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -121,7 +220,7 @@ function RectInfoSelected({
                   color: colorSet[imageLink],
                 }}
               >
-                {`Last Updated: ${LastUpdated}`}
+                {calcTime(LastUpdated)}
               </Text>
             </View>
           </View>
@@ -145,12 +244,28 @@ const Plans = (props) => {
   const [planName, setPlanName] = useState("");
   const [currentID, setCurrentID] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [size, setSize] = useState(0);
+  const [modalVisibleDeletion, setModalVisibleDeletion] = useState(false);
+  const [size, setSize] = useState(props.data[1].length);
   const [showDustBin, setShowDustBin] = useState(true);
   const [alertText, setAlertText] = useState(false);
   const [alertText1, setAlertText1] = useState(false);
   const [arrForRect, setArrForRect] = useState(info[3]);
   const [selectedplansinfo, setselectedplansinfo] = useState(info[4]);
+
+  const fb = FirebaseDB.firestore();
+  const [moduleMapping, setModuleMapping] = useState({});
+  const [Types, setTypes] = useState({});
+  const [Codes, setCodes] = useState({});
+  const [Levels, setLevels] = useState({});
+  const [records, setRecords] = useState({});
+  const [taken, setTaken] = useState({});
+
+  const typeRef = fb.collection("typeArray").doc(userID);
+  const codeRef = fb.collection("codeArray").doc(userID);
+  const levelRef = fb.collection("levelArray").doc(userID);
+  const recordsRef = fb.collection("records").doc(userID);
+  const moduleMappingRef = fb.collection("modulesMapping").doc(userID);
+  const takenModulesRef = fb.collection("takenModules").doc(userID);
 
   useEffect(() => {
     const unsub = plansArrayRef.onSnapshot(
@@ -166,23 +281,20 @@ const Plans = (props) => {
             setArrForRect(arr2);
             setCurrentID(selected);
             setSelected(new Map().set(selected, true));
+            setShowDustBin(true);
           } else {
             //addition occurs
             setArrForRect(props.data[3]);
             setSelected(new Map().set(selected, true));
             setCurrentArr(props.data[1]);
-            setCurrentID(props.data[2]);
-            setShowDustBin(true);
+            setCurrentID(selected);
+            if (props.data[2] !== "-1") {
+              setShowDustBin(true);
+            }
             setselectedplansinfo(props.data[4]);
           }
           setSize(arr.length);
-
           if (val.selected === "-1") {
-            setShowDustBin(false);
-          } else {
-            setShowDustBin(true);
-          }
-          if (arr.length === 0) {
             setShowDustBin(false);
           } else {
             setShowDustBin(true);
@@ -193,10 +305,27 @@ const Plans = (props) => {
           setShowDustBin(false);
           setCurrentID("-1");
         }
+        moduleMappingRef.get().then((document) => {
+          setModuleMapping(document.data());
+        });
+        recordsRef.get().then((document) => {
+          setRecords(document.data());
+        });
+        typeRef.get().then((document) => {
+          setTypes(document.data());
+        });
+        codeRef.get().then((document) => {
+          setCodes(document.data());
+        });
+        levelRef.get().then((document) => {
+          setLevels(document.data());
+        });
+        takenModulesRef.get().then((document) => {
+          setTaken(document.data());
+        });
       },
       (error) => alert(error)
     );
-
     return () => unsub();
   }, [userID, props.data]);
 
@@ -261,6 +390,38 @@ const Plans = (props) => {
       ? 1.0
       : 0;
   };
+
+  const SuccessFulDeletion = () => {
+    return (
+      <Modal
+        style={styles.modalBox2}
+        isOpen={modalVisibleDeletion}
+        backdropPressToClose={false}
+        backdropOpacity={0.1}
+        animationDuration={300}
+        coverScreen={true}
+        onClosed={() => setModalVisibleDeletion(false)}
+        keyboardTopOffset={300}
+        position="center"
+      >
+        <View style={{ flex: 1 }}>
+          <View style={styles.deletionTextAlertStyle}>
+            <Text style={{ ...globalFontStyles.NBEB_24, color: "#4AE8AB" }}>
+              Successful Deletion!
+            </Text>
+          </View>
+          <View style={{ flex: 2 }}>
+            <FeatherIcon
+              name="check-circle"
+              size={75}
+              style={{ color: "#4AE8AB", alignSelf: "center" }}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
   // ------------------------UNABLE TO PREVENT ANDROID MODAL TO STAY STATIONARY ----------------------------------------------------------
   const PopOutBox = () => {
     return (
@@ -349,7 +510,6 @@ const Plans = (props) => {
       </Modal>
     );
   };
-
   const emptySpace = <View style={styles.dustBinStyle} />;
   const dustBin = (
     <View style={styles.dustBinStyle}>
@@ -364,7 +524,6 @@ const Plans = (props) => {
                 const val = document.data();
                 if (val !== undefined) {
                   const arr = val.yearSem;
-
                   let justDelete = false;
                   let pos = 0;
                   let planName = "";
@@ -380,6 +539,8 @@ const Plans = (props) => {
                   }
                   if (justDelete) {
                     // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAN
+                    setModalVisibleDeletion(true);
+                    setTimeout(() => setModalVisibleDeletion(false), 1600);
                     let tempArr = [];
                     let tempIndex = 0;
                     let newarrForRect = [];
@@ -399,6 +560,9 @@ const Plans = (props) => {
                       }
                     }
                     let whatPos = (parseInt(currentID) - 1).toString();
+                    if (whatPos === "0" && tempArr.length > 0) {
+                      whatPos = "1";
+                    }
                     //deletion in plansItself
                     const currentPlanName = arr[pos].nameOfPlan;
                     FirebaseDB.firestore()
@@ -412,7 +576,6 @@ const Plans = (props) => {
                         )
                       )
                       .delete();
-
                     // updates in UserRef plansSelected info
                     let newSelectedPlansInfo = [];
                     let isThereApreviousFinalGrade = false;
@@ -441,19 +604,17 @@ const Plans = (props) => {
                           newSelectedPlansInfo.push(previousObjNoFinalGrade);
                       } else newSelectedPlansInfo.push(selectedplansinfo[i]);
                     }
+                    setselectedplansinfo(newSelectedPlansInfo);
                     const userRef = FirebaseDB.firestore()
                       .collection("users")
                       .doc(userID);
-                    userRef.update({
-                      SelectedPlansInfo: newSelectedPlansInfo,
-                    });
-
-                    setselectedplansinfo(newSelectedPlansInfo);
-
                     plansArrayRef.set({
                       yearSem: tempArr,
                       selected: whatPos,
                       ArrForRect: newarrForRect,
+                    });
+                    userRef.update({
+                      SelectedPlansInfo: newSelectedPlansInfo,
                     });
                   } else {
                     Alert.alert(
@@ -464,9 +625,16 @@ const Plans = (props) => {
                         {
                           text: "Continue",
                           onPress: () => {
+                            setModalVisibleDeletion(true);
+                            setTimeout(
+                              () => setModalVisibleDeletion(false),
+                              1600
+                            );
                             let tempArr = [];
                             let tempIndex = 0;
                             let newarrForRect = [];
+                            let finalName = "";
+                            let haveAchange = false;
                             for (let i = 0; i < arr.length; i++) {
                               if (arr[i].key !== currentID) {
                                 tempArr.push({
@@ -480,10 +648,16 @@ const Plans = (props) => {
                                 });
                                 tempIndex++;
                                 newarrForRect.push(arrForRect[i]);
+                                if (arr[i].useInCap) {
+                                  haveAchange = true;
+                                  finalName = arr[i].nameOfPlan;
+                                }
                               }
                             }
                             let whatPos = (parseInt(currentID) - 1).toString();
-
+                            if (whatPos === "0" && tempArr.length > 0) {
+                              whatPos = "1";
+                            }
                             let newSelectedPlansInfo = [];
                             let isThereApreviousFinalGrade = false;
                             let thepreviousObjFinalGrade;
@@ -511,7 +685,11 @@ const Plans = (props) => {
                                 }
                               }
                             }
-
+                            plansArrayRef.set({
+                              yearSem: tempArr,
+                              selected: whatPos,
+                              ArrForRect: newarrForRect,
+                            });
                             for (let i = 0; i < selectedplansinfo.length; i++) {
                               // checking if the plan to be deleted exist in selectedPlansInfo
                               if (
@@ -533,21 +711,6 @@ const Plans = (props) => {
                               } else
                                 newSelectedPlansInfo.push(selectedplansinfo[i]);
                             }
-                            const userRef = FirebaseDB.firestore()
-                              .collection("users")
-                              .doc(userID);
-                            userRef.update({
-                              SelectedPlansInfo: newSelectedPlansInfo,
-                            });
-
-                            setselectedplansinfo(newSelectedPlansInfo);
-
-                            plansArrayRef.set({
-                              yearSem: tempArr,
-                              selected: whatPos,
-                              ArrForRect: newarrForRect,
-                            });
-
                             // deletion in plansArray
                             const currentPlanName = arr[pos].nameOfPlan;
 
@@ -555,85 +718,609 @@ const Plans = (props) => {
                               .collection("usersModulesDetails")
                               .doc(userID);
 
-                            usersModulesDetailsRef
-                              .get()
-                              .then((document) => {
-                                const val = document.data();
-                                const arr1 = val.usersModulesArray;
-                                const nextArr = [];
-                                const tempArr2 = [];
-                                let totalSum = 0;
-                                let totalMc = 0;
-                                let totalMcUsedInCap = 0;
-                                for (let k = 0; k < arr1.length; k++) {
-                                  let semSum = 0;
-                                  let semMc = 0;
-                                  let semTotalMcUsedInCap = 0;
-                                  if (arr1[k].Semester !== props.headerTitle) {
-                                    nextArr.push(arr1[k]);
-                                    const refPoint =
-                                      arr1[k].ModulesDetailsArray;
-                                    for (let j = 0; j < refPoint.length; j++) {
-                                      const mc = refPoint[j].NumMcs;
-                                      const points = GradeToPoint(
-                                        refPoint[j].FinalGrade
-                                      );
-                                      if (
-                                        lettersChecker(refPoint[j].FinalGrade)
-                                      ) {
-                                        semTotalMcUsedInCap += mc;
-                                        totalMcUsedInCap += mc;
-                                        semSum += mc * points;
-                                        totalSum += mc * points;
-                                      }
-                                      totalMc += mc;
-                                      semMc += mc;
-                                    }
-                                    tempArr2.push({
-                                      SemestralCap: parseFloat(
-                                        (semSum / semTotalMcUsedInCap).toFixed(
-                                          2
-                                        )
-                                      ),
-                                      OverallCap: parseFloat(
-                                        (totalSum / totalMcUsedInCap).toFixed(2)
-                                      ),
-                                      Semester: arr1[k].Semester,
-                                      SemestralMc: semMc,
-                                      OverallMc: totalMc,
-                                      MCcountedToCap: semTotalMcUsedInCap,
-                                      TotalMcUsedInCap: totalMcUsedInCap,
-                                    });
-                                  }
-                                  semMc = 0;
-                                  semSum = 0;
+                            // Removing current modules from the current semester
+                            // Updating for records / focus area
+
+                            const origTaken = records.taken;
+                            const origNotTaken = records.notTaken;
+                            const toInclude = new Set(records.mapping);
+                            let newNotTaken = [];
+                            const newTaken = [];
+                            let typeObj = Types;
+                            let codeObj = Codes;
+                            let levelObj = Levels;
+
+                            for (let i = 0; i < origTaken.length; i++) {
+                              if (origTaken[i].sem === fromWhere) {
+                                const numMcs = origTaken[i].numMcs;
+                                const codePrefix = origTaken[i].codePrefix;
+                                const type = origTaken[i].type;
+                                const level = origTaken[i].level;
+                                const code = origTaken[i].code;
+                                const grade = origTaken[i].grade;
+                                const modulePoints =
+                                  numMcs * GradeToPoint(grade);
+                                const bool = lettersChecker(grade);
+
+                                if (toInclude.has(type)) {
+                                  origNotTaken.push({
+                                    name: origTaken[i].name,
+                                    type: type,
+                                    code: code,
+                                    level: level,
+                                    codePrefix: codePrefix,
+                                    numMcs: numMcs,
+                                  });
                                 }
 
-                                // deletion in usersRef
-                                const usersRef = FirebaseDB.firestore()
-                                  .collection("users")
-                                  .doc(userID);
-                                usersRef.update({
-                                  CapArray: tempArr2,
-                                });
+                                const indexType = typeObj[type];
+                                const indexCode = codeObj[codePrefix];
+                                const indexLevel = levelObj[level.toString()];
+                                if (grade !== "CU") {
+                                  typeObj.cat[indexType].mcsTaken -= numMcs;
+                                  typeObj.cat[indexType].numTaken -= 1;
+                                  codeObj.cat[indexCode].mcsTaken -= numMcs;
+                                  codeObj.cat[indexCode].numTaken -= 1;
+                                  levelObj.cat[indexLevel].mcsTaken -= numMcs;
+                                  levelObj.cat[indexLevel].numTaken -= 1;
+                                }
+                                if (bool) {
+                                  typeObj.cat[indexType].mcsUsedInCap -= numMcs;
+                                  codeObj.cat[indexCode].mcsUsedInCap -= numMcs;
+                                  levelObj.cat[
+                                    indexLevel
+                                  ].mcsUsedInCap -= numMcs;
 
-                                //deletion in usersModulesDetailsRef
-                                FirebaseDB.firestore()
-                                  .collection("plansItself")
-                                  .doc(
-                                    userID.concat(
-                                      "_",
-                                      props.headerTitle,
-                                      "_",
-                                      currentPlanName
-                                    )
+                                  typeObj.cat[indexType].points -= modulePoints;
+                                  levelObj.cat[
+                                    indexLevel
+                                  ].points -= modulePoints;
+                                  codeObj.cat[indexCode].points -= modulePoints;
+                                }
+                                delete taken[code];
+                              } else {
+                                newTaken.push(origTaken[i]);
+                              }
+                            }
+
+                            if (haveAchange) {
+                              // this signifies that the users has an older data with final grades input
+                              const dataToBeInserted = FirebaseDB.firestore()
+                                .collection("plansItself")
+                                .doc(
+                                  userID.concat(
+                                    "_",
+                                    props.headerTitle,
+                                    "_",
+                                    finalName
                                   )
-                                  .delete();
-                                usersModulesDetailsRef.set({
-                                  usersModulesArray: nextArr,
-                                });
-                              })
-                              .catch((error) => {});
+                                );
+                              let thisSemsemTotalMcUsedInCap = 0;
+                              let thisSemtotalMcUsedInCap = 0;
+                              let thisSemsemSum = 0;
+                              let thisSemtotalSum = 0;
+                              let thisSemtotalMc = 0;
+                              let thisSemsemMc = 0;
+                              let newModulesDetailsArray = [];
+
+                              dataToBeInserted
+                                .get()
+                                .then((document) => {
+                                  const val = document.data();
+                                  const arr = val.planInfo;
+                                  // For records & focus
+
+                                  // Remove from notTaken
+                                  const newSet = new Set();
+                                  arr.forEach((x) => {
+                                    newSet.add(x.moduleCode);
+                                  });
+
+                                  for (
+                                    let i = 0;
+                                    i < origNotTaken.length;
+                                    i++
+                                  ) {
+                                    if (!newSet.has(origNotTaken[i].code)) {
+                                      newNotTaken.push(origNotTaken[i]);
+                                    }
+                                  }
+                                  // For moduleDetailsArray & records
+                                  for (let i = 0; i < arr.length; i++) {
+                                    const moduleCode = arr[i].moduleCode;
+                                    const moduleName = arr[i].name;
+                                    const FinalGrade = arr[i].FinalGrade;
+                                    const NumMcs = arr[i].NumMcs;
+                                    const Level = arr[i].Level;
+                                    const codePrefix = arr[i].codePrefix;
+                                    const modulePoints =
+                                      NumMcs * GradeToPoint(FinalGrade);
+                                    const bool = lettersChecker(FinalGrade);
+                                    // Check if moduleType exists
+                                    let moduleType = "";
+                                    // Finding type
+                                    if (
+                                      moduleMapping[moduleCode] !== undefined
+                                    ) {
+                                      moduleType = moduleMapping[moduleCode];
+                                    }
+                                    // Module is found in mapping
+                                    if (moduleType !== "") {
+                                      const indexType = typeObj[moduleType];
+                                      if (
+                                        typeObj.cat[indexType].mcsTaken >=
+                                        typeObj.cat[indexType].mcsRequired
+                                      ) {
+                                        moduleType = "UE";
+                                      }
+                                    } else {
+                                      const index = typeObj["ULR"];
+                                      if (
+                                        codePrefix.length === 3 &&
+                                        (codePrefix.substring(0, 2) === "GE" ||
+                                          codePrefix === "UTS" ||
+                                          codePrefix === "UTC") &&
+                                        typeObj.cat[index].mcsTaken <
+                                          typeObj.cat[index].mcsRequired
+                                      ) {
+                                        moduleType = "ULR";
+                                      } else {
+                                        moduleType = "UE";
+                                      }
+                                    }
+
+                                    // Check if it is a new code
+                                    if (codeObj[codePrefix] === undefined) {
+                                      codeObj[codePrefix] = codeObj.cat.length;
+                                      codeObj.cat.push({
+                                        name: codePrefix,
+                                        key: codeObj.cat.length + 1,
+                                        mcsTaken: 0,
+                                        numTaken: 0,
+                                        mcsUsedInCap: 0,
+                                        points: 0,
+                                      });
+                                    }
+                                    // Check if it is a new level
+                                    if (
+                                      levelObj[Level.toString()] === undefined
+                                    ) {
+                                      levelObj[Level.toString()] =
+                                        levelObj.cat.length;
+                                      levelObj.cat.push({
+                                        name: Level.toString() + "s",
+                                        context: Level,
+                                        key: levelObj.cat.length + 1,
+                                        mcsTaken: 0,
+                                        numTaken: 0,
+                                        mcsUsedInCap: 0,
+                                        points: 0,
+                                      });
+                                    }
+                                    const indexType = typeObj[moduleType];
+                                    const indexCode = codeObj[codePrefix];
+                                    const indexLevel =
+                                      levelObj[Level.toString()];
+
+                                    if (FinalGrade !== "CU") {
+                                      typeObj.cat[indexType].mcsTaken += NumMcs;
+                                      typeObj.cat[indexType].numTaken += 1;
+                                      codeObj.cat[indexCode].mcsTaken += NumMcs;
+                                      codeObj.cat[indexCode].numTaken += 1;
+                                      levelObj.cat[
+                                        indexLevel
+                                      ].mcsTaken += NumMcs;
+                                      levelObj.cat[indexLevel].numTaken += 1;
+                                    }
+                                    if (bool) {
+                                      typeObj.cat[
+                                        indexType
+                                      ].mcsUsedInCap += NumMcs;
+                                      codeObj.cat[
+                                        indexCode
+                                      ].mcsUsedInCap += NumMcs;
+                                      levelObj.cat[
+                                        indexLevel
+                                      ].mcsUsedInCap += NumMcs;
+
+                                      typeObj.cat[
+                                        indexType
+                                      ].points += modulePoints;
+                                      codeObj.cat[
+                                        indexCode
+                                      ].points += modulePoints;
+                                      levelObj.cat[
+                                        indexLevel
+                                      ].points += modulePoints;
+                                    }
+                                    newTaken.push({
+                                      name: moduleName,
+                                      code: moduleCode,
+                                      type: moduleType,
+                                      grade: FinalGrade,
+                                      level: Level,
+                                      codePrefix: codePrefix,
+                                      numMcs: NumMcs,
+                                      sem: fromWhere,
+                                    });
+
+                                    taken[moduleCode] = {
+                                      name: moduleName,
+                                      code: moduleCode,
+                                      grade: FinalGrade,
+                                      numMcs: NumMcs,
+                                      sem: fromWhere,
+                                    };
+
+                                    // moduleDetailsArray
+                                    newModulesDetailsArray.push({
+                                      FinalGrade: FinalGrade,
+                                      Level: Level,
+                                      NumMcs: NumMcs,
+                                      codePrefix: codePrefix,
+                                      moduleCode: moduleCode,
+                                      moduleName: moduleName,
+                                    });
+
+                                    if (bool) {
+                                      thisSemsemTotalMcUsedInCap += NumMcs;
+                                      thisSemtotalMcUsedInCap += NumMcs;
+                                      thisSemsemSum += modulePoints;
+                                      thisSemtotalSum += modulePoints;
+                                    }
+                                    thisSemtotalMc += NumMcs;
+                                    thisSemsemMc += NumMcs;
+                                  }
+
+                                  // Set codeObj & sorting
+                                  const newcodeObj = [];
+                                  for (
+                                    let i = codeObj.fixed;
+                                    i < codeObj.cat.length;
+                                    i++
+                                  ) {
+                                    if (codeObj.cat[i].mcsTaken !== 0) {
+                                      newcodeObj.push({
+                                        name: codeObj.cat[i].name,
+                                        mcsTaken: codeObj.cat[i].mcsTaken,
+                                        numTaken: codeObj.cat[i].numTaken,
+                                        mcsUsedInCap:
+                                          codeObj.cat[i].mcsUsedInCap,
+                                        points: codeObj.cat[i].points,
+                                      });
+                                    } else {
+                                      delete codeObj[codeObj.cat[i].name];
+                                    }
+                                  }
+
+                                  newcodeObj.sort((a, b) => {
+                                    if (a.mcsTaken >= b.mcsTaken) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+                                  // reassign keys and indexes
+                                  for (let i = 0; i < newcodeObj.length; i++) {
+                                    newcodeObj[i].key = codeObj.fixed + i + 1;
+                                    codeObj[newcodeObj[i].name] =
+                                      codeObj.fixed + i;
+                                  }
+
+                                  codeObj.cat = codeObj.cat
+                                    .slice(0, codeObj.fixed)
+                                    .concat(newcodeObj);
+
+                                  newNotTaken.sort((a, b) => {
+                                    if (a.code <= b.code) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  newTaken.sort((a, b) => {
+                                    if (a.sem < b.sem) {
+                                      return -1;
+                                    } else if (a.sem === b.sem) {
+                                      if (a.code < b.code) {
+                                        return -1;
+                                      } else {
+                                        return 1;
+                                      }
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  typeRef.set(typeObj);
+                                  codeRef.set(codeObj);
+                                  levelRef.set(levelObj);
+                                  takenModulesRef.set(taken);
+                                  recordsRef.update({
+                                    notTaken: newNotTaken,
+                                    taken: newTaken,
+                                  });
+                                  // end of for loop
+                                  const newObjToInsert = {
+                                    Semester: props.headerTitle,
+                                    ModulesDetailsArray: newModulesDetailsArray,
+                                    nameOfPlan: val.nameOfPlan,
+                                  };
+                                  usersModulesDetailsRef
+                                    .get()
+                                    .then((document) => {
+                                      const val = document.data();
+                                      const arr1 = val.usersModulesArray;
+                                      const nextArr = [];
+                                      const tempArr2 = [];
+                                      let totalSum = 0;
+                                      let totalMc = 0;
+                                      let totalMcUsedInCap = 0;
+                                      for (let k = 0; k < arr1.length; k++) {
+                                        let semSum = 0;
+                                        let semMc = 0;
+                                        let semTotalMcUsedInCap = 0;
+                                        if (
+                                          arr1[k].Semester !== props.headerTitle
+                                        ) {
+                                          nextArr.push(arr1[k]);
+                                          const refPoint =
+                                            arr1[k].ModulesDetailsArray;
+                                          for (
+                                            let j = 0;
+                                            j < refPoint.length;
+                                            j++
+                                          ) {
+                                            const mc = refPoint[j].NumMcs;
+                                            const points = GradeToPoint(
+                                              refPoint[j].FinalGrade
+                                            );
+                                            if (
+                                              lettersChecker(
+                                                refPoint[j].FinalGrade
+                                              )
+                                            ) {
+                                              semTotalMcUsedInCap += mc;
+                                              totalMcUsedInCap += mc;
+                                              semSum += mc * points;
+                                              totalSum += mc * points;
+                                            }
+                                            totalMc += mc;
+                                            semMc += mc;
+                                          }
+                                          tempArr2.push({
+                                            SemestralCap: parseFloat(
+                                              (
+                                                semSum / semTotalMcUsedInCap
+                                              ).toFixed(2)
+                                            ),
+                                            OverallCap: parseFloat(
+                                              (
+                                                totalSum / totalMcUsedInCap
+                                              ).toFixed(2)
+                                            ),
+                                            Semester: arr1[k].Semester,
+                                            SemestralMc: semMc,
+                                            OverallMc: totalMc,
+                                            MCcountedToCap: semTotalMcUsedInCap,
+                                            TotalMcUsedInCap: totalMcUsedInCap,
+                                          });
+                                        } else {
+                                          nextArr.push(newObjToInsert);
+                                          semTotalMcUsedInCap += thisSemsemTotalMcUsedInCap;
+                                          totalMcUsedInCap += thisSemtotalMcUsedInCap;
+                                          semSum += thisSemsemSum;
+                                          totalSum += thisSemtotalSum;
+                                          totalMc += thisSemtotalMc;
+                                          semMc += thisSemsemMc;
+                                          tempArr2.push({
+                                            SemestralCap: parseFloat(
+                                              (
+                                                semSum / semTotalMcUsedInCap
+                                              ).toFixed(2)
+                                            ),
+                                            OverallCap: parseFloat(
+                                              (
+                                                totalSum / totalMcUsedInCap
+                                              ).toFixed(2)
+                                            ),
+                                            Semester: props.headerTitle,
+                                            SemestralMc: semMc,
+                                            OverallMc: totalMc,
+                                            MCcountedToCap: semTotalMcUsedInCap,
+                                            TotalMcUsedInCap: totalMcUsedInCap,
+                                          });
+                                        }
+                                      }
+                                      const usersRef = FirebaseDB.firestore()
+                                        .collection("users")
+                                        .doc(userID);
+                                      setselectedplansinfo(
+                                        newSelectedPlansInfo
+                                      );
+                                      usersRef.update({
+                                        CapArray: tempArr2,
+                                        SelectedPlansInfo: newSelectedPlansInfo,
+                                      });
+                                      //deletion in usersModulesDetailsRef
+                                      usersModulesDetailsRef.set({
+                                        usersModulesArray: nextArr,
+                                      });
+                                      FirebaseDB.firestore()
+                                        .collection("plansItself")
+                                        .doc(
+                                          userID.concat(
+                                            "_",
+                                            props.headerTitle,
+                                            "_",
+                                            currentPlanName
+                                          )
+                                        )
+                                        .delete();
+                                    });
+                                })
+                                .catch((error) => {});
+                            } else {
+                              // this means that no previous useInCap exist(no final grades)
+                              newNotTaken = origNotTaken;
+                              usersModulesDetailsRef
+                                .get()
+                                .then((document) => {
+                                  const val = document.data();
+                                  const arr1 = val.usersModulesArray;
+                                  const nextArr = [];
+                                  const tempArr2 = [];
+                                  let totalSum = 0;
+                                  let totalMc = 0;
+                                  let totalMcUsedInCap = 0;
+                                  for (let k = 0; k < arr1.length; k++) {
+                                    let semSum = 0;
+                                    let semMc = 0;
+                                    let semTotalMcUsedInCap = 0;
+                                    if (
+                                      arr1[k].Semester !== props.headerTitle
+                                    ) {
+                                      nextArr.push(arr1[k]);
+                                      const refPoint =
+                                        arr1[k].ModulesDetailsArray;
+                                      for (
+                                        let j = 0;
+                                        j < refPoint.length;
+                                        j++
+                                      ) {
+                                        const mc = refPoint[j].NumMcs;
+                                        const points = GradeToPoint(
+                                          refPoint[j].FinalGrade
+                                        );
+                                        if (
+                                          lettersChecker(refPoint[j].FinalGrade)
+                                        ) {
+                                          semTotalMcUsedInCap += mc;
+                                          totalMcUsedInCap += mc;
+                                          semSum += mc * points;
+                                          totalSum += mc * points;
+                                        }
+                                        totalMc += mc;
+                                        semMc += mc;
+                                      }
+                                      tempArr2.push({
+                                        SemestralCap: parseFloat(
+                                          (
+                                            semSum / semTotalMcUsedInCap
+                                          ).toFixed(2)
+                                        ),
+                                        OverallCap: parseFloat(
+                                          (totalSum / totalMcUsedInCap).toFixed(
+                                            2
+                                          )
+                                        ),
+                                        Semester: arr1[k].Semester,
+                                        SemestralMc: semMc,
+                                        OverallMc: totalMc,
+                                        MCcountedToCap: semTotalMcUsedInCap,
+                                        TotalMcUsedInCap: totalMcUsedInCap,
+                                      });
+                                    }
+
+                                    // deletion in usersRef
+                                    const usersRef = FirebaseDB.firestore()
+                                      .collection("users")
+                                      .doc(userID);
+                                    setselectedplansinfo(newSelectedPlansInfo);
+                                    usersRef.update({
+                                      CapArray: tempArr2,
+                                      SelectedPlansInfo: newSelectedPlansInfo,
+                                    });
+                                    //deletion in usersModulesDetailsRef
+                                    usersModulesDetailsRef.set({
+                                      usersModulesArray: nextArr,
+                                    });
+                                    FirebaseDB.firestore()
+                                      .collection("plansItself")
+                                      .doc(
+                                        userID.concat(
+                                          "_",
+                                          props.headerTitle,
+                                          "_",
+                                          currentPlanName
+                                        )
+                                      )
+                                      .delete();
+                                  }
+                                  // Set codeObj & sorting
+                                  const newcodeObj = [];
+                                  for (
+                                    let i = codeObj.fixed;
+                                    i < codeObj.cat.length;
+                                    i++
+                                  ) {
+                                    if (codeObj.cat[i].mcsTaken !== 0) {
+                                      newcodeObj.push({
+                                        name: codeObj.cat[i].name,
+                                        mcsTaken: codeObj.cat[i].mcsTaken,
+                                        numTaken: codeObj.cat[i].numTaken,
+                                        mcsUsedInCap:
+                                          codeObj.cat[i].mcsUsedInCap,
+                                        points: codeObj.cat[i].points,
+                                      });
+                                    } else {
+                                      delete codeObj[codeObj.cat[i].name];
+                                    }
+                                  }
+
+                                  newcodeObj.sort((a, b) => {
+                                    if (a.mcsTaken >= b.mcsTaken) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+                                  // reassign keys and indexes
+                                  for (let i = 0; i < newcodeObj.length; i++) {
+                                    newcodeObj[i].key = codeObj.fixed + i + 1;
+                                    codeObj[newcodeObj[i].name] =
+                                      codeObj.fixed + i;
+                                  }
+
+                                  codeObj.cat = codeObj.cat
+                                    .slice(0, codeObj.fixed)
+                                    .concat(newcodeObj);
+
+                                  newNotTaken.sort((a, b) => {
+                                    if (a.code <= b.code) {
+                                      return -1;
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  newTaken.sort((a, b) => {
+                                    if (a.sem < b.sem) {
+                                      return -1;
+                                    } else if (a.sem === b.sem) {
+                                      if (a.code < b.code) {
+                                        return -1;
+                                      } else {
+                                        return 1;
+                                      }
+                                    } else {
+                                      return 1;
+                                    }
+                                  });
+
+                                  typeRef.set(typeObj);
+                                  codeRef.set(codeObj);
+                                  levelRef.set(levelObj);
+                                  takenModulesRef.set(taken);
+                                  recordsRef.update({
+                                    notTaken: newNotTaken,
+                                    taken: newTaken,
+                                  });
+                                })
+                                .catch((error) => {});
+                            }
+                            // After else block
                           },
                         },
                       ],
@@ -642,7 +1329,7 @@ const Plans = (props) => {
                   }
                 }
               })
-              .catch((error) => alert(error));
+              .catch((error) => {});
           }
         }}
       >
@@ -651,19 +1338,13 @@ const Plans = (props) => {
     </View>
   );
   return (
-    <View style={{ flex: 1, minHeight: hp("100%") }}>
+    <View style={styles.overallContainer}>
       <View style={styles.header}>
         <ImageBackground
           style={styles.header}
           source={require("../../../../assets/HeaderBG.png")}
         >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "flex-start",
-            }}
-          >
+          <View style={styles.arrowContainer}>
             <Ionicons
               name="md-arrow-round-back"
               size={25}
@@ -673,7 +1354,6 @@ const Plans = (props) => {
                 const userRef = FirebaseDB.firestore()
                   .collection("users")
                   .doc(userID);
-
                 if (currentArr.length > 0) {
                   plansArrayRef.update({
                     selected: currentID,
@@ -726,32 +1406,18 @@ const Plans = (props) => {
                     selected: "-1",
                   });
                 }
-                navigation.dispatch(CommonActions.goBack());
+                navigation.goBack();
               }}
             />
           </View>
-          <View
-            style={{
-              flex: 3,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                ...globalFontStyles.NB_20,
-                color: "#3E3E3E",
-                bottom: 15,
-              }}
-            >
-              {props.headerTitle}
-            </Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.textStyling}>{props.headerTitle}</Text>
           </View>
 
           {showDustBin ? dustBin : emptySpace}
         </ImageBackground>
       </View>
-      <View style={{ flex: 6, backgroundColor: "#f9f9f9" }}>
+      <View style={{ flex: 6, backgroundColor: "#f9f9f9", top: 5 }}>
         <FlatList
           ListEmptyComponent={
             <View style={{ flex: 1, backgroundColor: "#f9f9f9" }} />
@@ -798,125 +1464,137 @@ const Plans = (props) => {
                   ? arrForRect[parseInt(item.key) - 1].useInCap
                   : 0
               }
-              LastUpdated={"24/04/20 DEMO"}
+              LastUpdated={
+                arrForRect.length === currentArr.length
+                  ? arrForRect[parseInt(item.key) - 1].LastUpdated
+                  : 0
+              }
             />
           )}
         />
       </View>
-      <View style={styles.btmPart}>
-        <View style={{ flex: 1 }} />
-        <View style={styles.btmMidPart}>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.enterButton}
-            onPress={() => {
-              // come here later to solve the problem!
-              const currentPlanName =
-                currentArr[parseInt(currentID) - 1].nameOfPlan;
-              const userRef = FirebaseDB.firestore()
-                .collection("users")
-                .doc(userID);
+      <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
+        <View style={styles.btmPart}>
+          <View style={{ flex: 1 }} />
+          <View style={styles.btmMidPart}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.enterButton}
+              onPress={() => {
+                // come here later to solve the problem!
+                if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
+                  alert("Please select or create a plan");
+                } else {
+                  if (currentArr.length > 0) {
+                    const currentPlanName =
+                      currentArr[parseInt(currentID) - 1].nameOfPlan;
+                    const userRef = FirebaseDB.firestore()
+                      .collection("users")
+                      .doc(userID);
+                    plansArrayRef.update({
+                      selected: currentID,
+                    });
 
-              if (currentArr.length > 0) {
-                plansArrayRef.update({
-                  selected: currentID,
-                });
+                    userRef
+                      .get()
+                      .then((document) => {
+                        const val = document.data();
+                        const arr = val.SelectedPlansInfo;
+                        let doIChange = true;
 
-                userRef
-                  .get()
-                  .then((document) => {
-                    const val = document.data();
-                    const arr = val.SelectedPlansInfo;
-                    let doIChange = true;
-
-                    for (let i = 0; i < arr.length; i++) {
-                      if (arr[i].Semester === props.headerTitle) {
-                        if (
-                          arr[i].useInCap ||
-                          arr[i].nameOfPlan === currentPlanName
-                        ) {
-                          doIChange = false;
+                        for (let i = 0; i < arr.length; i++) {
+                          if (arr[i].Semester === props.headerTitle) {
+                            if (
+                              arr[i].useInCap ||
+                              arr[i].nameOfPlan === currentPlanName
+                            ) {
+                              doIChange = false;
+                            }
+                            break;
+                          }
                         }
-                        break;
-                      }
-                    }
-                    if (doIChange) {
-                      let tempArr = [];
-                      for (let i = 0; i < arr.length; i++) {
-                        if (arr[i].Semester === props.headerTitle) {
-                          tempArr.push({
-                            Cap: currentArr[parseInt(currentID) - 1].Cap,
-                            McUsedInCap:
-                              currentArr[parseInt(currentID) - 1]
-                                .MCsCountedToCap,
-                            Semester: props.headerTitle,
-                            nameOfPlan: currentPlanName,
-                            useInCap: false,
+                        if (doIChange) {
+                          let tempArr = [];
+                          for (let i = 0; i < arr.length; i++) {
+                            if (arr[i].Semester === props.headerTitle) {
+                              tempArr.push({
+                                Cap: currentArr[parseInt(currentID) - 1].Cap,
+                                McUsedInCap:
+                                  currentArr[parseInt(currentID) - 1]
+                                    .MCsCountedToCap,
+                                Semester: props.headerTitle,
+                                nameOfPlan: currentPlanName,
+                                useInCap: false,
+                              });
+                            } else {
+                              tempArr.push(arr[i]);
+                            }
+                          }
+                          userRef.update({
+                            SelectedPlansInfo: tempArr,
                           });
-                        } else {
-                          tempArr.push(arr[i]);
                         }
+                      })
+                      .catch((error) => {});
+                  } else {
+                    plansArrayRef.update({
+                      selected: "-1",
+                    });
+                  }
+                  const currentPlanName =
+                    currentArr[parseInt(currentID) - 1].nameOfPlan;
+                  const plansItselfRef = FirebaseDB.firestore()
+                    .collection("plansItself")
+                    .doc(
+                      userID.concat(
+                        "_",
+                        props.headerTitle,
+                        "_",
+                        currentPlanName
+                      )
+                    );
+                  const val = plansItselfRef
+                    .get()
+                    .then((document) => {
+                      const info = document.data();
+                      if (info !== undefined) {
+                        const moduleInformations = info.planInfo;
+                        const thisPlanName = info.nameOfPlan;
+                        const amIfavourite = info.amIfavourite;
+                        navigation.navigate("ViewPlan", {
+                          item: [
+                            thisPlanName,
+                            docLoc,
+                            size,
+                            fromWhere,
+                            moduleInformations,
+                            amIfavourite,
+                          ],
+                        });
                       }
-                      userRef.update({
-                        SelectedPlansInfo: tempArr,
-                      });
-                    }
-                  })
-                  .catch((error) => {});
-              } else {
-                plansArrayRef.update({
-                  selected: "-1",
-                });
-              }
-
-              if (currentArr.length === 0 || parseInt(currentID) - 1 < 0) {
-                alert("Please select or create a plan");
-              } else {
-                const plansItselfRef = FirebaseDB.firestore()
-                  .collection("plansItself")
-                  .doc(
-                    userID.concat("_", props.headerTitle, "_", currentPlanName)
-                  );
-                const val = plansItselfRef
-                  .get()
-                  .then((document) => {
-                    const info = document.data();
-                    if (info !== undefined) {
-                      const moduleInformations = info.planInfo;
-                      const thisPlanName = info.nameOfPlan;
-                      const amIfavourite = info.amIfavourite;
-                      navigation.navigate("ViewPlan", {
-                        item: [
-                          thisPlanName,
-                          docLoc,
-                          size,
-                          fromWhere,
-                          moduleInformations,
-                          amIfavourite,
-                        ],
-                      });
-                    }
-                  })
-                  .catch((error) => {});
-              }
+                    })
+                    .catch((error) => {});
+                }
+              }}
+            >
+              <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
+                Enter
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.btmRightPart}
+            activeOpacity={0.9}
+            onPress={() => {
+              setModalVisible(true);
             }}
           >
-            <Text style={{ ...globalFontStyles.OSB_17, color: "white" }}>
-              Enter
-            </Text>
+            <Icon name="plus-circle" width={60} height={60} fill={"#FB5581"} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.btmRightPart}
-          activeOpacity={0.9}
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        >
-          <Icon name="plus-circle" width={60} height={60} fill={"#FB5581"} />
-        </TouchableOpacity>
       </View>
       {PopOutBox()}
+      {SuccessFulDeletion()}
     </View>
   );
 };
@@ -967,7 +1645,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
     backgroundColor: "white",
   },
@@ -989,6 +1666,12 @@ const styles = StyleSheet.create({
     width: 0.7 * width,
     height: 0.17 * height,
     borderRadius: 30,
+  },
+  modalBox2: {
+    backgroundColor: "#F4FFFC",
+    width: 0.7 * width,
+    height: 0.2 * height,
+    borderRadius: 20,
   },
   popouttext: {
     flexDirection: "row",
@@ -1052,6 +1735,7 @@ const styles = StyleSheet.create({
     height: 0.11 * height,
     width: "100%",
     flexDirection: "row",
+    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -1095,5 +1779,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     bottom: 10,
+  },
+  overallContainer: {
+    flex: 1,
+    minHeight: hp("100%"),
+    backgroundColor: "#f9f9f9",
+  },
+  arrowContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
+  },
+  textContainer: {
+    flex: 3,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  textStyling: {
+    ...globalFontStyles.NB_20,
+    color: "#3E3E3E",
+    bottom: 15,
+  },
+  deletionTextAlertStyle: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 });

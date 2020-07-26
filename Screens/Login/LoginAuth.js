@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import {
   View,
-  StyleSheet,
   Text,
   Dimensions,
   TextInput,
-  Alert,
+  StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -31,9 +31,8 @@ const LoginAuth = () => {
         .signInWithEmailAndPassword(emailValues, passwordValues)
         .then((response) => {
           const uid = response.user.uid;
-          const userRef = FirebaseDB.firestore().collection("users");
+          const userRef = FirebaseDB.firestore().collection("users").doc(uid);
           userRef
-            .doc(uid)
             .get()
             .then((firestoreDocument) => {
               if (!firestoreDocument.exists) {
@@ -42,6 +41,12 @@ const LoginAuth = () => {
               } else {
                 setIsLoading(false);
                 const user = firestoreDocument.data();
+                const oldpw = user.password;
+                if (oldpw !== passwordValues) {
+                  userRef.update({
+                    password: passwordValues,
+                  });
+                }
               }
             })
             .catch((error) => {
@@ -64,20 +69,20 @@ const LoginAuth = () => {
       <View style={globalStyles.header}>
         <MaterialCommunityIcons
           name="email"
-          size={30}
+          size={27}
           style={{ ...globalStyles.iconDesign, right: 13 }}
         />
         <TextInput
           placeholder="Email"
           onChangeText={(text) => setEmailValues(text)}
           placeholderTextColor="#7F8E9E"
-          style={{ ...globalFontStyles.OSR_17, right: 10, flex: 1, top: 7 }}
+          style={{ ...globalFontStyles.OSR_17, right: 8, flex: 1, top: 7 }}
         />
       </View>
-      <View style={{ ...globalStyles.header, top: 10 }}>
+      <View style={{ ...globalStyles.header, top: 13 }}>
         <Ionicons
           name="ios-lock"
-          size={34}
+          size={30}
           style={{ ...globalStyles.iconDesign, right: 10 }}
         />
         <TextInput
@@ -88,24 +93,53 @@ const LoginAuth = () => {
           style={{ ...globalFontStyles.OSR_17, right: 2, top: 7, flex: 1 }}
         />
       </View>
-      <View
-        style={{
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          width: "100%",
-          height: "100%",
-          top: 0.06 * height,
-          left: 30,
-        }}
-      >
-        <SignInButton func={() => signIn()} isLoading={isLoading}>
-          <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-            Sign In
+      <View style={{ ...styles.bottomDesign }}>
+        <View style={{ top: 0.05 * height }}>
+          <SignInButton func={() => signIn()} isLoading={isLoading}>
+            <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+              Sign In
+            </Text>
+          </SignInButton>
+        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={{
+            top: 0.05 * height,
+            left: 0.02 * width,
+            width: "40%",
+            height: "10%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={() => navigation.navigate("ForgetPassword")}
+        >
+          <Text
+            style={{
+              ...globalFontStyles.NB_14,
+              color: "#7F8E9E",
+              right: 0.01 * width,
+            }}
+          >
+            Forgot Password?
           </Text>
-        </SignInButton>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 export default LoginAuth;
+
+const styles = StyleSheet.create({
+  hundred: {
+    width: "100%",
+    height: "100%,",
+  },
+  bottomDesign: {
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+  },
+});

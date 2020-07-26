@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { MenuItem, OverflowMenu } from "@ui-kitten/components";
 import { Icon } from "react-native-eva-icons";
 
+console.disableYellowBox = true;
+
 const Ellipsis = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const MenuIcon = () => (

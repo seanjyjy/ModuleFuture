@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
+import FirebaseDB from "../FirebaseDB";
 //362
 const ratio = 228 / 362;
 
@@ -57,6 +58,60 @@ const CardWallet = (y, index, card, PageName) => {
     inputRange: [isDisappearing, isTop, isBottom, isAppearing],
     outputRange: [0.5, 1, 1, 0.5],
   });
+  const infoExtractor = async (
+    userID,
+    whatSem,
+    SumMcArr,
+    selectedplansinfo
+  ) => {
+    const docLocCurr = userID.concat("_", whatSem);
+    const plansArrayRef = FirebaseDB.firestore()
+      .collection("plansArray")
+      .doc(docLocCurr);
+
+    let arrToPass = [];
+    arrToPass[0] = userID;
+    arrToPass[4] = selectedplansinfo;
+    await plansArrayRef
+      .get()
+      .then((document) => {
+        const val = document.data();
+        if (val !== undefined && SumMcArr !== undefined) {
+          const arr = val.yearSem;
+          const arrLength = arr.length;
+          arrToPass[1] = arr;
+          arrToPass[2] = val.selected;
+          let tempArr = [];
+          for (let i = 0; i < arr.length; i++) {
+            const newTotalMcs = SumMcArr[1] + arr[i].MCs;
+            const newTotalSum = SumMcArr[0] + arr[i].MCs * arr[i].Cap;
+            tempArr.push({
+              SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
+              OverallCap:
+                newTotalMcs !== 0
+                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                  : 0,
+              PlannedOverallCap:
+                newTotalMcs !== 0
+                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+                  : 0,
+              PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
+              MCs: arr[i].MCs,
+              LastUpdated: arr[i].LastUpdated,
+              useInCap: arr[i].useInCap,
+            });
+          }
+          arrToPass[3] = tempArr;
+        } else {
+          plansArrayRef.set({ yearSem: [], selected: "-1", ArrForRect: [] });
+          arrToPass[1] = [];
+          arrToPass[2] = "1";
+          arrToPass[3] = [];
+        }
+      })
+      .then((error) => {});
+    return arrToPass;
+  };
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -66,7 +121,11 @@ const CardWallet = (y, index, card, PageName) => {
         width: 0.8 * width,
         height: CARD_HEIGHT,
       }}
-      onPress={() => PageName()}
+      onPress={async () => {
+        const arr = PageName();
+        const arrToPass = await infoExtractor(arr[0], arr[1], arr[2], arr[3]);
+        return arr[4].navigate(arr[1], { item: arrToPass });
+      }}
     >
       <Animated.View
         style={[

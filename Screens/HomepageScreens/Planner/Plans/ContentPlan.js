@@ -1,6 +1,7 @@
 import React from "react";
-import { View, StyleSheet, Text, TextInput } from "react-native";
 import Plans from "./Plans";
+
+console.disableYellowBox = true;
 
 export const Y1S1 = ({ route }) => (
   <Plans headerTitle="Y1S1" data={route.params?.item}></Plans>
