@@ -123,7 +123,7 @@ const ModulePage = (props) => {
       if (description === "" && workLoad === undefined) {
         height -= 115;
       } else if (description === "") {
-        height -= 50;
+        height -= 40;
       } else if (workLoad === undefined) {
         height -= 95;
       }
@@ -132,80 +132,86 @@ const ModulePage = (props) => {
 
     return (
       <TouchableOpacity
-        style={{ ...styles.container, height: findHeight() }}
+        style={{
+          ...styles.container,
+          height: findHeight(),
+          flexDirection: "column",
+        }}
         activeOpacity={0.8}
         onPress={() =>
           props.navigation.navigate("ModuleItself", { item: item })
         }
       >
-        <View
-          style={{
-            width: "78%",
-          }}
-        >
-          <Text
-            numberOfLines={1}
-            style={{
-              ...globalFontStyles.OSSB_14,
-              color: "#232323",
-              marginBottom: 15,
-            }}
-          >
-            {item.name}
-          </Text>
+        <View style={{ flexDirection: "row" }}>
           <View
             style={{
-              flexDirection: "row",
-              alignContent: "center",
-              marginBottom: 15,
+              width: "78%",
             }}
           >
+            <Text
+              numberOfLines={1}
+              style={{
+                ...globalFontStyles.OSSB_14,
+                color: "#232323",
+                marginBottom: 15,
+              }}
+            >
+              {item.name}
+            </Text>
             <View
               style={{
                 flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                marginRight: 15,
+                alignContent: "center",
+                marginBottom: 15,
               }}
             >
-              <Text style={{ ...styles.suTextStyle, marginRight: 2 }}>
-                SU availability
-              </Text>
-              {suOptions ? tickIcon : crossIcon}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: 15,
+                }}
+              >
+                <Text style={{ ...styles.suTextStyle, marginRight: 2 }}>
+                  SU availability
+                </Text>
+                {suOptions ? tickIcon : crossIcon}
+              </View>
+              <View
+                style={{
+                  borderLeftWidth: 1,
+                  borderLeftColor: "black",
+                  marginRight: 15,
+                }}
+              />
+              <Text
+                style={{
+                  alignSelf: "center",
+                  ...globalFontStyles.OSSB_14,
+                  color: "#2A4F74",
+                }}
+              >{`MCs : ${mc}`}</Text>
             </View>
-            <View
-              style={{
-                borderLeftWidth: 1,
-                borderLeftColor: "black",
-                marginRight: 15,
-              }}
-            />
             <Text
+              numberOfLines={4}
               style={{
-                alignSelf: "center",
-                ...globalFontStyles.OSSB_14,
-                color: "#2A4F74",
+                color: "#3B6EA2",
+                ...globalFontStyles.OSSB_13,
+                marginBottom: 20,
               }}
-            >{`MCs : ${mc}`}</Text>
+            >
+              {description}
+            </Text>
           </View>
-          <Text
-            numberOfLines={4}
-            style={{
-              color: "#3B6EA2",
-              ...globalFontStyles.OSSB_13,
-              marginBottom: 20,
-            }}
-          >
-            {description}
-          </Text>
-          {workLoad ? workloaddisplays(workLoad) : null}
+          <View style={{ width: "22%", alignItems: "flex-end" }}>
+            {sidetab("Sem 1", semData[0])}
+            {sidetab("Sem 2", semData[1])}
+            {sidetab("ST I", semData[2])}
+            {sidetab("ST II", semData[3])}
+          </View>
         </View>
-        <View style={{ width: "22%", alignItems: "flex-end" }}>
-          {sidetab("Sem 1", semData[0])}
-          {sidetab("Sem 2", semData[1])}
-          {sidetab("ST I", semData[2])}
-          {sidetab("ST II", semData[3])}
-        </View>
+        {workLoad ? workloaddisplays(workLoad) : null}
       </TouchableOpacity>
     );
   };
@@ -244,12 +250,12 @@ const ModulePage = (props) => {
     }
     if (array) {
       return (
-        <View>
+        <View style={{ flex: 1 }}>
           <Text
             style={{
               ...globalFontStyles.OSSB_13,
               color: "#232323",
-              marginBottom: 12,
+              marginBottom: 10,
             }}
           >
             {`Workload: ${sum} hrs`}

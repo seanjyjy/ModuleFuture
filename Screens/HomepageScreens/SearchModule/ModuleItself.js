@@ -133,6 +133,7 @@ const ModuleItself = ({ navigation, route }) => {
             alignSelf: "center",
             width: 160,
             height: 60,
+            marginBottom: 20,
           }}
           activeOpacity={0.875}
           onPress={() => null}
