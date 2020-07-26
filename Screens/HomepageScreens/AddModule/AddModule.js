@@ -237,6 +237,7 @@ Entering from records: Filter all modules mapped (to course) + planned
       </Modal>
     );
   };
+
   const crossIcon = (
     <Entypo size={20} name="cross" style={{ color: "#FF6C7D", top: 2 }} />
   );

@@ -13,6 +13,7 @@ import { globalFontStyles } from "../../../Component/GlobalFont";
 import ModuleBlocks from "../AddModule/ModuleBlocks";
 import Entypo from "react-native-vector-icons/Entypo";
 import { Icon } from "react-native-eva-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -83,7 +84,7 @@ const ModulePage = (props) => {
       setModuleList(newList);
       setFilterArr(props.route.params?.currentFilters);
     }
-  }, [props.route.params?.newModules || props.route.params?.currentFilters]);
+  }, [props.route.params?.currentFilters]);
 
   const [filterArr, setFilterArr] = useState([]);
   const [origList, setOrigList] = useState(new Set(props.moduleList));
@@ -91,10 +92,10 @@ const ModulePage = (props) => {
   const [moduleList, setModuleList] = useState(props.moduleList);
 
   const crossIcon = (
-    <Entypo size={20} name="cross" style={{ color: "#FF6C7D", top: 2 }} />
+    <Entypo size={20} name="cross" style={{ color: "#FF6C7D" }} />
   );
   const tickIcon = (
-    <Entypo size={20} name="check" style={{ color: "#4AE8AB", top: 1 }} />
+    <Entypo size={18} name="check" style={{ color: "#4AE8AB", left: 1 }} />
   );
 
   const setSem = (array) => {
@@ -117,15 +118,26 @@ const ModulePage = (props) => {
     const semData = setSem(item.Semester);
     const workLoad = item.workLoad;
 
-    let totalWork = 0;
-    if (workLoad) {
-      for (let i = 0; i < workLoad.length; i++) {
-        totalWork += workLoad[i];
+    const findHeight = () => {
+      let height = 275;
+      if (description === "" && workLoad === undefined) {
+        height -= 115;
+      } else if (description === "") {
+        height -= 50;
+      } else if (workLoad === undefined) {
+        height -= 95;
       }
-    }
+      return height;
+    };
 
     return (
-      <View style={{ ...styles.container }}>
+      <TouchableOpacity
+        style={{ ...styles.container, height: findHeight() }}
+        activeOpacity={0.8}
+        onPress={() =>
+          props.navigation.navigate("ModuleItself", { item: item })
+        }
+      >
         <View
           style={{
             width: "78%",
@@ -194,7 +206,7 @@ const ModulePage = (props) => {
           {sidetab("ST I", semData[2])}
           {sidetab("ST II", semData[3])}
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -202,7 +214,7 @@ const ModulePage = (props) => {
     <View
       style={{
         ...styles.sideTab,
-        backgroundColor: bool ? "#FF6B6B" : "#927575",
+        backgroundColor: bool ? "#FF6B6B" : "#DCDCDC",
       }}
     >
       <Text style={{ ...globalFontStyles.OSSB_13, color: "white" }}>{sem}</Text>
@@ -305,65 +317,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  modalBox: {
-    backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.2,
-    width: width * 0.9,
-    borderRadius: 25,
-  },
-  twoCenter: { flex: 2, alignItems: "center", justifyContent: "center" },
-  headerStyling: {
-    ...globalFontStyles.OSB_17,
-    alignSelf: "center",
-    color: "#1F3C58",
-  },
   suTextStyle: {
     ...globalFontStyles.OSSB_14,
-    color: "#2A4F74",
-  },
-  lineDesign: {
-    height: 1,
-    width: "90%",
-    backgroundColor: "#D0CECE",
-    alignSelf: "center",
-    bottom: 10,
-  },
-  oneCenter: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  flexRow10: {
-    flexDirection: "row",
-    bottom: 10,
-  },
-  headerPreStyling: {
-    ...globalFontStyles.OSB_15,
-    color: "#2A4F74",
-    alignSelf: "center",
-    textDecorationLine: "underline",
-  },
-  mdStyle: {
-    alignSelf: "center",
-    ...globalFontStyles.OSB_17,
     color: "#2A4F74",
   },
   container: {
     backgroundColor: "white",
     borderRadius: 15,
     borderColor: "lightgrey",
-    borderWidth: StyleSheet.hairlineWidth * 2,
-
-    width: width * 0.94,
-    height: 275,
-    paddingLeft: 10,
-    paddingTop: 20,
+    borderWidth: StyleSheet.hairlineWidth * 3,
+    width: width * 0.92,
+    paddingLeft: 18,
+    paddingTop: 18,
     marginVertical: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

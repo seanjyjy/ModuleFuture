@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-  SegmentedControlIOS,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
 import Header from "../../../Component/Header";
 import { Icon } from "react-native-eva-icons";
 import { globalFontStyles } from "../../../Component/GlobalFont";

@@ -31,6 +31,7 @@ import ProgressPageSettings from "./Screens/HomepageScreens/Planner/ProgressPage
 import AddModule from "./Screens/HomepageScreens/AddModule/AddModule";
 import Filter from "./Screens/HomepageScreens/AddModule/Filter";
 import SeeModules from "./Screens/HomepageScreens/AddModule/SeeModules";
+import ModuleItself from "./Screens/HomepageScreens/SearchModule/ModuleItself";
 import {
   Y1S1,
   Y1S2,
@@ -231,6 +232,10 @@ export default function App() {
                       <AuthStack.Screen
                         name="EditRecords"
                         component={EditRecords}
+                      />
+                      <AuthStack.Screen
+                        name="ModuleItself"
+                        component={ModuleItself}
                       />
                       <AuthStack.Screen name="AddModule">
                         {(props) => (

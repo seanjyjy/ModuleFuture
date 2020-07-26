@@ -64,6 +64,7 @@ const ModuleListWithKey = () => {
           " " +
           current.title
         ).toLowerCase(),
+        title: current.title,
         codePrefix: codeArr[0],
         Level: codeArr[1] * 1000,
         MC: parseInt(current.moduleCredit), // number
