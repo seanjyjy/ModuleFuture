@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
+  Linking,
   TouchableOpacity,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
@@ -15,11 +15,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
 
 const ModuleItself = ({ navigation, route }) => {
-  useEffect(() => {
-    if (route.params?.module) {
-    }
-  }, [route.params?.module]);
-
   const crossIcon = (
     <Entypo size={20} name="cross" style={{ color: "#FF6C7D" }} />
   );
@@ -136,7 +131,11 @@ const ModuleItself = ({ navigation, route }) => {
             marginBottom: 20,
           }}
           activeOpacity={0.875}
-          onPress={() => null}
+          onPress={() => {
+            const modName = item.title.replace(/\s+/g, "-").toLowerCase();
+            const webLink = `https://nusmods.com/modules/${item.code}/${modName}`;
+            Linking.openURL(webLink);
+          }}
         >
           <Text style={{ ...globalFontStyles.OSSB_13, color: "white" }}>
             View on NUSMods

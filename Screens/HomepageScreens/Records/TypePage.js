@@ -163,7 +163,12 @@ const TypePage = ({ navigation, route }) => {
         {editMode ? (
           <AddModuleButton
             size={45}
-            func={() => navigation.navigate("AddModule", { item: "TypePage" })}
+            func={() =>
+              navigation.navigate("AddModule", {
+                item: "TypePage",
+                modulesPlanned: taken.concat(notTaken),
+              })
+            }
           />
         ) : (
           <EditButton func={() => setEdit(!editMode)} />

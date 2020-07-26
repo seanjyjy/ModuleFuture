@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -114,8 +114,9 @@ const AddModule = (props) => {
     }
   }, [props.route.params?.newModules || props.route.params?.currentFilters]);
 
-  // TODO: Tag modules that are already planned in the current plan
-  const modulesPlanned = props.route.params?.modulesPlanned;
+  const [modulesPlanned, setModulesPlanned] = useState(
+    props.route.params?.modulesPlanned
+  );
   const locationFrom = props.route.params?.item;
   const [filterArr, setFilterArr] = useState([]);
   const [origList, setOrigList] = useState(new Set(props.moduleList));
@@ -130,15 +131,20 @@ const AddModule = (props) => {
 
   const valAdded = (item) => (locationFrom === "AddPlan" ? item.MC : 1);
 
-  /*
-Filter: 
-When entering from planner: Filter all modules planned
-Entering from records: Filter all modules mapped (to course) + planned
-*/
+  const checkIfCanAdd = (code) => {
+    console.log(modulesPlanned);
+    for (const mod of modulesPlanned) {
+      if (mod.code === code || mod.moduleCode === code) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   const holders = (item) => (
     <Container
       name={item.name}
+      canAdd={checkIfCanAdd(item.code)}
       button1Press={() => {
         if (item.preclusion && item.prerequisite) {
           setpreReqInfo([item.preclusion, item.prerequisite]);
@@ -160,7 +166,6 @@ Entering from records: Filter all modules mapped (to course) + planned
         return null;
       }}
       button2Press={() => {
-        // console.log(item.semesters);
         setInfoModalVisible(true);
         setInfoInfo([
           item.MC,

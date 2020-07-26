@@ -10,7 +10,6 @@ import { Icon } from "react-native-eva-icons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
 
 const EachFocusArea = ({ navigation, route }) => {
   const [arr, setArr] = useState([]);
@@ -162,7 +161,10 @@ const EachFocusArea = ({ navigation, route }) => {
           <AddModuleButton
             size={35}
             func={() =>
-              navigation.navigate("AddModule", { item: "EachFocusArea" })
+              navigation.navigate("AddModule", {
+                item: "EachFocusArea",
+                modulesPlanned: taken.concat(notTaken),
+              })
             }
           />
         );

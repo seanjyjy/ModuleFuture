@@ -8,12 +8,12 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import ModuleBlocks from "../AddModule/ModuleBlocks";
 import Entypo from "react-native-vector-icons/Entypo";
 import { Icon } from "react-native-eva-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;

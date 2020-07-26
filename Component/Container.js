@@ -75,15 +75,27 @@ const Container = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      <Icon
-        name={"plus-circle"}
-        width={43}
-        height={43}
-        fill={"#3FE2D3"}
-        onPress={() => {
-          move();
-        }}
-      />
+      {props.canAdd ? (
+        <Icon
+          name={"plus-circle"}
+          width={43}
+          height={43}
+          fill={"#3FE2D3"}
+          onPress={() => {
+            move();
+          }}
+        />
+      ) : (
+        <Text
+          style={{
+            ...globalFontStyles.OSR_12,
+            color: "#D5D5D5",
+            alignSelf: "flex-start",
+          }}
+        >
+          Already exists
+        </Text>
+      )}
     </Animated.View>
   );
 };
@@ -95,17 +107,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     borderColor: "lightgrey",
-    borderWidth: StyleSheet.hairlineWidth * 2,
+    borderWidth: StyleSheet.hairlineWidth * 3,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
     width: width * 0.9,
-    height: height * 0.12,
+    height: height * 0.13,
     paddingHorizontal: 15,
     paddingLeft: 20,
     marginVertical: 10,
