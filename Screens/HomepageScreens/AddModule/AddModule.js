@@ -18,7 +18,8 @@ import Modal from "react-native-modal";
 import Cross from "../../../Component/Cross";
 import Container from "../../../Component/Container";
 import Entypo from "react-native-vector-icons/Entypo";
-import ModuleBlocks from "./ModuleBlocks";
+import FeatherIcon from "react-native-vector-icons/Feather";
+import WorkLoadDisplay from "./WorkLoadDisplay";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
@@ -191,9 +192,58 @@ const AddModule = (props) => {
   const preReqModal = () => {
     const prereq = preReqInfo[1];
     const preclu = preReqInfo[0];
+
+    const modalSizing = [
+      {
+        precluFlex: 3,
+        prereqFlex: 3,
+        backgroundColor: "white",
+        modalStyle: {
+          backgroundColor: "white",
+          alignSelf: "center",
+          marginVertical: height * 0.29,
+          width: width * 0.9,
+          borderRadius: 25,
+        },
+      },
+      {
+        precluFlex: 3,
+        prereqFlex: 0,
+        modalStyle: {
+          backgroundColor: "white",
+          alignSelf: "center",
+          marginVertical: height * 0.36,
+          width: width * 0.9,
+          borderRadius: 25,
+        },
+      },
+      {
+        precluFlex: 0,
+        prereqFlex: 3,
+        modalStyle: {
+          backgroundColor: "white",
+          alignSelf: "center",
+          marginVertical: height * 0.36,
+          width: width * 0.9,
+          borderRadius: 25,
+        },
+      },
+      { precluFlex: 0, prereqFlex: 0, modalStyle: {} },
+    ];
+
+    let styleToUse = 0;
+    if (prereq && prereq !== "" && preclu && preclu != "") {
+      styleToUse = 0;
+    } else if (prereq && prereq !== "") {
+      styleToUse = 2;
+    } else if (preclu && preclu != "") {
+      styleToUse = 1;
+    } else {
+      styleToUse = 3;
+    }
     return (
       <Modal
-        style={styles.modalBox2}
+        style={modalSizing[styleToUse].modalStyle}
         backdropOpacity={0.3}
         animationIn="fadeIn"
         animationOut="fadeOut"
@@ -207,13 +257,38 @@ const AddModule = (props) => {
         }}
       >
         <View style={{ flex: 1 }}>
-          <View style={styles.oneCenter}>
-            <Text style={{ ...globalFontStyles.OSB_15, bottom: 5 }}>
-              Requirements
-            </Text>
-            <View style={{ ...styles.lineDesign, top: 5 }} />
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
+          >
+            <View style={{ flex: 1 }} />
+            <View style={{ flex: 6 }}>
+              <Text
+                style={{
+                  ...globalFontStyles.OSB_15,
+                  bottom: 5,
+                  alignSelf: "center",
+                }}
+              >
+                Requirements
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <FeatherIcon
+                name="x"
+                size={15}
+                color="#333333"
+                style={{ bottom: 5 }}
+                onPress={() => setPreReqModalVisible(false)}
+              />
+            </View>
           </View>
-          <View style={{ flex: 3 }}>
+          <View style={{ ...styles.lineDesign }} />
+          <View style={{ flex: modalSizing[styleToUse].precluFlex }}>
             <View style={{ flex: 1 }}>
               <Text style={{ ...styles.headerPreStyling }}>Preclusion</Text>
             </View>
@@ -225,7 +300,7 @@ const AddModule = (props) => {
               <View style={{ height: 2 }} />
             </View>
           </View>
-          <View style={{ flex: 3 }}>
+          <View style={{ flex: modalSizing[styleToUse].prereqFlex }}>
             <View style={{ flex: 1 }}>
               <Text style={{ ...styles.headerPreStyling }}>Prerequisite</Text>
             </View>
@@ -274,23 +349,22 @@ const AddModule = (props) => {
     if (array) {
       return (
         <View style={{ flex: 1, bottom: 7 }}>
-          <Text
-            style={{
-              ...globalFontStyles.OSSB_13,
-              color: "#333333",
-              bottom: 5,
-            }}
-          >
-            {`Workload: ${sum} hrs`}
-          </Text>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            {arrayToMake.map(({ color, title }, index) => (
-              <ModuleBlocks color={color} key={index} title={title} sum={sum} />
-            ))}
+          <Text style={styles.workloadStyling}>{`Workload: ${sum} hrs`}</Text>
+          <View style={{ flex: 1, width: width * 0.9 - 20 }}>
+            <WorkLoadDisplay arrayToMake={arrayToMake} sum={sum} />
           </View>
         </View>
       );
     }
+  };
+
+  const tickOrNoTick = (booleanValue, title) => {
+    return (
+      <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
+        <Text style={styles.suTextStyle}>{title}</Text>
+        {booleanValue ? tickIcon : crossIcon}
+      </View>
+    );
   };
 
   const infoModal = () => {
@@ -298,7 +372,8 @@ const AddModule = (props) => {
     const mc = infoInfo[0];
     let description = infoInfo[2];
     if (description) {
-      description = description.replace(/(\r\n|\n|\r)/gm, "");
+      description = description.replace(/(\r\n|\n|\r)/gm, " ");
+      description = description.replace(/  +/g, " ");
     }
     const semData = infoInfo[3];
     const suOptions = infoInfo[4];
@@ -315,7 +390,7 @@ const AddModule = (props) => {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * 0.2,
+          marginVertical: height * 0.23,
           width: width * 0.9,
           borderRadius: 25,
         },
@@ -384,14 +459,22 @@ const AddModule = (props) => {
         }}
       >
         <View style={{ flex: 1 }}>
-          <View
-            style={{
-              height: 70,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={styles.headerStyling}>{codeName ? codeName : ""}</Text>
+          <View style={styles.modalContainerOverall}>
+            <View style={{ flex: 1 }} />
+            <View style={{ flex: 6 }}>
+              <Text style={styles.headerStyling}>
+                {codeName ? codeName : ""}
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <FeatherIcon
+                name="x"
+                size={15}
+                color="#333333"
+                style={{ bottom: 10 }}
+                onPress={() => setInfoModalVisible(false)}
+              />
+            </View>
           </View>
           <View style={styles.lineDesign} />
           <View style={{ flex: modalSizing[styleToUse].descriptionflex }}>
@@ -402,50 +485,27 @@ const AddModule = (props) => {
             </View>
             <View style={{ flex: 10 }}>
               <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
-                <Text
-                  style={{
-                    color: "#3B6EA2",
-                    ...globalFontStyles.OSR_13,
-                    top: 5,
-                  }}
-                >
-                  {description}
-                </Text>
+                <Text style={styles.descriptionStyling}>{description}</Text>
                 <Text></Text>
               </ScrollView>
             </View>
           </View>
           <View style={{ flex: 2 }}>
-            <View style={{ height: 20 }} />
+            <View style={{ height: 22 }} />
             <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Semester 1</Text>
-                {arrOfBoolean[0] ? tickIcon : crossIcon}
-              </View>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Semester 2</Text>
-                {arrOfBoolean[1] ? tickIcon : crossIcon}
-              </View>
+              {tickOrNoTick(arrOfBoolean[0], "Semester 1")}
+              {tickOrNoTick(arrOfBoolean[1], "Semester 2")}
             </View>
             <View style={{ flex: 1, flexDirection: "row", top: 2 }}>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Special term I</Text>
-                {arrOfBoolean[2] ? tickIcon : crossIcon}
-              </View>
-              <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-                <Text style={styles.suTextStyle}>Special term II</Text>
-                {arrOfBoolean[3] ? tickIcon : crossIcon}
-              </View>
+              {tickOrNoTick(arrOfBoolean[2], "Special term I")}
+              {tickOrNoTick(arrOfBoolean[3], "Special term II")}
             </View>
           </View>
           <View style={{ flex: 1, flexDirection: "row" }}>
             <View style={{ ...styles.oneCenter, bottom: 10 }}>
               <Text style={styles.mcTextStyle}>{`Number of MCs: ${mc}`}</Text>
             </View>
-            <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
-              <Text style={styles.suTextStyle}>SU availability</Text>
-              {suOptions ? tickIcon : crossIcon}
-            </View>
+            {tickOrNoTick(suOptions, "SU availability")}
           </View>
           <View style={{ height: 5 }} />
           <View
@@ -507,7 +567,8 @@ const styles = StyleSheet.create({
   // Stylesheet for header
   header: {
     backgroundColor: "white",
-    borderBottomWidth: 0.2,
+    borderBottomWidth: 0.5,
+    borderColor: "#DDDDDD",
     width: width,
     height: 0.178 * height,
     shadowColor: "#000",
@@ -535,20 +596,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  modalBox: {
-    backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.2,
-    width: width * 0.9,
-    borderRadius: 25,
-  },
-  modalBox2: {
-    backgroundColor: "white",
-    alignSelf: "center",
-    marginVertical: height * 0.29,
-    width: width * 0.9,
-    borderRadius: 25,
   },
   headerStyling: {
     ...globalFontStyles.OSB_17,
@@ -607,5 +654,21 @@ const styles = StyleSheet.create({
     width: 0.9 * width - 40,
     alignSelf: "center",
     borderRadius: 5,
+  },
+  descriptionStyling: {
+    color: "#3B6EA2",
+    ...globalFontStyles.OSR_13,
+    top: 5,
+  },
+  modalContainerOverall: {
+    height: 70,
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+  },
+  workloadStyling: {
+    ...globalFontStyles.OSSB_13,
+    color: "#333333",
+    bottom: 5,
   },
 });

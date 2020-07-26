@@ -13,6 +13,7 @@ import ModuleBlocks from "../AddModule/ModuleBlocks";
 import Entypo from "react-native-vector-icons/Entypo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
+import { useSafeArea } from "react-native-safe-area-context";
 
 const ModuleItself = ({ navigation, route }) => {
   const crossIcon = (
@@ -128,7 +129,7 @@ const ModuleItself = ({ navigation, route }) => {
             alignSelf: "center",
             width: 160,
             height: 60,
-            marginBottom: 20,
+            marginBottom: useSafeArea().bottom > 0 ? useSafeArea().bottom : 20,
           }}
           activeOpacity={0.875}
           onPress={() => {

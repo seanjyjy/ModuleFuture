@@ -520,8 +520,6 @@ const Plans = (props) => {
         activeOpacity={0.9}
         onPress={() => {
           if (currentArr.length > 0) {
-            setModalVisibleDeletion(true);
-            setTimeout(() => setModalVisibleDeletion(false), 1500);
             plansArrayRef
               .get()
               .then((document) => {
@@ -543,6 +541,8 @@ const Plans = (props) => {
                   }
                   if (justDelete) {
                     // THIS MEANS THAT THIS PLAN IS NOT A IMPORTANT PLAN
+                    setModalVisibleDeletion(true);
+                    setTimeout(() => setModalVisibleDeletion(false), 1600);
                     let tempArr = [];
                     let tempIndex = 0;
                     let newarrForRect = [];
@@ -627,6 +627,11 @@ const Plans = (props) => {
                         {
                           text: "Continue",
                           onPress: () => {
+                            setModalVisibleDeletion(true);
+                            setTimeout(
+                              () => setModalVisibleDeletion(false),
+                              1600
+                            );
                             let tempArr = [];
                             let tempIndex = 0;
                             let newarrForRect = [];

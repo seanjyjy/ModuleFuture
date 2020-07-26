@@ -51,7 +51,7 @@ const Container = (props) => {
         >
           {/* Prereq button */}
           <TouchableOpacity
-            style={{ ...styles.button1, backgroundColor: "#303030" }}
+            style={{ ...styles.button1, backgroundColor: "#373F51" }}
             activeOpacity={0.85}
             onPress={() => {
               props.button1Press();
@@ -63,7 +63,7 @@ const Container = (props) => {
           </TouchableOpacity>
           {/* Info button */}
           <TouchableOpacity
-            style={styles.button1}
+            style={{ ...styles.button1, backgroundColor: "#DAA49A" }}
             activeOpacity={0.85}
             onPress={() => {
               props.button2Press();
@@ -133,6 +133,5 @@ const styles = StyleSheet.create({
     height: 30,
     width: 75,
     borderRadius: 5,
-    backgroundColor: "#DDAB57",
   },
 });

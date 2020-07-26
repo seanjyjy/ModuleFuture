@@ -1124,7 +1124,7 @@ const AddPlan = ({ route }) => {
   });
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {Header()}
       <View style={styles.container}>
         <FlatList
@@ -1145,7 +1145,7 @@ const AddPlan = ({ route }) => {
         translateY={translateY}
         dataArray={data}
       ></AnimatedBottomBar>
-    </>
+    </View>
   );
 };
 
@@ -1154,21 +1154,21 @@ export default AddPlan;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "transparent",
   },
   headerDesign: {
     height: 0.11 * height,
     width: "100%",
     flexDirection: "row",
     backgroundColor: "#f9f9f9",
-    shadowColor: "#000",
+    shadowColor: "#333333",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
     borderBottomWidth: 1,
     borderColor: "#DDDDDD",
   },

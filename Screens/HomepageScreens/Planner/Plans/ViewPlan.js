@@ -432,7 +432,10 @@ const ViewPlan = ({ route }) => {
               <View style={styles.centerThree}>
                 <Image
                   source={require("../../../../assets/ModuleFutureLogo1.png")}
-                  style={styles.imageStylingForDrawer}
+                  style={{
+                    ...styles.imageStylingForDrawer,
+                    left: 0.02 * width,
+                  }}
                 />
               </View>
               <View style={styles.oneCenter}>
@@ -664,7 +667,9 @@ const ViewPlan = ({ route }) => {
   return (
     <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {Header()}
-      <View style={{ ...styles.oneCenter, backgroundColor: "transparent" }}>
+      <View
+        style={{ ...styles.oneCenter, backgroundColor: "transparent", top: 5 }}
+      >
         <View
           style={{
             ...styles.container,
@@ -749,13 +754,20 @@ const styles = StyleSheet.create({
     color: "#232323",
   },
   headerDesign: {
-    width: width,
     height: 0.11 * height,
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomWidth: 0.3,
     backgroundColor: "#f9f9f9",
+    shadowColor: "#333333",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+    borderBottomWidth: 1,
+    borderColor: "#DDDDDD",
   },
   lineAtPlan: {
     width: 0.85 * width,

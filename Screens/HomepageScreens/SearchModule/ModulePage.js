@@ -254,7 +254,7 @@ const ModulePage = (props) => {
           <Text
             style={{
               ...globalFontStyles.OSSB_13,
-              color: "#232323",
+              color: "#333333",
               marginBottom: 10,
             }}
           >
