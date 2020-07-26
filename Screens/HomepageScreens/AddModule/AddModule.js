@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -241,7 +241,7 @@ Entering from records: Filter all modules mapped (to course) + planned
     <Entypo size={20} name="cross" style={{ color: "#FF6C7D", top: 2 }} />
   );
   const tickIcon = (
-    <Entypo size={20} name="check" style={{ color: "#4AE8AB", top: 1 }} />
+    <Entypo size={17} name="check" style={{ color: "#4AE8AB", top: 1 }} />
   );
 
   const workloaddisplays = (array) => {
@@ -267,12 +267,12 @@ Entering from records: Filter all modules mapped (to course) + planned
     }
     if (array) {
       return (
-        <View>
+        <View style={{ flex: 1, bottom: 7 }}>
           <Text
             style={{
               ...globalFontStyles.OSSB_13,
-              color: "#232323",
-              marginBottom: 12,
+              color: "#333333",
+              bottom: 5,
             }}
           >
             {`Workload: ${sum} hrs`}
@@ -286,6 +286,7 @@ Entering from records: Filter all modules mapped (to course) + planned
       );
     }
   };
+
   const infoModal = () => {
     const codeName = infoInfo[1];
     const mc = infoInfo[0];
@@ -302,9 +303,68 @@ Entering from records: Filter all modules mapped (to course) + planned
         arrOfBoolean[semData[i].semester - 1] = true;
       }
     }
+
+    let modalSizing = [
+      {
+        modalstyle: {
+          backgroundColor: "white",
+          alignSelf: "center",
+          marginVertical: height * 0.2,
+          width: width * 0.9,
+          borderRadius: 25,
+        },
+        descriptionflex: 6,
+        workloadflex: 2,
+      },
+      {
+        modalstyle: {
+          backgroundColor: "white",
+          alignSelf: "center",
+          marginVertical: height * 0.32,
+          width: width * 0.9,
+          borderRadius: 25,
+        },
+        descriptionflex: 0,
+        workloadflex: 2,
+      },
+      {
+        modalstyle: {
+          backgroundColor: "white",
+          alignSelf: "center",
+          marginVertical: height * 0.27,
+          width: width * 0.9,
+          borderRadius: 25,
+        },
+        descriptionflex: 6,
+        workloadflex: 0,
+      },
+      {
+        modalstyle: {
+          backgroundColor: "white",
+          alignSelf: "center",
+          marginVertical: height * 0.37,
+          width: width * 0.9,
+          borderRadius: 25,
+        },
+        descriptionflex: 0,
+        workloadflex: 0,
+      },
+    ];
+
+    let styleToUse = 0;
+    if (description && description !== "" && workLoad) {
+      styleToUse = 0;
+    } else if (description && description !== "") {
+      styleToUse = 2;
+    } else if (workLoad) {
+      styleToUse = 1;
+    } else {
+      styleToUse = 3;
+    }
+
     return (
       <Modal
-        style={styles.modalBox}
+        style={modalSizing[styleToUse].modalstyle}
         backdropOpacity={0.3}
         animationIn="fadeIn"
         animationOut="fadeOut"
@@ -318,17 +378,31 @@ Entering from records: Filter all modules mapped (to course) + planned
         }}
       >
         <View style={{ flex: 1 }}>
-          <View style={styles.twoCenter}>
+          <View
+            style={{
+              height: 70,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Text style={styles.headerStyling}>{codeName ? codeName : ""}</Text>
           </View>
           <View style={styles.lineDesign} />
-          <View style={{ flex: 10 }}>
+          <View style={{ flex: modalSizing[styleToUse].descriptionflex }}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.mdStyle}>Module Details</Text>
+              <Text style={{ ...styles.mdStyle, bottom: 5 }}>
+                Module Details
+              </Text>
             </View>
-            <View style={{ flex: 12 }}>
+            <View style={{ flex: 10 }}>
               <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
-                <Text style={{ color: "#3B6EA2", ...globalFontStyles.OSR_13 }}>
+                <Text
+                  style={{
+                    color: "#3B6EA2",
+                    ...globalFontStyles.OSR_13,
+                    top: 5,
+                  }}
+                >
                   {description}
                 </Text>
                 <Text></Text>
@@ -336,7 +410,7 @@ Entering from records: Filter all modules mapped (to course) + planned
             </View>
           </View>
           <View style={{ flex: 2 }}>
-            <View style={{ height: 10 }} />
+            <View style={{ height: 20 }} />
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
                 <Text style={styles.suTextStyle}>Semester 1</Text>
@@ -347,7 +421,7 @@ Entering from records: Filter all modules mapped (to course) + planned
                 {arrOfBoolean[1] ? tickIcon : crossIcon}
               </View>
             </View>
-            <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={{ flex: 1, flexDirection: "row", top: 2 }}>
               <View style={{ ...styles.oneCenter, ...styles.flexRow10 }}>
                 <Text style={styles.suTextStyle}>Special term I</Text>
                 {arrOfBoolean[2] ? tickIcon : crossIcon}
@@ -367,7 +441,14 @@ Entering from records: Filter all modules mapped (to course) + planned
               {suOptions ? tickIcon : crossIcon}
             </View>
           </View>
-          <View style={{ ...styles.twoCenter }}>
+          <View style={{ height: 5 }} />
+          <View
+            style={{
+              flex: modalSizing[styleToUse].workloadflex,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             {workLoad ? workloaddisplays(workLoad) : <View />}
           </View>
         </View>
@@ -452,7 +533,7 @@ const styles = StyleSheet.create({
   modalBox: {
     backgroundColor: "white",
     alignSelf: "center",
-    marginVertical: height * 0.15,
+    marginVertical: height * 0.2,
     width: width * 0.9,
     borderRadius: 25,
   },
@@ -463,7 +544,6 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     borderRadius: 25,
   },
-  twoCenter: { flex: 2, alignItems: "center", justifyContent: "center" },
   headerStyling: {
     ...globalFontStyles.OSB_17,
     alignSelf: "center",

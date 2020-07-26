@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   shadowImage: {
-    width: 0.605 * width,
+    width: 0.62 * width,
     height: 0.62 * height,
     shadowColor: "#000",
     shadowOffset: {
@@ -34,11 +34,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
+    alignSelf: "center",
+    justifyContent: "center",
   },
   imageStyling: {
     resizeMode: "contain",
     alignSelf: "center",
-    width: 0.605 * width,
+    width: 0.62 * width,
     height: 0.62 * height,
   },
 });
