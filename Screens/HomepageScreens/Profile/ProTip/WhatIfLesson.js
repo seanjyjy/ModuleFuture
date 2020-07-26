@@ -42,7 +42,7 @@ const WhatIfLesson = () => {
         "Note that when a plan has the final grades, the terminology will change from Planned Cap to Semestral Cap and Planned Overall Cap to Overall Cap.",
     },
     {
-      imageLink: require("../../../../assets/WhatIfLesson6.png"),
+      imageLink: require("../../../../assets/WhatIfLesson4.png"),
       subtitle: "CAP with final grades inserted",
       description:
         "Observe that the planned overall CAP in Y1S2 computed is based on Plan C.",

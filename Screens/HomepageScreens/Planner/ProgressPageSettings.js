@@ -52,9 +52,8 @@ const ProgressPageSettings = ({ navigation, route }) => {
     );
   };
 
-  const checkValidInput = (val) => {
-    let isnum = /^\d+$/.test(val);
-    return isnum;
+  const checkInValidInput = (val) => {
+    return isNaN(val);
   };
 
   return (
@@ -78,8 +77,7 @@ const ProgressPageSettings = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => {
             if (
-              !checkValidInput(TargetCAP) ||
-              TargetCAP <= 0 ||
+              (checkInValidInput(TargetCAP) && TargetCAP <= 0) ||
               TargetCAP > 5
             ) {
               Alert.alert(
@@ -88,7 +86,7 @@ const ProgressPageSettings = ({ navigation, route }) => {
                 [{ text: "Cancel", onPress: () => {} }],
                 { cancelable: false }
               );
-            } else if (!checkValidInput(totalMCs) || totalMCs <= 0) {
+            } else if (checkInValidInput(totalMCs) || totalMCs <= 0) {
               Alert.alert(
                 "Warning",
                 `Invalid value of ${totalMCs} inputted into total MCs`,

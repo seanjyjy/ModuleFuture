@@ -136,7 +136,6 @@ export default function App() {
       require("./assets/WhatIfLesson3.png"),
       require("./assets/WhatIfLesson4.png"),
       require("./assets/WhatIfLesson5.png"),
-      require("./assets/WhatIfLesson6.png"),
       // loading of Progress pictures
       require("./assets/ProgressLesson1.png"),
       require("./assets/ProgressLesson2.png"),

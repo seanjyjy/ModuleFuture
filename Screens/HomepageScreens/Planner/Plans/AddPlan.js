@@ -1002,11 +1002,19 @@ const AddPlan = ({ route }) => {
                 LastUpdated: date,
               });
             }
-            plansArrayRef.set({
-              yearSem: newPlansArr,
-              selected: (thisPlanLength + 1).toString(),
-              ArrForRect: arr2,
-            });
+            if (newPlansArr.length === thisPlanLength) {
+              // only change the internal
+              plansArrayRef.update({
+                yearSem: newPlansArr,
+                ArrForRect: arr2,
+              });
+            } else {
+              plansArrayRef.set({
+                yearSem: newPlansArr,
+                selected: (thisPlanLength + 1).toString(),
+                ArrForRect: arr2,
+              });
+            }
           } else {
             plansArrayRef.set({
               yearSem: [
