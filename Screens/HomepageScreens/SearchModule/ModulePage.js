@@ -92,7 +92,7 @@ const ModulePage = (props) => {
   const [moduleList, setModuleList] = useState(props.moduleList);
 
   const crossIcon = (
-    <Entypo size={20} name="cross" style={{ color: "#FF6C7D" }} />
+    <Entypo size={20} name="cross" style={{ color: "#FF6C7D", top: 1 }} />
   );
   const tickIcon = (
     <Entypo size={18} name="check" style={{ color: "#4AE8AB", left: 1 }} />
@@ -249,6 +249,7 @@ const ModulePage = (props) => {
       }
     }
     if (array) {
+      console.log(array.length);
       return (
         <View style={{ flex: 1 }}>
           <Text
@@ -260,7 +261,7 @@ const ModulePage = (props) => {
           >
             {`Workload: ${sum} hrs`}
           </Text>
-          <View style={{ flex: 1, flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", flex: 1 }}>
             {arrayToMake.map(({ color, title }, index) => (
               <ModuleBlocks color={color} key={index} title={title} sum={sum} />
             ))}
@@ -276,6 +277,7 @@ const ModulePage = (props) => {
       <View style={{ marginBottom: 0.25 * height }}>
         <FlatList
           keyboardShouldPersistTaps="always"
+          initialNumToRender={6}
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
           data={moduleList}
           keyExtractor={(item) => item.code}

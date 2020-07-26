@@ -133,7 +133,6 @@ const AddModule = (props) => {
   const valAdded = (item) => (locationFrom === "AddPlan" ? item.MC : 1);
 
   const checkIfCanAdd = (code) => {
-    console.log(modulesPlanned);
     for (const mod of modulesPlanned) {
       if (mod.code === code || mod.moduleCode === code) {
         return false;
@@ -527,6 +526,7 @@ const AddModule = (props) => {
       {header}
       <View style={{ marginBottom: 0.25 * height }}>
         <FlatList
+          initialNumToRender={10}
           keyboardShouldPersistTaps="always"
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
           data={moduleList}
