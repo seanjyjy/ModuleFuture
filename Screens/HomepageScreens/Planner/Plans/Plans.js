@@ -1160,7 +1160,9 @@ const Plans = (props) => {
                                         .delete();
                                     });
                                 })
-                                .catch((error) => {});
+                                .catch((error) => {
+                                  console.log(error);
+                                });
                             } else {
                               // this means that no previous useInCap exist(no final grades)
                               newNotTaken = origNotTaken;
@@ -1318,7 +1320,9 @@ const Plans = (props) => {
                                     taken: newTaken,
                                   });
                                 })
-                                .catch((error) => {});
+                                .catch((error) => {
+                                  console.log(error);
+                                });
                             }
                             // After else block
                           },

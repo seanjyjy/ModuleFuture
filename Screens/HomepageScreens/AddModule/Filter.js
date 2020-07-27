@@ -402,7 +402,9 @@ const Filter = ({ navigation, route }) => {
       } else {
         throw "Category does not exist!";
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const filterAll = (filters) => {

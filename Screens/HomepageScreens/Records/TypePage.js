@@ -257,6 +257,7 @@ const TypePage = ({ navigation, route }) => {
               onPress={() => {
                 setEdit(!editMode);
                 if (toAdd.size > 0 || toDel.size > 0) {
+                  console.log(toAdd);
                   setOrigNotTaken(notTaken);
                   const arrToAdd = Array.from(toAdd);
                   const arrToDel = Array.from(toDel);
