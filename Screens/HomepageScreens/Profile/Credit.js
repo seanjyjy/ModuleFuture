@@ -68,17 +68,17 @@ const Credit = () => {
                 Q) Does your app use our personal information?
               </Text>
               <Text style={styles.biggerWords}>
-                A) We only use the grades that is being entered, any other data
+                A) We only use the grades that are being entered, any other data
                 is not used without any permission.
               </Text>
               <Text style={styles.biggerWords}>
-                Q) What happen if I spot an error or bug that result in the app
+                Q) What happens if I spot an error or bug that result in the app
                 not being functional?
               </Text>
               <Text style={styles.biggerWords}>
-                A) We deeply apologise for the inconveniencies caused. That
-                said, please contact any of the developers. It would be great if
-                the problem can be describe aptly so that it is reproducible!
+                A) We deeply apologise for the inconveniences caused. That said,
+                please contact any of the developers. It would be great if the
+                problem can be described aptly so that it is reproducible!
               </Text>
               <Text style={styles.biggestWords}>Note</Text>
               <Text style={styles.biggerWords}>
