@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,22 +8,18 @@ import {
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import FilterItem from "../../../Component/FilterItem";
-import { TodosDispatch } from "./Filter";
 
 const FilterSection = (props) => {
-  const dispatch = useContext(TodosDispatch);
-
   const textWithIcon1 = (name) => (
-    <TodosDispatch.Provider value={dispatch}>
-      <FilterItem
-        text={name}
-        category={props.name}
-        box={true}
-        reset={props.reset}
-        click={dispatch}
-        filterSet={props.filterSet}
-      />
-    </TodosDispatch.Provider>
+    <FilterItem
+      text={name}
+      box={true}
+      reset={props.reset}
+      click={(name, bool) => {
+        props.click(name, bool);
+      }}
+      filterSet={props.filterSet}
+    />
   );
   const convert = (text) =>
     text === "Level"
