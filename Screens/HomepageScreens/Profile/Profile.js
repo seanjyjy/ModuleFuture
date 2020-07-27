@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, Dimensions } from "react-native";
 import Header from "../../../Component/Header";
-import LogoutButton from "../../../Component/LogoutButton";
 import ProfileButton0 from "../../../Component/ProfileButton0";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../../../FirebaseDB";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-
+import SignInButton from "../../../Component/SignInButton";
 const width = Dimensions.get("window").width;
 
 const Profile = (props) => {
@@ -134,7 +133,13 @@ const Profile = (props) => {
           transition={() => CreditPage()}
           right={""}
         />
-        <LogoutButton func={() => signOutUser()} />
+        <View style={{ alignItems: "center", top: 10 }}>
+          <SignInButton func={() => signOutUser()}>
+            <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
+              Logout
+            </Text>
+          </SignInButton>
+        </View>
       </View>
     </View>
   );
