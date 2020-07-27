@@ -134,7 +134,7 @@ const EmailVerification = () => {
           <View style={{ flex: 1, alignItems: "center" }}>
             <SignInButton func={() => verifyEmail()}>
               <Text style={{ ...globalFontStyles.OSSB_17, color: "white" }}>
-                CONFIRM EMAIL
+                VERIFY EMAIL
               </Text>
             </SignInButton>
           </View>
