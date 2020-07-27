@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, Dimensions, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
 
