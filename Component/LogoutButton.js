@@ -1,15 +1,6 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Text,
-  NativeModules,
-  Alert,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, Dimensions, Text } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
-import { useSafeArea } from "react-native-safe-area-context";
-import { log } from "react-native-reanimated";
 
 const LogoutButton = (props) => {
   return (
@@ -26,7 +17,7 @@ const LogoutButton = (props) => {
 };
 
 export default LogoutButton;
-const screenwidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
   buttonDesign: {
     height: 40,

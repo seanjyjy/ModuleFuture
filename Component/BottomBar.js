@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   Dimensions,
-  SafeAreaView,
   View,
 } from "react-native";
 import { globalFontStyles } from "./GlobalFont";

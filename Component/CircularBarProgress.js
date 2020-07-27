@@ -88,5 +88,3 @@ const CircularBarProgress = (props) => {
 };
 
 export default CircularBarProgress;
-
-const styles = StyleSheet.create({});

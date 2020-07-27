@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, Text, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { globalFontStyles } from "./GlobalFont";
 
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   buttonDesign: {
     height: 35,
     width: 28,
-    // backgroundColor: "pink",
     alignItems: "center",
     justifyContent: "center",
     left: "88%",

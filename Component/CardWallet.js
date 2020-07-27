@@ -3,11 +3,8 @@ import {
   Animated,
   Dimensions,
   StyleSheet,
-  View,
-  Text,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import FirebaseDB from "../FirebaseDB";
 //362
 const ratio = 228 / 362;

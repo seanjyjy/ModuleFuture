@@ -38,7 +38,8 @@ const ModuleItself = ({ navigation, route }) => {
     const suOptions = item.suOption;
     let description = item.description;
     if (description) {
-      description = description.replace(/(\r\n|\n|\r)/gm, "");
+      description = description.replace(/(\r\n|\n|\r)/gm, " ");
+      description = description.replace(/  +/g, " ");
     }
     const semData = setSem(item.Semester);
     const workLoad = item.workLoad;

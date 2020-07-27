@@ -65,23 +65,24 @@ const Credit = () => {
                 A) Yes but it is stored in firebase.
               </Text>
               <Text style={styles.biggerWords}>
-                Q) Does your app uses our personal information?
+                Q) Does your app use our personal information?
               </Text>
               <Text style={styles.biggerWords}>
-                A) Yes we only use the grades that is being entered, any other
-                data are not being used without any permission.
+                A) We only use the grades that is being entered, any other data
+                is not used without any permission.
               </Text>
               <Text style={styles.biggerWords}>
                 Q) What happen if I spot an error or bug that result in the app
                 not being functional?
               </Text>
               <Text style={styles.biggerWords}>
-                A) You can contact either of the developers. It would be great
-                if the problem can be describe aptly so that it is reproducible!
+                A) We deeply apologise for the inconveniencies caused. That
+                said, please contact any of the developers. It would be great if
+                the problem can be describe aptly so that it is reproducible!
               </Text>
               <Text style={styles.biggestWords}>Note</Text>
               <Text style={styles.biggerWords}>
-                {`There will be some deviation between different Platform mainly IOS vs Android phones. \nPhone size of less than 5 inch will likely to have inaccurate rendering of the app. \nPerformance will vary between phones.`}
+                {`There will be some deviation between different Platform mainly IOS vs Android phones. \nPhone size of less than 5 inch will likely have inconsistent displays. \nPerformance will vary between phones.`}
               </Text>
               <Text style={styles.biggestWords}>Developers</Text>
               <Text style={styles.biggerWords}>
@@ -114,7 +115,7 @@ const Credit = () => {
               </Text>
               <Text style={styles.biggerWords}>Photo from pngtree.com</Text>
             </ScrollView>
-            <View style={{ height: 40 }}>
+            <View style={{ height: 40, top: 10 }}>
               <Text
                 style={styles.tncStyle}
                 onPress={() =>

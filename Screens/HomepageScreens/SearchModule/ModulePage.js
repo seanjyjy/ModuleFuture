@@ -144,7 +144,7 @@ const ModulePage = (props) => {
           height: findHeight(),
           flexDirection: "column",
         }}
-        activeOpacity={0.8}
+        activeOpacity={0.95}
         onPress={() =>
           props.navigation.navigate("ModuleItself", { item: item })
         }

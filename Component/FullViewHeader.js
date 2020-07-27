@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { globalFontStyles } from "./GlobalFont";
-const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const FullViewHeader = (props) => {

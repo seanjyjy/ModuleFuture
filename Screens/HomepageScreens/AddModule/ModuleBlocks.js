@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Dimensions, Text } from "react-native";
-import { globalFontStyles } from "../../../Component/GlobalFont";
+import { View, Dimensions } from "react-native";
+
 const width = Dimensions.get("window").width;
+
 const ModuleBlocks = ({ color, sum }) => {
   const widthToUse = sum !== 0 ? (0.9 * width - 50 - sum * 2) / sum : 0;
   return (

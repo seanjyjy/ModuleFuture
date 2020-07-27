@@ -39,18 +39,6 @@ const ModuleListWithKey = () => {
   let current;
   let i = 0;
 
-  // const getPrereq = (code) => {
-  //   try {
-  //     const response = await fetch(
-  //       `https://api.nusmods.com/v2/2020-2021/modules/${code}.json`
-  //     );
-  //     const json = await response.json();
-  //     return json.prereqTree;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   for (; i < moduleInfo.length; i++) {
     current = moduleInfo[i];
     if (current.semesterData.length !== 0) {
