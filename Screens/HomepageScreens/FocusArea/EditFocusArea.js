@@ -40,7 +40,7 @@ const EditRecords = ({ navigation, route }) => {
         setType(arr);
         setNum(arr.length);
       },
-      (error) => alert(error)
+      (error) => null
     );
     return () => unsub();
   }, [route.params?.type]);

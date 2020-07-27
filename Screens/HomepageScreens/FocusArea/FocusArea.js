@@ -34,7 +34,7 @@ const FocusArea = ({ navigation }) => {
           setTaken(document.data());
         });
       },
-      (error) => alert(error)
+      (error) => null
     );
     return () => unsub();
   }, []);

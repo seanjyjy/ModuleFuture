@@ -410,7 +410,6 @@ const ChoosingOptions = ({ route }) => {
                   })
                   .catch((error) => {
                     setIsLoading(false);
-                    alert(error);
                   });
               } else {
                 if (!checked) {

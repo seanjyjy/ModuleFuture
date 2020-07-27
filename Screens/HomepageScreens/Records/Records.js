@@ -45,7 +45,7 @@ const Records = ({ navigation }) => {
           setCode(document.data().cat);
         });
       },
-      (error) => alert(error)
+      (error) => null
     );
     return () => unsub();
   }, []);

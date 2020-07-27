@@ -700,9 +700,7 @@ const AddPlan = ({ route }) => {
             });
           }
         })
-        .catch((error) => {
-          alert(error);
-        });
+        .catch((error) => {});
       // -----------------UPDATING PLANS ARRAY WITH FINAL GRADE-------------------------------------------------
 
       let thisPlanSum1 = 0;
@@ -862,9 +860,7 @@ const AddPlan = ({ route }) => {
             });
           }
         })
-        .catch((error) => {
-          alert(error);
-        });
+        .catch((error) => {});
     } else {
       // -----------------UPDATING PLANS ARRAY when no FINAL GRADE -------------------------------------------------
 
@@ -1034,9 +1030,7 @@ const AddPlan = ({ route }) => {
             });
           }
         })
-        .catch((error) => {
-          alert(error);
-        });
+        .catch((error) => {});
     }
     // -----------------UPDATING PLANSitself array-------------------------------------------------
     const plansItself = FirebaseDB.firestore()

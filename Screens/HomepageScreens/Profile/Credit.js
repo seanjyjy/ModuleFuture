@@ -62,7 +62,7 @@ const Credit = () => {
                 password?
               </Text>
               <Text style={styles.biggerWords}>
-                A) Yes but it is stored in firebase.
+                A) Yes it is stored in our database.
               </Text>
               <Text style={styles.biggerWords}>
                 Q) Does your app use our personal information?
@@ -82,7 +82,7 @@ const Credit = () => {
               </Text>
               <Text style={styles.biggestWords}>Note</Text>
               <Text style={styles.biggerWords}>
-                {`There will be some deviation between different Platform mainly IOS vs Android phones. \nPhone size of less than 5 inch will likely have inconsistent displays. \nPerformance will vary between phones.`}
+                {`There will be some deviation between IOS and Android phones. \nPhone sizes of less than 5 inches will likely have inconsistent displays. \nPerformance may vary between phones.`}
               </Text>
               <Text style={styles.biggestWords}>Developers</Text>
               <Text style={styles.biggerWords}>

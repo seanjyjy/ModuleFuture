@@ -31,9 +31,7 @@ const EmailVerification = () => {
   const signOutUser = async () => {
     try {
       await FirebaseDB.auth().signOut();
-    } catch (error) {
-      alert(error);
-    }
+    } catch (error) {}
   };
   // if upgrading the plan then can do something liddat :(
   //   let actionCodeSettings = {

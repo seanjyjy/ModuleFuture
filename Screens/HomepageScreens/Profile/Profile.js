@@ -29,9 +29,7 @@ const Profile = (props) => {
   const signOutUser = async () => {
     try {
       await FirebaseDB.auth().signOut();
-    } catch (error) {
-      alert(error);
-    }
+    } catch (error) {}
   };
 
   const CourseOf = (props) => {

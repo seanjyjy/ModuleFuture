@@ -50,7 +50,7 @@ const EditRecords = ({ navigation, route }) => {
           setTotalMC(document.data().totalMCs);
         });
       },
-      (error) => alert(error)
+      (error) => null
     );
     return () => unsub();
   }, [route.params?.type]);

@@ -209,9 +209,7 @@ const ViewPlan = ({ route }) => {
   const signOutUser = async () => {
     try {
       await FirebaseDB.auth().signOut();
-    } catch (error) {
-      alert(error);
-    }
+    } catch (error) {}
   };
 
   const calculatorOfSem = (val) => {

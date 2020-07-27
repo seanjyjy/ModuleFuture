@@ -324,7 +324,7 @@ const Plans = (props) => {
           setTaken(document.data());
         });
       },
-      (error) => alert(error)
+      (error) => null
     );
     return () => unsub();
   }, [userID, props.data]);
@@ -1160,9 +1160,7 @@ const Plans = (props) => {
                                         .delete();
                                     });
                                 })
-                                .catch((error) => {
-                                  console.log(error);
-                                });
+                                .catch((error) => {});
                             } else {
                               // this means that no previous useInCap exist(no final grades)
                               newNotTaken = origNotTaken;
@@ -1320,9 +1318,7 @@ const Plans = (props) => {
                                     taken: newTaken,
                                   });
                                 })
-                                .catch((error) => {
-                                  console.log(error);
-                                });
+                                .catch((error) => {});
                             }
                             // After else block
                           },
