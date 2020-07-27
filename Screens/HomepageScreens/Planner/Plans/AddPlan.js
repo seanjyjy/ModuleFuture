@@ -863,7 +863,6 @@ const AddPlan = ({ route }) => {
         .catch((error) => {});
     } else {
       // -----------------UPDATING PLANS ARRAY when no FINAL GRADE -------------------------------------------------
-
       let thisPlanSum = 0;
       let thisPlanMc = 0;
       let thisPlanMcUsedInCap = 0;
@@ -926,7 +925,11 @@ const AddPlan = ({ route }) => {
               if (doIchangeCurrentArr) {
                 tempArr.push(newObjToPush);
               } else {
-                tempArr.push(arr[i]);
+                if (arr[i].nameOfPlan === planNameValue) {
+                  tempArr.push(newObjToPush);
+                } else {
+                  tempArr.push(arr[i]);
+                }
               }
               pushed = true;
             } else {

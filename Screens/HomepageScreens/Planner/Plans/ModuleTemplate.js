@@ -230,7 +230,14 @@ const ModuleTemplate = (props) => {
                 }
               } else {
                 if (validText(text1.toString().toUpperCase())) {
-                  if (
+                  if (text1.toString() === "" && FinalGrade !== "") {
+                    Alert.alert(
+                      "Warning",
+                      "You are not allowed to remove final grades, only can edit it. If you wish to remove it, delete this plan instead",
+                      [{ text: "Cancel", onPress: () => {} }],
+                      { cancelable: false }
+                    );
+                  } else if (
                     text1.toString().toUpperCase() !== "S" ||
                     (text1.toString().toUpperCase() === "S" && suAble)
                   ) {

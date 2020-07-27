@@ -56,7 +56,7 @@ const Credit = () => {
                 If there is something you wish to be included in the app, do
                 suggest it to us!
               </Text>
-              <Text style={styles.biggestWords}>QnA</Text>
+              <Text style={styles.biggestWords}>FAQ</Text>
               <Text style={styles.biggerWords}>
                 Q) Does your app keep information about my username and
                 password?

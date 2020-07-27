@@ -89,11 +89,12 @@ const Container = (props) => {
         <Text
           style={{
             ...globalFontStyles.OSR_12,
-            color: "#D5D5D5",
+            color: "#777777",
             alignSelf: "flex-start",
+            top: 5,
           }}
         >
-          Already exists
+          Added
         </Text>
       )}
     </Animated.View>
