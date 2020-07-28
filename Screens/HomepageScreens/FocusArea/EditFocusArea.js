@@ -114,7 +114,7 @@ const EditRecords = ({ navigation, route }) => {
 
   const holders = (item) => {
     const key = item.key;
-    const name = item.name;
+    const name = item.shortName === undefined ? item.name : item.shortName;
 
     return (
       <View style={{ ...styles.container }}>

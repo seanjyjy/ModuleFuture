@@ -165,6 +165,7 @@ const SeeModules = ({ navigation, route }) => {
         <FlatList
           data={modArr}
           keyExtractor={(item) => item.code}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => holders(item)}
           ListFooterComponent={
             <Text

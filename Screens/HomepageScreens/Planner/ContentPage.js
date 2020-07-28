@@ -34,7 +34,6 @@ console.disableYellowBox = true;
 const ContentPage = (props) => {
   const usaB = useSafeArea().bottom;
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
   const userInfo = FirebaseDB.firestore().collection("users");
   const userID = FirebaseDB.auth().currentUser.uid;
   const [usersDetails, setUsersDetails] = useState([]);

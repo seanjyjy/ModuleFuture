@@ -118,6 +118,7 @@ const EachFocusArea = ({ navigation, route }) => {
             <FlatList
               data={current.taken.concat(current.notTaken)}
               keyExtractor={(item) => item.code}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item }) =>
                 item.grade !== undefined ? holders(item) : holders2(item)
               }
@@ -202,6 +203,7 @@ const EachFocusArea = ({ navigation, route }) => {
           <FlatList
             data={taken.concat(notTaken)}
             keyExtractor={(item) => item.code}
+            showsVerticalScrollIndicator={false}
             extraData={notTaken}
             renderItem={({ item }) =>
               item.grade !== undefined ? holders(item) : holdersPrereq(item)

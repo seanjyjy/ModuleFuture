@@ -456,6 +456,7 @@ const Filter = ({ navigation, route }) => {
       <FlatList
         data={other}
         keyExtractor={(item) => item.name}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => textWithIcon2(item.name)}
       />
     </View>

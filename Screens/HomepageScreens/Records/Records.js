@@ -503,6 +503,7 @@ const Records = ({ navigation }) => {
             <FlatList
               data={showAll ? currTaken().concat(currNotTaken()) : currTaken()}
               keyExtractor={(item) => item.name.toString()}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item }) =>
                 item.grade !== undefined ? holders(item) : holders2(item)
               }
@@ -519,6 +520,7 @@ const Records = ({ navigation }) => {
         data={currentArr}
         keyExtractor={(item) => item.key.toString()}
         renderItem={({ item }) => IndividualBox(item)}
+        showsVerticalScrollIndicator={false}
       />
     );
   };
