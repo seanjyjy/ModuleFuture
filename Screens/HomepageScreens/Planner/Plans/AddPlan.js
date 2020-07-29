@@ -283,7 +283,7 @@ const AddPlan = ({ route }) => {
       const newTaken = [];
       const newNotTaken = [];
 
-      const newSet = new Set();
+      const newSet = new Set(); 
       data.forEach((x) => {
         newSet.add(x.moduleCode);
       });

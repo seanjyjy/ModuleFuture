@@ -22,7 +22,6 @@ const WordSpreader = ({ arrayToMake, array, sum }) => {
                 style={{
                   ...globalFontStyles.NSB_11,
                   color: arrayToMake[Math.ceil(index)].color,
-                  bottom: 3,
                   left: 2,
                 }}
               >

@@ -20,6 +20,7 @@ import Container from "../../../Component/Container";
 import Entypo from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import WorkLoadDisplay from "./WorkLoadDisplay";
+import MakingTheBlocks from "./MakingTheBlocks";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
@@ -324,25 +325,27 @@ const AddModule = (props) => {
     <Entypo size={17} name="check" style={{ color: "#4AE8AB", top: 1 }} />
   );
 
-  const workloaddisplays = (array) => {
-    let sum = 0;
+  const workloaddisplays = (array, sum) => {
     const colorArray = ["#F49097", "#DFB2F4", "#5467CE", "#5491CE", "#55D6C2"];
     const titleArray = ["Lec", "Tut", "Lab", "Proj", "Prep"];
     const arrayToMake = [];
     for (let i = 0; i < array.length; i++) {
-      sum += array[i];
-      for (let j = 0; j < Math.floor(array[i]); j++) {
+      let val = array[i];
+      for (let j = 0; j < Math.ceil(array[i]); j++) {
         if (j === 0) {
           arrayToMake.push({
             color: colorArray[i],
             title: titleArray[i],
+            value: val >= 1 ? 1 : val.toFixed(1),
           });
         } else {
           arrayToMake.push({
             color: colorArray[i],
             title: "",
+            value: val >= 1 ? 1 : val.toFixed(1),
           });
         }
+        val -= 1;
       }
     }
     if (array) {
@@ -356,11 +359,7 @@ const AddModule = (props) => {
               bottom: 3,
             }}
           >
-            <WorkLoadDisplay
-              arrayToMake={arrayToMake}
-              sum={sum}
-              array={array}
-            />
+            <MakingTheBlocks arrayToMake={arrayToMake} />
           </View>
         </View>
       );
@@ -393,24 +392,33 @@ const AddModule = (props) => {
         arrOfBoolean[semData[i].semester - 1] = true;
       }
     }
-
+    let sum = 0;
+    let realsum = 0;
+    if (workLoad) {
+      for (let i = 0; i < workLoad.length; i++) {
+        sum += Math.ceil(workLoad[i]);
+        realsum += workLoad[i];
+      }
+    }
+    sum = sum;
+    const numRowRequired = Math.ceil(sum / 10) - 1;
     let modalSizing = [
       {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * 0.22,
+          marginVertical: height * (0.22 - numRowRequired * 0.04),
           width: width * 0.95,
           borderRadius: 25,
         },
         descriptionflex: 6,
-        workloadflex: 2,
+        workloadflex: 2 + numRowRequired,
       },
       {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * 0.31,
+          marginVertical: height * (0.28 - numRowRequired * 0.01),
           width: width * 0.95,
           borderRadius: 25,
         },
@@ -524,7 +532,7 @@ const AddModule = (props) => {
               justifyContent: "center",
             }}
           >
-            {workLoad ? workloaddisplays(workLoad) : <View />}
+            {workLoad ? workloaddisplays(workLoad, realsum) : <View />}
           </View>
         </View>
       </Modal>
