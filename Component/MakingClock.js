@@ -317,6 +317,8 @@ const ChoosingOptions = ({ route }) => {
                       favPlanArray: [],
                       favPlanInfo: [],
                       SelectedPlansInfo: [],
+                      MCcolor: "#12DDB3",
+                      CAPcolor: "#C86FFC",
                     };
 
                     const FB = FirebaseDB.firestore();

@@ -28,6 +28,15 @@ const ProgressPage = ({ navigation, route }) => {
   const [allowClicks, setAllowClicks] = useState(false);
   const [userID, setUserID] = useState("");
   const [mcremainder, setmcRemainder] = useState(0);
+  const [MCcolor, setMCcolor] = useState("#12DDB3");
+  const [CAPcolor, setCAPcolor] = useState("#C86FFC");
+
+  const [MCdot, setMCdot] = useState(
+    <View style={{ backgroundColor: "#12DDB3", ...styles.dotDesign }} />
+  );
+  const [CAPdot, setCAPdot] = useState(
+    <View style={{ backgroundColor: "#C86FFC", ...styles.dotDesign }} />
+  );
   useEffect(() => {
     if (
       route.params?.usersDetails &&
@@ -71,7 +80,8 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(usersOverallMc, usersTARGETMC) / usersTARGETMC) * 100,
             usersOverallMc,
             usersTARGETMC,
-            "#12DDB3"
+            route.params?.usersDetails.MCcolor
+            // COLOR TO BE CHANGED
           )
         );
         setCircleRight(
@@ -79,7 +89,8 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100,
             usersCurrentCap,
             usersTARGETCAP,
-            "#C86FFC"
+            route.params?.usersDetails.CAPcolor
+            // COLOR TO BE CHANGED
           )
         );
         setTextToShow(
@@ -87,7 +98,26 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(usersCurrentCap, usersTARGETCAP) / usersTARGETCAP) * 100
           )
         );
+        setMCdot(
+          <View
+            style={{
+              backgroundColor: route.params?.usersDetails.MCcolor,
+              ...styles.dotDesign,
+            }}
+          />
+        );
+        setCAPdot(
+          <View
+            style={{
+              backgroundColor: route.params?.usersDetails.CAPcolor,
+              ...styles.dotDesign,
+            }}
+          />
+        );
+        setMCcolor(route.params?.usersDetails.MCcolor);
+        setCAPcolor(route.params?.usersDetails.CAPcolor);
       }
+
       setAllowClicks(true);
     } else {
       if (
@@ -106,7 +136,7 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(MCs, first) / first) * 100,
             MCs,
             first,
-            "#12DDB3"
+            route.params.items[2]
           )
         );
         setCircleRight(
@@ -114,13 +144,31 @@ const ProgressPage = ({ navigation, route }) => {
             (Math.min(cap, second) / second) * 100,
             cap,
             second,
-            "#C86FFC"
+            route.params.items[3]
           )
         );
         setTextToShow(whatText((Math.min(cap, second) / second) * 100));
         if (route.params?.userID) {
           setUserID(route.params?.userID);
         }
+        setMCdot(
+          <View
+            style={{
+              backgroundColor: route.params.items[2],
+              ...styles.dotDesign,
+            }}
+          />
+        );
+        setCAPdot(
+          <View
+            style={{
+              backgroundColor: route.params.items[3],
+              ...styles.dotDesign,
+            }}
+          />
+        );
+        setMCcolor(route.params.items[2]);
+        setCAPcolor(route.params.items[3]);
       } else {
         setAllowClicks(false);
         //GET THE DATA FROM THE USERS TO SEE TO SHOW TILL Y4S2 OR Y5S2
@@ -140,12 +188,34 @@ const ProgressPage = ({ navigation, route }) => {
         setShowGraph(true);
         setProgress(0);
         setProgress2(0);
-        setCircleLeft(whatCircle(0, 0, 160, "#12DDB3"));
-        setCircleRight(whatCircle(0, 0, 5, "#C86FFC"));
+        setCircleLeft(
+          whatCircle(0, 0, 160, route.params?.usersDetails.MCcolor)
+        );
+        setCircleRight(
+          whatCircle(0, 0, 5, route.params?.usersDetails.CAPcolor)
+        );
         setTextToShow(whatText(0));
         if (route.params?.userID) {
           setUserID(route.params?.userID);
         }
+        setMCdot(
+          <View
+            style={{
+              backgroundColor: route.params?.usersDetails.MCcolor,
+              ...styles.dotDesign,
+            }}
+          />
+        );
+        setCAPdot(
+          <View
+            style={{
+              backgroundColor: route.params?.usersDetails.CAPcolor,
+              ...styles.dotDesign,
+            }}
+          />
+        );
+        setMCcolor(route.params?.usersDetails.MCcolor);
+        setCAPcolor(route.params?.usersDetails.CAPcolor);
       }
     }
   }, [route.params?.items, route.params?.usersDetails]);
@@ -488,7 +558,11 @@ const ProgressPage = ({ navigation, route }) => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("ProgressPageSettings", { userID: userID });
+            navigation.navigate("ProgressPageSettings", {
+              userID: userID,
+              MCcolor: MCcolor,
+              CAPcolor: CAPcolor,
+            });
           }}
           activeOpacity={0.9}
           style={{
@@ -603,9 +677,7 @@ const ProgressPage = ({ navigation, route }) => {
                     alignItems: "flex-end",
                   }}
                 >
-                  <View
-                    style={{ backgroundColor: "#12DDB3", ...styles.dotDesign }}
-                  />
+                  {MCdot}
                 </View>
 
                 <View
@@ -651,9 +723,7 @@ const ProgressPage = ({ navigation, route }) => {
                     alignItems: "flex-end",
                   }}
                 >
-                  <View
-                    style={{ backgroundColor: "#12DDB3", ...styles.dotDesign }}
-                  />
+                  {MCdot}
                 </View>
 
                 <View
@@ -732,9 +802,7 @@ const ProgressPage = ({ navigation, route }) => {
                   alignItems: "center",
                 }}
               >
-                <View
-                  style={{ backgroundColor: "#C86FFC", ...styles.dotDesign }}
-                />
+                {CAPdot}
               </View>
               {/* -------------------------------------------Right Section ----------------------------------------------------- */}
               <View

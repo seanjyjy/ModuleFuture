@@ -12,7 +12,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import WorkLoadDisplay from "../AddModule/WorkLoadDisplay";
+import MakingTheBlocks from "../AddModule/MakingTheBlocks";
 import Entypo from "react-native-vector-icons/Entypo";
 import { Icon } from "react-native-eva-icons";
 
@@ -124,15 +124,25 @@ const ModulePage = (props) => {
     }
     const semData = setSem(item.Semester);
     const workLoad = item.workLoad;
-
+    let sum = 0;
+    let realsum = 0;
+    if (workLoad) {
+      for (let i = 0; i < workLoad.length; i++) {
+        sum += Math.ceil(workLoad[i]);
+        realsum += workLoad[i];
+      }
+    }
+    sum = sum;
+    let numRowRequired = Math.ceil(sum / 10) - 1;
+    numRowRequired = numRowRequired ? numRowRequired : 0;
     const findHeight = () => {
-      let height = 275;
+      let height = 275 + numRowRequired * 35;
       if (description === "" && workLoad === undefined) {
         height -= 115;
       } else if (description === "") {
         height -= 40;
       } else if (workLoad === undefined) {
-        height -= 95;
+        height -= 65;
       }
       return height;
     };
@@ -218,7 +228,7 @@ const ModulePage = (props) => {
             {sidetab("ST II", semData[3])}
           </View>
         </View>
-        {workLoad ? workloaddisplays(workLoad) : null}
+        {workLoad ? workloaddisplays(workLoad, realsum) : null}
       </TouchableOpacity>
     );
   };
@@ -234,45 +244,48 @@ const ModulePage = (props) => {
     </View>
   );
 
-  const workloaddisplays = (array) => {
-    let sum = 0;
+  const workloaddisplays = (array, sum) => {
     const colorArray = ["#F49097", "#DFB2F4", "#5467CE", "#5491CE", "#55D6C2"];
     const titleArray = ["Lec", "Tut", "Lab", "Proj", "Prep"];
     const arrayToMake = [];
-    if (array) {
-      for (let i = 0; i < array.length; i++) {
-        sum += array[i];
-        for (let j = 0; j < array[i]; j++) {
-          if (j === 0) {
-            arrayToMake.push({
-              color: colorArray[i],
-              title: titleArray[i],
-            });
-          } else {
-            arrayToMake.push({
-              color: colorArray[i],
-              title: "",
-            });
-          }
+    for (let i = 0; i < array.length; i++) {
+      let val = array[i];
+      for (let j = 0; j < Math.ceil(array[i]); j++) {
+        if (j === 0) {
+          arrayToMake.push({
+            color: colorArray[i],
+            title: titleArray[i],
+            value: val >= 1 ? 1 : val.toFixed(1),
+          });
+        } else {
+          arrayToMake.push({
+            color: colorArray[i],
+            title: "",
+            value: val >= 1 ? 1 : val.toFixed(1),
+          });
         }
+        val -= 1;
       }
+    }
+    let showSum = sum;
+    if (isNaN(showSum)) {
+      showSum = showSum.toString().substring(1);
+    }
+    if (array) {
       return (
-        <View style={{ flex: 1 }}>
-          <View style={{ flex: 2, top: 5 }}>
-            <View>
-              <Text
-                style={{ ...styles.workloadStyling, bottom: 10 }}
-              >{`Workload: ${sum} hrs`}</Text>
-            </View>
-            <View style={{ width: width * 0.9 - 20, flex: 1 }}>
-              <WorkLoadDisplay
-                arrayToMake={arrayToMake}
-                sum={sum}
-                array={array}
-              />
-            </View>
+        <View style={{ flex: 1, bottom: 7 }}>
+          <Text
+            style={styles.workloadStyling}
+          >{`Workload: ${showSum} hrs`}</Text>
+          <View
+            style={{
+              flex: 1,
+              width: width * 0.9 - 20,
+              bottom: 3,
+            }}
+          >
+            <MakingTheBlocks arrayToMake={arrayToMake} />
           </View>
-          <View style={{ flex: 1 }} />
         </View>
       );
     }

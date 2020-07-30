@@ -5,16 +5,18 @@ import {
   View,
   Linking,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import { globalStyles } from "../../../Component/GlobalStyle";
 import Header from "../../../Component/Header";
-import ModuleBlocks from "../AddModule/ModuleBlocks";
+import MakingTheBlocks from "../AddModule/MakingTheBlocks";
 import Entypo from "react-native-vector-icons/Entypo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeArea } from "react-native-safe-area-context";
 
+const width = Dimensions.get("window").width;
 const ModuleItself = ({ navigation, route }) => {
   const crossIcon = (
     <Entypo size={20} name="cross" style={{ color: "#FF6C7D" }} />
@@ -41,11 +43,22 @@ const ModuleItself = ({ navigation, route }) => {
       description = description.replace(/(\r\n|\n|\r)/gm, " ");
       description = description.replace(/  +/g, " ");
     }
+
     const semData = setSem(item.Semester);
     const workLoad = item.workLoad;
     const preclusion = item.preclusion;
     const prereq = item.prerequisite;
-
+    let sum = 0;
+    let realsum = 0;
+    if (workLoad) {
+      for (let i = 0; i < workLoad.length; i++) {
+        sum += Math.ceil(workLoad[i]);
+        realsum += workLoad[i];
+      }
+    }
+    sum = sum;
+    let numRowRequired = Math.ceil(sum / 10) - 1;
+    numRowRequired = numRowRequired ? numRowRequired : 0;
     return (
       <View>
         <View style={{ ...styles.container }}>
@@ -121,7 +134,7 @@ const ModuleItself = ({ navigation, route }) => {
             {headAndBody("Module Details", description)}
             {headAndBody("Preclusion", preclusion)}
             {headAndBody("Prerequisites", prereq)}
-            {workLoad ? workloaddisplays(workLoad) : null}
+            {workLoad ? workloaddisplays(workLoad, realsum) : null}
           </View>
         </View>
         <TouchableOpacity
@@ -181,44 +194,47 @@ const ModuleItself = ({ navigation, route }) => {
       <Text style={{ ...globalFontStyles.OSSB_13, color: "white" }}>{sem}</Text>
     </View>
   );
-
-  const workloaddisplays = (array) => {
-    let sum = 0;
+  const workloaddisplays = (array, sum) => {
     const colorArray = ["#F49097", "#DFB2F4", "#5467CE", "#5491CE", "#55D6C2"];
     const titleArray = ["Lec", "Tut", "Lab", "Proj", "Prep"];
     const arrayToMake = [];
     for (let i = 0; i < array.length; i++) {
-      sum += array[i];
-      for (let j = 0; j < array[i]; j++) {
+      let val = array[i];
+      for (let j = 0; j < Math.ceil(array[i]); j++) {
         if (j === 0) {
           arrayToMake.push({
             color: colorArray[i],
             title: titleArray[i],
+            value: val >= 1 ? 1 : val.toFixed(1),
           });
         } else {
           arrayToMake.push({
             color: colorArray[i],
             title: "",
+            value: val >= 1 ? 1 : val.toFixed(1),
           });
         }
+        val -= 1;
       }
+    }
+    let showSum = sum;
+    if (isNaN(showSum)) {
+      showSum = showSum.toString().substring(1);
     }
     if (array) {
       return (
-        <View style={{ marginBottom: 25 }}>
+        <View style={{ flex: 1, bottom: 7 }}>
           <Text
+            style={styles.workloadStyling}
+          >{`Workload: ${showSum} hrs`}</Text>
+          <View
             style={{
-              ...globalFontStyles.OSSB_13,
-              color: "#232323",
-              marginBottom: 10,
+              flex: 1,
+              width: width * 0.9 - 20,
+              top: 5,
             }}
           >
-            {`Workload: ${sum} hrs`}
-          </Text>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            {arrayToMake.map(({ color, title }, index) => (
-              <ModuleBlocks color={color} key={index} title={title} sum={sum} />
-            ))}
+            <MakingTheBlocks arrayToMake={arrayToMake} />
           </View>
         </View>
       );

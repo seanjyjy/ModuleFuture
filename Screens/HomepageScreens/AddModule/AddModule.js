@@ -19,7 +19,6 @@ import Cross from "../../../Component/Cross";
 import Container from "../../../Component/Container";
 import Entypo from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
-import WorkLoadDisplay from "./WorkLoadDisplay";
 import MakingTheBlocks from "./MakingTheBlocks";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -348,10 +347,16 @@ const AddModule = (props) => {
         val -= 1;
       }
     }
+    let showSum = sum;
+    if (isNaN(showSum)) {
+      showSum = showSum.toString().substring(1);
+    }
     if (array) {
       return (
         <View style={{ flex: 1, bottom: 7 }}>
-          <Text style={styles.workloadStyling}>{`Workload: ${sum} hrs`}</Text>
+          <Text
+            style={styles.workloadStyling}
+          >{`Workload: ${showSum} hrs`}</Text>
           <View
             style={{
               flex: 1,
@@ -401,13 +406,14 @@ const AddModule = (props) => {
       }
     }
     sum = sum;
-    const numRowRequired = Math.ceil(sum / 10) - 1;
+    let numRowRequired = Math.ceil(sum / 10) - 1;
+    numRowRequired = numRowRequired ? numRowRequired : 0;
     let modalSizing = [
       {
         modalstyle: {
           backgroundColor: "white",
           alignSelf: "center",
-          marginVertical: height * (0.22 - numRowRequired * 0.04),
+          marginVertical: height * (0.23 - numRowRequired * 0.04),
           width: width * 0.95,
           borderRadius: 25,
         },
