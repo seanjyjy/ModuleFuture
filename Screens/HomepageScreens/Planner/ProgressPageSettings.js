@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { Surface } from "gl-react-expo";
 import { GLSL, Node, Shaders } from "gl-react";
@@ -15,9 +17,9 @@ import { hsv2color } from "react-native-redash";
 import Box from "./Box";
 import Picker, { CANVAS_SIZE } from "./Picker";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-
 import FirebaseDB from "../../../FirebaseDB";
 import Modal from "react-native-modal";
+import { useSafeArea } from "react-native-safe-area-context";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
@@ -39,6 +41,8 @@ const ProgressPageSettings = ({ navigation, route }) => {
   const [whereChange, setWhereChange] = useState(3);
   let finalH = 0;
   let finalS = 0;
+  let finalH2 = 0;
+  let finalS2 = 0;
   const shaders = Shaders.create({
     hue: {
       frag: GLSL`
@@ -127,56 +131,119 @@ const ProgressPageSettings = ({ navigation, route }) => {
 
           <Box {...{ h, s, backgroundColor }} />
         </View>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <TouchableOpacity
+        {Platform.OS === "android" ? null : (
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                borderTopWidth: 0.7,
+                borderColor: "#B5B5B5",
+                borderRightWidth: 0.7,
+              }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                borderTopWidth: 0.7,
+                borderColor: "#B5B5B5",
+              }}
+              onPress={() => {
+                setModalVisible(false);
+                const newColor =
+                  "#" + convert.hsv.hex.raw([finalH * 360, finalS * 100, 100]);
+                if (whereChange === 3) {
+                  setMCcolor(newColor);
+                } else {
+                  setCAPcolor(newColor);
+                }
+              }}
+              activeOpacity={0.9}
+            >
+              <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
+                Done
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  const Hue2 = () => {
+    const h = new Value(0);
+    const s = new Value(0);
+    const v = new Value(1);
+    const backgroundColor = hsv2color(h, s, v);
+    useCode(() => {
+      return call([h], (h) => {
+        finalH2 = h;
+      });
+    }, [h]);
+
+    useCode(() => {
+      return call([s], (s) => {
+        finalS2 = s;
+      });
+    }, [s]);
+    return (
+      <View style={styles.container}>
+        <View style={styles.hue}>
+          <Surface style={styles.surface}>
+            <Node shader={shaders.hue} />
+          </Surface>
+          <Picker {...{ h, s, backgroundColor }} />
+        </View>
+        <View
+          style={{
+            flex: 2,
+            top: 20,
+            flexDirection: "row",
+          }}
+        >
+          <View
             style={{
               flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              borderTopWidth: 0.7,
-              borderColor: "#B5B5B5",
-              borderRightWidth: 0.7,
+              width: "100%",
+              justifyContent: "flex-start",
+              alignItems: "flex-end",
+              top: 15,
             }}
-            onPress={() => setModalVisible(false)}
           >
-            <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
-              Cancel
+            <Text
+              style={{ top: 20, ...globalFontStyles.NB_17, color: "#0c0d34" }}
+            >
+              Color picked:
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              borderTopWidth: 0.7,
-              borderColor: "#B5B5B5",
-            }}
-            onPress={() => {
-              setModalVisible(false);
-              const newColor =
-                "#" + convert.hsv.hex.raw([finalH * 360, finalS * 100, 100]);
-              if (whereChange === 3) {
-                setMCcolor(newColor);
-              } else {
-                setCAPcolor(newColor);
-              }
-            }}
-            activeOpacity={0.9}
-          >
-            <Text style={{ ...globalFontStyles.NB_14, color: "#007AFF" }}>
-              Done
-            </Text>
-          </TouchableOpacity>
+          </View>
+
+          <Box {...{ h, s, backgroundColor }} />
         </View>
       </View>
     );
   };
+
   const questions = (questions, displays, key) => {
     return (
-      <View style={{ height: 65, flexDirection: "row" }}>
+      <View
+        style={{
+          height: 65,
+          flexDirection: "row",
+        }}
+      >
         <View
           style={{
             ...styles.questionLeft,
+            borderBottomWidth:
+              Platform.OS === "android" ? (key === 2 ? 0.7 : 0) : 0,
           }}
         >
           <Text style={{ ...globalFontStyles.NB_15, left: 20 }}>
@@ -222,14 +289,16 @@ const ProgressPageSettings = ({ navigation, route }) => {
               backgroundColor: key === 3 ? MCcolor : CAPcolor,
             }}
             onPress={() => {
-              if (key === 3) {
-                setModalTitle("Color for MC progression circle");
-                setWhereChange(3);
-              } else {
-                setModalTitle("Color for CAP progression circle");
-                setWhereChange(4);
+              if (Platform.OS !== "android") {
+                if (key === 3) {
+                  setModalTitle("Color for MC progression circle");
+                  setWhereChange(3);
+                } else {
+                  setModalTitle("Color for CAP progression circle");
+                  setWhereChange(4);
+                }
+                setModalVisible(true);
               }
-              setModalVisible(true);
             }}
           />
         </View>
@@ -244,7 +313,11 @@ const ProgressPageSettings = ({ navigation, route }) => {
   const modal = () => {
     return (
       <Modal
-        style={styles.modalBox}
+        style={{
+          ...styles.modalBox,
+          marginVertical: height * 0.06 + useSafeArea().top * 2,
+        }}
+        propagateSwipe={true}
         backdropOpacity={0.3}
         animationIn="fadeIn"
         animationOut="fadeOut"
@@ -259,7 +332,11 @@ const ProgressPageSettings = ({ navigation, route }) => {
       >
         <View style={{ flex: 1 }}>
           <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
             <Text
               style={{ ...globalFontStyles.NB_20, color: "#0c0d34", top: 20 }}
@@ -313,16 +390,36 @@ const ProgressPageSettings = ({ navigation, route }) => {
               const usersRef = FirebaseDB.firestore()
                 .collection("users")
                 .doc(userID);
-              usersRef.update({
-                totalMCs: parseInt(totalMCs),
-                TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
-                MCcolor: MCcolor,
-                CAPcolor: CAPcolor,
-              });
-              navigation.navigate("ProgressPage", {
-                items: [totalMCs, TargetCAP, MCcolor, CAPcolor],
-                from: "ProgressPageSettings",
-              });
+
+              if (Platform.OS === "android") {
+                const androidMCColor =
+                  "#" + convert.hsv.hex.raw([finalH * 360, finalS * 100, 100]);
+                const androidCAPColor =
+                  "#" +
+                  convert.hsv.hex.raw([finalH2 * 360, finalS2 * 100, 100]);
+
+                usersRef.update({
+                  totalMCs: parseInt(totalMCs),
+                  TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
+                  MCcolor: androidMCColor,
+                  CAPcolor: androidCAPColor,
+                });
+                navigation.navigate("ProgressPage", {
+                  items: [totalMCs, TargetCAP, androidMCColor, androidCAPColor],
+                  from: "ProgressPageSettings",
+                });
+              } else {
+                usersRef.update({
+                  totalMCs: parseInt(totalMCs),
+                  TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
+                  MCcolor: MCcolor,
+                  CAPcolor: CAPcolor,
+                });
+                navigation.navigate("ProgressPage", {
+                  items: [totalMCs, TargetCAP, MCcolor, CAPcolor],
+                  from: "ProgressPageSettings",
+                });
+              }
             }
           }}
           activeOpacity={0.9}
@@ -334,12 +431,42 @@ const ProgressPageSettings = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       {/* ----------------------------------------------------------------- BOTTOM --------------------------------------------------------------------------- */}
-      <View style={styles.btmPortion}>
-        {questions("Total MCs", "160", 1)}
-        {questions("Target CAP", "0-5", 2)}
-        {questions2("MC color", 3)}
-        {questions2("CAP color", 4)}
-      </View>
+      {Platform.OS === "android" ? (
+        <ScrollView style={styles.btmPortion}>
+          {questions("Total MCs", "160", 1)}
+          {questions("Target CAP", "0-5", 2)}
+          <Text
+            style={{
+              alignSelf: "center",
+              ...globalFontStyles.NB_20,
+              color: "#0c0d34",
+              top: 15,
+            }}
+          >
+            Colors for MC progression circle
+          </Text>
+          {Hue()}
+          <Text
+            style={{
+              alignSelf: "center",
+              ...globalFontStyles.NB_20,
+              color: "#0c0d34",
+              top: 15,
+            }}
+          >
+            Colors for CAP progression circle
+          </Text>
+          {Hue2()}
+          <View style={{ height: 20 }} />
+        </ScrollView>
+      ) : (
+        <View style={styles.btmPortion}>
+          {questions("Total MCs", "160", 1)}
+          {questions("Target CAP", "0-5", 2)}
+          {questions2("MC color", 3)}
+          {questions2("CAP color", 4)}
+        </View>
+      )}
       {modal()}
     </>
   );
@@ -400,7 +527,6 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     alignSelf: "center",
-    marginVertical: height * 0.18,
     width: width * 0.9,
     borderRadius: 25,
     backgroundColor: "white",

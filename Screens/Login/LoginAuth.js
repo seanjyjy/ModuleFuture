@@ -50,13 +50,16 @@ const LoginAuth = () => {
               }
             })
             .catch((error) => {
+              alert(error);
               setIsLoading(false);
             });
         })
         .catch((error) => {
+          alert(error);
           setIsLoading(false);
         });
     } catch (error) {
+      alert(error);
       setIsLoading(false);
     }
   };

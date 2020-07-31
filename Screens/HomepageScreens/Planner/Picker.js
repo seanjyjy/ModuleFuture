@@ -1,6 +1,10 @@
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { PanGestureHandler, State } from "react-native-gesture-handler";
+import {
+  PanGestureHandler,
+  State,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Svg, { Path } from "react-native-svg";
 import Animated, {
   Value,
@@ -65,7 +69,7 @@ export default ({ h, s, backgroundColor }) => {
     saturation,
   ]);
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <GestureHandlerRootView style={StyleSheet.absoluteFill}>
       <PanGestureHandler {...gestureHandler}>
         <Animated.View
           style={{
@@ -76,6 +80,7 @@ export default ({ h, s, backgroundColor }) => {
             },
             shadowOpacity: 0.58,
             shadowRadius: 16.0,
+            backgroundColor: "transparent",
             elevation: 24,
             transform: [
               ...translate(polar2Canvas(l, CENTER)),
@@ -89,7 +94,11 @@ export default ({ h, s, backgroundColor }) => {
           <Svg
             width={PICKER_WIDTH + STROKE_WIDTH * 2}
             height={PICKER_HEIGHT}
-            style={{ top: -PICKER_HEIGHT / 2 }}
+            style={{
+              top: -PICKER_HEIGHT / 2,
+              backgroundColor: "transparent",
+              elevation: 24,
+            }}
             viewBox={`-${STROKE_WIDTH / 2} -${STROKE_WIDTH / 2} ${
               44 + STROKE_WIDTH
             } ${60 + STROKE_WIDTH}`}
@@ -104,6 +113,6 @@ export default ({ h, s, backgroundColor }) => {
           </Svg>
         </Animated.View>
       </PanGestureHandler>
-    </View>
+    </GestureHandlerRootView>
   );
 };
