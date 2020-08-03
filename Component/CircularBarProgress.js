@@ -33,6 +33,8 @@ const CircularBarProgress = (props) => {
         {
           alignItems: "center",
           justifyContent: "center",
+          width: "100%",
+          height: 2 * radius + 27.5,
         },
         {
           transform: [{ rotate: "270deg" }],
