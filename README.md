@@ -110,9 +110,9 @@ To get a better understanding of the difficulties faced by current NUS Computing
 - Progress page with an elegant representation of data which tracks the user’s CAP and MC progression
 
 <div>
-    <img src="readmeimages/Planner.gif" width="33%"/>
-    <img src="readmeimages/Records.gif" width="33%"/>
-    <img src="readmeimages/Progress.gif" width="33%"/>
+    <img src="readmeimages/Planner.gif" width="32.5%"/>
+    <img src="readmeimages/Records.gif" width="32.5%"/>
+    <img src="readmeimages/Progress.gif" width="32.5%"/>
 </div>
 
 _GIFs are only limited to 10 frames per second (fps) and may have some lag due to the duration being more than 30s._
