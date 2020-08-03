@@ -397,17 +397,69 @@ const ProgressPageSettings = ({ navigation, route }) => {
                 const androidCAPColor =
                   "#" +
                   convert.hsv.hex.raw([finalH2 * 360, finalS2 * 100, 100]);
+                const defaultColor = "#" + convert.hsv.hex.raw([0, 0, 100]);
 
-                usersRef.update({
-                  totalMCs: parseInt(totalMCs),
-                  TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
-                  MCcolor: androidMCColor,
-                  CAPcolor: androidCAPColor,
-                });
-                navigation.navigate("ProgressPage", {
-                  items: [totalMCs, TargetCAP, androidMCColor, androidCAPColor],
-                  from: "ProgressPageSettings",
-                });
+                if (
+                  androidMCColor === defaultColor &&
+                  androidCAPColor === defaultColor
+                ) {
+                  return navigation.navigate("ProgressPage", {
+                    items: [
+                      totalMCs,
+                      TargetCAP,
+                      route.params?.MCcolor,
+                      route.params?.CAPcolor,
+                    ],
+                    from: "ProgressPageSettings",
+                  });
+                } else if (androidMCColor === defaultColor) {
+                  usersRef.update({
+                    totalMCs: parseInt(totalMCs),
+                    TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
+                    CAPcolor: androidCAPColor,
+                  });
+                  return navigation.navigate("ProgressPage", {
+                    items: [
+                      totalMCs,
+                      TargetCAP,
+                      route.params?.MCcolor,
+                      androidCAPColor,
+                    ],
+                    from: "ProgressPageSettings",
+                  });
+                } else if (androidCAPColor === defaultColor) {
+                  usersRef.update({
+                    totalMCs: parseInt(totalMCs),
+                    TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
+                    MCcolor: androidMCColor,
+                  });
+                  return navigation.navigate("ProgressPage", {
+                    items: [
+                      totalMCs,
+                      TargetCAP,
+                      androidMCColor,
+                      route.params?.CAPcolor,
+                    ],
+                    from: "ProgressPageSettings",
+                  });
+                } else {
+                  usersRef.update({
+                    totalMCs: parseInt(totalMCs),
+                    TargetCAP: parseFloat(parseFloat(TargetCAP).toFixed(2)),
+                    MCcolor: androidMCColor,
+                    CAPcolor: androidCAPColor,
+                  });
+
+                  return navigation.navigate("ProgressPage", {
+                    items: [
+                      totalMCs,
+                      TargetCAP,
+                      androidMCColor,
+                      androidCAPColor,
+                    ],
+                    from: "ProgressPageSettings",
+                  });
+                }
               } else {
                 usersRef.update({
                   totalMCs: parseInt(totalMCs),

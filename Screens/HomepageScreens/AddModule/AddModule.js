@@ -287,30 +287,34 @@ const AddModule = (props) => {
             </View>
           </View>
           <View style={{ ...styles.lineDesign }} />
-          <View style={{ flex: modalSizing[styleToUse].precluFlex }}>
-            <View style={{ flex: 1 }}>
-              <Text style={{ ...styles.headerPreStyling }}>Preclusion</Text>
+          {modalSizing[styleToUse].precluFlex === 0 ? null : (
+            <View style={{ flex: modalSizing[styleToUse].precluFlex }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ ...styles.headerPreStyling }}>Preclusion</Text>
+              </View>
+              <View style={styles.infoBox}>
+                <View style={{ height: 5 }} />
+                <ScrollView style={styles.ScrollViewStyling}>
+                  <Text style={styles.informationStyling}>{preclu}</Text>
+                </ScrollView>
+                <View style={{ height: 2 }} />
+              </View>
             </View>
-            <View style={styles.infoBox}>
-              <View style={{ height: 5 }} />
-              <ScrollView style={styles.ScrollViewStyling}>
-                <Text style={styles.informationStyling}>{preclu}</Text>
-              </ScrollView>
-              <View style={{ height: 2 }} />
+          )}
+          {modalSizing[styleToUse].prereqFlex === 0 ? null : (
+            <View style={{ flex: modalSizing[styleToUse].prereqFlex }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ ...styles.headerPreStyling }}>Prerequisite</Text>
+              </View>
+              <View style={styles.infoBox}>
+                <View style={{ height: 5 }} />
+                <ScrollView style={styles.ScrollViewStyling}>
+                  <Text style={styles.informationStyling}>{prereq}</Text>
+                </ScrollView>
+                <View style={{ height: 2 }} />
+              </View>
             </View>
-          </View>
-          <View style={{ flex: modalSizing[styleToUse].prereqFlex }}>
-            <View style={{ flex: 1 }}>
-              <Text style={{ ...styles.headerPreStyling }}>Prerequisite</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <View style={{ height: 5 }} />
-              <ScrollView style={styles.ScrollViewStyling}>
-                <Text style={styles.informationStyling}>{prereq}</Text>
-              </ScrollView>
-              <View style={{ height: 2 }} />
-            </View>
-          </View>
+          )}
         </View>
         <View style={{ height: 10 }} />
       </Modal>
