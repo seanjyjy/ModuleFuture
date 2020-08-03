@@ -46,9 +46,9 @@ We aim to streamline the way NUS students plan their modules and choose their sp
 5. As a student, I want to know what my categorical CAP is so that I can better understand my strengths and weaknesses and choose the right modules to take.
 6. As a student, I want to know the intensity and workload of a module so that I can better plan what modules to take.
 
-## Preliminary Survey[^1]
+## Preliminary Survey
 
-To get a better understanding of the difficulties faced by current NUS Computing students on the matters related to modules and general academic life, we have done a preliminary survey on a small sample size of 16 SOC students. The general consensus among students seems to be that most are unsure of which focus areas to choose because they do not know which field they are good in and are not well-informed of what each focus area is. Many students also highlighted that them being unaware of the workload and difficulty of each module forms the main difficulty while planning for modules to take in each semester. This further points to a clear lack of transparency in each module, disallowing students from making informed decisions in their module planning.
+To get a better understanding of the difficulties faced by current NUS Computing students on the matters related to modules and general academic life, we have done a preliminary [survey](https://drive.google.com/file/d/1aeXrTT6FEH8Iqp3SBMeEOW-viN8mYuVy/view?usp=sharing) on a small sample size of 16 SOC students. The general consensus among students seems to be that most are unsure of which focus areas to choose because they do not know which field they are good in and are not well-informed of what each focus area is. Many students also highlighted that them being unaware of the workload and difficulty of each module forms the main difficulty while planning for modules to take in each semester. This further points to a clear lack of transparency in each module, disallowing students from making informed decisions in their module planning.
 
 ## Comparison with other similar platforms
 
@@ -109,11 +109,11 @@ To get a better understanding of the difficulties faced by current NUS Computing
 - Multiple view options to track modules and grades in different categories
 - Progress page with an elegant representation of data which tracks the user’s CAP and MC progression
 
-![alt_text](./readmeimages/Planner.gif "image_tooltip")
-
-![alt_text](./readmeimages/Records.gif "image_tooltip")
-
-![alt_text](./readmeimages/Progress.gif "image_tooltip")
+<div>
+    <img src="readmeimages/Planner.gif" width="33.3%"/>
+    <img src="readmeimages/Records.gif" width="33.3%"/>
+    <img src="readmeimages/Progress.gif" width="33.3%"/>
+</div>
 
 _GIFs are only limited to 10 frames per second (fps) and may have some lag due to the duration being more than 30s._
 
@@ -123,7 +123,7 @@ For this project, we decided to use an agile approach for our software developme
 
 ## Version Control System
 
-For this project, we picked up Git integration and Github, and split our features into different branches. At the end of each week, we merged into the master branch after checking its functionality. Git network graph is linked in the footnote[^2].
+For this project, we picked up Git integration and Github, and split our features into different branches. At the end of each week, we merged into the master branch after checking its functionality. You can view our github graph [here](https://docs.google.com/document/d/14478-enKSBYA9VNpdzKDbmkPWpXFyGDKvdzRuUVU3Zk/edit?usp=sharing).
 
 ##
 
@@ -340,7 +340,7 @@ For our app, we spent a lot of time designing and doing up the UI/UX components 
   <tr>
    <td>
 
-<img src="readmeimages/PlannerHome.jpeg" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/PlannerHome.jpeg">
 
    </td>
    <td>On login/signup, users are presented with a scrollable list of plans for each semester. The images are loaded lazily as the users scroll for optimization purposes. With our intuitive bottom navigation bar, users can move between screens with ease to view the features in our app.
@@ -358,9 +358,7 @@ For our app, we spent a lot of time designing and doing up the UI/UX components 
   <tr>
    <td>
 
-<p id="gdcalert5" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image5.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert6">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image5.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/plans.jpeg">
 
    </td>
    <td>
@@ -391,9 +389,7 @@ For our app, we spent a lot of time designing and doing up the UI/UX components 
   <tr>
    <td>
 
-<p id="gdcalert6" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image6.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert7">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image6.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/addmodule.jpeg">
 
    </td>
    <td>
@@ -419,9 +415,7 @@ For our app, we spent a lot of time designing and doing up the UI/UX components 
   <tr>
    <td>
 
-<p id="gdcalert7" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image7.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert8">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image7.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/filter.jpeg">
 
    </td>
    <td>
@@ -441,9 +435,7 @@ For our app, we spent a lot of time designing and doing up the UI/UX components 
   <tr>
    <td>
 
-<p id="gdcalert8" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image8.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert9">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image8.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/ModuleInfo.jpeg">
 
    </td>
    <td>Clicking the info button will display the module information. 
@@ -470,9 +462,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert9" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image9.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert10">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image9.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/Addplan.jpeg">
 
    </td>
    <td>
@@ -492,9 +482,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert10" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image10.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert11">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image10.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/Doneplan.jpeg">
 
    </td>
    <td>
@@ -514,9 +502,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert11" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image11.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert12">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image11.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/customdrawer.jpeg">
 
    </td>
    <td>
@@ -534,9 +520,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert12" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image12.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert13">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image12.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/Progresspage.jpeg">
 
    </td>
    <td>
@@ -554,9 +538,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert13" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image13.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert14">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image13.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/records.jpeg">
 
    </td>
    <td>
@@ -578,9 +560,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert14" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image14.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert15">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image14.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/editcurrenttypes.jpeg">
 
    </td>
    <td>
@@ -600,9 +580,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert15" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image15.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert16">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image15.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/Math and science.jpeg">
 
    </td>
    <td>
@@ -622,9 +600,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert16" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image16.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert17">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image16.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/fullview.jpeg">
 
    </td>
    <td>
@@ -644,9 +620,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert17" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image17.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert18">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image17.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/modulesearching.jpeg" width="" alt="alt_text" title="image_tooltip">
 
    </td>
    <td>
@@ -664,9 +638,7 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   <tr>
    <td>
 
-<p id="gdcalert18" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image18.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert19">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-<img src="images/image18.png" width="" alt="alt_text" title="image_tooltip">
+<img src="readmeimages/Tutorial.jpeg">
 
    </td>
    <td>Based on our user surveys and testing, we realised there were some issues with users being stuck at various points. Thus, we discussed and implemented a tutorial so that users will be taught and guided on how to use the app. There are five main parts to our tutorial
@@ -741,9 +713,9 @@ Depending on your phone speed, the waiting time at the loading screen differs, s
 
 ##
 
-## User Testing[^3]
+## User Testing
 
-To get a rough gauge of our UI/UX design, we have conducted user surveys on some of our friends in SOC to get some information on our current app and its features. We also gathered some questions along our implementation of the features and asked them too.
+To get a rough gauge of our UI/UX design, we have conducted user [surveys](https://docs.google.com/document/d/1YPkFKglhtRNbcvDl5SNSPAxfHRVbbLFACAoH0MUF7Ik/edit?usp=sharing) on some of our friends in SOC to get some information on our current app and its features. We also gathered some questions along our implementation of the features and asked them too.
 
 ### Problems and suggestion from Milestone II user testings
 
@@ -1612,11 +1584,3 @@ Milestone III report
    </td>
   </tr>
 </table>
-
-<!-- Footnotes themselves at the bottom. -->
-
-## Notes
-
-[^1]: [https://drive.google.com/file/d/1aeXrTT6FEH8Iqp3SBMeEOW-viN8mYuVy/view?usp=sharing](https://drive.google.com/file/d/1aeXrTT6FEH8Iqp3SBMeEOW-viN8mYuVy/view?usp=sharing)
-[^2]: [https://docs.google.com/document/d/14478-enKSBYA9VNpdzKDbmkPWpXFyGDKvdzRuUVU3Zk/edit?usp=sharing](https://docs.google.com/document/d/14478-enKSBYA9VNpdzKDbmkPWpXFyGDKvdzRuUVU3Zk/edit?usp=sharing)
-[^3]: Survey link: [https://docs.google.com/document/d/1YPkFKglhtRNbcvDl5SNSPAxfHRVbbLFACAoH0MUF7Ik/edit](https://docs.google.com/document/d/1YPkFKglhtRNbcvDl5SNSPAxfHRVbbLFACAoH0MUF7Ik/edit)
