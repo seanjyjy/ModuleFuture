@@ -661,19 +661,17 @@ Similarly, if users wish to see information on the prerequisites and preclusions
 
 ## ModuleFuture app
 
-You can access our app [here](https://expo.io/@modulefuture2020/ModuleFuture)!
-
 ### Steps
 
 For Android Users:
 
 1. Make sure you have [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_SG) installed on your phone.
-2. Then proceed to enter our app through the link provided.
+2. Then proceed to enter our app through the [link](https://expo.io/@modulefuture2020/ModuleFuture) provided.
 
 For iOS Users:
 
 1. Make sure you have [Expo](https://apps.apple.com/us/app/expo-client/id982107779) installed on your phone.
-2. Use this account to log into [Expo](https://apps.apple.com/us/app/expo-client/id982107779) app in your phone first:
+2. Use this account to log into the Expo app on your phone first:
 
 - Email : ModuleFuture2020@gmail.com
 - Password: ModuleFuture2020
