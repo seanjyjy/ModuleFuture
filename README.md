@@ -666,28 +666,22 @@ Similarly, if users wish to see information on the prerequisites and preclusions
 For Android Users:
 
 1. Make sure you have [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_SG) installed on your phone.
-2. Then proceed to enter our app through the [link](https://expo.io/@modulefuture2020/ModuleFuture) provided.
+2. Then proceed to enter our app through the [link](https://expo.io/@modulefuture2022/ModuleFuture) provided.
 
 For iOS Users:
 
 1. Make sure you have [Expo](https://apps.apple.com/us/app/expo-client/id982107779) installed on your phone.
 2. Use this account to log into the Expo app on your phone first:
 
-- Email : ModuleFuture2020@gmail.com
-- Password: ModuleFuture2020
-- Link : [https://expo.io/@modulefuture2020/ModuleFuture](https://expo.io/@modulefuture2020/ModuleFuture)
+- Username : modulefuture2022
+- Password: ModuleFuture2022
+- Link : [https://expo.io/@modulefuture2022/ModuleFuture](https://expo.io/@modulefuture2022/ModuleFuture)
 
-3. Enter the app through the link provided. (You should be able to scan the QR code)!
+3. Enter the app through the link provided. You should be able to scan the QR code if necessary!
 
 Error logging in?
 
-If you do not get redirected to the homepage, clear and reopen the expo app. (Firebase seems to be lagging at times) . If your screen darkens and you are unable to do anything, clear phone RAM and running apps and reopen the expo app again. (Mini-tutorial might be causing this issue)
-
-Try this account if the above account does not work:
-
-- Email : [ModuleFuture2019@gmail.com](mailto:ModuleFuture2019@gmail.com)
-- Password: ModuleFuture2019
-- Link : [https://expo.io/@modulefuture2019/ModuleFuture](https://expo.io/@modulefuture2019/ModuleFuture)
+If you do not get redirected to the homepage, clear and reopen the expo app. If your screen darkens and you are unable to do anything, clear phone RAM and running apps and reopen the expo app again.
 
 ### FAQ
 
