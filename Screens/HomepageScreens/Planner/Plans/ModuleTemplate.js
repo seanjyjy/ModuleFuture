@@ -9,7 +9,6 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
@@ -142,6 +141,7 @@ const ModuleTemplate = (props) => {
         onClosed={() => setModalVisible(false)}
         keyboardTopOffset={300}
         position="center"
+        useNativeDriver={true}
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>

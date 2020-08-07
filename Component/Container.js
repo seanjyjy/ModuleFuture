@@ -22,7 +22,7 @@ const Container = (props) => {
       toValue: -width,
       duration: 300,
       easing: Easing.linear,
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start(() => props.incr());
   };
 

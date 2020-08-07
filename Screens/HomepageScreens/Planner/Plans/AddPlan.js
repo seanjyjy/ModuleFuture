@@ -8,6 +8,7 @@ import {
   Animated,
   FlatList,
   Alert,
+  VirtualizedList,
 } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import AnimatedBottomBar from "./AnimatedBottomBar";
@@ -283,7 +284,7 @@ const AddPlan = ({ route }) => {
       const newTaken = [];
       const newNotTaken = [];
 
-      const newSet = new Set(); 
+      const newSet = new Set();
       data.forEach((x) => {
         newSet.add(x.moduleCode);
       });
@@ -1133,11 +1134,13 @@ const AddPlan = ({ route }) => {
     <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {Header()}
       <View style={styles.container}>
-        <FlatList
+        <VirtualizedList
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
           data={data}
+          getItem={(data, index) => data[index]}
+          getItemCount={(data) => data.length}
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
             <ModuleTemplate dataObj={item} deleteMethod={deleteItem} />
