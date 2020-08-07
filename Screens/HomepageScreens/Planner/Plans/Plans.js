@@ -403,6 +403,7 @@ const Plans = (props) => {
         onClosed={() => setModalVisibleDeletion(false)}
         keyboardTopOffset={300}
         position="center"
+        useNativeDriver={true}
       >
         <View style={{ flex: 1 }}>
           <View style={styles.deletionTextAlertStyle}>
@@ -433,6 +434,7 @@ const Plans = (props) => {
         onClosed={() => setModalVisible(false)}
         keyboardTopOffset={300}
         position="center"
+        useNativeDriver={true}
       >
         <View style={styles.modalHeaderQuestion}>
           <Text style={styles.popoutheader}>Name of Plan</Text>
