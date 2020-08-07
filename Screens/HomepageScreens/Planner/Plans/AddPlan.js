@@ -6,7 +6,6 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  FlatList,
   Alert,
   VirtualizedList,
 } from "react-native";

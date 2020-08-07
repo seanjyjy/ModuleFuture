@@ -4,12 +4,12 @@ import {
   Text,
   View,
   Dimensions,
-  FlatList,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
   Alert,
+  VirtualizedList,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import { Icon } from "react-native-eva-icons";
@@ -553,14 +553,15 @@ const AddModule = (props) => {
     <View style={{ alignItems: "center", backgroundColor: "#F4F4F4", flex: 1 }}>
       {header}
       <View style={{ marginBottom: 0.25 * height }}>
-        <FlatList
-          initialNumToRender={10}
+        <VirtualizedList
           keyboardShouldPersistTaps="always"
           ListHeaderComponent={<View style={{ marginVertical: 5 }} />}
           data={moduleList}
           extraData={modules}
           keyExtractor={(item) => item.code}
           renderItem={({ item }) => holders(item)}
+          getItem={(data, index) => data[index]}
+          getItemCount={(data) => data.length}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<View style={{ height: height * 0.06 - 20 }} />}
         />
