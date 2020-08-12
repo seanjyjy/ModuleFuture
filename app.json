@@ -3,7 +3,7 @@
     "name": "ModuleFuture",
     "slug": "ModuleFuture",
     "platforms": ["ios", "android", "web"],
-    "version": "2.0.1",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/modulefuturelogoscreen.png",
     "splash": {
@@ -21,7 +21,7 @@
     "description": "The future Module planner app. Founded by Keane and Sean",
     "android": {
       "package": "com.modulefuture2019.ModuleFuture",
-      "versionCode": 2
+      "versionCode": 3
     }
   }
 }
