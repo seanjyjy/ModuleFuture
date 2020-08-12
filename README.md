@@ -1,28 +1,3 @@
-<!-- Copy and paste the converted output. -->
-
-<!-----
-NEW: Check the "Suppress top comment" option to remove this info from the output.
-
-Conversion time: 17.029 seconds.
-
-
-Using this Markdown file:
-
-1. Paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β29
-* Mon Aug 03 2020 07:28:43 GMT-0700 (PDT)
-* Source doc: Milestone 3 README
-* Tables are currently converted to HTML tables.
-* This document has images: check for >>>>>  gd2md-html alert:  inline image link in generated source and store images to your server. NOTE: Images in exported zip file from Google Docs may not appear in  the same order as they do in your doc. Please check the images!
-
------>
-
 ## Milestone III
 
 Team name: ModuleFuture
@@ -79,7 +54,7 @@ A) We deeply apologise for any inconveniences caused. That said, please contact 
 
 ### Note
 
-There will be some deviation between IOS and Android phones. Phone sizes of less than 5 inches will likely have inconsistent displays. Performance may vary between phones.
+There will be some deviation between iOS and Android phones. Phone sizes of less than 5 inches will likely have inconsistent displays. Performance may vary between phones.
 
 Depending on your phone speed, the waiting time at the loading screen differs, so please be patient!
 
