@@ -830,8 +830,9 @@ const styles = StyleSheet.create({
     color: "#4a4e5d",
   },
   imageStylingForDrawer: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     resizeMode: "contain",
+    top: 20,
   },
 });
