@@ -130,8 +130,6 @@ const AddModule = (props) => {
   const [preReqInfo, setpreReqInfo] = useState([]);
   const [modules, add] = useState([]); // modules are stored here
 
-  const valAdded = (item) => (locationFrom === "AddPlan" ? item.MC : 1);
-
   const checkIfCanAdd = (code) => {
     for (const mod of modulesPlanned) {
       if (mod.code === code || mod.moduleCode === code) {
@@ -178,7 +176,7 @@ const AddModule = (props) => {
         return null;
       }}
       incr={() => {
-        addVal(MCcount + valAdded(item));
+        addVal(MCcount + item.MC);
         modules.push(item);
         let newArr = moduleList.filter((x) => x.code !== item.code);
         setModuleList(newArr);
@@ -186,7 +184,7 @@ const AddModule = (props) => {
     />
   );
 
-  const moduleOrMC = locationFrom === "AddPlan" ? "MC count" : "Modules Added";
+  const moduleOrMC = "MC count";
 
   const preReqModal = () => {
     const prereq = preReqInfo[1];

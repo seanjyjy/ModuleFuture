@@ -17,8 +17,7 @@ const SeeModules = ({ navigation, route }) => {
   const [modArr, setModArr] = useState([]);
   const [MCcount, setMCcount] = useState(0);
   const [arr, setArr] = useState([]);
-  const text =
-    route.params.location === "AddPlan" ? "Total MCs: " : "Total modules: ";
+  const text = "Total MCs: ";
 
   useEffect(() => {
     if (route.params?.modDetails) {
@@ -48,7 +47,7 @@ const SeeModules = ({ navigation, route }) => {
         onPress={() => {
           const newList = modArr.filter((x) => x.code !== item.code);
           setModArr(newList);
-          setMCcount(MCcount - (text === "Total MCs: " ? item.MC : 1));
+          setMCcount(MCcount - item.MC);
           let current = arr;
           current.push(item);
           setArr(current);

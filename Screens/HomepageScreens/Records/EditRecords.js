@@ -214,7 +214,6 @@ const EditRecords = ({ navigation, route }) => {
       backdropPressToClose={false}
       coverScreen={true}
       onClosed={() => setModalVisible(false)}
-      keyboardTopOffset={300}
       position="center"
     >
       <View
