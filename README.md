@@ -1,33 +1,62 @@
-<!-- Copy and paste the converted output. -->
-
-<!-----
-NEW: Check the "Suppress top comment" option to remove this info from the output.
-
-Conversion time: 17.029 seconds.
-
-
-Using this Markdown file:
-
-1. Paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β29
-* Mon Aug 03 2020 07:28:43 GMT-0700 (PDT)
-* Source doc: Milestone 3 README
-* Tables are currently converted to HTML tables.
-* This document has images: check for >>>>>  gd2md-html alert:  inline image link in generated source and store images to your server. NOTE: Images in exported zip file from Google Docs may not appear in  the same order as they do in your doc. Please check the images!
-
------>
-
 ## Milestone III
 
 Team name: ModuleFuture
 
 Proposed level of achievement: Artemis
+
+## Features preview
+
+- Quick and user-friendly method to create a plan coupled with an intuitive UI to add modules
+- Multiple view options to track modules and grades in different categories
+- Progress page with an elegant representation of data which tracks the user’s CAP and MC progression
+
+<div>
+    <img src="readmeimages/Planner.gif" width="32.5%"/>
+    <img src="readmeimages/Records.gif" width="32.5%"/>
+    <img src="readmeimages/Progress.gif" width="32.5%"/>
+</div>
+
+_GIFs are only limited to 10 frames per second (fps) and may have some lag due to the long duration._
+
+## ModuleFuture app
+
+For Android Users:
+
+1. Access the app on Google Play [here](https://play.google.com/store/apps/details?id=com.modulefuture2019.ModuleFuture)!
+
+For iOS Users:
+
+1. Make sure you have [Expo](https://apps.apple.com/us/app/expo-client/id982107779) installed on your phone.
+2. Use this account to log into the Expo app on your phone first:
+
+- Username : modulefuture2022
+- Password: ModuleFuture2022
+
+3. Enter the app [here](https://expo.io/@modulefuture2022/ModuleFuture)! (You should be able to scan the QR code if necessary).
+
+Error logging in?
+
+If you do not get redirected to the homepage, clear and reopen the app again. If your screen darkens and you are unable to do anything, clear phone RAM and running apps and reopen the app again.
+
+### FAQ
+
+Q) Does your app keep information about my username and password?
+
+A) Yes it is stored in firebase cloud storage.
+
+Q) Does your app use our personal information?
+
+A) We only use the grades that are being entered, any other data is not used without any permission.
+
+Q) What happens if I spot an error or bug that results in the app not being functional?
+
+A) We deeply apologise for any inconveniences caused. That said, please contact any of the developers. It would be great if the problem can be described aptly so that it is reproducible!
+
+### Note
+
+There will be some deviation between iOS and Android phones. Phone sizes of less than 5 inches will likely have inconsistent displays. Performance may vary between phones.
+
+Depending on your phone speed, the waiting time at the loading screen differs, so please be patient!
 
 ## Motivation
 
@@ -101,22 +130,6 @@ To get a better understanding of the difficulties faced by current NUS Computing
   </tr>
 </table>
 
-##
-
-## Features preview
-
-- Quick and user-friendly method to create a plan coupled with an intuitive UI to add modules
-- Multiple view options to track modules and grades in different categories
-- Progress page with an elegant representation of data which tracks the user’s CAP and MC progression
-
-<div>
-    <img src="readmeimages/Planner.gif" width="32.5%"/>
-    <img src="readmeimages/Records.gif" width="32.5%"/>
-    <img src="readmeimages/Progress.gif" width="32.5%"/>
-</div>
-
-_GIFs are only limited to 10 frames per second (fps) and may have some lag due to the duration being more than 30s._
-
 ## Software Engineering Approach
 
 For this project, we decided to use an agile approach for our software development, SCRUM methodology. We decided to keep our project progress via a series of sprints as we believe that our features can be divided into smaller, independent components that could be implemented within 1 - 2 weeks. Both of us decided the number of features that we can commit to and allocated tasks to be completed during each sprint. To meet our target, we tried to complete each feature within one week. We met up daily at night to update each other on what we have done for the day. At the end of each week, we conducted unit testing of our completed features and identified any possible bugs in the program. This feedback loop is essential for us given the fact that we do not have much experience in software development.
@@ -124,8 +137,6 @@ For this project, we decided to use an agile approach for our software developme
 ## Version Control System
 
 For this project, we picked up Git integration and Github, and split our features into different branches. At the end of each week, we merged into the master branch after checking its functionality. You can view our github graph [here](https://docs.google.com/document/d/14478-enKSBYA9VNpdzKDbmkPWpXFyGDKvdzRuUVU3Zk/edit?usp=sharing).
-
-##
 
 ## Milestone II implementations
 
@@ -157,8 +168,6 @@ For this project, we picked up Git integration and Github, and split our feature
   - List of graduation semester, changing of course, and focus area
 - Login page
   - Collection of details: Year of matriculation, Expected graduation semester, Course
-
-##
 
 ## Milestone III Features
 
@@ -211,8 +220,6 @@ For this project, we picked up Git integration and Github, and split our feature
   - Forget password
   - Widen our app from previously catering to 5 SOC courses to now all NUS courses
   - Including Terms and Conditions to be read and accepted before creating an account
-
-##
 
 ## Features Demo
 
@@ -329,8 +336,6 @@ For this project, we picked up Git integration and Github, and split our feature
    </td>
   </tr>
 </table>
-
-##
 
 ## User Interface/Experience
 
@@ -659,52 +664,6 @@ Similarly, if users wish to see information on the prerequisites and preclusions
   </tr>
 </table>
 
-## ModuleFuture app
-
-### Steps
-
-For Android Users:
-
-1. Make sure you have [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_SG) installed on your phone.
-2. Then proceed to enter our app through the [link](https://expo.io/@modulefuture2022/ModuleFuture) provided.
-
-For iOS Users:
-
-1. Make sure you have [Expo](https://apps.apple.com/us/app/expo-client/id982107779) installed on your phone.
-2. Use this account to log into the Expo app on your phone first:
-
-- Username : modulefuture2022
-- Password: ModuleFuture2022
-- Link : [https://expo.io/@modulefuture2022/ModuleFuture](https://expo.io/@modulefuture2022/ModuleFuture)
-
-3. Enter the app through the link provided. You should be able to scan the QR code if necessary!
-
-Error logging in?
-
-If you do not get redirected to the homepage, clear and reopen the expo app. If your screen darkens and you are unable to do anything, clear phone RAM and running apps and reopen the expo app again.
-
-### FAQ
-
-Q) Does your app keep information about my username and password?
-
-A) Yes it is stored in firebase cloud storage.
-
-Q) Does your app use our personal information?
-
-A) We only use the grades that are being entered, any other data is not used without any permission.
-
-Q) What happens if I spot an error or bug that results in the app not being functional?
-
-A) We deeply apologise for any inconveniences caused. That said, please contact any of the developers. It would be great if the problem can be described aptly so that it is reproducible!
-
-### Note
-
-There will be some deviation between IOS and Android phones. Phone sizes of less than 5 inches will likely have inconsistent displays. Performance may vary between phones.
-
-Depending on your phone speed, the waiting time at the loading screen differs, so please be patient!
-
-##
-
 ## User Testing
 
 To get a rough gauge of our UI/UX design, we have conducted user [surveys](https://docs.google.com/document/d/1YPkFKglhtRNbcvDl5SNSPAxfHRVbbLFACAoH0MUF7Ik/edit?usp=sharing) on some of our friends in SOC to get some information on our current app and its features. We also gathered some questions along our implementation of the features and asked them too.
@@ -937,8 +896,6 @@ To get a rough gauge of our UI/UX design, we have conducted user [surveys](https
    </td>
   </tr>
 </table>
-
-##
 
 ## Project Log
 
