@@ -4,6 +4,8 @@ Team name: ModuleFuture
 
 Proposed level of achievement: Artemis
 
+Promotional Video: https://www.youtube.com/watch?v=sqWDVRd5qqU&t=14s
+
 ## Features preview
 
 - Quick and user-friendly method to create a plan coupled with an intuitive UI to add modules
