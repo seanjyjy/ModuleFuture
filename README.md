@@ -4,7 +4,7 @@ Team name: ModuleFuture
 
 Proposed level of achievement: Artemis
 
-Promotional Video: https://www.youtube.com/watch?v=sqWDVRd5qqU&list=LLqTk6zmfA-BqhNrqm9sja-g&index=4&t=0s
+Promotional Video: https://www.youtube.com/watch?v=sqWDVRd5qqU
 
 ## Features preview
 
