@@ -128,7 +128,6 @@ const ViewPlan = ({ route }) => {
       //during and after august consider start of sem as of 1st aug
       textToReturn += "Y" + (numYear + 1) + "S1";
     }
-    // show Y0S2 or ???
     return textToReturn;
   };
 

@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import FirebaseDB from "../FirebaseDB";
-//362
 const ratio = 228 / 362;
 
 const width = Dimensions.get("window").width;

@@ -267,7 +267,6 @@ const Records = ({ navigation }) => {
           return "-";
         } else {
           const val = item.points / item.mcsUsedInCap;
-          // return Math.round((val + Number.EPSILON) * 100) / 100;
           return val.toFixed(2);
         }
       };

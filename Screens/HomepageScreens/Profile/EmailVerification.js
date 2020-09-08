@@ -33,22 +33,6 @@ const EmailVerification = () => {
       await FirebaseDB.auth().signOut();
     } catch (error) {}
   };
-  // if upgrading the plan then can do something liddat :(
-  //   let actionCodeSettings = {
-  //     url:
-  //       "https://orbital-modulefuture.firebaseapp.com/?email=" +
-  //       FirebaseDB.auth().currentUser.email,
-  //     iOS: {
-  //       bundleId: "com.nus-orbital-moduleFuture",
-  //     },
-  //     android: {
-  //       packageName: "com.ModuleFuture",
-  //       installApp: true,
-  //       minimumVersion: "12",
-  //     },
-  //     dynamicLinkDomain: "modulefuture.page.link",
-  //     handleCodeInApp: true,
-  //   };
 
   const verifyEmail = () => {
     const user = FirebaseDB.auth().currentUser;
