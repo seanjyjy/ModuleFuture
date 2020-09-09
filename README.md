@@ -20,7 +20,7 @@ Promotional Video: https://www.youtube.com/watch?v=sqWDVRd5qqU
 
 _GIFs are only limited to 10 frames per second (fps) and may have some lag due to the long duration._
 
-## ModuleFuture app
+## Accessing app
 
 For Android Users:
 
