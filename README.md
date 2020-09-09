@@ -1,8 +1,8 @@
-## Milestone III
+## ModuleFuture
 
-Team name: ModuleFuture
+A module planning application that all NUS students must have!
 
-Proposed level of achievement: Artemis
+Level of achievement: Artemis
 
 Promotional Video: https://www.youtube.com/watch?v=sqWDVRd5qqU
 
