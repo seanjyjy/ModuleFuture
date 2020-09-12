@@ -1,7 +1,6 @@
 import React from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View } from "react-native";
 import BlocksPerRow from "./BlocksPerRow";
-const width = Dimensions.get("window").width;
 
 const MakingTheBlocks = ({ arrayToMake }) => {
   let variableLength = arrayToMake.length;

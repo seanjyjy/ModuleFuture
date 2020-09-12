@@ -62,7 +62,7 @@ const AddModule = (props) => {
                     setModuleList(newList);
                   }}
                   ref={current}
-                ></TextInput>
+                />
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -229,11 +229,11 @@ const AddModule = (props) => {
     ];
 
     let styleToUse = 0;
-    if (prereq && prereq !== "" && preclu && preclu != "") {
+    if (prereq && prereq !== "" && preclu && preclu !== "") {
       styleToUse = 0;
     } else if (prereq && prereq !== "") {
       styleToUse = 2;
-    } else if (preclu && preclu != "") {
+    } else if (preclu && preclu !== "") {
       styleToUse = 1;
     } else {
       styleToUse = 3;
@@ -407,7 +407,6 @@ const AddModule = (props) => {
         realsum += workLoad[i];
       }
     }
-    sum = sum;
     let numRowRequired = Math.ceil(sum / 10) - 1;
     numRowRequired = numRowRequired ? numRowRequired : 0;
     let modalSizing = [

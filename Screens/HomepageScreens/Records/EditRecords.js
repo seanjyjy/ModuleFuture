@@ -15,6 +15,8 @@ import { FlatList } from "react-native-gesture-handler";
 import BottomBar from "../../../Component/BottomBar";
 import Modal from "react-native-modalbox";
 
+console.disableYellowBox = true;
+
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
@@ -34,8 +36,6 @@ const EditRecords = ({ navigation, route }) => {
   const fb = FirebaseDB.firestore();
   const userID = FirebaseDB.auth().currentUser.uid;
   const typeRef = fb.collection("typeArray").doc(userID);
-
-  console.disableYellowBox;
 
   useEffect(() => {
     const unsub = typeRef.onSnapshot(

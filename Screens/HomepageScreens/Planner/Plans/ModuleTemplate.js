@@ -71,8 +71,7 @@ const ModuleTemplate = (props) => {
   };
 
   const validText = (val) => {
-    if (
-      val === "A+" ||
+    return val === "A+" ||
       val === "A" ||
       val === "A-" ||
       val === "B+" ||
@@ -86,12 +85,7 @@ const ModuleTemplate = (props) => {
       val === "S" ||
       val === "CS" ||
       val === "CU" ||
-      val === ""
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+      val === "";
   };
 
   const closeModal = () => {

@@ -4,26 +4,14 @@ import moduleList from "./ModuleList1.json";
 const ModuleListWithKey = () => {
   const noExam = (item) => {
     if (item.length === 2) {
-      if (item[0]?.examDuration || item[1]?.examDuration) {
-        return false;
-      } else {
-        return true;
-      }
+      return !(item[0]?.examDuration || item[1]?.examDuration);
     } else if (item.length === 1) {
-      if (item[0]?.examDuration) {
-        return false;
-      } else {
-        return true;
-      }
+      return !item[0]?.examDuration;
     }
   };
 
   const hasSu = (current) => {
-    if (current?.attributes?.su) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!current?.attributes?.su;
   };
 
   const firstDigit = (item) => {
@@ -42,7 +30,7 @@ const ModuleListWithKey = () => {
   for (; i < moduleInfo.length; i++) {
     current = moduleInfo[i];
     if (current.semesterData.length !== 0) {
-      codeArr = firstDigit(current.moduleCode);
+      let codeArr = firstDigit(current.moduleCode);
       const code = current.moduleCode;
       arr[k] = {
         code: code, // string

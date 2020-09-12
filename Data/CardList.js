@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, Dimensions, Image } from "react-native";
 import {
   Y1S1,
@@ -14,7 +14,6 @@ import {
 } from "../Screens/HomepageScreens/Planner/Plans/ContentPlan";
 
 const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
 const ratio = 228 / 362;
 
 const CARD_HEIGHT = width * 0.8 * ratio;
@@ -54,7 +53,7 @@ const card9 = (
 const card10 = (
   <Image source={require("../assets/y5s2.png")} style={styles.card} />
 );
-const card11 = <View style={{ width: 0.8 * width, height: 100 }}></View>;
+const card11 = <View style={{width: 0.8 * width, height: 100}}/>;
 
 export let Menu = [
   {

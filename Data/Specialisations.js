@@ -5071,12 +5071,3 @@ export const specialisations = {
     cat: [],
   },
 };
-
-const temp = {
-  modules: [
-    {
-      code: "",
-      name: "",
-    },
-  ],
-};

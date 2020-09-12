@@ -12,7 +12,6 @@ import FirebaseDB from "../../FirebaseDB";
 import { BarPasswordStrengthDisplay } from "react-native-password-strength-meter";
 
 const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
 const temp = [
   {
     label: "Very Weak",
@@ -48,13 +47,13 @@ const temp = [
 
 function hasLowerCase(str) {
   if (str !== undefined) {
-    return str.toUpperCase() != str;
+    return str.toUpperCase() !== str;
   }
 }
 
 function hasUpperCase(str) {
   if (str !== undefined) {
-    return str.toLowerCase() != str;
+    return str.toLowerCase() !== str;
   }
 }
 
@@ -124,7 +123,6 @@ const reviewSchema = yup.object({
 });
 
 const NoPage = () => {
-  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();

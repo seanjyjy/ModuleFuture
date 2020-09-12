@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Text} from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
 
 const BlocksPerRow = ({ arrayToUse }) => {

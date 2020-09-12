@@ -38,7 +38,7 @@ const dateFormatter = (date, month, year, hour, minute) => {
   let newHour = hour;
   let newMinute = minute;
   if (parseInt(date) < 10) {
-    newdate = "0" + newDate;
+    newDate = "0" + newDate;
   }
   if (parseInt(newMonth) < 10) {
     newMonth = "0" + newMonth;
@@ -74,7 +74,7 @@ const calcTime = (dateInStr) => {
   let date = dateFormatter(getDate, getMonth, getYear, getHours, getMinutes);
   const todayDateArray = dateExtractor(date);
   const previousDateArray = dateExtractor(dateInStr);
-  if (todayDateArray[0] == previousDateArray[0]) {
+  if (todayDateArray[0] === previousDateArray[0]) {
     return "Today " + previousDateArray[1];
   } else if (isYesturday(todayDateArray[0], previousDateArray[0])) {
     return "Yesturday " + previousDateArray[1];
@@ -115,14 +115,8 @@ const isYesturday = (str1, str2) => {
     for (let i = 0; i < len; i++) {
       if (str1.charAt(i) === "/") {
         if (parseInt(dateForStr1) - parseInt(dateForStr2) === 1) {
-          if (
-            str1.charAt(i + 1) + str1.charAt(i + 2) ===
-            str2.charAt(i + 1) + str2.charAt(i + 2)
-          ) {
-            return true;
-          } else {
-            return false;
-          }
+          return str1.charAt(i + 1) + str1.charAt(i + 2) ===
+            str2.charAt(i + 1) + str2.charAt(i + 2);
         } else {
           return false;
         }
@@ -362,11 +356,7 @@ const Plans = (props) => {
   };
 
   const lettersChecker = (val) => {
-    if (val !== "S" && val !== "CS" && val !== "CU") {
-      return true;
-    } else {
-      return false;
-    }
+    return val !== "S" && val !== "CS" && val !== "CU";
   };
 
   const GradeToPoint = (val) => {

@@ -74,7 +74,6 @@ const CardWallet = (y, index, card, PageName) => {
         const val = document.data();
         if (val !== undefined && SumMcArr !== undefined) {
           const arr = val.yearSem;
-          const arrLength = arr.length;
           arrToPass[1] = arr;
           arrToPass[2] = val.selected;
           let tempArr = [];
@@ -105,7 +104,7 @@ const CardWallet = (y, index, card, PageName) => {
           arrToPass[3] = [];
         }
       })
-      .then((error) => {});
+      .then(() => {});
     return arrToPass;
   };
   return (
