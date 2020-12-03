@@ -80,16 +80,13 @@ const CardWallet = (y, index, card, PageName) => {
           for (let i = 0; i < arr.length; i++) {
             const newTotalMcs = SumMcArr[1] + arr[i].MCs;
             const newTotalSum = SumMcArr[0] + arr[i].MCs * arr[i].Cap;
+            const overallCap = newTotalMcs !== 0
+              ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
+              : 0;
             tempArr.push({
               SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
-              OverallCap:
-                newTotalMcs !== 0
-                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
-                  : 0,
-              PlannedOverallCap:
-                newTotalMcs !== 0
-                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
-                  : 0,
+              OverallCap: overallCap,
+              PlannedOverallCap: overallCap,
               PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
               MCs: arr[i].MCs,
               LastUpdated: arr[i].LastUpdated,
