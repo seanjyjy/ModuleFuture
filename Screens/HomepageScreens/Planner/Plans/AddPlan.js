@@ -208,11 +208,7 @@ const AddPlan = ({ route }) => {
   };
 
   const lettersChecker = (val) => {
-    if (val !== "S" && val !== "CS" && val !== "CU") {
-      return true;
-    } else {
-      return false;
-    }
+    return val !== "S" && val !== "CS" && val !== "CU";
   };
 
   const dateFormatter = (date, month, year, hour, minute) => {
@@ -222,7 +218,7 @@ const AddPlan = ({ route }) => {
     let newHour = hour;
     let newMinute = minute;
     if (parseInt(date) < 10) {
-      newdate = "0" + newDate;
+      newDate = "0" + newDate;
     }
     if (parseInt(newMonth) < 10) {
       newMonth = "0" + newMonth;

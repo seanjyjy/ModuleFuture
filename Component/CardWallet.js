@@ -101,7 +101,7 @@ const CardWallet = (y, index, card, PageName) => {
           arrToPass[3] = [];
         }
       })
-      .then((error) => {});
+      .then(() => {});
     return arrToPass;
   };
   return (

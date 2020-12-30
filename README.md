@@ -1,8 +1,10 @@
-## Milestone III
+## ModuleFuture
 
-Team name: ModuleFuture
+A module planning application that all NUS students must have!
 
-Proposed level of achievement: Artemis
+Level of achievement: Artemis
+
+Promotional Video: https://www.youtube.com/watch?v=sqWDVRd5qqU
 
 ## Features preview
 
@@ -18,7 +20,7 @@ Proposed level of achievement: Artemis
 
 _GIFs are only limited to 10 frames per second (fps) and may have some lag due to the long duration._
 
-## ModuleFuture app
+## Accessing app
 
 For Android Users:
 

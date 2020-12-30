@@ -20,7 +20,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import SignInButton from "../../Component/SignInButton";
 
 const height = Dimensions.get("window").height;
-const width = Dimensions.get("window").width;
 
 const ForgetPW = () => {
   const navigation = useNavigation();

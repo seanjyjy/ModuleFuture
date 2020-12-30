@@ -15,6 +15,8 @@ import { FlatList } from "react-native-gesture-handler";
 import BottomBar from "../../../Component/BottomBar";
 import Modal from "react-native-modalbox";
 
+console.disableYellowBox = true;
+
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
@@ -119,26 +121,14 @@ const EditRecords = ({ navigation, route }) => {
             }}
             onEndEditing={(current) => {
               const val = current.nativeEvent.text;
-              // if (index === "numRequired") {
-              //   if (val === "" || val === "not specified") {
-              //   } else {
-              //     const nextNum = parseInt(val);
-              //     if (isNaN(nextNum) || nextNum < 0) {
-              //       theAlert();
-              //     }
-              //   }
-              // } else {
               const nextNum = parseInt(val);
-              if (isNaN(nextNum) || nextNum <= 0) {
-                // if (val !== "") theAlert();
-              } else {
+              if (!(isNaN(nextNum) || nextNum <= 0)) {
                 let sum = 0;
                 for (const eachType of type) {
                   if (!isNaN(eachType.mcsRequired)) sum += eachType.mcsRequired;
                 }
                 setMCsPlanned(sum);
               }
-              // }
             }}
             placeholder={current.toString()}
             style={{ textAlign: "center" }}

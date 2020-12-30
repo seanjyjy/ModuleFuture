@@ -8,8 +8,8 @@ import {
   Alert,
   StatusBar,
 } from "react-native";
-import { globalFontStyles } from "../Component/GlobalFont";
-import SignInButton from "../Component/SignInButton";
+import { globalFontStyles } from "./GlobalFont";
+import SignInButton from "./SignInButton";
 import BackgroundFaded from "../Screens/Backgrounds/BackgroundFaded";
 import FirebaseDB from "../FirebaseDB";
 import { Modules, Mapping, Levels, Codes, Types } from "../Data/Types";

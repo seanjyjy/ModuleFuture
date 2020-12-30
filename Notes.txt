@@ -1,9 +1,0 @@
-1. Records and focus area (75%)
-- Focus area mapping to each course
-2. Search for deprecated modules
-3. AddModule: prereq and info button (link to nusmods)
-4. Download new modules from 2020/2021
-5. Search module feature: To be similar to the addmodule page
-- Allow them to add modules into planner
-- Data: Workload, semester
-6. Prereq tree??

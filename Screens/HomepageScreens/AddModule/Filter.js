@@ -413,9 +413,11 @@ const Filter = ({ navigation, route }) => {
         tempList = tempList.filter((x) => x.codePrefix === name);
         setList(tempList);
       } else {
-        throw "Category does not exist!";
+        console.assert(false,"Category does not exist!");
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const textWithIcon2 = (name) => (

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import { globalFontStyles } from "./GlobalFont";

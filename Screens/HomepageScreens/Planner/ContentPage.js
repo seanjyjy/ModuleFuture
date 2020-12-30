@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,

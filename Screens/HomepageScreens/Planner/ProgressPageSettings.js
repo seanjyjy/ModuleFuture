@@ -26,7 +26,7 @@ const height = Dimensions.get("window").height;
 console.disableYellowBox = true;
 
 const ProgressPageSettings = ({ navigation, route }) => {
-  var convert = require("color-convert");
+  let convert = require("color-convert");
   const userID = route.params?.userID;
   const [totalMCs, setTotalMCs] = useState(160);
   const [TargetCAP, setTargetCAP] = useState(5);

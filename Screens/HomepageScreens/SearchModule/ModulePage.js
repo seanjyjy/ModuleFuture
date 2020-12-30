@@ -132,7 +132,6 @@ const ModulePage = (props) => {
         realsum += workLoad[i];
       }
     }
-    sum = sum;
     let numRowRequired = Math.ceil(sum / 10) - 1;
     numRowRequired = numRowRequired ? numRowRequired : 0;
     const findHeight = () => {

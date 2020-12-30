@@ -137,11 +137,7 @@ const FocusArea = ({ navigation }) => {
   ];
 
   const lettersChecker = (val) => {
-    if (val !== "S" && val !== "CS" && val !== "CU") {
-      return true;
-    } else {
-      return false;
-    }
+    return val !== "S" && val !== "CS" && val !== "CU";
   };
 
   const sort = (arr) => {
