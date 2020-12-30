@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { globalFontStyles } from "../../../../Component/GlobalFont";
 import SignInButton from "../../../../Component/SignInButton";
+
 const SubText = ({ subtitle, description, last, onPress }) => {
   return (
     <View style={styles.container}>

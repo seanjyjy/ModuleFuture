@@ -12,7 +12,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { globalFontStyles } from "../../../Component/GlobalFont";
-import MakingTheBlocks from "../AddModule/MakingTheBlocks";
+import ModuleWorkloadInformation from "../AddModule/ModuleWorkloadInformation";
 import Entypo from "react-native-vector-icons/Entypo";
 import { Icon } from "react-native-eva-icons";
 
@@ -284,7 +284,7 @@ const ModulePage = (props) => {
               bottom: 3,
             }}
           >
-            <MakingTheBlocks arrayToMake={arrayToMake} />
+            <ModuleWorkloadInformation arrayToMake={arrayToMake} />
           </View>
         </View>
       );

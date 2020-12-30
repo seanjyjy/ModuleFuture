@@ -23,7 +23,7 @@ const Dots = ({ index, currentIndex }) => {
         borderRadius: 4,
         margin: 4,
       }}
-    ></Animated.View>
+    />
   );
 };
 

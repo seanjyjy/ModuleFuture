@@ -19,7 +19,7 @@ import Cross from "../../../Component/Cross";
 import Container from "../../../Component/Container";
 import Entypo from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
-import MakingTheBlocks from "./MakingTheBlocks";
+import ModuleWorkloadInformation from "./ModuleWorkloadInformation";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
@@ -366,7 +366,7 @@ const AddModule = (props) => {
               bottom: 3,
             }}
           >
-            <MakingTheBlocks arrayToMake={arrayToMake} />
+            <ModuleWorkloadInformation arrayToMake={arrayToMake} />
           </View>
         </View>
       );

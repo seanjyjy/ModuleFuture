@@ -10,7 +10,7 @@ import {
 import { globalFontStyles } from "../../../Component/GlobalFont";
 import { globalStyles } from "../../../Component/GlobalStyle";
 import Header from "../../../Component/Header";
-import MakingTheBlocks from "../AddModule/MakingTheBlocks";
+import ModuleWorkloadInformation from "../AddModule/ModuleWorkloadInformation";
 import Entypo from "react-native-vector-icons/Entypo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
@@ -234,7 +234,7 @@ const ModuleItself = ({ navigation, route }) => {
               top: 5,
             }}
           >
-            <MakingTheBlocks arrayToMake={arrayToMake} />
+            <ModuleWorkloadInformation arrayToMake={arrayToMake} />
           </View>
         </View>
       );

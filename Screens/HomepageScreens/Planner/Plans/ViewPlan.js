@@ -295,7 +295,8 @@ const ViewPlan = ({ route }) => {
       }}
     />
   );
-  const ProgressButon = (
+
+  const ProgressButton = (
     <Tabs
       icon={<EntypoIcon name="bar-graph" color="#726F6F" size={22} />}
       text="Progress"
@@ -449,7 +450,7 @@ const ViewPlan = ({ route }) => {
                 then increase this flex and decrease the flex below*/}
                 <View style={{ flex: 3 }}>
                   {HomeButton}
-                  {ProgressButon}
+                  {ProgressButton}
                   {SmartRecall(fromWhere)}
                 </View>
                 <Text style={styles.alsoSee}>Also see</Text>

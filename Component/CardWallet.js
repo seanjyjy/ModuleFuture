@@ -6,15 +6,16 @@ import {
   TouchableOpacity,
 } from "react-native";
 import FirebaseDB from "../FirebaseDB";
-//362
-const ratio = 228 / 362;
 
+const ratio = 228 / 362;
 const width = Dimensions.get("window").width;
+const { height: wHeight } = Dimensions.get("window");
 
 export const MARGIN = 20;
 export const CARD_HEIGHT = width * 0.8 * ratio + MARGIN * 2;
-const { height: wHeight } = Dimensions.get("window");
+
 const height = wHeight - 64;
+
 const styles = StyleSheet.create({
   card: {
     marginVertical: MARGIN,
@@ -75,23 +76,17 @@ const CardWallet = (y, index, card, PageName) => {
         const val = document.data();
         if (val !== undefined && SumMcArr !== undefined) {
           const arr = val.yearSem;
-          const arrLength = arr.length;
           arrToPass[1] = arr;
           arrToPass[2] = val.selected;
           let tempArr = [];
           for (let i = 0; i < arr.length; i++) {
             const newTotalMcs = SumMcArr[1] + arr[i].MCs;
             const newTotalSum = SumMcArr[0] + arr[i].MCs * arr[i].Cap;
+            const newCap = parseFloat((newTotalSum / newTotalMcs).toFixed(2));
             tempArr.push({
               SemestralCap: arr[i].useInCap ? arr[i].Cap : 0,
-              OverallCap:
-                newTotalMcs !== 0
-                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
-                  : 0,
-              PlannedOverallCap:
-                newTotalMcs !== 0
-                  ? parseFloat((newTotalSum / newTotalMcs).toFixed(2))
-                  : 0,
+              OverallCap: newTotalMcs !== 0 ? newCap : 0,
+              PlannedOverallCap: newTotalMcs !== 0 ? newCap : 0,
               PlannedCap: arr[i].useInCap ? 0 : arr[i].Cap,
               MCs: arr[i].MCs,
               LastUpdated: arr[i].LastUpdated,
