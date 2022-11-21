@@ -17,7 +17,7 @@
     "color-convert": "^2.0.1",
     "expo": "^38.0.0",
     "expo-asset": "~8.1.7",
-    "expo-cli": "^3.23.3",
+    "expo-cli": "^6.0.8",
     "expo-gl": "~8.3.1",
     "expo-linear-gradient": "~8.2.1",
     "firebase": "7.9.0",
